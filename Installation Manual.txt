@@ -1,0 +1,20 @@
+install :
+    1) Python 3.8.0 (becase it is developed in this version, you can download higher but with no guarantee of compatibility)
+        - link: https://www.python.org/downloads/release/python-380/
+    2) Add python.exe to System path and User path
+        - Windows Settings
+        - write to search "Edit the system environment variables" - open it
+        - in "Advanced" tab hit "Enironment Variables"
+        - in section "System variables" find line with "Variable = Path" - Edit it
+        - New
+        - Add path to the installed python.exe  
+            Usually: "C:\Users\...\AppData\Local\Programs\Python\Python38"
+
+Library installation:
+    1) run command line (cmd)
+    2) cd C:\Users\...\AppData\Local\Programs\Python\Python38\Scripts\
+        write all these lines one by one and hit enter:
+            pip install pandas
+            pip install pyodbc
+            pip install openpyxl
+            pip install tqdm
