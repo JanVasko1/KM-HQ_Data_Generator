@@ -1,0 +1,16 @@
+    {
+		"Item_No":["AC0CR74000","AC0CR73700","AC0CR73700","AC0CR73800","AC0CR73800","A73303H","A11G151","A33K450","A33K350","A33K250","A33K250","ACTEWY1","ACTEWY1"],
+		"Line_Type":["ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM","ITEM"],
+		"Item_Line_Quantity":["20","2","13","3","15","5","5","4","4","2","4","3","5"],
+		"Item_Unit_of_Measure":["KS","KS","KS","KS","KS","KS","KS","KS","KS","KS","KS","KS","KS"],
+		"Item_Unit_Price":["370.48","75.57","75.57","75.57","75.57","893.12","597.45","1271.23","1271.23","1271.23","1271.23","366.92","366.92"],
+		"Main_BOM_Item":["N","N","N","N","N","N","N","N","N","N","N","N","N"],
+		"Item_Connected_to_BOM":["N","N","N","N","N","N","N","N","N","N","N","N","N"],
+		"BOM_Item_Relation":["","","","","","","","","","","","",""],
+		"Item_Free_Of_Charge":["N","N","N","N","N","N","N","N","N","N","N","N","N"],
+		"Item_Free_Of_Charge_Relation":["","","","","","","","","","","","",""],
+		"Item_SN_Tracking":["N","N","N","N","N","N","N","N","N","N","N","N","N"],
+		"HQ_Confirmation_Line_Flag_Use":["N","N","N","N","N","N","N","N","N","N","N","N","N"],
+		"HQ_Confirmation_Line_Flag":["","","","","","","","","","","","",""],
+		"HQ_SUB_New_Item":["","","","","","","","","","","","",""]
+    }
