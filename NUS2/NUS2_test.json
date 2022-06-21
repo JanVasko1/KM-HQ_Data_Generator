@@ -18,7 +18,8 @@
             "HQ_Del_Quest": "Y",
             "HQ_DeL_Track_Quest": "N",
             "HQ_Packg_Track_Quest": "N",
-            "HQ_Inv_Quest": "Y"
+            "HQ_Inv_Quest": "Y",
+            "Record_link_Quest": "N"
         },
 
         "PO_Document_Header_Setup_df": 
@@ -184,6 +185,15 @@
             "HQ_HQPTR_Register_No_Start": "",
             "HQ_HQPTR_Register_No_Increment": "",
             "HQ_Packg_Track_Packages_per_Delivery": ""
+        },
+
+        "Record_Links_Setup_df": 
+        {
+            "NOC": "",
+            "Server": "",
+            "Server_link": "",
+            "User ID": "",
+            "Company": ""
         }
     }
 }

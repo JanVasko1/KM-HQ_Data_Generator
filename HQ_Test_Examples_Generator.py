@@ -240,7 +240,7 @@ if JSON_Load == "Y":
         data = pandas.read_json(f"{JSON_Path}{JSON_File_Name}")
         # Define each settings from JSON 
         General_Setup_df = pandas.DataFrame(data["Setup"]["General_Setup_df"], columns=["File_Location_Current", "File_path", "File_name", "Navision", "HQ_Date_format", "Conf_Package"], index=[0])
-        Questions_df = pandas.DataFrame(data["Setup"]["Questions_df"], columns=["HQ_Export_Quest", "HQ_Conf_Quest", "HQ_PreAdv_Quest", "HQ_Del_Quest", "HQ_DeL_Track_Quest", "HQ_Packg_Track_Quest", "HQ_Inv_Quest"], index=[0])
+        Questions_df = pandas.DataFrame(data["Setup"]["Questions_df"], columns=["HQ_Export_Quest", "HQ_Conf_Quest", "HQ_PreAdv_Quest", "HQ_Del_Quest", "HQ_DeL_Track_Quest", "HQ_Packg_Track_Quest", "HQ_Inv_Quest", "Record_link_Quest"], index=[0])
         PO_Document_Header_Setup_df = pandas.DataFrame(data["Setup"]["PO_Document_Header_Setup_df"], columns=["Document_Type", "Document_Number_prefix", "Document_Number_suffix", "Document_Number_Increment", "Documents_Count", "Buy_from_Vendor_No", "Document_Location","HQ_Logistic_Process", "HQ_Random_Order_Type", "HQ_Order_Type", "HQ_Shipping_Condition", "Shipment_Methods", "Shipping_Agent", "Shipping_Agent_Service"], index=[0])
         Item_Index_count = list(range(len(data["Setup"]["Items_df"]["Item_No"])))   # Helps to count number of Items in the list
         Items_df = pandas.DataFrame(data["Setup"]["Items_df"], columns=["Item_No", "Line_Type", "Item_Line_Quantity", "Item_Unit_of_Measure", "Item_Unit_Price", "Main_BOM_Item", "Item_Connected_to_BOM", "BOM_Item_Relation", "Item_Free_Of_Charge", "Item_Free_Of_Charge_Relation", "Item_SN_Tracking", "HQ_Confirmation_Line_Flag_Use", "HQ_Confirmation_Line_Flag", "HQ_SUB_New_Item"],  index=Item_Index_count)
@@ -256,6 +256,7 @@ if JSON_Load == "Y":
         HQ_HQSNR_Setup_df = pandas.DataFrame(data["Setup"]["HQ_HQSNR_Setup_df"], columns=["HQ_HQSNR_Register_No_Start", "HQ_HQSNR_Register_No_Increment", "HQ_SN_SN_prefix", "HQ_SN_SN_suffix", "HQ_SN_SN_Increment"], index=[0])
         HQ_DEL_Track_Setup_df = pandas.DataFrame(data["Setup"]["HQ_DEL_Track_Setup_df"], columns=["HQ_HQDTR_Register_No_Start", "HQ_HQDTR_Register_No_Increment", "HQ_Del_Track_Packa_prefix", "HQ_Del_Track_Packa_suffix", "HQ_Del_Track_Packa_Increment", "HQ_Del_Track_Bill_prefix", "HQ_Del_Track_Bill_suffix", "HQ_Del_Track_Bill_Increment", "HQ_Del_Track_EXIDV_prefix", "HQ_Del_Track_EXIDV_suffix", "HQ_Del_Track_EXIDV_Increment", "HQ_Del_Track_Random_Shipment_Method", "HQ_Del_Track_Shipment_Method", "HQ_Del_Track_Random_Shipping_Agent", "HQ_Del_Track_Shipping_Agent", "HQ_Del_Track_Random_Weight", "HQ_Del_Track_Weight", "HQ_Del_Track_Weight_UOM", "HQ_Del_Track_Random_Volume", "HQ_Del_Track_Volume", "HQ_Del_Track_Volume_UOM"], index=[0])
         HQ_Packg_Track_Setup_df = pandas.DataFrame(data["Setup"]["HQ_Packg_Track_Setup_df"], columns=["HQ_HQPTR_Register_No_Start", "HQ_HQPTR_Register_No_Increment", "HQ_Packg_Track_Packages_per_Delivery"], index=[0])
+        Record_Links_Setup_df = pandas.DataFrame(data["Setup"]["Record_Links_Setup_df"], columns=["NOC", "Server", "Server_link", "User ID", "Company"], index=[0])
 
         General_Setup_df.Name = "General_Setup_df"
         Questions_df.Name = "Questions_df"
@@ -273,6 +274,7 @@ if JSON_Load == "Y":
         HQ_HQSNR_Setup_df.Name = "HQ_HQSNR_Setup_df"
         HQ_DEL_Track_Setup_df.Name = "HQ_DEL_Track_Setup_df"
         HQ_Packg_Track_Setup_df.Name = "HQ_Packg_Track_Setup_df"
+        Record_Links_Setup_df.Name = "Record_Links_Setup_df"
 
 
         # print Setup
@@ -324,6 +326,9 @@ if JSON_Load == "Y":
         print("\n-section sumary-")
         print(HQ_Packg_Track_Setup_df.transpose())
 
+        print("\n-section sumary-")
+        print(Record_Links_Setup_df.transpose())
+
         # Section checker
         Section_check = ""
         while Section_check != "Y" and Section_check != "N":
@@ -347,7 +352,8 @@ if JSON_Load == "N":
         "HQ_Del_Quest": "",
         "HQ_DeL_Track_Quest": "",
         "HQ_Packg_Track_Quest": "",
-        "HQ_Inv_Quest": ""}
+        "HQ_Inv_Quest": "",
+        "Record_link_Quest": ""}
     Questions_df = pandas.DataFrame(Questions_dict, columns=Questions_dict.keys(), index=[0])
     Questions_df.Name = "Questions_df"
 
@@ -2068,6 +2074,70 @@ if JSON_Load == "N":
     else:
         pass
 
+
+    # Record Links
+    print("\n-----------------------------------------------------")
+    while Questions_df.iloc[0]["Record_link_Quest"] != "Y" and Questions_df.iloc[0]["Record_link_Quest"] != "N":
+        Questions_df.iloc[0]["Record_link_Quest"] = update_string(input("Do you want to prepare .pdf Record Link [Y/N]: ")).upper() 
+    if Questions_df.iloc[0]["Record_link_Quest"] == "Y":
+        while True:
+            # General
+            NUS3_NOC_list = ["COREQA", "BDK", "BPL", "BHR", "BSL", "BIH", "BRS", "BR"]
+            Record_Links_NOC = ""
+            while Record_Links_NOC not in NUS3_NOC_list:
+                Record_Links_NOC = update_string(input(f"Which NOC you want to select? {NUS3_NOC_list} [Code]: "))
+            Record_Links_Server = ""
+            while Record_Links_Server != "QA" and Record_Links_Server != "PRD":
+                Record_Links_Server = update_string(input("Which DB you want to select as data source? [QA/PRD]: "))
+            Record_Links_User_ID = update_string(input("Define your User ID which is in NAV [string]: "))
+            Record_Links_Company = update_string(input("Define your Company which is in NAV you want to prepare links [string]: "))
+
+            # Setup Dataframe definition - Record Links
+            Record_Links_Setup_Dict = {
+                "NOC": Record_Links_NOC,
+                "Server": Record_Links_Server,
+                "Server_link": "kmnavfs02.bs.kme.intern",
+                "User ID": Record_Links_User_ID,
+                "Company": Record_Links_Company} 
+            Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
+            Record_Links_Setup_df.Name = "Record_Links_Setup_df"
+            print("\n-section sumary-")
+            print(Record_Links_Setup_df.transpose())
+
+            # Variable to Delete
+            Var_to_del = []
+            for Variable in Var_to_del:      
+                try:
+                    exec(f'del {Variable}')
+                except:
+                    pass
+            try:
+                del Variable
+                del Var_to_del
+            except:
+                pass
+
+            # Section checker
+            Section_check = ""
+            while Section_check != "Y" and Section_check != "N":
+                Section_check = update_string(input(f"Are all values correct? [Y/N]: ")).upper() 
+            if Section_check == "Y":
+                break
+            elif Section_check == "N":
+                pass
+    else:
+        # Setup Dataframe definition - Record Links
+        Record_Links_Setup_Dict = {
+            "NOC": "",
+            "Server": "",
+            "Server_link": "",
+            "User ID": "",
+            "Company": ""} 
+        Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
+        Record_Links_Setup_df.Name = "Record_Links_Setup_df"
+        print("You did't selected Record Links to be created - skipping")
+
+
     JSON_safe = ""
     while JSON_safe != "Y" and JSON_safe != "N":
         JSON_safe = update_string(input(f"Do You want to save setup in reloadable JSON file [Y/N]: ")).upper() 
@@ -2107,6 +2177,7 @@ if JSON_Load == "N":
         HQ_HQSNR_Setup_df.to_json(f'{JSON_help_path}/{HQ_HQSNR_Setup_df.Name}.json', indent=4, date_format=General_Setup_df.iloc[0]["HQ_Date_format"], force_ascii=True, lines=True, orient="records")
         HQ_DEL_Track_Setup_df.to_json(f'{JSON_help_path}/{HQ_DEL_Track_Setup_df.Name}.json', indent=4, date_format=General_Setup_df.iloc[0]["HQ_Date_format"], force_ascii=True, lines=True, orient="records")
         HQ_Packg_Track_Setup_df.to_json(f'{JSON_help_path}/{HQ_Packg_Track_Setup_df.Name}.json', indent=4, date_format=General_Setup_df.iloc[0]["HQ_Date_format"], force_ascii=True, lines=True, orient="records")
+        Record_Links_Setup_df.to_json(f'{JSON_help_path}/{HQ_Packg_Track_Setup_df.Name}.json', indent=4, date_format=General_Setup_df.iloc[0]["HQ_Date_format"], force_ascii=True, lines=True, orient="records")
 
         Items_Dict = {
             "Item_No": list(Items_df.iloc[:]["Item_No"]),
@@ -2166,6 +2237,7 @@ if JSON_Load == "N":
             concatenate_dataframe("HQ_HQSNR_Setup_df", JSON_help_path)
             concatenate_dataframe("HQ_DEL_Track_Setup_df", JSON_help_path)
             concatenate_dataframe("HQ_Packg_Track_Setup_df", JSON_help_path)
+            concatenate_dataframe("Record_Links_Setup_df", JSON_help_path)
 
         # deletion of "/JSON/" help folder and content
         try:
@@ -2317,6 +2389,22 @@ Export_HQ_HQPTR_Weight_Unit_list = []
 Export_HQ_HQPTR_Volume_list = []
 Export_HQ_HQPTR_Volume_Unit_list = []
 Export_HQ_HQPTR_Plant_No_list = []
+
+# Record Links
+Link_ID_list = []
+Record_ID_list = []
+URL1_list = []
+URL2_list = []
+URL3_list = []
+URL4_list = []
+Description_list = []
+Type_list = []
+Note_list = []
+Created_list = []
+User_ID_list = []
+Company_list = []
+Notify_list = []
+To_User_ID_list = []
 
 # Numbe Series Preparation - Start numbers + helpers
 if General_Setup_df.iloc[0]["Navision"] == "NUS3":
@@ -4011,10 +4099,28 @@ for Current_PO_Number in tqdm(range(int(PO_Document_Header_Setup_df.iloc[0]["Doc
                     Set_HQITR_Register_No += int(HQ_General_Setup_df.iloc[0]["HQ_HQITR_Register_No_Increment"])
                     HQ_Document_Order_Number += int(HQ_General_Setup_df.iloc[0]["HQ_Document_Order_No_Increment"])
                     HQ_Vendor_Line_Number += int(HQ_General_Setup_df.iloc[0]["HQ_Document_Order_No_Increment"])
+
+                # Record Links:
+                if Questions_df.iloc[0]["Record_link_Quest"] == "Y":
+                    Link_ID_list.append(str(""))
+                    Record_ID_list.append(str("<Binary Data>"))
+                    URL1_list.append(str(f"""//{Record_Links_Setup_df.iloc[0]["Server_link"]}/NUS_{Record_Links_Setup_df.iloc[0]["Server"]}/{Record_Links_Setup_df.iloc[0]["NOC"]}/HQ/Archive/PDF/{Current_HQ_ITR_Vendor_Document_No}.pdf"""))
+                    URL2_list.append(str(""))
+                    URL3_list.append(str(""))
+                    URL4_list.append(str(""))
+                    Description_list.append(str(Current_HQ_ITR_Vendor_Document_No))
+                    Type_list.append(str("Link"))
+                    Note_list.append(str(""))
+                    Created_list.append(str(""))
+                    User_ID_list.append(str(Record_Links_Setup_df.iloc[0]["User ID"]))
+                    Company_list.append(str(Record_Links_Setup_df.iloc[0]["Company"]))
+                    Notify_list.append(str("No"))
+                    To_User_ID_list.append(str(""))
+
                 Day1 = datetime.strptime(New_Invoice_Posting_Date, "%d.%m.%Y")
                 Day2 = datetime.strftime((Day1 + timedelta(days=1)), General_Setup_df.iloc[0]["HQ_Date_format"])
                 New_Invoice_Posting_Date = test_date(Day2, General_Setup_df.iloc[0]["HQ_Date_format"])
-            
+
             # Clean Variables to speed up searching in dataframe
             Var_to_del = ["Exported_Lines_df"]
             for Variable in Var_to_del:      
@@ -4139,7 +4245,7 @@ for Current_PO_Number in tqdm(range(int(PO_Document_Header_Setup_df.iloc[0]["Doc
                 Day1 = datetime.strptime(New_Invoice_Posting_Date, "%d.%m.%Y")
                 Day2 = datetime.strftime((Day1 + timedelta(days=1)), General_Setup_df.iloc[0]["HQ_Date_format"])
                 New_Invoice_Posting_Date = test_date(Day2, General_Setup_df.iloc[0]["HQ_Date_format"])
-            
+
         pass
     else:
         pass
@@ -4311,6 +4417,23 @@ if General_Setup_df.iloc[0]["Navision"] == "NUS3":
         "Volume": Export_HQ_HQPTR_Volume_list,
         "Volume Unit": Export_HQ_HQPTR_Volume_Unit_list,
         "Plant No.": Export_HQ_HQPTR_Plant_No_list}
+
+    Export_Record_Link_dict = {
+        "Link ID": Link_ID_list,
+        "Record ID": Record_ID_list,
+        "URL1": URL1_list,
+        "URL2": URL2_list,
+        "URL3": URL3_list,
+        "URL4": URL4_list,
+        "Description": Description_list,
+        "Type": Type_list,
+        "Note": Note_list,
+        "Created": Created_list,
+        "User ID": User_ID_list,
+        "Company": Company_list,
+        "Notify": Notify_list,
+        "To User ID": To_User_ID_list}
+
 elif General_Setup_df.iloc[0]["Navision"] == "NUS2":
     #! Dodělat správné názvy polí !!!!!
     Export_Purchase_Header_dict = {
@@ -4398,6 +4521,7 @@ if General_Setup_df.iloc[0]["Navision"] == "NUS3":
     Export_HQ_SNR_df = pandas.DataFrame(Export_HQ_SNR_dict, columns=Export_HQ_SNR_dict.keys())
     Export_HQ_DTR_df = pandas.DataFrame(Export_HQ_DTR_dict, columns=Export_HQ_DTR_dict.keys())
     Export_HQ_PTR_df = pandas.DataFrame(Export_HQ_PTR_dict, columns=Export_HQ_PTR_dict.keys())
+    Export_Record_Link_df = pandas.DataFrame(Export_Record_Link_dict, columns=Export_Record_Link_dict.keys())
 elif General_Setup_df.iloc[0]["Navision"] == "NUS2":
     Export_Purchase_Header_df = pandas.DataFrame(Export_Purchase_Header_dict, columns=Export_Purchase_Header_dict.keys())
     Export_Purchase_Lines_df = pandas.DataFrame(Export_Purchase_Lines_dict, columns=Export_Purchase_Lines_dict.keys())
@@ -4454,6 +4578,7 @@ if General_Setup_df.iloc[0]["Navision"] == "NUS3":
         Export_HQ_SNR_df.to_excel(writer, sheet_name="HQ Serial Number Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
         Export_HQ_DTR_df.to_excel(writer, sheet_name="HQ Delivery Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
         Export_HQ_PTR_df.to_excel(writer, sheet_name="HQ Package Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+        Export_Record_Link_df.to_excel(writer, sheet_name="Record Link", index=False, startcol=0, startrow=0, header=True, engine="openpyxl")
 
     print("Data Formating ...")
     # Writer addtional texts + table definition
@@ -4586,6 +4711,16 @@ if General_Setup_df.iloc[0]["Navision"] == "NUS3":
         HQ_PTR_tab = Table(displayName="HQ_Package_Tracking_Register", ref=f"A3:{Columns_Name}{1 + 3}")
     HQ_PTR_tab.tableStyleInfo = style
     worksheet.add_table(HQ_PTR_tab)
+
+    # Record Links
+    worksheet = workbook.worksheets[workbook_index.index("Record Link")]
+    Columns_Name = excel_colum_def(Export_Record_Link_df.shape[1])
+    if Export_Record_Link_df.shape[0] != 0:
+        HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{Export_Record_Link_df.shape[0]}")
+    else:
+        HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{1}")
+    HQ_Link_tab.tableStyleInfo = style
+    worksheet.add_table(HQ_Link_tab)
 
     workbook.save(f"{File_path}/NUS3_{File_name}.xlsx") 
 

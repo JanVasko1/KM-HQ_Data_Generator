@@ -18,7 +18,8 @@
 	        "HQ_Del_Quest":"Y",
 	        "HQ_DeL_Track_Quest":"Y",
 	        "HQ_Packg_Track_Quest":"Y",
-	        "HQ_Inv_Quest":"Y"
+	        "HQ_Inv_Quest":"Y",
+            "Record_link_Quest": "Y"
 		},
 
 		"PO_Document_Header_Setup_df": 
@@ -184,6 +185,15 @@
 	        "HQ_HQPTR_Register_No_Start":"0",
 	        "HQ_HQPTR_Register_No_Increment":"1",
 	        "HQ_Packg_Track_Packages_per_Delivery":"1"
-		}
+		},
+
+        "Record_Links_Setup_df": 
+        {
+            "NOC": "BPL",
+            "Server": "QA",
+            "Server_link": "kmnavfs02.bs.kme.intern",
+            "User ID": "CZ011845",
+            "Company": "Konica Minolta Poland"
+        }
 	}
 }
