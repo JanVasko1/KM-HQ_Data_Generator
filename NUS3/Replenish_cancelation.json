@@ -2,12 +2,13 @@
     {
         "General_Setup_df": 
         {
-            "File_Location_Current": "Y",
-            "File_path": "C:/Users/CZ011845/OneDrive - KME/Development/Data_Generators/HQ_Data_Generator/NUS3/",
-            "File_name": "Replenish_cancel",
             "Navision": "NUS3",
             "HQ_Date_format": "%d.%m.%Y",
-            "Conf_Package": "HQ_DATA_GENERATOR"
+            "Conf_Package": "HQ_DATA_GENERATOR",
+            "Export_File_name": "TEST",
+            "Export_File_Location_as_Current": "Y",
+            "Export_File_path": "C:/Users/CZ011845/OneDrive - KME/Development/Data_Generators/HQ_Data_Generator/NUS3/",
+            "Export_File_Type": "EXCEL"
         },
 
         "Questions_df":

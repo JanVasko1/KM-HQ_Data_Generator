@@ -236,10 +236,10 @@ while JSON_Load != "Y" and JSON_Load != "N":
 if JSON_Load == "Y":
     while True:
         JSON_Path = str(input("Put full path without file name [string]: "))
-        JSON_File_Name = str(input("Put file name [string]: "))
-        data = pandas.read_json(f"{JSON_Path}{JSON_File_Name}")
+        JSON_Load_File_Name = str(input("Put file name [string]: "))
+        data = pandas.read_json(f"{JSON_Path}{JSON_Load_File_Name}")
         # Define each settings from JSON 
-        General_Setup_df = pandas.DataFrame(data["Setup"]["General_Setup_df"], columns=["File_Location_Current", "File_path", "File_name", "Navision", "HQ_Date_format", "Conf_Package"], index=[0])
+        General_Setup_df = pandas.DataFrame(data["Setup"]["General_Setup_df"], columns=["Navision", "HQ_Date_format", "Conf_Package", "Export_File_name", "Export_File_Location_as_Current", "Export_File_path", "Export_File_Type"], index=[0])
         Questions_df = pandas.DataFrame(data["Setup"]["Questions_df"], columns=["HQ_Export_Quest", "HQ_Conf_Quest", "HQ_PreAdv_Quest", "HQ_Del_Quest", "HQ_DeL_Track_Quest", "HQ_Packg_Track_Quest", "HQ_Inv_Quest", "Record_link_Quest"], index=[0])
         PO_Document_Header_Setup_df = pandas.DataFrame(data["Setup"]["PO_Document_Header_Setup_df"], columns=["Document_Type", "Document_Number_prefix", "Document_Number_suffix", "Document_Number_Increment", "Documents_Count", "Buy_from_Vendor_No", "Document_Location","HQ_Logistic_Process", "HQ_Random_Order_Type", "HQ_Order_Type", "HQ_Shipping_Condition", "Shipment_Methods", "Shipping_Agent", "Shipping_Agent_Service"], index=[0])
         Item_Index_count = list(range(len(data["Setup"]["Items_df"]["Item_No"])))   # Helps to count number of Items in the list
@@ -358,14 +358,25 @@ if JSON_Load == "N":
     Questions_df.Name = "Questions_df"
 
     while True:
-        File_Location_current = ""
-        while File_Location_current != "Y" and File_Location_current != "N":
-            File_Location_current = update_string(input("Do you want to create export in the same directory as current script[Y/N]: ")).upper() 
-        if File_Location_current == "Y":
-            File_path = os.path.dirname(os.path.abspath(__file__))
-        elif File_Location_current == "N":
-            File_path = str(input("Please define full path [string]: "))
-        File_name = update_string(input("Define your file name[string]: "))
+        # Defined by Export Type
+        Export_File_Type = ""
+        while Export_File_Type != "EXCEL" and Export_File_Type != "XML":
+            Export_File_Type = update_string(input("Define to which format to export (Excel - One file for Data import; XML - multiple file per Vendor Document No)[EXCEL/XML]: ")).upper() 
+        if Export_File_Type == "EXCEL":
+            Export_File_Location_as_Current = ""
+            while Export_File_Location_as_Current != "Y" and Export_File_Location_as_Current != "N":
+                Export_File_Location_as_Current = update_string(input("Do you want to create export in the same directory as current script[Y/N]: ")).upper() 
+            if Export_File_Location_as_Current == "Y":
+                Export_File_path = os.path.dirname(os.path.abspath(__file__))
+            elif Export_File_Location_as_Current == "N":
+                Export_File_path = str(input("Please define full path where to save Excel file [string]: "))
+            Export_File_name = update_string(input("Define your file name[string]: "))
+        elif Export_File_Type == "XML":
+            Export_File_Location_as_Current = "N"
+            Export_File_path = str(input("Please define full path to HQ Import folder '../TONAV/' (Program will automacically find sub folders for each type) [string]: "))
+            Export_File_name = ""
+            
+        # Navisoin Version + Date Firmat
         Navision = ""
         while Navision != "NUS3" and Navision != "NUS2":
             Navision = update_string(input("For which NAV version you prepare data? [NUS2 / NUS3][string]: "))
@@ -377,8 +388,7 @@ if JSON_Load == "N":
         elif Navision == "NUS2":
             HQ_Date_format_check = "Short"
         else:
-            pass
-        HQ_Date_format_check = ""
+            HQ_Date_format_check = ""
         while HQ_Date_format_check != "Long" and HQ_Date_format_check != "Short":
             HQ_Date_format_check = update_string(input("Which date format to use? [Long - 15.06.2022 (NUS3) / Short - 15.06.22 (NUS2)][string]: "))
         if HQ_Date_format_check == "Long":
@@ -387,12 +397,14 @@ if JSON_Load == "N":
             HQ_Date_format = "%d.%m.%y"
 
         General_Setup_Dict = {
-            "File_Location_current": File_Location_current,
-            "File_path": File_path,
-            "File_name": File_name,
             "Navision": Navision,
             "HQ_Date_format": HQ_Date_format,
-            "Conf_Package": Conf_Package}
+            "Conf_Package": Conf_Package,
+            "Export_File_name": Export_File_name,
+            "Export_File_Location_as_Current": Export_File_Location_as_Current,
+            "Export_File_path": Export_File_path,
+            "Export_File_Type": Export_File_Type}
+            
         General_Setup_df = pandas.DataFrame(General_Setup_Dict, columns=General_Setup_Dict.keys(), index=[0])
         General_Setup_df.Name = "General_Setup_df"
         print("\n-section sumary-")
@@ -536,7 +548,7 @@ if JSON_Load == "N":
         cursor.close()
         
         # Variable to Delete
-        Var_to_del = ["File_Location_current", "Download_Data_NOC_list", "Download_Data", "Download_Data_System", "Download_Data_NOC", "Download_Data_Shipment_Methods", "Download_Data_Shipping_Agents", "Download_Data_Shipping_Agens_Service_Codes", "Download_Data_Country_Region_of_Origin_Codes", "Download_Data_Pland_No", "Download_Data_Tariff_Numbers", "Download_Data_HQ_Shipping_Condition", "Download_Setup_dict", "server", "database", "dabase_schama", "Connection_string", "cnxn", "cursor", "row", "company_list", "Company", "General_Setup_Dict"]
+        Var_to_del = ["Export_File_Location_as_Current", "Download_Data_NOC_list", "Download_Data", "Download_Data_System", "Download_Data_NOC", "Download_Data_Shipment_Methods", "Download_Data_Shipping_Agents", "Download_Data_Shipping_Agens_Service_Codes", "Download_Data_Country_Region_of_Origin_Codes", "Download_Data_Pland_No", "Download_Data_Tariff_Numbers", "Download_Data_HQ_Shipping_Condition", "Download_Setup_dict", "server", "database", "dabase_schama", "Connection_string", "cnxn", "cursor", "row", "company_list", "Company", "General_Setup_Dict"]
         for Variable in Var_to_del:      
             try:
                 exec(f'del {Variable}')
@@ -640,7 +652,7 @@ if JSON_Load == "N":
         print(PO_Document_Header_Setup_df.transpose())
 
         # Variable to Delete
-        Var_to_del = ["Document_Type", "Document_Number_prefix", "Document_Number_suffix", "Document_Number_Increment", "Documents_Count", "Buy_from_Vendor_No", "Document_Location", "HQ_Logistic_Process", "HQ_Order_Type", "HQ_Random_Order_Type", "HQ_Manual_Order_Type", "HQ_Order_Type_list", "HQ_Shipping_Condition", "Shipment_Methods", "Shipping_Agent", "Shipping_Agent_Service", "PO_Document_Header_Setup_dict", "File_Location_current", "File_name", "Navision", "HQ_Date_format", "Questions_dict"]
+        Var_to_del = ["Document_Type", "Document_Number_prefix", "Document_Number_suffix", "Document_Number_Increment", "Documents_Count", "Buy_from_Vendor_No", "Document_Location", "HQ_Logistic_Process", "HQ_Order_Type", "HQ_Random_Order_Type", "HQ_Manual_Order_Type", "HQ_Order_Type_list", "HQ_Shipping_Condition", "Shipment_Methods", "Shipping_Agent", "Shipping_Agent_Service", "PO_Document_Header_Setup_dict", "Export_File_Location_as_Current", "Export_File_name", "Navision", "HQ_Date_format", "Questions_dict"]
         for Variable in Var_to_del:      
             try:
                 exec(f'del {Variable}')
@@ -2074,57 +2086,68 @@ if JSON_Load == "N":
     else:
         pass
 
-
     # Record Links
     print("\n-----------------------------------------------------")
-    while Questions_df.iloc[0]["Record_link_Quest"] != "Y" and Questions_df.iloc[0]["Record_link_Quest"] != "N":
-        Questions_df.iloc[0]["Record_link_Quest"] = update_string(input("Do you want to prepare .pdf Record Link [Y/N]: ")).upper() 
-    if Questions_df.iloc[0]["Record_link_Quest"] == "Y":
-        while True:
-            # General
-            NUS3_NOC_list = ["COREQA", "BDK", "BPL", "BHR", "BSL", "BIH", "BRS", "BR"]
-            Record_Links_NOC = ""
-            while Record_Links_NOC not in NUS3_NOC_list:
-                Record_Links_NOC = update_string(input(f"Which NOC you want to select? {NUS3_NOC_list} [Code]: "))
-            Record_Links_Server = ""
-            while Record_Links_Server != "QA" and Record_Links_Server != "PRD":
-                Record_Links_Server = update_string(input("Which DB you want to select as data source? [QA/PRD]: "))
-            Record_Links_User_ID = update_string(input("Define your User ID which is in NAV [string]: "))
-            Record_Links_Company = update_string(input("Define your Company which is in NAV you want to prepare links [string]: "))
+    if General_Setup_df.iloc[0]["Export_File_Type"] == "EXCEL":
+        while Questions_df.iloc[0]["Record_link_Quest"] != "Y" and Questions_df.iloc[0]["Record_link_Quest"] != "N":
+            Questions_df.iloc[0]["Record_link_Quest"] = update_string(input("Do you want to prepare .pdf Record Link [Y/N]: ")).upper() 
+        if Questions_df.iloc[0]["Record_link_Quest"] == "Y":
+            while True:
+                # General
+                NUS3_NOC_list = ["COREQA", "BDK", "BPL", "BHR", "BSL", "BIH", "BRS", "BR"]
+                Record_Links_NOC = ""
+                while Record_Links_NOC not in NUS3_NOC_list:
+                    Record_Links_NOC = update_string(input(f"Which NOC you want to select? {NUS3_NOC_list} [Code]: "))
+                Record_Links_Server = ""
+                while Record_Links_Server != "QA" and Record_Links_Server != "PRD":
+                    Record_Links_Server = update_string(input("Which DB you want to select as data source? [QA/PRD]: "))
+                Record_Links_User_ID = update_string(input("Define your User ID which is in NAV [string]: "))
+                Record_Links_Company = update_string(input("Define your Company which is in NAV you want to prepare links [string]: "))
 
-            # Setup Dataframe definition - Record Links
-            Record_Links_Setup_Dict = {
-                "NOC": Record_Links_NOC,
-                "Server": Record_Links_Server,
-                "Server_link": "kmnavfs02.bs.kme.intern",
-                "User ID": Record_Links_User_ID,
-                "Company": Record_Links_Company} 
-            Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
-            Record_Links_Setup_df.Name = "Record_Links_Setup_df"
-            print("\n-section sumary-")
-            print(Record_Links_Setup_df.transpose())
+                # Setup Dataframe definition - Record Links
+                Record_Links_Setup_Dict = {
+                    "NOC": Record_Links_NOC,
+                    "Server": Record_Links_Server,
+                    "Server_link": "kmnavfs02.bs.kme.intern",
+                    "User ID": Record_Links_User_ID,
+                    "Company": Record_Links_Company} 
+                Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
+                Record_Links_Setup_df.Name = "Record_Links_Setup_df"
+                print("\n-section sumary-")
+                print(Record_Links_Setup_df.transpose())
 
-            # Variable to Delete
-            Var_to_del = []
-            for Variable in Var_to_del:      
+                # Variable to Delete
+                Var_to_del = []
+                for Variable in Var_to_del:      
+                    try:
+                        exec(f'del {Variable}')
+                    except:
+                        pass
                 try:
-                    exec(f'del {Variable}')
+                    del Variable
+                    del Var_to_del
                 except:
                     pass
-            try:
-                del Variable
-                del Var_to_del
-            except:
-                pass
 
-            # Section checker
-            Section_check = ""
-            while Section_check != "Y" and Section_check != "N":
-                Section_check = update_string(input(f"Are all values correct? [Y/N]: ")).upper() 
-            if Section_check == "Y":
-                break
-            elif Section_check == "N":
-                pass
+                # Section checker
+                Section_check = ""
+                while Section_check != "Y" and Section_check != "N":
+                    Section_check = update_string(input(f"Are all values correct? [Y/N]: ")).upper() 
+                if Section_check == "Y":
+                    break
+                elif Section_check == "N":
+                    pass
+        else:
+            # Setup Dataframe definition - Record Links
+            Record_Links_Setup_Dict = {
+                "NOC": "",
+                "Server": "",
+                "Server_link": "",
+                "User ID": "",
+                "Company": ""} 
+            Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
+            Record_Links_Setup_df.Name = "Record_Links_Setup_df"
+            print("You did't selected Record Links to be created - skipping")
     else:
         # Setup Dataframe definition - Record Links
         Record_Links_Setup_Dict = {
@@ -2135,9 +2158,9 @@ if JSON_Load == "N":
             "Company": ""} 
         Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
         Record_Links_Setup_df.Name = "Record_Links_Setup_df"
-        print("You did't selected Record Links to be created - skipping")
 
-
+    # JSON template safe
+    print("\n-----------------------------------------------------")
     JSON_safe = ""
     while JSON_safe != "Y" and JSON_safe != "N":
         JSON_safe = update_string(input(f"Do You want to save setup in reloadable JSON file [Y/N]: ")).upper() 
@@ -2153,7 +2176,7 @@ if JSON_Load == "N":
             JSON_path = str(input("Please define full path [string]: "))
             JSON_help_path= str(JSON_path) + str(r"/JSON/")
             JSON_help_path = JSON_help_path.replace("\\","/")
-        File_name = update_string(input("Define your file name[string]: "))
+        JSON_Save_File_name = update_string(input("Define your file name[string]: "))
 
         # Creation of "/JSON/" help folder
         try:
@@ -2218,7 +2241,7 @@ if JSON_Load == "N":
                     file.write(line)
         
         # Concatenation into one setup into one folder
-        with open(f"{JSON_path}/{File_name}.json", mode="tw") as file:
+        with open(f"{JSON_path}/{JSON_Save_File_name}.json", mode="tw") as file:
             file.write("""{"Setup": \n""")
             file.write("\t{\n")
             concatenate_dataframe("General_Setup_df", JSON_help_path)
@@ -4554,243 +4577,272 @@ try:
 except:
     pass
 
-if General_Setup_df.iloc[0]["File_Location_Current"] == "Y":
-    File_path = os.path.dirname(os.path.abspath(__file__))
-else:
-    File_path = General_Setup_df.iloc[0]["File_path"]
-File_name = General_Setup_df.iloc[0]["File_name"]
-
-# Writer Dataframes
 print("Data Saving ...")
-if General_Setup_df.iloc[0]["Navision"] == "NUS3":
-    # Copy Cnfiguraiton package to destina tion folder and rename it
-    original = f"{File_path}/NUS3/Templates/HQ_DATA_GENERATOR_template.xlsx"
-    target = f"{File_path}/NUS3_{File_name}.xlsx"
-    shutil.copyfile(original, target)
-
-    with pandas.ExcelWriter(f"{File_path}/NUS3_{File_name}.xlsx", engine= "openpyxl", mode="w") as writer:  
-        Export_Purchase_Header_df.to_excel(writer, sheet_name="Purchase Header", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_Purchase_Lines_df.to_excel(writer, sheet_name="Purchase Line", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_ITR_df.to_excel(writer, sheet_name="HQ Item Transport Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_ATPR_df.to_excel(writer, sheet_name="HQ ATP Check Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_SUBR_df.to_excel(writer, sheet_name="HQ Substitution Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_PREAR_df.to_excel(writer, sheet_name="HQ PreAdvice Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_SNR_df.to_excel(writer, sheet_name="HQ Serial Number Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_DTR_df.to_excel(writer, sheet_name="HQ Delivery Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_HQ_PTR_df.to_excel(writer, sheet_name="HQ Package Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
-        Export_Record_Link_df.to_excel(writer, sheet_name="Record Link", index=False, startcol=0, startrow=0, header=True, engine="openpyxl")
-
-    print("Data Formating ...")
-    # Writer addtional texts + table definition
-    workbook=openpyxl.load_workbook(f"{File_path}/NUS3_{File_name}.xlsx")
-    workbook_index = workbook.sheetnames
-    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
-
-    # Purcahse Header
-    worksheet = workbook.worksheets[workbook_index.index("Purchase Header")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "Purchase Header"
-    worksheet["C1"] = "38"
-
-    Columns_Name = excel_colum_def(Export_Purchase_Header_df.shape[1])
-    if Export_Purchase_Header_df.shape[0] != 0:
-        Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{Export_Purchase_Header_df.shape[0] + 3}")
+# Export_Type = Excel
+if General_Setup_df.iloc[0]["Export_Type"] == "EXCEL":
+    if General_Setup_df.iloc[0]["Export_File_Location_as_Current"] == "Y":
+        Export_File_path = os.path.dirname(os.path.abspath(__file__))
     else:
-        Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{1 + 3}")
-    Puchase_Header_tab.tableStyleInfo = style
-    worksheet.add_table(Puchase_Header_tab)
+        Export_File_path = General_Setup_df.iloc[0]["Export_File_path"]
+    Export_File_name = General_Setup_df.iloc[0]["Export_File_name"]
 
-    # Purchase Lines
-    worksheet = workbook.worksheets[workbook_index.index("Purchase Line")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "Purchase Line"
-    worksheet["C1"] = "39"
+    # Writer Dataframes
+    if General_Setup_df.iloc[0]["Navision"] == "NUS3":
+        # Copy Configuraiton package to destina tion folder and rename it
+        original = f"{Export_File_path}/NUS3/Templates/HQ_DATA_GENERATOR_template.xlsx"
+        target = f"{Export_File_path}/NUS3_{Export_File_name}.xlsx"
+        shutil.copyfile(original, target)
 
-    Columns_Name = excel_colum_def(Export_Purchase_Lines_df.shape[1])
-    if Export_Purchase_Lines_df.shape[0] != 0:
-        Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{Export_Purchase_Lines_df.shape[0] + 3}")
+        with pandas.ExcelWriter(f"{Export_File_path}/NUS3_{Export_File_name}.xlsx", engine= "openpyxl", mode="w") as writer:  
+            Export_Purchase_Header_df.to_excel(writer, sheet_name="Purchase Header", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_Purchase_Lines_df.to_excel(writer, sheet_name="Purchase Line", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_ITR_df.to_excel(writer, sheet_name="HQ Item Transport Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_ATPR_df.to_excel(writer, sheet_name="HQ ATP Check Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_SUBR_df.to_excel(writer, sheet_name="HQ Substitution Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_PREAR_df.to_excel(writer, sheet_name="HQ PreAdvice Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_SNR_df.to_excel(writer, sheet_name="HQ Serial Number Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_DTR_df.to_excel(writer, sheet_name="HQ Delivery Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_HQ_PTR_df.to_excel(writer, sheet_name="HQ Package Tracking Register", index=False, startcol=0, startrow=2, header=True, engine="openpyxl")
+            Export_Record_Link_df.to_excel(writer, sheet_name="Record Link", index=False, startcol=0, startrow=0, header=True, engine="openpyxl")
+
+        print("Data Formating ...")
+        # Writer addtional texts + table definition
+        workbook=openpyxl.load_workbook(f"{Export_File_path}/NUS3_{Export_File_name}.xlsx")
+        workbook_index = workbook.sheetnames
+        style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
+
+        # Purcahse Header
+        worksheet = workbook.worksheets[workbook_index.index("Purchase Header")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "Purchase Header"
+        worksheet["C1"] = "38"
+
+        Columns_Name = excel_colum_def(Export_Purchase_Header_df.shape[1])
+        if Export_Purchase_Header_df.shape[0] != 0:
+            Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{Export_Purchase_Header_df.shape[0] + 3}")
+        else:
+            Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{1 + 3}")
+        Puchase_Header_tab.tableStyleInfo = style
+        worksheet.add_table(Puchase_Header_tab)
+
+        # Purchase Lines
+        worksheet = workbook.worksheets[workbook_index.index("Purchase Line")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "Purchase Line"
+        worksheet["C1"] = "39"
+
+        Columns_Name = excel_colum_def(Export_Purchase_Lines_df.shape[1])
+        if Export_Purchase_Lines_df.shape[0] != 0:
+            Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{Export_Purchase_Lines_df.shape[0] + 3}")
+        else:
+            Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{1 + 3}")
+        Purchase_Line_tab.tableStyleInfo = style
+        worksheet.add_table(Purchase_Line_tab)
+
+        # HQ Item Transport Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ Item Transport Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ Item Transport Register"
+        worksheet["C1"] = "51064"
+
+        Columns_Name = excel_colum_def(Export_HQ_ITR_df.shape[1])
+        if Export_HQ_ITR_df.shape[0] != 0:
+            HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{Export_HQ_ITR_df.shape[0] + 3}")
+        else:
+            HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_ITR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_ITR_tab)
+
+        # HQ ATP Check Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ ATP Check Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ ATP Check Register"
+        worksheet["C1"] = "51060"
+
+        Columns_Name = excel_colum_def(Export_HQ_ATPR_df.shape[1])
+        if Export_HQ_ATPR_df.shape[0] != 0:
+            HQ_ATPR_tab = Table(displayName="HQ_ATP_Check_Register", ref=f"A3:{Columns_Name}{Export_HQ_ATPR_df.shape[0] + 3}")
+        else:
+            HQ_ATPR_tab = Table(displayName="HQ_ATP_Check_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_ATPR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_ATPR_tab)
+
+        # HQ Substitution Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ Substitution Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ Substitution Register"
+        worksheet["C1"] = "51066"
+
+        Columns_Name = excel_colum_def(Export_HQ_SUBR_df.shape[1])
+        if Export_HQ_SUBR_df.shape[0] != 0:
+            HQ_SUBR_tab = Table(displayName="HQ_Substitution_Register", ref=f"A3:{Columns_Name}{Export_HQ_SUBR_df.shape[0] + 3}")
+        else:
+            HQ_SUBR_tab = Table(displayName="HQ_Substitution_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_SUBR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_SUBR_tab)
+
+        # HQ Pre-Advice Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ PreAdvice Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ PreAdvice Register"
+        worksheet["C1"] = "51071"
+
+        Columns_Name = excel_colum_def(Export_HQ_PREAR_df.shape[1])
+        if Export_HQ_PREAR_df.shape[0] != 0:
+            HQ_PRER_tab = Table(displayName="HQ_PreAdvice_Register", ref=f"A3:{Columns_Name}{Export_HQ_PREAR_df.shape[0] + 3}")
+        else:
+            HQ_PRER_tab = Table(displayName="HQ_PreAdvice_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_PRER_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_PRER_tab)
+
+        # HQ Serial Number Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ Serial Number Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ Serial Number Register"
+        worksheet["C1"] = "51065"
+
+        Columns_Name = excel_colum_def(Export_HQ_SNR_df.shape[1])
+        if Export_HQ_SNR_df.shape[0] != 0:
+            HQ_SNR_tab = Table(displayName="HQ_Serial_Number_Register", ref=f"A3:{Columns_Name}{Export_HQ_SNR_df.shape[0] + 3}")
+        else:
+            HQ_SNR_tab = Table(displayName="HQ_Serial_Number_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_SNR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_SNR_tab)
+
+        # HQ Delivery Tracking Register
+        worksheet = workbook.worksheets[workbook_index.index("HQ Delivery Tracking Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ Delivery Tracking Register"
+        worksheet["C1"] = "51062"
+
+        Columns_Name = excel_colum_def(Export_HQ_DTR_df.shape[1])
+        if Export_HQ_DTR_df.shape[0] != 0:
+            HQ_DTR_tab = Table(displayName="HQ_Delivery_Tracking_Register", ref=f"A3:{Columns_Name}{Export_HQ_DTR_df.shape[0] + 3}")
+        else:
+            HQ_DTR_tab = Table(displayName="HQ_Delivery_Tracking_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_DTR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_DTR_tab)
+
+        # HQ Package Tracking Regsiter
+        worksheet = workbook.worksheets[workbook_index.index("HQ Package Tracking Register")]
+        worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
+        worksheet["B1"] = "HQ Package Tracking Register"
+        worksheet["C1"] = "51063"
+
+        Columns_Name = excel_colum_def(Export_HQ_PTR_df.shape[1])
+        if Export_HQ_PTR_df.shape[0] != 0:
+            HQ_PTR_tab = Table(displayName="HQ_Package_Tracking_Register", ref=f"A3:{Columns_Name}{Export_HQ_PTR_df.shape[0] + 3}")
+        else:
+            HQ_PTR_tab = Table(displayName="HQ_Package_Tracking_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_PTR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_PTR_tab)
+
+        # Record Links
+        worksheet = workbook.worksheets[workbook_index.index("Record Link")]
+        Columns_Name = excel_colum_def(Export_Record_Link_df.shape[1])
+        if Export_Record_Link_df.shape[0] != 0:
+            HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{Export_Record_Link_df.shape[0]}")
+        else:
+            HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{1}")
+        HQ_Link_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_Link_tab)
+
+        workbook.save(f"{Export_File_path}/NUS3_{Export_File_name}.xlsx") 
+
+    elif General_Setup_df.iloc[0]["Navision"] == "NUS2":
+        with pandas.ExcelWriter(f"{Export_File_path}/NUS2_{Export_File_name}.xlsx", engine= "openpyxl") as writer:  
+            Export_Purchase_Header_df.to_excel(writer, sheet_name="PurchaseHeader", index=False, startcol=0, startrow=2, header=True)
+            Export_Purchase_Lines_df.to_excel(writer, sheet_name="PurchaseLine", index=False, startcol=0, startrow=2, header=True)
+            Export_HQ_ITR_df.to_excel(writer, sheet_name="HQItemTransportRegister", index=False, startcol=0, startrow=2, header=True)
+            Export_HQ_TTR_df.to_excel(writer, sheet_name="HQTransferTrackingNo", index=False, startcol=0, startrow=2, header=True)
+
+        print("Data Updates ...")
+        # Writer addtional texts + table definition
+        workbook=openpyxl.load_workbook(f"{Export_File_path}/NUS2_{Export_File_name}.xlsx")
+        workbook_index = workbook.sheetnames
+        style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
+
+        # Purcahse Header
+        worksheet = workbook.worksheets[workbook_index.index("PurchaseHeader")]
+        worksheet["A1"] = "Purchase Header"
+        worksheet["B1"] = "38"
+
+        Columns_Name = excel_colum_def(Export_Purchase_Header_df.shape[1])
+        if Export_Purchase_Header_df.shape[0] != 0:
+            Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{Export_Purchase_Header_df.shape[0] + 3}")
+        else:
+            Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{1 + 3}")
+        Puchase_Header_tab.tableStyleInfo = style
+        worksheet.add_table(Puchase_Header_tab)
+
+        # Purchase Lines
+        worksheet = workbook.worksheets[workbook_index.index("PurchaseLine")]
+        worksheet["A1"] = "Purchase Line"
+        worksheet["B1"] = "39"
+
+        Columns_Name = excel_colum_def(Export_Purchase_Lines_df.shape[1])
+        if Export_Purchase_Lines_df.shape[0] != 0:
+            Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{Export_Purchase_Lines_df.shape[0] + 3}")
+        else:
+            Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{1 + 3}")
+        Purchase_Line_tab.tableStyleInfo = style
+        worksheet.add_table(Purchase_Line_tab)
+
+        # HQ Item Transport Register
+        worksheet = workbook.worksheets[workbook_index.index("HQItemTransportRegister")]
+        worksheet["A1"] = "HQ Item Transport Register"
+        worksheet["B1"] = "51317"
+
+        Columns_Name = excel_colum_def(Export_HQ_ITR_df.shape[1])
+        if Export_HQ_ITR_df.shape[0] != 0:
+            HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{Export_HQ_ITR_df.shape[0] + 3}")
+        else:
+            HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_ITR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_ITR_tab)
+
+        # HQ Transfer Tracking No
+        worksheet = workbook.worksheets[workbook_index.index("HQTransferTrackingNo")]
+        worksheet["A1"] = "HQ Transfer Tracking No."
+        worksheet["B1"] = "51322"
+
+        Columns_Name = excel_colum_def(Export_HQ_TTR_df.shape[1])
+        if Export_HQ_TTR_df.shape[0] != 0:
+            HQ_TTR_tab = Table(displayName="HQ_Transfer_Tracking_No", ref=f"A3:{Columns_Name}{Export_HQ_TTR_df.shape[0] + 3}")
+        else:
+            HQ_TTR_tab = Table(displayName="HQ_Transfer_Tracking_No", ref=f"A3:{Columns_Name}{1 + 3}")
+        HQ_TTR_tab.tableStyleInfo = style
+        worksheet.add_table(HQ_TTR_tab)
+
+        workbook.save(f"{Export_File_path}/NUS2_{Export_File_name}.xlsx") 
     else:
-        Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{1 + 3}")
-    Purchase_Line_tab.tableStyleInfo = style
-    worksheet.add_table(Purchase_Line_tab)
+        pass
 
-    # HQ Item Transport Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ Item Transport Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ Item Transport Register"
-    worksheet["C1"] = "51064"
+elif General_Setup_df.iloc[0]["Export_Type"] == "XML":
+    if General_Setup_df.iloc[0]["Navision"] == "NUS3":
+        #! Dodělat
+        # General principle
+        """
+        1) Copy template into varialbe
+        2) update values
+        3) Safe file into import folders (file name take as pořadové čislo + Vendor Document No.)
+        4) Zkontrolovat jestli existují importní složky
+        """
 
-    Columns_Name = excel_colum_def(Export_HQ_ITR_df.shape[1])
-    if Export_HQ_ITR_df.shape[0] != 0:
-        HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{Export_HQ_ITR_df.shape[0] + 3}")
+        #-------- Confirmaiton --------#
+        with open("/Lib/NUS3_Template_Confirmation.xml", "r") as f:
+            temp_Header_file_lines = f.readlines()
+        for line in temp_Header_file_lines:
+            line = line.replace("<GENERATION_DATE>HERE</GENERATION_DATE>", f"<GENERATION_DATE></GENERATION_DATE>")
+        #-------- PreAdvice --------#
+        #-------- Delivery --------#
+        #-------- Invoice --------#
+    elif General_Setup_df.iloc[0]["Navision"] == "NUS2":
+        pass
+        #! Dodělat
     else:
-        HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_ITR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_ITR_tab)
-
-    # HQ ATP Check Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ ATP Check Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ ATP Check Register"
-    worksheet["C1"] = "51060"
-
-    Columns_Name = excel_colum_def(Export_HQ_ATPR_df.shape[1])
-    if Export_HQ_ATPR_df.shape[0] != 0:
-        HQ_ATPR_tab = Table(displayName="HQ_ATP_Check_Register", ref=f"A3:{Columns_Name}{Export_HQ_ATPR_df.shape[0] + 3}")
-    else:
-        HQ_ATPR_tab = Table(displayName="HQ_ATP_Check_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_ATPR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_ATPR_tab)
-
-    # HQ Substitution Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ Substitution Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ Substitution Register"
-    worksheet["C1"] = "51066"
-
-    Columns_Name = excel_colum_def(Export_HQ_SUBR_df.shape[1])
-    if Export_HQ_SUBR_df.shape[0] != 0:
-        HQ_SUBR_tab = Table(displayName="HQ_Substitution_Register", ref=f"A3:{Columns_Name}{Export_HQ_SUBR_df.shape[0] + 3}")
-    else:
-        HQ_SUBR_tab = Table(displayName="HQ_Substitution_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_SUBR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_SUBR_tab)
-
-    # HQ Pre-Advice Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ PreAdvice Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ PreAdvice Register"
-    worksheet["C1"] = "51071"
-
-    Columns_Name = excel_colum_def(Export_HQ_PREAR_df.shape[1])
-    if Export_HQ_PREAR_df.shape[0] != 0:
-        HQ_PRER_tab = Table(displayName="HQ_PreAdvice_Register", ref=f"A3:{Columns_Name}{Export_HQ_PREAR_df.shape[0] + 3}")
-    else:
-        HQ_PRER_tab = Table(displayName="HQ_PreAdvice_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_PRER_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_PRER_tab)
-
-    # HQ Serial Number Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ Serial Number Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ Serial Number Register"
-    worksheet["C1"] = "51065"
-
-    Columns_Name = excel_colum_def(Export_HQ_SNR_df.shape[1])
-    if Export_HQ_SNR_df.shape[0] != 0:
-        HQ_SNR_tab = Table(displayName="HQ_Serial_Number_Register", ref=f"A3:{Columns_Name}{Export_HQ_SNR_df.shape[0] + 3}")
-    else:
-        HQ_SNR_tab = Table(displayName="HQ_Serial_Number_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_SNR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_SNR_tab)
-
-    # HQ Delivery Tracking Register
-    worksheet = workbook.worksheets[workbook_index.index("HQ Delivery Tracking Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ Delivery Tracking Register"
-    worksheet["C1"] = "51062"
-
-    Columns_Name = excel_colum_def(Export_HQ_DTR_df.shape[1])
-    if Export_HQ_DTR_df.shape[0] != 0:
-        HQ_DTR_tab = Table(displayName="HQ_Delivery_Tracking_Register", ref=f"A3:{Columns_Name}{Export_HQ_DTR_df.shape[0] + 3}")
-    else:
-        HQ_DTR_tab = Table(displayName="HQ_Delivery_Tracking_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_DTR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_DTR_tab)
-
-    # HQ Package Tracking Regsiter
-    worksheet = workbook.worksheets[workbook_index.index("HQ Package Tracking Register")]
-    worksheet["A1"] = str(General_Setup_df.iloc[0]["Conf_Package"])
-    worksheet["B1"] = "HQ Package Tracking Register"
-    worksheet["C1"] = "51063"
-
-    Columns_Name = excel_colum_def(Export_HQ_PTR_df.shape[1])
-    if Export_HQ_PTR_df.shape[0] != 0:
-        HQ_PTR_tab = Table(displayName="HQ_Package_Tracking_Register", ref=f"A3:{Columns_Name}{Export_HQ_PTR_df.shape[0] + 3}")
-    else:
-        HQ_PTR_tab = Table(displayName="HQ_Package_Tracking_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_PTR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_PTR_tab)
-
-    # Record Links
-    worksheet = workbook.worksheets[workbook_index.index("Record Link")]
-    Columns_Name = excel_colum_def(Export_Record_Link_df.shape[1])
-    if Export_Record_Link_df.shape[0] != 0:
-        HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{Export_Record_Link_df.shape[0]}")
-    else:
-        HQ_Link_tab = Table(displayName="Export_Record_Link_df", ref=f"A1:{Columns_Name}{1}")
-    HQ_Link_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_Link_tab)
-
-    workbook.save(f"{File_path}/NUS3_{File_name}.xlsx") 
-
-elif General_Setup_df.iloc[0]["Navision"] == "NUS2":
-    with pandas.ExcelWriter(f"{File_path}/NUS2_{File_name}.xlsx", engine= "openpyxl") as writer:  
-        Export_Purchase_Header_df.to_excel(writer, sheet_name="PurchaseHeader", index=False, startcol=0, startrow=2, header=True)
-        Export_Purchase_Lines_df.to_excel(writer, sheet_name="PurchaseLine", index=False, startcol=0, startrow=2, header=True)
-        Export_HQ_ITR_df.to_excel(writer, sheet_name="HQItemTransportRegister", index=False, startcol=0, startrow=2, header=True)
-        Export_HQ_TTR_df.to_excel(writer, sheet_name="HQTransferTrackingNo", index=False, startcol=0, startrow=2, header=True)
-
-    print("Data Updates ...")
-    # Writer addtional texts + table definition
-    workbook=openpyxl.load_workbook(f"{File_path}/NUS2_{File_name}.xlsx")
-    workbook_index = workbook.sheetnames
-    style = TableStyleInfo(name="TableStyleMedium2", showFirstColumn=False, showLastColumn=False, showRowStripes=True, showColumnStripes=False)
-
-    # Purcahse Header
-    worksheet = workbook.worksheets[workbook_index.index("PurchaseHeader")]
-    worksheet["A1"] = "Purchase Header"
-    worksheet["B1"] = "38"
-
-    Columns_Name = excel_colum_def(Export_Purchase_Header_df.shape[1])
-    if Export_Purchase_Header_df.shape[0] != 0:
-        Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{Export_Purchase_Header_df.shape[0] + 3}")
-    else:
-        Puchase_Header_tab = Table(displayName="Purchase_Header", ref=f"A3:{Columns_Name}{1 + 3}")
-    Puchase_Header_tab.tableStyleInfo = style
-    worksheet.add_table(Puchase_Header_tab)
-
-    # Purchase Lines
-    worksheet = workbook.worksheets[workbook_index.index("PurchaseLine")]
-    worksheet["A1"] = "Purchase Line"
-    worksheet["B1"] = "39"
-
-    Columns_Name = excel_colum_def(Export_Purchase_Lines_df.shape[1])
-    if Export_Purchase_Lines_df.shape[0] != 0:
-        Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{Export_Purchase_Lines_df.shape[0] + 3}")
-    else:
-        Purchase_Line_tab = Table(displayName="Purchase_Line", ref=f"A3:{Columns_Name}{1 + 3}")
-    Purchase_Line_tab.tableStyleInfo = style
-    worksheet.add_table(Purchase_Line_tab)
-
-    # HQ Item Transport Register
-    worksheet = workbook.worksheets[workbook_index.index("HQItemTransportRegister")]
-    worksheet["A1"] = "HQ Item Transport Register"
-    worksheet["B1"] = "51317"
-
-    Columns_Name = excel_colum_def(Export_HQ_ITR_df.shape[1])
-    if Export_HQ_ITR_df.shape[0] != 0:
-        HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{Export_HQ_ITR_df.shape[0] + 3}")
-    else:
-        HQ_ITR_tab = Table(displayName="HQ_Item_Transport_Register", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_ITR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_ITR_tab)
-
-    # HQ Transfer Tracking No
-    worksheet = workbook.worksheets[workbook_index.index("HQTransferTrackingNo")]
-    worksheet["A1"] = "HQ Transfer Tracking No."
-    worksheet["B1"] = "51322"
-
-    Columns_Name = excel_colum_def(Export_HQ_TTR_df.shape[1])
-    if Export_HQ_TTR_df.shape[0] != 0:
-        HQ_TTR_tab = Table(displayName="HQ_Transfer_Tracking_No", ref=f"A3:{Columns_Name}{Export_HQ_TTR_df.shape[0] + 3}")
-    else:
-        HQ_TTR_tab = Table(displayName="HQ_Transfer_Tracking_No", ref=f"A3:{Columns_Name}{1 + 3}")
-    HQ_TTR_tab.tableStyleInfo = style
-    worksheet.add_table(HQ_TTR_tab)
-
-    workbook.save(f"{File_path}/NUS2_{File_name}.xlsx") 
+        print("You are idiot to create all data and not to export them.")
 else:
-    pass
+    print("No export Type selected")
 
 print("Test Data prepared")

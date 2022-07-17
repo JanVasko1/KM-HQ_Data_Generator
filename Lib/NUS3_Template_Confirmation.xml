@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ORDERRESPONSE>
+  <ORDERRESPONSE_HEADER>
+    <CONTROL_INFO>
+      <GENERATION_DATE>HERE</GENERATION_DATE>
+    </CONTROL_INFO>
+    <ORDERRESPONSE_INFO>
+      <ORDER_ID>HERE</ORDER_ID>
+      <SUPPLIER_ORDER_ID>HERE</SUPPLIER_ORDER_ID>
+      <ORDER_DATE>HERE</ORDER_DATE>
+      <ORDERRESPONSE_DATE>HERE</ORDERRESPONSE_DATE>
+      <ORDER_PARTIES>
+        <BUYER_PARTY>
+          <PARTY>
+            <PARTY_ID type="supplier_specific">HERE</PARTY_ID>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+            </ADDRESS>
+          </PARTY>
+        </BUYER_PARTY>
+        <SUPPLIER_PARTY>
+          <PARTY>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+            </ADDRESS>
+          </PARTY>
+        </SUPPLIER_PARTY>
+        <INVOICE_PARTY>
+          <PARTY>
+            <PARTY_ID type="supplier_specific">HERE</PARTY_ID>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+            </ADDRESS>
+          </PARTY>
+        </INVOICE_PARTY>
+        <SHIPMENT_PARTIES>
+          <DELIVERY_PARTY>
+            <PARTY>
+              <PARTY_ID type="supplier_specific">HERE</PARTY_ID>
+              <ADDRESS>
+                <NAME>NOCs</NAME>
+                <NAME2>NOCs</NAME2>
+                <STREET>NOCs</STREET>
+                <ZIP>639 00</ZIP>
+                <CITY>Brno</CITY>
+                <COUNTRY>CZ</COUNTRY>
+              </ADDRESS>
+            </PARTY>
+          </DELIVERY_PARTY>
+        </SHIPMENT_PARTIES>
+      </ORDER_PARTIES>
+      <PRICE_CURRENCY>HERE</PRICE_CURRENCY>
+    </ORDERRESPONSE_INFO>
+  </ORDERRESPONSE_HEADER>
+  <ORDERRESPONSE_ITEM_LIST>
+    <ORDERRESPONSE_ITEM>
+      <LINE_ITEM_ID>HERE</LINE_ITEM_ID>
+      <ARTICLE_ID>
+        <SUPPLIER_AID>HERE</SUPPLIER_AID>
+        <BUYER_AID type="ordered">HERE</BUYER_AID>
+        <DESCRIPTION_LONG>HERE</DESCRIPTION_LONG>
+      </ARTICLE_ID>
+      <QUANTITY>HERE</QUANTITY>
+      <ORDER_UNIT>HERE</ORDER_UNIT>
+      <ARTICLE_PRICE type="net_list">
+        <PRICE_AMOUNT>HERE</PRICE_AMOUNT>
+        <PRICE_LINE_AMOUNT>HERE</PRICE_LINE_AMOUNT>
+      </ARTICLE_PRICE>
+      <DELIVERY_DATE type="fixed">
+        <DELIVERY_START_DATE>HERE</DELIVERY_START_DATE>
+        <DELIVERY_END_DATE>HERE</DELIVERY_END_DATE>
+      </DELIVERY_DATE>
+      <REMARK type="ordered_quantity">HERE</REMARK>
+      <REMARK type="supplier_order_item_id">HERE</REMARK>
+      <REMARK type="item_category">HERE</REMARK>
+      <REMARK type="bom">HERE</REMARK>
+      <SCHEDULES>
+        <SCHEDULE>
+          <QUANTITY>HERE</QUANTITY>
+          <DATE>HERE</DATE>
+          <STOCK_ORIGIN>HERE</STOCK_ORIGIN>
+        </SCHEDULE>
+      </SCHEDULES>
+    </ORDERRESPONSE_ITEM>
+  </ORDERRESPONSE_ITEM_LIST>
+  <ORDERRESPONSE_SUMMARY>
+    <TOTAL_ITEM_NUM>HERE</TOTAL_ITEM_NUM>
+    <TOTAL_AMOUNT>HERE</TOTAL_AMOUNT>
+  </ORDERRESPONSE_SUMMARY>
+</ORDERRESPONSE>
+

@@ -2,12 +2,13 @@
     {
         "General_Setup_df": 
         {
-            "File_Location_Current": "Y",
-            "File_path": "C:/Users/CZ011845/OneDrive - KME/Development/Data_Generators/HQ_Data_Generator/NUS3/",
-            "File_name": "DDL_Consumable",
             "Navision": "NUS3",
             "HQ_Date_format": "%d.%m.%Y",
-            "Conf_Package": "HQ_DATA_GENERATOR"
+            "Conf_Package": "HQ_DATA_GENERATOR",
+            "Export_File_name": "TEST",
+            "Export_File_Location_as_Current": "N",
+            "Export_File_path": "C:/Users/CZ011845/OneDrive - KME/Development/Data_Generators/HQ_Data_Generator/NUS3/",
+            "Export_File_Type": "XML"
         },
 
         "Questions_df":
@@ -19,7 +20,7 @@
             "HQ_DeL_Track_Quest": "Y",
             "HQ_Packg_Track_Quest": "Y",
             "HQ_Inv_Quest": "Y",
-            "Record_link_Quest": "Y"
+            "Record_link_Quest": "N"
         },
 
         "PO_Document_Header_Setup_df": 

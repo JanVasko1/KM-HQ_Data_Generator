@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <INVOICE>
+    <INVOICE_HEADER>
+      <CONTROL_INFO>
+        <GENERATION_DATE>HERE</GENERATION_DATE>
+      </CONTROL_INFO>
+      <INVOICE_INFO>
+        <INVOICE_ID>HERE</INVOICE_ID>
+        <INVOICE_DATE>HERE</INVOICE_DATE>
+        <DELIVERY_DATE type="fixed">
+          <DELIVERY_START_DATE>HERE</DELIVERY_START_DATE>
+          <DELIVERY_END_DATE>HERE</DELIVERY_END_DATE>
+        </DELIVERY_DATE>
+        <BUYER_PARTY>
+          <PARTY>
+            <PARTY_ID type="supplier_specific">HERE</PARTY_ID>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+              <VAT_ID>HERE</VAT_ID>
+              <PHONE type="office"></PHONE>
+            </ADDRESS>
+          </PARTY>
+        </BUYER_PARTY>
+        <SUPPLIER_PARTY>
+          <PARTY>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+              <VAT_ID>HERE</VAT_ID>
+            </ADDRESS>
+          </PARTY>
+        </SUPPLIER_PARTY>
+        <INVOICE_PARTY>
+          <PARTY>
+            <PARTY_ID type="supplier_specific">HERE</PARTY_ID>
+            <ADDRESS>
+              <NAME>Konica Minolta Business Solutions</NAME>
+              <NAME2>ACC2</NAME2>
+              <STREET>Holandska 4</STREET>
+              <ZIP>639 00</ZIP>
+              <CITY>Brno</CITY>
+              <COUNTRY>CZ</COUNTRY>
+              <PHONE type="office"></PHONE>
+            </ADDRESS>
+          </PARTY>
+        </INVOICE_PARTY>
+        <PRICE_CURRENCY>HERE</PRICE_CURRENCY>
+        <PAYMENT>
+          <ACCOUNT>
+            <HOLDER>Konica Minolta BEU</HOLDER>
+            <BANK_NAME>The Bank of Tokyo-Mitsubishi UFJ, Ltd.</BANK_NAME>
+            <BANK_COUNTRY>DE</BANK_COUNTRY>
+            <BANK_CODE>BOTKDEDX</BANK_CODE>
+            <BANK_ACCOUNT>DE49300107002978038638</BANK_ACCOUNT>
+          </ACCOUNT>
+        </PAYMENT>
+      </INVOICE_INFO>
+      <ORDER_HISTORY>
+        <ORDER_ID>HERE</ORDER_ID>
+        <SUPPLIER_ORDER_ID>HERE</SUPPLIER_ORDER_ID>
+        <ORDER_DATE>HERE</ORDER_DATE>
+        <DELIVERY_NOTE_ID>HERE</DELIVERY_NOTE_ID>
+        <DELIVERY_NOTE_DATE>HERE</DELIVERY_NOTE_DATE>
+      </ORDER_HISTORY>
+    </INVOICE_HEADER>
+    <INVOICE_ITEM_LIST>
+      <INVOICE_ITEM>
+        <LINE_ITEM_ID>HERE</LINE_ITEM_ID>
+        <ARTICLE_ID>
+          <SUPPLIER_AID>HERE</SUPPLIER_AID>
+          <DESCRIPTION_SHORT>HERE</DESCRIPTION_SHORT>
+        </ARTICLE_ID>
+        <QUANTITY>HERE</QUANTITY>
+        <ORDER_UNIT>HERE</ORDER_UNIT>
+        <ARTICLE_PRICE type="net_list">
+          <PRICE_AMOUNT>HERE</PRICE_AMOUNT>
+          <PRICE_LINE_AMOUNT>HERE</PRICE_LINE_AMOUNT>
+        </ARTICLE_PRICE>
+        <ORDER_REFERENCE>
+          <ORDER_ID>HERE</ORDER_ID>
+          <LINE_ITEM_ID>HERE</LINE_ITEM_ID>
+          <ORDER_DATE>HERE</ORDER_DATE>
+        </ORDER_REFERENCE>
+        <SUPPLIER_ORDER_REFERENCE>
+          <SUPPLIER_ORDER_ID>HERE</SUPPLIER_ORDER_ID>
+          <SUPPLIER_ORDER_ITEM_ID>HERE</SUPPLIER_ORDER_ITEM_ID>
+        </SUPPLIER_ORDER_REFERENCE>
+        <DELIVERY_REFERENCE>
+          <DELIVERY_NOTE_ID>HERE</DELIVERY_NOTE_ID>
+          <LINE_ITEM_ID>HERE</LINE_ITEM_ID>
+        </DELIVERY_REFERENCE>
+        <TARIF_NUMBER>HERE</TARIF_NUMBER>
+        <REMARK type="origin">HERE</REMARK>
+        <REMARK type="plant">HERE</REMARK>
+      </INVOICE_ITEM>
+    </INVOICE_ITEM_LIST>
+    <INVOICE_SUMMARY>
+      <TOTAL_ITEM_NUM>HERE</TOTAL_ITEM_NUM>
+      <TOTAL_AMOUNT>HERE</TOTAL_AMOUNT>
+      <TOTAL_TAX_AMOUNT>HERE</TOTAL_TAX_AMOUNT>
+    </INVOICE_SUMMARY>
+  </INVOICE>
