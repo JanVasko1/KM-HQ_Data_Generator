@@ -1,20 +1,13 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# HQ Data creator
+This program was developed, because of an need of testing HQ Integration during testing of HQ functionality or for local colegues / support team.
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Setup
+### <span style="color:blue;">Installation</span>
+1. Install [Python 3.11.2](https://www.python.org/downloads/release/python-3112/) - recomended or higher
+    - install it as "Run as Administrator"
+    - on pop-up page mark "Add Python to PATH" and unmark "Instal launcher for all users" (if possible)
+2. Run `Installation_libs.ps1` code (reflect correct path to your python installation)
+3. Update `HQ_Data_Generator.bat` to reflect correct path to your python installation
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
-
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+# Process
+### <span style="color:blue;">Diagram</span>

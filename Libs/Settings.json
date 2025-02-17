@@ -1,0 +1,62 @@
+{
+    "General": {
+        "User": {
+            "Code": "CZ011845",
+            "Name": "Jan Vasko",
+            "Email": "Jan.Vasko@konicaminolta.eu"
+        },
+        "Formats": {
+            "Date": "%Y-%m-%d",
+            "Time": "%H:%M"
+        }
+    },
+    "HQ_Data_Handler": {
+        "HQ_General_Setup_df": {
+            "HQ_Currency_Code": "EUR"
+        },
+        "Confirmation": {
+            "HQ_Confirmation_prefix": "CONS"
+        }, 
+        "ATP": {
+            "HQ_ATP_Random_Stock": true,
+            "HQ_ATP_Stock": ["ONH", "ONB", "BACK"],
+            "HQ_ATP_Stock_Distribution": [80, 15, 5],
+            "HQ_ATP_Multiple_Lines": true,       
+            "HQ_ATP_ONH_Day_Movement": 1
+        },
+        "CPDI": {},
+        "PreAdvice": {
+            "HQ_PreAdvice_prefix": "PRE"
+        },
+        "Delivery": {
+            "HQ_Delivery_prefix": "DEL",
+            "Delivery_Random_Metgod": "All",
+            "HQ_HQSNR_Setup_df": {
+                "HQ_SN_SN_prefix": "SN_"
+            },
+            "Delivery_Tracking": {
+                "HQ_Del_Track_Packa_prefix": "PACK_",
+                "HQ_Del_Track_Bill_prefix": "BIL_",
+                "HQ_Del_Track_EXIDV_prefix": "EXD_",
+                "HQ_Del_Track_Random_Shipment_Method": true,
+                "HQ_Del_Track_Random_Shipping_Agent": true,
+                "HQ_Del_Track_Random_Weight": true,
+                "HQ_Del_Track_Weight_UOM": "KG",
+                "HQ_Del_Track_Random_Volume": true,
+                "HQ_Del_Track_Volume_UOM": "CM2",
+                "Package_Tracking": {
+                    "HQ_HQPTR_Register_No_Start": "1000",
+                    "HQ_HQPTR_Register_No_Increment": "1",
+                    "HQ_Packg_Track_Packages_per_Delivery": "1"
+                }
+            }
+        },
+        "Invoice": {
+            "HQ_Invoice_prefix": "INV",
+            "HQ_Invoice_Random_Count_Reg_Origin": true,
+            "HQ_Invoice_Random_Plant": true,
+            "HQ_Invoice_Random_Tariff_No": true
+        },
+        "IAL": {}
+    }
+}

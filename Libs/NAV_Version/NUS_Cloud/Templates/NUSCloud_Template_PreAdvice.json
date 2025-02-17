@@ -1,0 +1,72 @@
+{
+    "preadvice": {
+        "dispatchnotification_header": {
+            "control_info": {
+                "generation_date": "2024-12-03",
+                "delivery_date": "2024-12-09"
+            },
+            "dispatchnotification_info": {
+                "dispatchnotification_id": "22886357",
+                "buyer_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "1000000023",
+                        "address": {
+                            "name": "Konica Minolta",
+                            "name2": "Business Solutions Romania S.R.L.",
+                            "street": "Str. Copilului 18",
+                            "zip": "012178",
+                            "city": "Bucuresti",
+                            "country": "RO"
+                        }
+                    }
+                },
+                "shipment_parties": {
+                    "delivery_party": {
+                        "party": {
+                            "party_id": "7000010210",
+                            "address": {
+                                "name": "Konica Minolta",
+                                "name2": "critical repl.",
+                                "street": "Str. Copilului 18",
+                                "zip": "012178",
+                                "city": "Bucaresti",
+                                "country": "RO"
+                            }
+                        }
+                    }
+                },
+                "remarks": {
+                    "exidv2": "",
+                    "bolnr": ""
+                }
+            }
+        },
+        "dispatchnotification_item_list": [
+            {
+                "line_item_id": "900001",
+                "article_id": {
+                    "supplier_aid": "A1RF849701"
+                },
+                "quantity": 1.0,
+                "order_unit": "C62",
+                "delivery_date": {
+                    "delivery_start_date": "2024-12-09",
+                    "delivery_end_date": "2024-12-09"
+                },
+                "order_reference": {
+                    "order_id": "P-ORD000000000049647",
+                    "line_item_id": "000900",
+                    "order_date": "2024-11-28"
+                },
+                "supplier_order_reference": {
+                    "supplier_order_id": "0010868599",
+                    "supplier_order_item_id": "000090"
+                }
+            }
+        ],
+        "dispatchnotification_summary": {
+            "total_item_num": 1.0
+        }
+    }
+}

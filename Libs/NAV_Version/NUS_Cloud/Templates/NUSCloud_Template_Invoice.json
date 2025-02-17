@@ -1,0 +1,107 @@
+{
+    "invoice": {
+        "invoice_header": {
+            "control_info": {
+                "generation_date": "2024-12-03"
+            },
+            "invoice_info": {
+                "invoice_id": "7005415575",
+                "invoice_date": "2024-12-02",
+                "delivery_date": {
+                    "type": "fixed",
+                    "delivery_start_date": "2024-12-04",
+                    "delivery_end_date": "2024-12-04"
+                },
+                "buyer_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "1000000023",
+                        "address": {
+                            "name": "Konica Minolta",
+                            "name2": "Business Solutions Romania S.R.L.",
+                            "name3": "",
+                            "street": "Str. Copilului 18",
+                            "zip": "012178",
+                            "city": "Bucuresti",
+                            "country": "RO",
+                            "vat_id": "RO2786070",
+                            "phone": "0740110044",
+                            "fax": ""
+                        }
+                    }
+                },
+                "invoice_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "1000000023",
+                        "address": {
+                            "name": "Konica Minolta",
+                            "name2": "Business Solutions Romania S.R.L.",
+                            "name3": "",
+                            "street": "Str. Copilului 18",
+                            "zip": "012178",
+                            "city": "Bucuresti",
+                            "country": "RO",
+                            "phone": "0740110044"
+                        }
+                    }
+                },
+                "price_currency": "RON",
+                "payment": {
+                    "account": {
+                        "holder": "Konica Minolta BEU",
+                        "bank_name": "The Bank of Tokyo-Mitsubishi UFJ, Ltd.",
+                        "bank_country": "DE",
+                        "bank_code": "30010700",
+                        "bank_account": "2203038638"
+                    }
+                }
+            },
+            "order_history": {
+                "order_id": "P-ORD000000000049667",
+                "supplier_order_id": "0010874363",
+                "order_date": "2024-11-29",
+                "delivery_note_id": "0022882389",
+                "delivery_note_date": "2024-12-04"
+            }
+        },
+        "invoice_item_list": [
+            {
+                "line_item_id": "000550",
+                "article_id": {
+                    "supplier_aid": "ACTEWY1",
+                    "description_short": "Waste Toner Bottle"
+                },
+                "quantity": 10.0,
+                "order_unit": "C62",
+                "article_price": {
+                    "type": "net_list",
+                    "price_amount": 74.92,
+                    "price_line_amount": 749.2
+                },
+                "order_reference": {
+                    "order_id": "P-ORD000000000049667",
+                    "line_item_id": "005500",
+                    "order_date": "2024-11-29"
+                },
+                "supplier_order_reference": {
+                    "supplier_order_id": "0010874363",
+                    "supplier_order_item_id": "000550"
+                },
+                "delivery_reference": {
+                    "delivery_note_id": "22882389",
+                    "line_item_id": "900001"
+                },
+                "remarks": {
+                    "origin": "HK",
+                    "plant": "1004"
+                }
+            }
+        ],
+        "invoice_summary": {
+            "total_item_num": 1.0,
+            "total_amount": 749.2,
+            "total_tax_amount": 0.0
+        }
+    }
+}
