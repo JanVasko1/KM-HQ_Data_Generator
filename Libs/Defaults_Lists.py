@@ -8,8 +8,29 @@ from customtkinter import StringVar, IntVar, BooleanVar, get_appearance_mode
 from CTkMessagebox import CTkMessagebox
 
 # --------------------------------------------- Load defaults --------------------------------------------- #
+def Load_Settings() -> dict:
+    File = open(file=Absolute_path(relative_path=f"Libs\\Settings.json"), mode="r", encoding="UTF-8", errors="ignore")
+    Settings = json.load(fp=File)
+    File.close()
+    return Settings
+
+def Load_Configuration() -> dict:
+    File = open(file=Absolute_path(relative_path=f"Libs\\GUI\\Configuration.json"), mode="r", encoding="UTF-8", errors="ignore")
+    Configuration = json.load(fp=File)
+    File.close()
+    return Configuration
+
+def Load_Environments() -> list:
+    Environment_list = ["QA", "FIX", "Sandbox"]
+    return Environment_list
+
+def Load_NOC() -> list:
+    NOC_list = ["Core", "BBG", "BBL", "BCZ", "BGR", "BGE", "BKZ", "BHN", "BHR", "BiH", "BPL", "BR", "BRO", "BRS", "BSK", "BSL", "BUR", "BDK", "BSW", "BNO", "BFI", "BTR"]
+    return NOC_list
+
+# --------------------------------------------- Load defaults --------------------------------------------- #
 def Load_Exchange_env() -> list[str, str, str]:
-    load_dotenv(dotenv_path=Absolute_path(relative_path=f"Libs\\Download\\Exchange.env"))
+    load_dotenv(dotenv_path=Absolute_path(relative_path=f"Libs\\Azure\\Authorization.env"))
     client_id = os.getenv("client_id")
     client_secret = os.getenv("client_secret")
     tenant_id = os.getenv("tenant_id")

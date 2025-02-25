@@ -1,14 +1,13 @@
 # Import Libraries
 import requests
 
-import Libs.Defaults_Lists as Defaults_Lists
+
 
 from CTkMessagebox import CTkMessagebox
 
-# ---------------------------------------------------------- Set Defaults ---------------------------------------------------------- #
-client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()
-
-def Exchange_OAuth(Settings: dict, User_Password: str) -> str:
+# ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
+def Exchange_OAuth(Settings: dict, client_id: str, client_secret: str, tenant_id: str) -> str:
+    User_Password = "1x810fklL..."
     User_Email = Settings["General"]["User"]["Email"]
 
     if not client_id:
@@ -24,10 +23,13 @@ def Exchange_OAuth(Settings: dict, User_Password: str) -> str:
         "grant_type": "client_credentials",
         "client_id": client_id,
         "client_secret": client_secret,
-        "scope": "https://graph.microsoft.com/.default",
+        "scope": "https://api.businesscentral.dynamics.com/.default"}
+    
+    body = {
         "username": User_Email,
         "password": User_Password}
-    response = requests.post(url=url, data=payload)
+    
+    response = requests.post(url=url, data=payload, json=body)
     tokens = response.json()
     access_token = tokens["access_token"]
 
