@@ -20,12 +20,12 @@ import pywinstyles
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
+from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 import Libs.Defaults_Lists as Defaults_Lists
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
-    Template_Used = Settings["0"]["General"]["Template"]["Last_Used"]
-    Template_List = Settings["0"]["General"]["Template"]["Templates_List"]
+    
     Actual_Template_Variable = StringVar(master=Frame, value=Template_Used)
 
     # ------------------------- Local Functions -------------------------#
@@ -40,7 +40,8 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         else:
             set_appearance_mode(mode_string="system")
 
-    def Save_Template(Template_List: list):
+    def Save_Template(Actual_Template_Frame_Var: CTkScrollableDropdown):
+        global Template_List
         # Define Name for new Template
         File_Name = Defaults_Lists.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
         Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
@@ -56,6 +57,9 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         Save_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}.json")
         with open(file=Save_Path, mode="w") as file: 
             json.dump(Save_Template_dict, file)
+
+        Actual_Template_Frame_Var.configure(values=Template_List)
+
         Success_Message = CTkMessagebox(title="Success", message="Actual settings were saved into saved templates.", icon="check", option_1="Thanks", fade_in_duration=1)
         Success_Message.get()
 
@@ -77,7 +81,12 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         pass
 
     # ------------------------- Main Functions -------------------------#
-        # Theme Change - Button
+    # Actual Template
+    Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
+    Actual_Template_Frame.configure(variable=Actual_Template_Variable)
+    Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Load_Template())
+
+    # Theme Change - Button
     Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="sun-moon", Icon_Size="Header", Button_Size="Picture_Theme")
     Icon_Theme.configure(text="")
     Icon_Theme.configure(command = lambda: Theme_Change())
@@ -86,7 +95,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     # Button - Save Template
     Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="download", Icon_Size="Header", Button_Size="Picture_Theme")
     Icon_Save_Template.configure(text="")
-    Icon_Save_Template.configure(command = lambda: Save_Template(Template_List=Template_List))
+    Icon_Save_Template.configure(command = lambda: Save_Template(Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Save_Template, message="Save Current settings.", ToolTip_Size="Normal")
 
     # Button - Export Templates
@@ -95,11 +104,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     Icon_Export_Templates.configure(command = lambda: Export_Templates())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Export_Templates, message="Export all templates to Download folder.", ToolTip_Size="Normal")
 
-    # Actual Template
-    Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
-    Actual_Template_Frame.configure(variable=Actual_Template_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Load_Template())
-
+    
     # Build look of Widget
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
     Actual_Template_Frame.pack(side="right", fill="none", expand=False, padx=5, pady=5)
@@ -347,6 +352,9 @@ if __name__ == "__main__":
     Win_Style_Actual = Configuration["Global_Appearance"]["Window"]["Style"]
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
+
+    Template_Used = Settings["0"]["General"]["Template"]["Last_Used"]
+    Template_List = Settings["0"]["General"]["Template"]["Templates_List"]
 
     # Create folders if do not exists
     try:

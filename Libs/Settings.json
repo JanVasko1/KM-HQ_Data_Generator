@@ -2,11 +2,8 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "BHN_DDL_Tower",
-                "Templates_List": [
-                    "BHN_DDL_Dealers",
-                    "BHN_DDL_Tower"
-                ]
+                "Last_Used": "",
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
