@@ -29,6 +29,7 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     Items_BOMs_df = DataFrame()
     Items_Substitutions_df = DataFrame()
     Items_Connected_Items_df = DataFrame()
+    Items_Price_List_Detail_df = DataFrame()
     Items_Tracking_df = DataFrame()
     Items_UoM_df = DataFrame()
     NVR_FS_Connect_df = DataFrame()
@@ -125,7 +126,7 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     else:
         pass
 
-    # Connected Items
+    # HQ_Testing_Items_Connected_Items
     if Can_Process == True:
         Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"])
     else:
@@ -134,6 +135,13 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     # Concat Items
     if Can_Process == True:
         Items_df = pandas.concat(objs=[Items_df, Items_For_BOM_df, Items_For_Substitution_df, Items_For_Connected_Items_df])
+    else:
+        pass
+
+    # HQ_Testing_Items_Price_Detail_List
+    if Can_Process == True:
+        Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"])
     else:
         pass
 
@@ -203,7 +211,7 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     else:
         pass
 
-    return Can_Process, Purchase_Headers_df, Purchase_Lines_df, HQ_Communication_Setup_df, Company_Information_df, Country_Regions_df, HQ_CPDI_Levels_df, HQ_CPDI_Status_df, HQ_Item_Transport_Register_df, Items_df, Items_BOMs_df, Items_Substitutions_df, Items_Connected_Items_df, Items_Tracking_df, Items_UoM_df, NVR_FS_Connect_df, Plants_df, Shipment_Method_df, Shipping_Agent_df, Tariff_Numbers_df, UoM_df
+    return Can_Process, Purchase_Headers_df, Purchase_Lines_df, HQ_Communication_Setup_df, Company_Information_df, Country_Regions_df, HQ_CPDI_Levels_df, HQ_CPDI_Status_df, HQ_Item_Transport_Register_df, Items_df, Items_BOMs_df, Items_Substitutions_df, Items_Connected_Items_df, Items_Price_List_Detail_df, Items_Tracking_df, Items_UoM_df, NVR_FS_Connect_df, Plants_df, Shipment_Method_df, Shipping_Agent_df, Tariff_Numbers_df, UoM_df
         
 
 def Download_Data_Purchase_Invoice(Settings: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> list[DataFrame]:

@@ -35,6 +35,7 @@ Permission Set: NUS_HQ_Data_WS
     - Vždy by si uživatel měl mít možnost nastavit vlastní Line Flag hned po tom co se zpraciuje "Confirmation", ale jen pokud budou zapnutý
 (metoda random (prostě náhodně vybrat každý line flag), nebo pevně určit --> načíst řádk, které budou použity v Confirmation a nechat uživatele zvolit jaký line flag chce k jendotlivým řádkům )
     - Substitution --> když manuálně vyberu, tak musím i manuálně vybrat 
+    - Label --> pozor musí být pro všechny mašiny automaticky, protože BEU to dělá automaticky (ale pokud mám manual, tak by měl ten label automaticky označit tam kde je použitý i když byl vygenerovaný automaticky)
     Příklad:
                     Substitution    New Item No        Cancel      Finished        Lable       To Parent
         Item 1                                                                       X
@@ -53,11 +54,12 @@ Permission Set: NUS_HQ_Data_WS
     - dotaz jestli a jak chci procesovat ATP check:
         * Full Random: plný random pro každý řádek a qty řádku zvlášť (neměl by mít stejné datumy) -->je to option kdy opravdu může jeden řádek mít víc záznamů
         * Line Random: random datumy pro každou lines
-    - Field: Max ATL Records : parametr který omezi počet záznamů v ATP na maximálně 5
+    - Field: Max ATP Records : parametr který omezi počet záznamů v ATP na maximálně 5
 
 - Prices (použít stejné pak na Invoice)
     - Price Source MEthods:
-        * Price List: vzít si přémo u NAV price list jednotlivým Itemům a k Free Of Charge doplnit fiktivní, nějakou malou
+        * Purchase Line: vezme Direct Unt Cost z exportované PO Line 
+        * Price List: vzít si přémo u NAV price list jednotlivým Itemům a k Free Of Charge doplnit fiktivní, nějakou malou, a pokud chybí tak pop-up Window s dotazem na doplnění ceny
         * Manual
             --> popup page která se objevá kde u každého řádku budu moci specifikovat cenu za UoM
                 Item        Desctiption     Qty         Unit Price
@@ -90,7 +92,7 @@ Permission Set: NUS_HQ_Data_WS
 
 # CPDI Status
 - zde by bylo dobrý mít možnost zaškrtnout kkterý status chci exportovat 
-- samozřejmně ho musí program vytvořit pouze pro Objednávky který myjí CPDI 
+- samozřejmně ho musí program vytvořit pouze pro Objednávky který mají CPDI 
 
 
 
@@ -126,7 +128,7 @@ Permission Set: NUS_HQ_Data_WS
             * Random Entity: 
                 - Lines only: random vybere jen mezi lines a plný Qty
                 - Lines and Qty: random jak lines tak i Qty on Line --> tzv. plný random
-        * Manual (Option 1) (pouze pro celé řádky)
+        * Prompt (Option 1) (pouze pro celé řádky)
             --> popup page která se objevá kde u každého řádku budu moci specifikovat Delivery ke které patří
                     **Item**    **Description**     **Qty**     **Delviery**
                     Item1       MAšina              5           DEL1
@@ -135,6 +137,8 @@ Permission Set: NUS_HQ_Data_WS
                     ....  
 
 - Serial numbers (NUS Cloud má 50 znaků, NUS3 má 20 znaků)
+    Method:
+        
     - musím zajistit, aby byli 100% unikátní
     - Složenina:
         * Prefix: SN
@@ -146,7 +150,7 @@ Permission Set: NUS_HQ_Data_WS
     - Methods:
         * Fixed: Manuálně vybrané datum jen jedno jediné
         * Random: pro každou delivery si vybere vlastní datum (právě z range)
-        * Manual: pro každou delivery si bude moci uživatel zvolit vlastní datum
+        * Prompt: pro každou delivery si bude moci uživatel zvolit vlastní datum
             - zde bude potřeba asi nějaká pop-up page (možná na té popup page zobrazit ten kalendář: https://github.com/maxverwiebe/CTkDatePicker)
                     Delviery    Delviery Date
                     DEL1        2025-02-15
@@ -156,7 +160,7 @@ Permission Set: NUS_HQ_Data_WS
 - Tracking Information (Delviery + Package)
     - BEU Carrier ID
         - Methods:
-            * Fixed: MAnuálně vybraný "BEU Carrier ID"
+            * Manual: MAnuálně vybraný "BEU Carrier ID"
             * Randam: Náhodný vývběr z listu "Shipping Agents" kteřá mají "BEU Carrier ID"
     - Package No: Nějaký Prefix + random číslo (z intervalu)
     - EXIDV2: random číslo (z intervalu)
@@ -180,7 +184,7 @@ Permission Set: NUS_HQ_Data_WS
 - Plant mít možnost vyběru pland ze který přišlo zboží
     - Methods:
         * Random: vybere random z listu pro každou fakturu
-        * Manual: 
+        * Prompt: 
             Invoice     Plant    
             INV1        1000
             INV1        1004
@@ -190,9 +194,9 @@ Permission Set: NUS_HQ_Data_WS
     - Methods:
         * Fixed: Manuálně vybrané datum jen jedno jediné
         * Random: pro každou delivery si vybere vlastní datum (právě z range)
-        * Manual: pro každou delivery si bude moci uživatel zvolit vlastní datum
+        * Prompt: pro každou delivery si bude moci uživatel zvolit vlastní datum
             - zde bude potřeba asi nějaká pop-up page (možná na té popup page zobrazit ten kalendář: https://github.com/maxverwiebe/CTkDatePicker)
-                Invoice    Delviery Date
+                Invoice    Posting Date
                 INV1        2025-02-15
                 INV2        2025-02-19
                 ....  

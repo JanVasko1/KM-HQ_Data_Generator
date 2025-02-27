@@ -25,7 +25,8 @@ def Get_Params(fields_list_string: str, filters_list_string: str) -> dict:
             "$filter": filters_list_string,
             "$schemaversion" : "2.1"}
     else:
-        params = {}
+        params = {
+            "$schemaversion" : "2.1"}
     return params
     
 def Get_Field_List_string(fields_list: list, Join_sign: str) -> str:
@@ -456,7 +457,7 @@ def Get_HQ_Item_Transport_Register_df(headers: dict, tenant_id: str, NUS_version
 # ------------------- HQ_Testing_Items ------------------- #
 def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
-    fields_list = ["No", "Description", "Vendor_No", "Vendor_Item_No", "Item_Tracking_Code", "Substitutes_Exist_NUS", "AssemblyBOM", "BEU_Set_NUS", "BEU_End_of_Life_NUS", "Material_Group_NUS"]
+    fields_list = ["No", "Description", "Vendor_No", "Vendor_Item_No", "Item_Tracking_Code", "Substitutes_Exist_NUS", "AssemblyBOM", "BEU_Set_NUS", "BEU_End_of_Life_NUS", "Material_Group_NUS", "Unit_Price"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -480,6 +481,7 @@ def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Env
     BEU_Set_NUS_list = []
     Material_Group_NUS_list = []
     BEU_End_of_Life_NUS_list = []
+    Unit_Price_List = []
     for index in range(0, list_len):
         No_list.append(response_values_List[index]["No"])
         Description_list.append(response_values_List[index]["Description"])
@@ -491,6 +493,7 @@ def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Env
         BEU_Set_NUS_list.append(response_values_List[index]["BEU_Set_NUS"])
         BEU_End_of_Life_NUS_list.append(response_values_List[index]["BEU_End_of_Life_NUS"])
         Material_Group_NUS_list.append(response_values_List[index]["Material_Group_NUS"])
+        Unit_Price_List.append(response_values_List[index]["Unit_Price"])
 
     response_values_dict = {
         "No": No_list,
@@ -502,7 +505,8 @@ def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Env
         "AssemblyBOM": AssemblyBOM_list,
         "BEU_Set_NUS": BEU_Set_NUS_list,
         "BEU_End_of_Life_NUS": BEU_End_of_Life_NUS_list,
-        "Material_Group_NUS": Material_Group_NUS_list}
+        "Material_Group_NUS": Material_Group_NUS_list,
+        "Unit_Price": Unit_Price_List}
     
     if list_len == 1:
         Items_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
@@ -686,6 +690,104 @@ def Get_Items_Connected_Items_df(headers: dict, tenant_id: str, NUS_version: str
 
     return Items_Connected_Items_df, Items_For_Connected_Items_df
 
+# ------------------- HQ_Testing_Items_Price_List ------------------- #
+def Get_Items_Price_Lists_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+    # Fields
+    fields_list = ["Code", "Status"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_list_string = f"""Status eq 'Active'"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Prices_List")
+
+    # Prepare DataFrame
+    Code_list = []
+    Status_list = []
+    for index in range(0, list_len):
+        Code_list.append(response_values_List[index]["Code"])
+        Status_list.append(response_values_List[index]["Status"])
+
+    response_values_dict = {
+        "Code": Code_list,
+        "Status": Status_list}
+    
+    if list_len == 1:
+        Active_Price_Lists_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        Active_Price_Lists_df = DataFrame(data=response_values_dict, columns=fields_list)
+    
+    # BEU Price List Code
+    BEU_Price_list = []
+    for Price_List_Code in Code_list:
+        index = Price_List_Code.find("BEU")
+        if index > -1:
+            BEU_Price_list.append(Price_List_Code)
+        else:
+            pass
+
+    return Active_Price_Lists_df, BEU_Price_list
+
+# ------------------- HQ_Testing_Items_Price_Detail_List ------------------- #
+def Get_Items_Price_List_detail_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, BEU_Price_list: str, Amount_Type_List: list) -> DataFrame:
+    # Fields
+    fields_list = ["Price_List_Code", "SourceType", "SourceNo", "Asset_Type", "Asset_No", "Unit_of_Measure_Code", "StartingDate", "EndingDate", "DirectUnitCost"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Items = Get_Field_List_string(fields_list=Items_list, Join_sign="','")
+    filters_Price_Lists = Get_Field_List_string(fields_list=BEU_Price_list, Join_sign="','")
+    filters_Amount_type = Get_Field_List_string(fields_list=Amount_Type_List, Join_sign="','")
+    filters_list_string = f"""Price_List_Code in ('{filters_Price_Lists}') and Asset_Type eq 'Item' and Asset_No in ('{filters_Items}') and Amount_Type in ('{filters_Amount_type}')"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Price_Detail_List")
+
+    # Prepare DataFrame
+    Price_List_Code = []
+    SourceType = []
+    SourceNo = []
+    Asset_Type = []
+    Asset_No = []
+    Unit_of_Measure_Code = []
+    StartingDate = []
+    EndingDate = []
+    DirectUnitCost = []
+    for index in range(0, list_len):
+        Price_List_Code.append(response_values_List[index]["Price_List_Code"])
+        SourceType.append(response_values_List[index]["SourceType"])
+        SourceNo.append(response_values_List[index]["SourceNo"])
+        Asset_Type.append(response_values_List[index]["Asset_Type"])
+        Asset_No.append(response_values_List[index]["Asset_No"])
+        Unit_of_Measure_Code.append(response_values_List[index]["Unit_of_Measure_Code"])
+        StartingDate.append(response_values_List[index]["StartingDate"])
+        EndingDate.append(response_values_List[index]["EndingDate"])
+        DirectUnitCost.append(response_values_List[index]["DirectUnitCost"])
+
+    response_values_dict = {
+        "Price_List_Code": Price_List_Code,
+        "SourceType": SourceType,
+        "SourceNo": SourceNo,
+        "Asset_Type": Asset_Type,
+        "Asset_No": Asset_No,
+        "Unit_of_Measure_Code": Unit_of_Measure_Code,
+        "StartingDate": StartingDate,
+        "EndingDate": EndingDate,
+        "DirectUnitCost": DirectUnitCost}
+    
+    if list_len == 1:
+        Items_Price_List_Detail_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        Items_Price_List_Detail_df = DataFrame(data=response_values_dict, columns=fields_list)
+
+    return Items_Price_List_Detail_df 
 
 # ------------------- HQ_Testing_Items_Tracking_Codes ------------------- #
 def Get_Items_Tracking_Codes_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Item_Tracking_Code_list: list) -> DataFrame:
@@ -723,7 +825,7 @@ def Get_Items_Tracking_Codes_df(headers: dict, tenant_id: str, NUS_version: str,
 # ------------------- HQ_Testing_Items_UoM ------------------- #
 def Get_Items_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
-    fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure"]
+    fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure", "Weight"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -740,15 +842,18 @@ def Get_Items_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str, 
     Item_No_list = []
     Code_list = []
     Qty_per_Unit_of_Measure_list = []
+    Weight_List = []
     for index in range(0, list_len):
         Item_No_list.append(response_values_List[index]["Item_No"])
         Code_list.append(response_values_List[index]["Code"])
         Qty_per_Unit_of_Measure_list.append(response_values_List[index]["Qty_per_Unit_of_Measure"])
+        Weight_List.append(response_values_List[index]["Weight"])
 
     response_values_dict = {
         "Item_No": Item_No_list, 
         "Code": Code_list,
-        "Qty_per_Unit_of_Measure": Qty_per_Unit_of_Measure_list}
+        "Qty_per_Unit_of_Measure": Qty_per_Unit_of_Measure_list,
+        "Weight": Weight_List}
     
     if list_len == 1:
         Items_UoM_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
