@@ -29,7 +29,6 @@ def Page_Settings(Settings: dict, Configuration: dict, window: CTk, Frame: CTk|C
     Color_Palette_Widget = Settings_Widgets.Settings_General_Color(Settings=Settings, Configuration=Configuration, Frame=Tab_App)
 
     # User Page
-    Program_User_Type_Widget = Settings_Widgets.Settings_User_Widget(Settings=Settings, Configuration=Configuration, Frame=Tab_Usr)
     Program_User_Access_Widget = Settings_Widgets.Settings_User_Access(Settings=Settings, Configuration=Configuration, Frame=Tab_Usr)
 
     # Build look of Widget
@@ -40,5 +39,4 @@ def Page_Settings(Settings: dict, Configuration: dict, window: CTk, Frame: CTk|C
     Theme_Widget.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
     Color_Palette_Widget.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
-    Program_User_Type_Widget.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
     Program_User_Access_Widget.grid(row=0, column=1, padx=5, pady=5, sticky="nw")

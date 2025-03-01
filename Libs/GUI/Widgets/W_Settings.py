@@ -183,67 +183,6 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     return Frame_Main
 
 
-def Settings_User_Widget(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    User_Name = Settings["0"]["General"]["User"]["Name"]
-    User_ID = Settings["0"]["General"]["User"]["Code"]
-    User_Email = Settings["0"]["General"]["User"]["Email"]
-    
-    # ------------------------- Local Functions ------------------------#
-    def Password_required(User_Type_Variable: StringVar, User_Type_Frame_Var: str) -> None:
-        def Dialog_Window_Request(title: str, text: str, Dialog_Type: str) -> str|None:
-            # Password required
-            dialog = Elements.Get_DialogWindow(Configuration=Configuration, title=title, text=text, Dialog_Type=Dialog_Type)
-            Password = dialog.get_input()
-            return Password
-        
-        if User_Type_Frame_Var == "User":
-            User_Type_Variable.value = "User"
-            Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=User_Type_Variable, File_Name="Settings", JSON_path=["0", "General", "User", "User_Type"], Information=User_Type_Frame_Var)
-        elif User_Type_Frame_Var == "Manager":
-            Password = Dialog_Window_Request(title="Admin", text="Write your password", Dialog_Type="Password")
-
-            if Password == "JVA_is_best":
-                User_Type_Variable.value = "Manager"
-                Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=User_Type_Variable, File_Name="Settings", JSON_path=["0", "General", "User", "User_Type"], Information=User_Type_Frame_Var)
-            else:
-                User_Type_Variable.value = "User"
-                Error_Message = CTkMessagebox(title="Error", message=f"Wrong administration password.", icon="cancel", fade_in_duration=1)
-                Error_Message.get()
-           
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="User", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="This is setup of definition if user is considerate as user or user leading team with additional functionality.")
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - User ID
-    User_ID_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="User ID", Field_Type="Input_Normal")
-    User_ID_Frame_Var = User_ID_Frame.children["!ctkframe3"].children["!ctkentry"]
-    User_ID_Frame_Var.configure(placeholder_text="My Konica ID.")
-    User_ID_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "User", "Code"], Information=User_ID_Frame_Var.get()))
-    Entry_field_Insert(Field=User_ID_Frame_Var, Value=User_ID)
-
-    # Field - Name
-    User_Name_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="User Name", Field_Type="Input_Normal") 
-    User_Name_Frame_Var = User_Name_Frame.children["!ctkframe3"].children["!ctkentry"]
-    User_Name_Frame_Var.configure(placeholder_text="My Name.")
-    User_Name_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "User", "Name"], Information=User_Name_Frame_Var.get()))
-    Entry_field_Insert(Field=User_Name_Frame_Var, Value=User_Name)
-
-    # Field - User Email
-    User_Email_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="User Email", Field_Type="Input_Normal")
-    User_Email_Frame_Var = User_Email_Frame.children["!ctkframe3"].children["!ctkentry"]
-    User_Email_Frame_Var.configure(placeholder_text="My Konica ID.")
-    User_Email_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "User", "Email"], Information=User_Email_Frame_Var.get()))
-    Entry_field_Insert(Field=User_Email_Frame_Var, Value=User_Email)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-
 def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()

@@ -6,7 +6,7 @@ import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 import Libs.Azure.Authorization as Authorization
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.Downloader.NAV_OData_API as NAV_OData_API
+import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
 def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
@@ -14,6 +14,7 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Environment_List = Settings["0"]["Connection"]["Environment_List"]
     NOC_List = Settings["0"]["Connection"]["NOC_List"]
     Companies_List = []
+    
 
     NUS_Version_Variable = StringVar(master=Frame, value="Cloud", name="NUS_Version_Variable")
     Environment_Variable = StringVar(master=Frame, value="QA", name="Environment_Variable")
@@ -23,32 +24,27 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # ------------------------- Local Functions ------------------------#
     def Download_Companies(Companies_Frame_Var: CTkScrollableDropdown) -> list:
         global Companies_list
-        User_Password = Defaults_Lists.Dialog_Window_Request(Configuration=Configuration, title="Navision Login", text="Write your password", Dialog_Type="Password")
-        
-        if User_Password == None:
-            Error_Message = CTkMessagebox(title="Error", message="Cannot download, because of missing Password.", icon="cancel", fade_in_duration=1)
-            Error_Message.get()
+        Companies_list = Downloader.Get_Companies_List(NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get())
+
+        if len(Companies_list) > 0:
+            # Update Option List
+            Companies_Frame_Var.configure(values=Companies_list)
+
+            Success_Message = CTkMessagebox(title="Success", message="Companies downloaded.", icon="check", option_1="Thanks", fade_in_duration=1)
+            Success_Message.get()
         else:
-            client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()
-            access_token = Authorization.Azure_OAuth(Settings=Settings, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id, User_Password=User_Password)
-            headers = {
-                'Authorization': f'Bearer {access_token}',
-                'Content-Type': 'application/json'}
-
-            Companies_list = NAV_OData_API.Get_Companies(headers=headers, tenant_id=tenant_id, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get())
-
-            if len(Companies_list) > 0:
-                # Update Option List
-                Companies_Frame_Var.configure(values=Companies_list)
-
-                Success_Message = CTkMessagebox(title="Success", message="Companies downloaded.", icon="check", option_1="Thanks", fade_in_duration=1)
-                Success_Message.get()
-            else:
-                pass
+            pass
 
     def Generate_Purchase_Orders() -> None:
         print("Generate_Purchase_Orders")
         pass
+
+    def Purchase_Orders_Show() -> None:
+        Purchase_Orders_List = []
+        print(Purchase_Orders_List)
+        Purchase_Orders_List = Downloader.Get_Orders_List(NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Document_Type="Order")
+
+        print(Purchase_Orders_List)
 
     def Generate_BackBone_Billing() -> None:
         print("Generate_Purchase_Orders")
@@ -58,13 +54,12 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
         print("Generate_Purchase_Orders")
         pass
 
+
+
     # ------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
     Frame_Download_State_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Status_Line")
     Frame_Download_State_Area.pack_propagate(flag=False)
-
-    Frame_Download_Sub_State_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Status_Line")
-    Frame_Download_Sub_State_Area.pack_propagate(flag=False)
 
     Frame_Download_Work_Detail_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Detail")
     Frame_Download_Work_Detail_Area.grid_propagate(flag=False)
@@ -110,19 +105,13 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Companies_Frame.configure(variable=Company_Variable)
     Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command=None)
     
-
     Button_Download_Company.configure(text="Get Companies", command = lambda:Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
 
-
-    # ------------------------- Sub State Area -------------------------#
+    # ------------------------- Work Area -------------------------#
     # Progress Bar
-    Progress_Bar = Elements.Get_ProgressBar(Configuration=Configuration, Frame=Frame_Download_Sub_State_Area, orientation="Horizontal", Progress_Size="Download_Process")
+    Progress_Bar = Elements.Get_ProgressBar(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, orientation="Horizontal", Progress_Size="Download_Process")
     Progress_Bar.set(value=0)
 
-    Progress_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Download_Sub_State_Area, Label_Size="Field_Label", Font_Size="Field_Label")
-    Progress_text.configure(text=f"Download progress", width=200)
-
-    # ------------------------- Work Area -------------------------#
     # -------- Purchase Order Tab -------- #
     Generate_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Use"]
     Generate_PreAdvice = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Use"]
@@ -153,15 +142,15 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_Conf_Frame_Var = Generate_Conf_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_Conf_Frame_Var.configure(variable=Generate_CON_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"], Information=Generate_CON_Variable))
 
-    # Field - Use PreAdvice
-    Generate_PREA_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="PreAdvice", Field_Type="Input_CheckBox") 
-    Generate_PREA_Frame_Var = Generate_PREA_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_PREA_Frame_Var.configure(variable=Generate_PRA_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRA_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"], Information=Generate_PRA_Variable))
-
     # Field - Use CPDI
     Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI", Field_Type="Input_CheckBox") 
     Generate_CPDI_Frame_Var = Generate_CPDI_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_CPDI_Frame_Var.configure(variable=Generate_CPD_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CPD_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Use"], Information=Generate_CPD_Variable))
+
+    # Field - Use PreAdvice
+    Generate_PREA_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="PreAdvice", Field_Type="Input_CheckBox") 
+    Generate_PREA_Frame_Var = Generate_PREA_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    Generate_PREA_Frame_Var.configure(variable=Generate_PRA_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRA_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"], Information=Generate_PRA_Variable))
 
     # Field - Use Delivery
     Generate_DEL_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Delivery", Field_Type="Input_CheckBox") 
@@ -183,11 +172,20 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_IAL_Frame_Var = Generate_IAL_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_IAL_Frame_Var.configure(variable=Generate_IAL_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_IAL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "IAL", "Use"], Information=Generate_IAL_Variable))
 
+    # Selected Purchase Orders List
+    PO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Selected POs", Field_Type="Input_Normal") 
+    PO_Selected_Frame_Var = PO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
+    PO_Selected_Frame_Var.configure(placeholder_text="Purchase Orders", placeholder_text_color="#949A9F")
 
-    # Button - Generate Purchase Orders
-    Button_Generate_PO = Elements.Get_Button(Configuration=Configuration, Frame=Tab_PO, Button_Size="Normal")
-    Button_Generate_PO.configure(text="Generate", command = lambda:Generate_Purchase_Orders())
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Generate_PO, message="Generate marked documents for selected POs.", ToolTip_Size="Normal")
+    # Buttons
+    Button_Frame = Elements_Groups.Get_Widget_Button_row(Frame=Tab_PO, Configuration=Configuration, Field_Frame_Type="Half_size" , Buttons_count=2, Button_Size="Normal") 
+    Button_PO_Generate_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+    Button_PO_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Generate_Var, message="Process selected files for filtered Purchase Orders.", ToolTip_Size="Normal")
+
+    Button_PO_Show_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
+    Button_PO_Show_Var.configure(text="Select Multiple", command = lambda: Purchase_Orders_Show())
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal")
 
     # -------- BackBone Billing Tab -------- #
     Generate_BB_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Use"]
@@ -257,11 +255,9 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Button_Generate_PRO.configure(text="Generate", command = lambda:Generate_Purchase_Return_Orders())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Generate_PRO, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal")
 
-
     # Build look of Widget
     Frame_Download_State_Area.pack(side="top", fill="x", expand=False, padx=0, pady=0)
-    Frame_Download_Sub_State_Area.pack(side="top", fill="x", expand=False, padx=0, pady=0)
-    Frame_Download_Work_Detail_Area.pack(side="top", fill="none", expand=True, padx=0, pady=0)
+    Frame_Download_Work_Detail_Area.pack(side="top", fill="none", expand=False, padx=0, pady=0)
 
     NUS_Version_Text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
     NUS_Version_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
@@ -273,25 +269,24 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Companies_Text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
     Companies_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
 
-    Progress_text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
-    Progress_Bar.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
+    Progress_Bar.pack(side="top", fill="x", expand=False, padx=5, pady=(10,5))
 
-    TabView_PO.grid(row=1, column=0, padx=5, pady=0, sticky="n")
+    TabView_PO.pack(side="left", fill="y", expand=False, padx=5, pady=5)
     Generate_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Generate_PREA_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_CPDI_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Generate_PREA_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_DEL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Button_Generate_PO.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Button_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
-    
-    TabView_BB.grid(row=1, column=1, padx=5, pady=0, sticky="n")
+    TabView_BB.pack(side="left", fill="y", expand=False, padx=5, pady=5)
     Generate_BB_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_BB_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_Generate_BB.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_PRO.grid(row=1, column=2, padx=5, pady=0, sticky="n")
+    TabView_PRO.pack(side="left", fill="y", expand=False, padx=5, pady=5)
     Generate_PRO_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)

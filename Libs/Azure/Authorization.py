@@ -4,9 +4,7 @@ import requests
 from CTkMessagebox import CTkMessagebox
 
 # ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
-def Azure_OAuth(Settings: dict, client_id: str, client_secret: str, tenant_id: str, User_Password: str) -> str:
-    User_Email = Settings["0"]["General"]["User"]["Email"]
-
+def Azure_OAuth(client_id: str, client_secret: str, tenant_id: str) -> str:
     if not client_id:
         CTkMessagebox(title="Error", message=f"No client_id found. Check your .env file.", icon="cancel", fade_in_duration=1)
     if not client_secret:
@@ -22,11 +20,7 @@ def Azure_OAuth(Settings: dict, client_id: str, client_secret: str, tenant_id: s
         "client_secret": client_secret,
         "scope": "https://api.businesscentral.dynamics.com/.default"}
     
-    body = {
-        "username": User_Email,
-        "password": User_Password}
-    
-    response = requests.post(url=url, data=payload, json=body)
+    response = requests.post(url=url, data=payload)
     tokens = response.json()
     access_token = tokens["access_token"]
 

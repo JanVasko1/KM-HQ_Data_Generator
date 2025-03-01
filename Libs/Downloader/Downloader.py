@@ -10,8 +10,50 @@ from CTkMessagebox import CTkMessagebox
 
 client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()
 
+def Get_Companies_List(NUS_version: str, NOC: str, Environment: str,) -> list:
+    Companies_list = []
+
+    access_token = Authorization.Azure_OAuth(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'}
+
+    Companies_list = NAV_OData_API.Get_Companies(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
+    return Companies_list
+
+def Get_Orders_List(NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str) -> list:
+    Can_Process = True
+    Purchase_Order_list = []
+
+    access_token = Authorization.Azure_OAuth(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'}
+
+    # HQ_Testing_HQ_Communication
+    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    if HQ_Communication_Setup_df.empty:
+        Error_Message = CTkMessagebox(title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1)
+        Error_Message.get()
+        Can_Process = False
+    else:
+        pass
+
+    # HQ_Testing_Purchase_Headers
+    if Can_Process == True:
+        Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_list_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list)
+        if Purchase_Order_list.empty:
+            Error_Message = CTkMessagebox(title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1)
+            Error_Message.get()
+        else:
+            pass
+    else:
+        pass
+
+    return Purchase_Order_list
+
 # Get Access Token
-def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> list[DataFrame]:
+def Download_Data_Purchase_Orders(NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> list[DataFrame]:
     Can_Process = True
 
     Purchase_Headers_df = DataFrame()
@@ -40,7 +82,7 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     UoM_df = DataFrame()
 
     # Headers for all pages
-    access_token = Authorization.Exchange_OAuth(Settings=Settings, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
@@ -214,10 +256,10 @@ def Download_Data_Purchase_Orders(Settings: dict, NUS_version: str, NOC: str, En
     return Can_Process, Purchase_Headers_df, Purchase_Lines_df, HQ_Communication_Setup_df, Company_Information_df, Country_Regions_df, HQ_CPDI_Levels_df, HQ_CPDI_Status_df, HQ_Item_Transport_Register_df, Items_df, Items_BOMs_df, Items_Substitutions_df, Items_Connected_Items_df, Items_Price_List_Detail_df, Items_Tracking_df, Items_UoM_df, NVR_FS_Connect_df, Plants_df, Shipment_Method_df, Shipping_Agent_df, Tariff_Numbers_df, UoM_df
         
 
-def Download_Data_Purchase_Invoice(Settings: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> list[DataFrame]:
+def Download_Data_Purchase_Invoice(NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> list[DataFrame]:
     # TODO --> Completaly finish
     # Headers for all pages
-    access_token = Authorization.Exchange_OAuth(Settings=Settings, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
@@ -234,7 +276,11 @@ def Download_Data_Purchase_Invoice(Settings: dict, NUS_version: str, NOC: str, E
     print("Finished")
 
 
-def Download_Data_Return_Order(Settings: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Order_list: list) -> list[DataFrame]:
-    # TODO --> Completaly finish
+def Download_Data_Return_Order(NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Order_list: list) -> list[DataFrame]:
+    # Headers for all pages
+    access_token = Authorization.Azure_OAuth(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'}
 
     print("Finished")

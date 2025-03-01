@@ -320,6 +320,15 @@ def Insert_Data_to_Table(Settings: dict, Table: CTkTable, JSON_path: list) -> No
         Error_Message = CTkMessagebox(title="Error", message=f"It is not possible to insert data to table. DAta are uploaded, just restart application.", icon="cancel", fade_in_duration=1)
         Error_Message.get()
 
+def Disable_Enable_Fields(Enable_Elements_List: list, Disable_Elements_List: list) -> None:
+    # Enable Fields
+    for Enable_Element in Enable_Elements_List:
+        Enable_Element.configure(state="normal")
+
+    # Disable Fields
+    for Disable_Element in Disable_Elements_List:
+        Disable_Element.configure(state="disabled")
+
 # --------------------------------------------- PyInstaller --------------------------------------------- #
 def Absolute_path(relative_path: str) -> str:
     try:

@@ -1,18 +1,9 @@
 {
     "0": {
         "General": {
-            "User": {
-                "Code": "CZ011845",
-                "Name": "Jan Vasko",
-                "Email": "Jan.Vasko@konicaminolta.eu"
-            },
             "Template": {
-                "Last_Used": "Default",
-                "Templates_List": [
-                    "BHN_DDL_Dealers",
-                    "BHN_DDL_Tower",
-                    "Default"
-                ]
+                "Last_Used": "",
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -69,7 +60,7 @@
                             "Prefix": "CON"
                         },
                         "Fixed_Options": {
-                            "Number": ""
+                            "Number": "CON_JVA_001"
                         }
                     },
                     "Line_Flags": {
@@ -79,19 +70,20 @@
                             "Random Cancel",
                             "Random Finished",
                             "Prompt"
-                        ]
+                        ],
+                        "Labels_always": true
                     },
                     "Prices": {
-                        "Price_Source_Method": "Price List",
-                        "Price_Source_Method_List": [
-                            "Manual",
+                        "Method": "Manual",
+                        "Methods_List": [
+                            "Prompt",
                             "Price List",
                             "Purchase Line"
                         ]
                     },
                     "Currency": {
-                        "Currency_Method": "Fixed",
-                        "Currency_Method_List": [
+                        "Method": "Fixed",
+                        "Methods_List": [
                             "Fixed",
                             "Purchase Line"
                         ],
@@ -106,13 +98,15 @@
                             "ONB",
                             "BACK"
                         ],
-                        "Max_ATP_Records": 5,
+                        "Max_ATP_Records": 4,
                         "Quantities": {
-                            "ATP_Quantity_Method": "Full Random",
-                            "ATP_Quantity_Method_List": [
+                            "Method": "Full Random",
+                            "Methods_List": [
+                                "All On-Hand",
+                                "All On-Board",
                                 "Full Random",
-                                "Random Distribution",
-                                "Line Random"
+                                "Line Random",
+                                "Random Distribution"
                             ],
                             "Random_Distribution_Percentage": [
                                 80,
@@ -121,19 +115,19 @@
                             ]
                         },
                         "Dates_Intervals": {
-                            "ATP_Dates_Method": "",
-                            "ATP_Dates_Method_List": [
-                                "Manual",
+                            "Method": "Intervals",
+                            "Methods_List": [
+                                "Fixed",
                                 "Intervals"
                             ],
                             "Intervals_Dates": {
                                 "ONH": {
-                                    "From_Date_Formula_days": "1",
-                                    "To_Date_Formula_days": ""
+                                    "From": 1,
+                                    "To": 10
                                 },
                                 "ONB": {
-                                    "From_Week_Formula": "",
-                                    "To_Week_Formula": ""
+                                    "From": 3,
+                                    "To": 5
                                 }
                             },
                             "Manual_Dates": {
@@ -144,13 +138,13 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": true
+                    "Use": false
                 }
             },
             "CPDI": {
-                "Use": true,
-                "Create_CPDI_Method": "All",
-                "Create_CPDI_Method_List": [
+                "Use": false,
+                "Method": "All",
+                "Methods_List": [
                     "All",
                     "Prompt"
                 ]

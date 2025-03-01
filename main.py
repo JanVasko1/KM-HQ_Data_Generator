@@ -15,7 +15,7 @@ import json
 import time
 from glob import glob
 
-from customtkinter import CTk, CTkFrame, set_appearance_mode, StringVar, CTkButton
+from customtkinter import CTk, CTkFrame, set_appearance_mode, StringVar, CTkButton, deactivate_automatic_dpi_awareness
 from CTkMessagebox import CTkMessagebox
 import pywinstyles
 
@@ -26,9 +26,6 @@ import Libs.Defaults_Lists as Defaults_Lists
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
-    User_Name = Settings["0"]["General"]["User"]["Name"]
-    User_ID = Settings["0"]["General"]["User"]["Code"]
-    User_Email = Settings["0"]["General"]["User"]["Email"]
     Actual_Template_Variable = StringVar(master=Frame, value=Template_Used)
 
     # ------------------------- Local Functions -------------------------#
@@ -47,25 +44,29 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         global Template_List
         # Define Name for new Template
         File_Name = Defaults_Lists.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
-        Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
-        Template_List.append(File_Name)
-        Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
+        if File_Name == None:
+            Error_Message = CTkMessagebox(title="Error", message="Cannot save, because of missing Filename", icon="cancel", fade_in_duration=1)
+            Error_Message.get()
+        else:
+            Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
+            Template_List.append(File_Name)
+            Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
 
-        # Save My_Team Dict into Downloads Folder
-        Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
-        Save_Template_dict = {
-            "Type": "Template",
-            "Data": Actual_Template_Settings}
-        
-        Save_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}.json")
-        with open(file=Save_Path, mode="w") as file: 
-            json.dump(Save_Template_dict, file)
+            # Save My_Team Dict into Downloads Folder
+            Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
+            Save_Template_dict = {
+                "Type": "Template",
+                "Data": Actual_Template_Settings}
+            
+            Save_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}.json")
+            with open(file=Save_Path, mode="w") as file: 
+                json.dump(Save_Template_dict, file)
 
-        # Update Option List
-        Actual_Template_Frame_Var.configure(values=Template_List)
+            # Update Option List
+            Actual_Template_Frame_Var.configure(values=Template_List)
 
-        Success_Message = CTkMessagebox(title="Success", message="Actual settings were saved into saved templates.", icon="check", option_1="Thanks", fade_in_duration=1)
-        Success_Message.get()
+            Success_Message = CTkMessagebox(title="Success", message="Actual settings were saved into saved templates.", icon="check", option_1="Thanks", fade_in_duration=1)
+            Success_Message.get()
 
     def Apply_Template(Selected_Value: str, Settings: dict, Actual_Template_Variable: StringVar) -> None:
         Load_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
@@ -192,21 +193,6 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
 
     # ------------------------- Main Functions -------------------------#
-    # Account Mail
-    Frame_User_Email = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
-    Frame_User_Email.configure(text=User_Email)
-    Frame_User_Email.pack_propagate(flag=False)
-
-    # Account ID
-    Frame_User_ID = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
-    Frame_User_ID.configure(text=User_ID)
-    Frame_User_ID.pack_propagate(flag=False)
-
-    # Account Name
-    Frame_User_Name = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
-    Frame_User_Name.configure(text=User_Name)
-    Frame_User_Name.pack_propagate(flag=False)
-
     # Actual Template
     Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
     Actual_Template_Frame.configure(variable=Actual_Template_Variable)
@@ -244,9 +230,6 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
     # Build look of Widget
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Frame_User_Email.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Frame_User_ID.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Frame_User_Name.pack(side="right", fill="none", expand=False, padx=5, pady=5)
 
     Icon_Save_Template.pack(side="left", fill="none", expand=False, padx=5, pady=5)
     Actual_Template_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=5)
@@ -486,6 +469,7 @@ class Win(CTk):
         self._offsety = super().winfo_pointery() - super().winfo_rooty()
 
 if __name__ == "__main__":
+    deactivate_automatic_dpi_awareness()
     Application = Defaults_Lists.Load_Application()
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 

@@ -68,6 +68,18 @@ def Get_DashBoard_Widget_Frame(Configuration:dict, Frame: CTk|CTkFrame, Label: s
 
     return Frame_Single_Body
 
+def Get_Widget_Section_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Label_Size: str, Font_Size: str) -> CTkFrame:
+    # Build one line for one input field
+    Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
+    Frame_Area.pack_propagate(flag=False)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Area, Label_Size=Label_Size, Font_Size=Font_Size)
+    Label_text.configure(text=f"{Label}")
+    Label_text.pack(side="left", fill="none", expand=False, padx=(20, 0), pady=5)
+
+    return Frame_Area
+
 def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)

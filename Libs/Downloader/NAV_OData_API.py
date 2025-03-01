@@ -79,7 +79,30 @@ def Get_Companies(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  En
     return Companies_list
 
 # ------------------- HQ_Testing_Purchase_Headers ------------------- #
-def Get_Purchase_Headers_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
+def Get_Purchase_Headers_list_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list):
+    # Fields
+    fields_list = ["No"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Purchase_Order = Get_Field_List_string(fields_list=HQ_Vendors_list, Join_sign="','")
+    filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Purchase_Order}')"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+
+    # Prepare DataFrame
+    Purchase_Order_No_list = []
+    for index in range(0, list_len):
+        Purchase_Order_No_list.append(response_values_List[index]["No"])
+    
+    return Purchase_Order_No_list
+
+
+def Get_Purchase_Headers_info_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
     # Fields
     fields_list = ["No", "Buy_from_Vendor_No", "HQ_Identification_No_NUS", "ShippingConditionFieldNUS", "CompleteDeliveryFieldNUS", "PDICenterFieldNUS", "HQCPDILevelRequestedFieldNUS", "Expected_Receipt_Date", "Promised_Receipt_Date", "Requested_Receipt_Date", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
