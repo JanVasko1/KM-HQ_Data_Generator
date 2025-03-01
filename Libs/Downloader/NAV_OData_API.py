@@ -61,7 +61,20 @@ def Request_Endpoint(headers: dict, params: dict, tenant_id: str, NUS_version: s
 def Get_Companies(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str) -> list:    
     url = f"https://api.businesscentral.dynamics.com/v2.0/{tenant_id}/NUS_{NUS_version}_{NOC}_{Environment}/api/v2.0/companies"
     response = requests.get(url=url, headers=headers)
-    Companies_list = response.json()['value']
+    Companies_list = []
+
+    if (response.status_code >= 200) and (response.status_code < 300):
+        response_values_List = response.json()["value"]
+        list_len =len(response_values_List)
+
+        for index in range(0, list_len):
+            Companies_list.append(response_values_List[index]["name"])
+    else:
+        Error_dict = json.loads(response.text)
+        Error_Code = Error_dict["error"]["code"]
+        Error_Detail = Error_dict["error"]["message"]
+        Error_Message = CTkMessagebox(title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1)
+        Error_Message.get()
 
     return Companies_list
 

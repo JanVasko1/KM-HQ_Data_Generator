@@ -336,6 +336,8 @@ def Get_Option_Menu_Advance(Configuration:dict, attach: CTkOptionMenu|CTkComboBo
     # Advance CTkScrollableDropdown
     Configuration_Advance_Option_Menu = Configuration["Fields"]["OptionMenu"]["AdvancedCTk"]["Normal"]
 
+    BaseCTk_width = attach.cget("width")
+
     Accent_Color_help = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Advance_Option_Menu["fg_color"])
     scrollbar_button_hover_color_advance = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Advance_Option_Menu["scrollbar_button_hover_color"], Accent_Color=Accent_Color_help)
     hover_color_advance = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Advance_Option_Menu["hover_color"], Accent_Color=Accent_Color_help)
@@ -344,7 +346,7 @@ def Get_Option_Menu_Advance(Configuration:dict, attach: CTkOptionMenu|CTkComboBo
         attach = attach,
         values = values,
         image_values = Configuration_Advance_Option_Menu["image_values"],
-        width = Configuration_Advance_Option_Menu["width"],
+        width = BaseCTk_width,
         height = Configuration_Advance_Option_Menu["height"],
         fg_color = tuple(Configuration_Advance_Option_Menu["fg_color"]),
         button_color = tuple(Configuration_Advance_Option_Menu["button_color"]),

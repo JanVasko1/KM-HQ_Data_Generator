@@ -1,14 +1,11 @@
 # Import Libraries
 import requests
 
-
-
 from CTkMessagebox import CTkMessagebox
 
 # ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
-def Exchange_OAuth(Settings: dict, client_id: str, client_secret: str, tenant_id: str) -> str:
-    User_Password = "1x810fklL..."
-    User_Email = Settings["General"]["User"]["Email"]
+def Azure_OAuth(Settings: dict, client_id: str, client_secret: str, tenant_id: str, User_Password: str) -> str:
+    User_Email = Settings["0"]["General"]["User"]["Email"]
 
     if not client_id:
         CTkMessagebox(title="Error", message=f"No client_id found. Check your .env file.", icon="cancel", fade_in_duration=1)

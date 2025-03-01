@@ -1,11 +1,11 @@
 # Import Libraries
 from pandas import DataFrame, to_datetime
-from dotenv import load_dotenv
+from dotenv import load_dotenv, set_key
 import json
 import os
 import pyautogui
 from glob import glob
-from shutil import rmtree
+from shutil import rmtree, copy
 
 from customtkinter import CTkButton, StringVar, IntVar, BooleanVar, get_appearance_mode
 from CTkMessagebox import CTkMessagebox
@@ -37,27 +37,12 @@ def Load_Configuration() -> dict:
     File.close()
     return Configuration
 
-def Load_Figures(Theme:str) -> dict:
-    File = open(file=Absolute_path(relative_path=f"Libs\\GUI\\Figure_settings_{Theme}.json"), mode="r", encoding="UTF-8", errors="ignore")
-    Configuration = json.load(fp=File)
-    File.close()
-    return Configuration
-
-def Busy_Status_List() -> list[str]:
-    Busy_Statuses = ["Free", "Tentative", "Busy", "Out of Office", "Working elsewhere"]
-    return Busy_Statuses
-
-def Exchange_Busy_Status_List() -> list[str]:
-    Busy_Statuses = ["free", "tentative", "busy", "oof", "workingElsewhere", "unknown"]
-    return Busy_Statuses
-
-def Busy_Status_Priorities_List() -> list[str]:
-    # Smaller Index = Higher priority
-    Busy_Statuses_Priorities = ["Busy", "Working elsewhere", "Tentative", "Free", "Out of Office"]
-    return Busy_Statuses_Priorities
+def Save_set_key_env(Key: str, Value: str) -> None:
+    set_key(dotenv_path=Absolute_path(relative_path=f"Libs\\Azure\\Authorization.env"), key_to_set=Key, value_to_set=Value)
+    
 
 def Load_Exchange_env() -> list[str, str, str]:
-    load_dotenv(dotenv_path=Absolute_path(relative_path=f"Libs\\Download\\Exchange.env"))
+    load_dotenv(dotenv_path=Absolute_path(relative_path=f"Libs\\Azure\\Authorization.env"))
     client_id = os.getenv("client_id")
     client_secret = os.getenv("client_secret")
     tenant_id = os.getenv("tenant_id")
@@ -212,6 +197,13 @@ def Create_Folder(file_path: str) -> None:
         Error_Message = CTkMessagebox(title="Error", message=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1)
         Error_Message.get()
 
+def Copy_File(Source_Path: str, Destination_Path: str) -> None:
+    try:
+        copy(src=Source_Path, dst=Destination_Path)
+    except Exception as Error:
+        Error_Message = CTkMessagebox(title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1)
+        Error_Message.get()
+
 def Delete_Folder(file_path: str) -> None:
     # Create Folder
     try: 
@@ -242,7 +234,7 @@ def Delete_All_Files(file_path: str, include_hidden: bool) -> None:
         print(Error)
 
 def Get_Downloads_File_Path(File_Name: str, File_postfix: str):
-    downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
+    downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
     Destination_File = os.path.join(downloads_folder, os.path.basename(f"{File_Name}.{File_postfix}"))
     return Destination_File
 
@@ -264,6 +256,18 @@ def Dialog_Window_Request(Configuration: dict, title: str, text: str, Dialog_Typ
     dialog = Elements.Get_DialogWindow(Configuration=Configuration, title=title, text=text, Dialog_Type=Dialog_Type)
     Dialog_Input = dialog.get_input()
     return Dialog_Input
+
+def Get_All_Templates_List(Settings: dict) -> list:
+    file_path = Absolute_path(relative_path=f"Operational\\Template")
+    Files = glob(pathname=os.path.join(file_path, "*"))
+    Files_Templates = [x.replace(file_path, "") for x in Files]
+    Files_Templates = [x.replace("\\", "") for x in Files_Templates]
+    Files_Templates = [x.replace(".json", "") for x in Files_Templates]
+    Files_Templates = list(set(Files_Templates))
+    Files_Templates.sort()
+    Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Files_Templates)
+
+    return Files_Templates
 
 def Get_Current_Theme() -> str:
     Current_Theme = get_appearance_mode()

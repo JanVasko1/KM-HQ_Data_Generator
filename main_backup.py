@@ -278,55 +278,55 @@ if JSON_Load == "Y":
 
 
         # print Setup
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(General_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(Questions_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(PO_Document_Header_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(Items_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_General_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_Export_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_Confirmation_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_PreAdvice_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_Delivery_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_Invoice_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_ATPR_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_SUB_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_HQPAR_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_HQSNR_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_DEL_Track_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_Packg_Track_Setup_df.transpose())
 
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(Record_Links_Setup_df.transpose())
 
         # Section checker
@@ -407,7 +407,7 @@ if JSON_Load == "N":
             
         General_Setup_df = pandas.DataFrame(General_Setup_Dict, columns=General_Setup_Dict.keys(), index=[0])
         General_Setup_df.Name = "General_Setup_df"
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(General_Setup_df.transpose())
 
         # Section checker
@@ -463,7 +463,7 @@ if JSON_Load == "N":
                 "Download_Data_HQ_Shipping_Condition": Download_Data_HQ_Shipping_Condition}
             Download_Setup_df = pandas.DataFrame(Download_Setup_dict, columns=Download_Setup_dict.keys(), index=[0])
             Download_Setup_df.Name = "Download_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(Download_Setup_df.transpose())
 
             # Section checker
@@ -572,7 +572,7 @@ if JSON_Load == "N":
             "Download_Data_HQ_Shipping_Condition": "N"}
         Download_Setup_df = pandas.DataFrame(Download_Setup_dict, columns=Download_Setup_dict.keys(), index=[0])
         Download_Setup_df.Name = "Download_Setup_df"
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(Download_Setup_df.transpose())
 
     # Purchase Header
@@ -648,7 +648,7 @@ if JSON_Load == "N":
             "Shipping_Agent_Service": Shipping_Agent_Service}
         PO_Document_Header_Setup_df = pandas.DataFrame(PO_Document_Header_Setup_dict, index=[0])
         PO_Document_Header_Setup_df.Name = "PO_Document_Header_Setup_df"
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(PO_Document_Header_Setup_df.transpose())
 
         # Variable to Delete
@@ -685,7 +685,7 @@ if JSON_Load == "N":
             Items_df = pandas.DataFrame(Items_Dict, columns=Items_Dict.keys())
             Items_df.Name = "Items_df"
 
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(Items_df.transpose())
 
     elif PO_Lines_Donwload == "N":
@@ -849,7 +849,7 @@ if JSON_Load == "N":
             else:
                 pass
                     
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(Items_df.transpose())
 
             # Variable to Delete
@@ -905,7 +905,7 @@ if JSON_Load == "N":
             "HQ_Vendor_Line_No_Increment": HQ_Vendor_Line_No_Increment}
         HQ_General_Setup_df = pandas.DataFrame(HQ_General_Setup_Dict, index=[0])
         HQ_General_Setup_df.Name = "HQ_General_Setup_df"
-        print("\n-section sumary-")
+        print("\n-section summary-")
         print(HQ_General_Setup_df.transpose())
 
         # Variable to Delete
@@ -945,7 +945,7 @@ if JSON_Load == "N":
                     "HQ_Export_Vendor_Line_No": HQ_Export_Vendor_Line_No}
                 HQ_Export_Setup_df = pandas.DataFrame(HQ_Export_Setup_Dict, index=[0])
                 HQ_Export_Setup_df.Name = "HQ_Export_Setup_df"
-                print("\n-section sumary-")
+                print("\n-section summary-")
                 print(HQ_Export_Setup_df.transpose())
 
                 # Variable to Delete
@@ -1006,7 +1006,7 @@ if JSON_Load == "N":
                 "HQ_Conf_Vendor_Document_Created_Date": HQ_Conf_Vendor_Document_Created_Date} 
             HQ_Confirmation_Setup_df = pandas.DataFrame(HQ_Confirmation_Setup_Dict, index=[0])
             HQ_Confirmation_Setup_df.Name = "HQ_Confirmation_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(HQ_Confirmation_Setup_df.transpose())
 
             # Variable to Delete
@@ -1064,7 +1064,7 @@ if JSON_Load == "N":
                 "HQ_PreAdvice_Vendor_Document_Created_Date": HQ_PreAdvice_Vendor_Document_Created_Date}
             HQ_PreAdvice_Setup_df = pandas.DataFrame(HQ_PreAdvice_Setup_Dict, index=[0])
             HQ_PreAdvice_Setup_df.Name = "HQ_PreAdvice_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(HQ_PreAdvice_Setup_df.transpose())
 
             # Variable to Delete
@@ -1167,7 +1167,7 @@ if JSON_Load == "N":
                 "HQ_Delviery_To_Post_Auto": HQ_Delivery_To_Post_Auto}
             HQ_Delivery_Setup_df = pandas.DataFrame(HQ_Delivery_Setup_Dict, index=[0])
             HQ_Delivery_Setup_df.Name = "HQ_Delivery_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(HQ_Delivery_Setup_df.transpose())
 
             # Variable to Delete
@@ -1300,7 +1300,7 @@ if JSON_Load == "N":
                 "HQ_Invoice_To_Post_Auto": HQ_Invoice_To_Post_Auto}
             HQ_Invoice_Setup_df = pandas.DataFrame(HQ_Invoice_Setup_Dict, index=[0])
             HQ_Invoice_Setup_df.Name = "HQ_Invoice_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(HQ_Invoice_Setup_df.transpose())
 
             # Variable to Delete
@@ -1411,7 +1411,7 @@ if JSON_Load == "N":
                 "HQ_ATP_Zero_Date": HQ_ATP_Zero_Date}
             HQ_ATPR_Setup_df = pandas.DataFrame(HQ_ATP_Setup_Dict, index=[0])
             HQ_ATPR_Setup_df.Name = "HQ_ATPR_Setup_df"
-            print("\n-section sumary-")
+            print("\n-section summary-")
             print(HQ_ATPR_Setup_df.transpose())
 
             # Variable to Delete
@@ -1468,7 +1468,7 @@ if JSON_Load == "N":
                         "HQ_SUB_Register_No_Increment": HQ_SUB_Register_No_Increment}
                     HQ_SUB_Setup_df = pandas.DataFrame(HQ_SUB_Setup_Dict, index=[0])
                     HQ_SUB_Setup_df.Name = "HQ_SUB_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_SUB_Setup_df.transpose())
 
                     # Variable to Delete
@@ -1530,7 +1530,7 @@ if JSON_Load == "N":
                     "HQ_HQPAR_Register_No_Increment": HQ_HQPAR_Register_No_Increment}
                 HQ_HQPAR_Setup_df = pandas.DataFrame(HQ_HQPAR_Setup_Dict, index=[0])
                 HQ_HQPAR_Setup_df.Name = "HQ_HQPAR_Setup_df"
-                print("\n-section sumary-")
+                print("\n-section summary-")
                 print(HQ_HQPAR_Setup_df.transpose())
 
                 # Variable to Delete
@@ -1595,7 +1595,7 @@ if JSON_Load == "N":
                         "HQ_SN_SN_Increment": HQ_SN_SN_Increment}
                     HQ_HQSNR_Setup_df = pandas.DataFrame(HQ_HQSNR_Setup_Dict, index=[0])
                     HQ_HQSNR_Setup_df.Name = "HQ_HQSNR_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_HQSNR_Setup_df.transpose())
 
                     # Variable to Delete
@@ -1658,7 +1658,7 @@ if JSON_Load == "N":
                         "HQ_SN_SN_Increment": HQ_SN_SN_Increment}
                     HQ_HQSNR_Setup_df = pandas.DataFrame(HQ_HQSNR_Setup_Dict, index=[0])
                     HQ_HQSNR_Setup_df.Name = "HQ_HQSNR_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_HQSNR_Setup_df.transpose())
 
                     # Variable to Delete
@@ -1821,7 +1821,7 @@ if JSON_Load == "N":
                         "HQ_Del_Track_Volume_UOM": HQ_Del_Track_Volume_UOM}
                     HQ_DEL_Track_Setup_df = pandas.DataFrame(HQ_DEL_Track_Setup_Dict, index=[0])
                     HQ_DEL_Track_Setup_df.Name = "HQ_DEL_Track_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_DEL_Track_Setup_df.transpose())
 
                     # Variable to Delete
@@ -1934,7 +1934,7 @@ if JSON_Load == "N":
                         "HQ_Del_Track_Volume_UOM": ""}
                     HQ_DEL_Track_Setup_df = pandas.DataFrame(HQ_DEL_Track_Setup_Dict, index=[0])
                     HQ_DEL_Track_Setup_df.Name = "HQ_DEL_Track_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_DEL_Track_Setup_df.transpose())
 
                     # Variable to Delete
@@ -2037,7 +2037,7 @@ if JSON_Load == "N":
                         "HQ_Packg_Track_Packages_per_Delivery": HQ_Packg_Track_Packages_per_Delivery}
                     HQ_Packg_Track_Setup_df = pandas.DataFrame(HQ_Packg_Track_Setup_Dict, index=[0])
                     HQ_Packg_Track_Setup_df.Name = "HQ_Packg_Track_Setup_df"
-                    print("\n-section sumary-")
+                    print("\n-section summary-")
                     print(HQ_Packg_Track_Setup_df.transpose())
 
                     # Variable to Delete
@@ -2113,7 +2113,7 @@ if JSON_Load == "N":
                     "Company": Record_Links_Company} 
                 Record_Links_Setup_df = pandas.DataFrame(Record_Links_Setup_Dict, index=[0])
                 Record_Links_Setup_df.Name = "Record_Links_Setup_df"
-                print("\n-section sumary-")
+                print("\n-section summary-")
                 print(Record_Links_Setup_df.transpose())
 
                 # Variable to Delete

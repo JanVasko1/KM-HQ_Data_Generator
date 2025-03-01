@@ -24,7 +24,7 @@
             "Colors": {
                 "Accent": {
                     "Accent_Color_Mode": "Windows",
-                    "Accent_Color_Manual": "#ff2c67",
+                    "Accent_Color_Manual": "#99ff92",
                     "Accent_Color_List": [
                         "Windows",
                         "Manual",
@@ -78,7 +78,7 @@
         },
         "Field_Label": {
             "family": "Roboto",
-            "size": 12,
+            "size": 11,
             "weight": "normal",
             "slant": "roman",
             "underline": false,
@@ -549,13 +549,13 @@
     "Frames": {
         "Page_Frames": {
             "Background": {
-                "width": 1800,
-                "height": 900,
+                "width": 1180,
+                "height": 700,
                 "corner_radius": 10,
-                "border_width": 0,
+                "border_width": 1,
                 "border_color": [
                     "#2C2C2C",
-                    "#111219"
+                    "#FFFFFF"
                 ],
                 "bg_color": "#000001",
                 "fg_color": [
@@ -565,7 +565,7 @@
             },
             "SideBar": {
                 "width": 70,
-                "height": 900,
+                "height": 700,
                 "corner_radius": 10,
                 "border_width": 0,
                 "border_color": [
@@ -584,8 +584,8 @@
                 "corner_radius": 10,
                 "border_width": 0,
                 "border_color": [
-                    "#f7f9f9",
-                    "#2C2C2C"
+                    "#2C2C2C",
+                    "#FFFFFF"
                 ],
                 "bg_color": "transparent",
                 "fg_color": [
@@ -594,13 +594,13 @@
                 ]
             },
             "Work_Area": {
-                "width": 1730,
-                "height": 900,
-                "corner_radius": 0,
-                "border_width": 0,
+                "width": 1110,
+                "height": 700,
+                "corner_radius": 10,
+                "border_width": 1,
                 "border_color": [
-                    "#ecf0f1",
-                    "#111219"
+                    "#2C2C2C",
+                    "#FFFFFF"
                 ],
                 "bg_color": "#000001",
                 "fg_color": [
@@ -609,13 +609,13 @@
                 ]
             },
             "Work_Area_Header": {
-                "width": 1730,
+                "width": 1110,
                 "height": 70,
-                "corner_radius": 0,
+                "corner_radius": 10,
                 "border_width": 0,
                 "border_color": [
-                    "#f7f9f9",
-                    "#2C2C2C"
+                    "#2C2C2C",
+                    "#FFFFFF"
                 ],
                 "bg_color": "#000001",
                 "fg_color": [
@@ -624,13 +624,13 @@
                 ]
             },
             "Work_Area_Main": {
-                "width": 1730,
-                "height": 830,
-                "corner_radius": 0,
-                "border_width": 0,
+                "width": 1110,
+                "height": 630,
+                "corner_radius": 10,
+                "border_width": 1,
                 "border_color": [
-                    "#ecf0f1",
-                    "#111219"
+                    "#2C2C2C",
+                    "#FFFFFF"
                 ],
                 "bg_color": "#000001",
                 "fg_color": [
@@ -639,13 +639,13 @@
                 ]
             },
             "Work_Area_Status_Line": {
-                "width": 1730,
+                "width": 1110,
                 "height": 50,
-                "corner_radius": 0,
-                "border_width": 0,
+                "corner_radius": 10,
+                "border_width": 1,
                 "border_color": [
-                    "#ecf0f1",
-                    "#111219"
+                    "#2C2C2C",
+                    "#FFFFFF"
                 ],
                 "bg_color": "#000001",
                 "fg_color": [
@@ -654,8 +654,8 @@
                 ]
             },
             "Work_Area_Detail": {
-                "width": 1730,
-                "height": 780,
+                "width": 1110,
+                "height": 580,
                 "corner_radius": 0,
                 "border_width": 0,
                 "border_color": [
@@ -686,6 +686,37 @@
         },
         "Widgets": {
             "Widget_Frames": {
+                "Half_size": {
+                    "Body": {
+                        "width": 300,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": [
+                            "#DBDBDB",
+                            "#2C2C2C"
+                        ]
+                    },
+                    "Header": {
+                        "width": 298,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Data_Area": {
+                        "width": 298,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    }
+                },
                 "Single_size": {
                     "Body": {
                         "width": 500,
@@ -861,6 +892,40 @@
                 }
             },
             "Field_Frames": {
+                "Half_size": {
+                    "Area": {
+                        "width": 296,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Label": {
+                        "width": 170,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Space": {
+                        "width": 30,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Value": {
+                        "width": 100,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    }
+                },
                 "Single_Column": {
                     "Area": {
                         "width": 496,
@@ -1318,7 +1383,51 @@
     },
     "TabView": {
         "Normal": {
-            "width": 1700,
+            "width": 1100,
+            "height": 10,
+            "corner_radius": 10,
+            "border_width": 1,
+            "border_color": [
+                "#2C2C2C",
+                "#FFFFFF"
+            ],
+            "bg_color": "transparent",
+            "fg_color": [
+                "#d0d0d0",
+                "#2C2C2C"
+            ],
+            "segmented_button_fg_color": [
+                "#2C2C2C",
+                "#FFFFFF"
+            ],
+            "segmented_button_selected_color": [
+                "#00A9FF",
+                "#00A9FF"
+            ],
+            "segmented_button_selected_hover_color": [
+                "#33BAff",
+                "#33BAff"
+            ],
+            "segmented_button_unselected_color": [
+                "#EDEDED",
+                "#2C2C2C"
+            ],
+            "segmented_button_unselected_hover_color": [
+                "#33BAff",
+                "#33BAff"
+            ],
+            "text_color": [
+                "#2C2C2C",
+                "#FFFFFF"
+            ],
+            "text_color_disabled": [
+                "#2C2C2C",
+                "#FFFFFF"
+            ],
+            "anchor": "center"
+        },
+        "Download": {
+            "width": 350,
             "height": 10,
             "corner_radius": 10,
             "border_width": 1,
@@ -1505,7 +1614,7 @@
     "ProgressBar": {
         "Horizontal": {
             "Download_Process": {
-                "width": 1490,
+                "width": 870,
                 "height": 15,
                 "border_width": 1,
                 "border_color": [

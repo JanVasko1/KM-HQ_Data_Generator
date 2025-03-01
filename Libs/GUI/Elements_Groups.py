@@ -286,7 +286,7 @@ def Get_Pop_up_window(Configuration:dict, title: str, width: int, height: int, T
     else:
         pass
     Pop_Up_Window.overrideredirect(boolean=True)
-    Pop_Up_Window.iconbitmap(bitmap=Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\TimeSheet.ico"))
+    Pop_Up_Window.iconbitmap(bitmap=Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
     Pop_Up_Window.resizable(width=False, height=False)
 
     # Rounded corners 

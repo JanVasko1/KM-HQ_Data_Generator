@@ -1,3 +1,5 @@
+# BUG --> from some reason the null value appeare in TEmpalte and TEmplate list?
+# BUG --> Tool Tip for Import Windows is not on Top
 # TODO --> implementovat nejaký Counter kolik toho bylo vytvořeno a při zavárání aplikace aktualizovat něco na sharepointu / per NOC (aby bylo vidět kolik se toho skrz aplikaci udělalo)
 
 """
@@ -12,9 +14,8 @@ import os
 import json
 import time
 from glob import glob
-from shutil import copy as sh_copy
 
-from customtkinter import CTk, CTkFrame, set_appearance_mode, StringVar
+from customtkinter import CTk, CTkFrame, set_appearance_mode, StringVar, CTkButton
 from CTkMessagebox import CTkMessagebox
 import pywinstyles
 
@@ -25,7 +26,9 @@ import Libs.Defaults_Lists as Defaults_Lists
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
-    
+    User_Name = Settings["0"]["General"]["User"]["Name"]
+    User_ID = Settings["0"]["General"]["User"]["Code"]
+    User_Email = Settings["0"]["General"]["User"]["Email"]
     Actual_Template_Variable = StringVar(master=Frame, value=Template_Used)
 
     # ------------------------- Local Functions -------------------------#
@@ -40,7 +43,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         else:
             set_appearance_mode(mode_string="system")
 
-    def Save_Template(Actual_Template_Frame_Var: CTkScrollableDropdown):
+    def Save_Template(Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
         global Template_List
         # Define Name for new Template
         File_Name = Defaults_Lists.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
@@ -58,33 +61,156 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         with open(file=Save_Path, mode="w") as file: 
             json.dump(Save_Template_dict, file)
 
+        # Update Option List
         Actual_Template_Frame_Var.configure(values=Template_List)
 
         Success_Message = CTkMessagebox(title="Success", message="Actual settings were saved into saved templates.", icon="check", option_1="Thanks", fade_in_duration=1)
         Success_Message.get()
 
-    def Export_Templates():
+    def Apply_Template(Selected_Value: str, Settings: dict, Actual_Template_Variable: StringVar) -> None:
+        Load_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
+        Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
+        Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
+        Defaults_Lists.Import_Data(Settings=Settings, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+
+    def Export_Templates() -> None:
         Source_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template")
         Destination_Path = os.path.join(os.path.expanduser("~"), "Downloads")
         files = glob(pathname=os.path.join(Source_Path, "*"))
 
         for Source_file in files:
             Destination_file = Source_file.replace(Source_Path, Destination_Path)
-            sh_copy(src=Source_file, dst=Destination_file)
+            Defaults_Lists.Copy_File(Source_Path=Source_file, Destination_Path=Destination_file)
 
         Success_Message = CTkMessagebox(title="Success", message="All Templates exported to Download folder.", icon="check", option_1="Thanks", fade_in_duration=1)
         Success_Message.get()
 
-    def Load_Template():
-        # TODO --> Finish: Load_Template --> dropdown a nahrát do Templates podle NSU prostředí a aktualizovat Settings
-        print("Load_Template")
-        pass
+    def Import_Template(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
+        def Template_drop_func(file: str) -> None:
+            global Template_List
+            # Get File Name 
+            Source_Path = file[0]
+            Last_Div = (Source_Path.rfind("\\")) + 1
+            File_Name = Source_Path[Last_Div:]
+           
+            # Copy File to Template Folder
+            Destination_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}")
+            Defaults_Lists.Copy_File(Source_Path=Source_Path, Destination_Path=Destination_Path)
+
+            # Update Template List
+            Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
+
+            # Update Option List
+            Actual_Template_Frame_Var.configure(values=Template_List)
+
+            Import_window.destroy()  
+            Success_Message = CTkMessagebox(title="Success", message="Your settings file has been imported. You can close Window.", icon="check", option_1="Thanks", fade_in_duration=1)
+            Success_Message.get()
+
+        Import_window_geometry = (200, 200)
+        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Import_window_geometry[0])
+        Import_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Drop file", width=Import_window_geometry[0], height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+
+        Frame_Body = Elements.Get_Frame(Configuration=Configuration, Frame=Import_window, Frame_Size="Import_Drop")
+        pywinstyles.apply_dnd(widget=Frame_Body, func=lambda file: Template_drop_func(file=file))
+        Frame_Body.pack(side="top", padx=15, pady=15)
+
+        Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Body, Icon_Name="circle-fading-plus", Icon_Size="Header", Button_Size="Picture_Theme")
+        Icon_Theme.configure(text="")
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Theme, message="Drop file here.", ToolTip_Size="Normal")
+
+        Icon_Theme.pack(side="top", padx=50, pady=50)
+       
+    def Delete_Templates(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
+        def Delete_Templates_Confirm(Frame_Body: CTkFrame, Actual_Template_Frame_Var: CTkScrollableDropdown, No_Lines: int) -> None:
+            global Template_List
+            Delete_Template_List = []
+            # Analyze content --> what is marked to be deleted
+            for line in range(0, No_Lines):
+                if line == 0:
+                    Frame_Index = ""
+                else:
+                    Frame_Index = str(line + 1)
+                Line_Element_Group = Frame_Body.children[f"!ctkframe{Frame_Index}"]
+                Delete_Label_Element = Line_Element_Group.children["!ctkframe"].children["!ctklabel"]
+                Delete_CheckBox_Element = Line_Element_Group.children["!ctkframe3"].children["!ctkcheckbox"]
+
+                if Delete_CheckBox_Element.get() == True:
+                    Delete_Label = str(Delete_Label_Element.cget("text"))
+                    try:
+                        Delete_Label = Delete_Label.replace(":", "")
+                    except:
+                        pass
+                    Delete_Template_List.append(Delete_Label)
+
+            # Delete
+            for Template in Delete_Template_List:
+                file_path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{Template}.json")
+                Defaults_Lists.Delete_File(file_path=file_path) 
+
+            # Update Template List
+            Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
+
+            # Update Option List
+            Actual_Template_Frame_Var.configure(values=Template_List)
+
+            Delete_Activity_Correct_Close() 
+
+            Success_Message = CTkMessagebox(title="Success", message="Selected Templates were deleted.", icon="check", option_1="Thanks", fade_in_duration=1)
+            Success_Message.get()
+
+        def Delete_Activity_Correct_Close() -> None:
+            Delete_Activity_Correct_Window.destroy()
+        
+        # TopUp Window
+        Delete_Activity_Correct_Window_geometry = (300, 250)
+        # TODO --> Should make pop-up with fix width, now it is taken from sub-elements
+        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Delete_Activity_Correct_Window_geometry[0])
+        Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Delete Templates.", width=Delete_Activity_Correct_Window_geometry[0], height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=False)
+
+        # Frame - General
+        Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Delete_Activity_Correct_Window, Name="Delete Templates:", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To delete unwanted templates.")
+        Frame_Body = Frame_Main.children["!ctkframe2"]
+
+        # Fields - Templates
+        No_Lines = 0
+        for template in Template_List:
+            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}", Field_Type="Input_CheckBox") 
+            Var1 = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+            Var1.configure(text="")
+            No_Lines += 1
+
+        # Buttons
+        Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Small") 
+        Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+        Button_Confirm_Var.configure(text="Confirm", command = lambda:Delete_Templates_Confirm(Frame_Body=Frame_Body, Actual_Template_Frame_Var=Actual_Template_Frame_Var, No_Lines=No_Lines))
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm line delete.", ToolTip_Size="Normal")
+
+        Button_Reject_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
+        Button_Reject_Var.configure(text="Reject", command = lambda:Delete_Activity_Correct_Close())
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Reject_Var, message="Dont process, closing Window.", ToolTip_Size="Normal")
+
 
     # ------------------------- Main Functions -------------------------#
+    # Account Mail
+    Frame_User_Email = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
+    Frame_User_Email.configure(text=User_Email)
+    Frame_User_Email.pack_propagate(flag=False)
+
+    # Account ID
+    Frame_User_ID = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
+    Frame_User_ID.configure(text=User_ID)
+    Frame_User_ID.pack_propagate(flag=False)
+
+    # Account Name
+    Frame_User_Name = Elements.Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Column_Header", Font_Size="Column_Header")
+    Frame_User_Name.configure(text=User_Name)
+    Frame_User_Name.pack_propagate(flag=False)
+
     # Actual Template
     Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
     Actual_Template_Frame.configure(variable=Actual_Template_Variable)
-    Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Load_Template())
+    Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Apply_Template(Selected_Value=Actual_Template_Frame_Var, Settings=Settings, Actual_Template_Variable=Actual_Template_Variable))
 
     # Theme Change - Button
     Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="sun-moon", Icon_Size="Header", Button_Size="Picture_Theme")
@@ -93,24 +219,40 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Theme, message="Change theme.", ToolTip_Size="Normal")
 
     # Button - Save Template
-    Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="download", Icon_Size="Header", Button_Size="Picture_Theme")
+    Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_SideBar")
     Icon_Save_Template.configure(text="")
     Icon_Save_Template.configure(command = lambda: Save_Template(Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Save_Template, message="Save Current settings.", ToolTip_Size="Normal")
 
     # Button - Export Templates
-    Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="folder-output", Icon_Size="Header", Button_Size="Picture_Theme")
+    Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="folder-output", Icon_Size="Header", Button_Size="Picture_SideBar")
     Icon_Export_Templates.configure(text="")
     Icon_Export_Templates.configure(command = lambda: Export_Templates())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Export_Templates, message="Export all templates to Download folder.", ToolTip_Size="Normal")
 
-    
+    # Button - Import Templates
+    Icon_Import_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="import", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Import_Templates.configure(text="")
+    Icon_Import_Templates.configure(command = lambda: Import_Template(Button=Icon_Import_Templates, Actual_Template_Frame_Var=Actual_Template_Frame_Var))
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Import_Templates, message="Import Template file to program.", ToolTip_Size="Normal")
+
+    # Button - Delete Templates
+    Icon_Delete_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="file-x-2", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Delete_Templates.configure(text="")
+    Icon_Delete_Templates.configure(command = lambda: Delete_Templates(Button=Icon_Delete_Templates, Actual_Template_Frame_Var=Actual_Template_Frame_Var))
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Delete_Templates, message="Delete Templates file from program.", ToolTip_Size="Normal")
+
     # Build look of Widget
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Actual_Template_Frame.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Icon_Save_Template.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    Icon_Export_Templates.pack(side="right", fill="none", expand=False, padx=5, pady=5)
-    
+    Frame_User_Email.pack(side="right", fill="none", expand=False, padx=5, pady=5)
+    Frame_User_ID.pack(side="right", fill="none", expand=False, padx=5, pady=5)
+    Frame_User_Name.pack(side="right", fill="none", expand=False, padx=5, pady=5)
+
+    Icon_Save_Template.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+    Actual_Template_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+    Icon_Export_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+    Icon_Import_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+    Icon_Delete_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Side Bar ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
@@ -119,7 +261,6 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
     global Side_Bar_Icon_top_pady, Side_Bar_Icon_Bottom_pady, Icon_Default_pady, Logo_Height, Logo_width, Side_Bar_Frame_Height, Icon_Button_Height, Logo_pady
     
     Icon_count = 9
-
     Icon_Default_pady = 10
     Logo_Height = 40
     Logo_width = 70
@@ -140,7 +281,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Detail)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=(Side_Bar_Icon_top_pady, Icon_Default_pady), sticky="e")
         time.sleep(0.1)
-        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Detail)
+        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Detail)
         window.update_idletasks()
 
     def Show_Confirmation_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -196,7 +337,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Detail)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_Settings.Page_Settings(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Detail)
+        P_Settings.Page_Settings(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Detail)
         window.update_idletasks()
 
 
@@ -316,8 +457,8 @@ class Win(CTk):
 
         display_width = self.winfo_screenwidth()
         display_height = self.winfo_screenheight()
-        Window_Frame_width = 1800
-        Window_Frame_height = 900
+        Window_Frame_width = 1200
+        Window_Frame_height = 700
         left_position = int(display_width // 2 - Window_Frame_width // 2)
         top_position = int(display_height // 2 - Window_Frame_height // 2)
         self.geometry(f"{Window_Frame_width}x{Window_Frame_height}+{left_position}+{top_position}")
@@ -354,15 +495,12 @@ if __name__ == "__main__":
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
 
     Template_Used = Settings["0"]["General"]["Template"]["Last_Used"]
-    Template_List = Settings["0"]["General"]["Template"]["Templates_List"]
+    Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
 
     # Create folders if do not exists
     try:
         os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\"))
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\DashBoard\\"))
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\Downloads\\"))
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\My_Team\\"))
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\History\\"))
+        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\"))
     except:
         pass
 
@@ -395,15 +533,7 @@ if __name__ == "__main__":
     Frame_Work_Area_Detail.pack(side="left", fill="none", expand=False)
 
     Get_Header(Frame=Frame_Header)
-    Get_Side_Bar(Side_Bar_Frame=Frame_Side_Bar)
-    # TODO --> spustut Popup k výběru Enviromentu, DB_Type¨
-    # TODO --> aktualizovat aktuální Template List
+    Get_Side_Bar(Side_Bar_Frame=Frame_Side_Bar)   
     
-    # Temporary variables
-    NUS_version = "Cloud"
-    NOC = "Core"
-    Environment = "QA"
-    Company = "CRONUS%20International%20Ltd."
-
     # run
     window.mainloop()

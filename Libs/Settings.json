@@ -1,27 +1,75 @@
 {
     "0": {
         "General": {
+            "User": {
+                "Code": "CZ011845",
+                "Name": "Jan Vasko",
+                "Email": "Jan.Vasko@konicaminolta.eu"
+            },
             "Template": {
-                "Last_Used": "",
-                "Templates_List": []
+                "Last_Used": "Default",
+                "Templates_List": [
+                    "BHN_DDL_Dealers",
+                    "BHN_DDL_Tower",
+                    "Default"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
                 "Time": "%H:%M"
             }
         },
+        "Connection": {
+            "NUS_Version_List": [
+                "Cloud",
+                "NUS3"
+            ],
+            "Environment_List": [
+                "QA",
+                "FIX",
+                "Sandbox"
+            ],
+            "NOC_List": [
+                "BBG",
+                "BBL",
+                "BCZ",
+                "BDK",
+                "BFI",
+                "BGE",
+                "BGR",
+                "BHN",
+                "BHR",
+                "BIH",
+                "BNO",
+                "BPL",
+                "BPT",
+                "BR",
+                "BRO",
+                "BRS",
+                "BSK",
+                "BSL",
+                "BSW",
+                "BTR",
+                "BUR",
+                "Core"
+            ]
+        },
         "HQ_Data_Handler": {
             "Confirmation": {
-                "Normal": {
+                "Purchase_Order": {
                     "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
-                            "Manual",
-                            "Automatic"
+                            "Fixed",
+                            "Automatic",
+                            "Prompt"
                         ],
                         "Automatic_Options": {
                             "Prefix": "CON"
+                        },
+                        "Fixed_Options": {
+                            "Number": ""
                         }
                     },
                     "Line_Flags": {
@@ -95,14 +143,16 @@
                         }
                     }
                 },
-                "Return_Order": {}
+                "Return_Order": {
+                    "Use": true
+                }
             },
             "CPDI": {
                 "Use": true,
                 "Create_CPDI_Method": "All",
                 "Create_CPDI_Method_List": [
                     "All",
-                    "Manual select"
+                    "Prompt"
                 ]
             },
             "PreAdvice": {
@@ -132,11 +182,15 @@
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
-                        "Manual",
-                        "Automatic"
+                        "Fixed",
+                        "Automatic",
+                        "Prompt"
                     ],
                     "Automatic_Options": {
                         "Prefix": "DEL"
+                    },
+                    "Fixed_Options": {
+                        "Number": ""
                     }
                 },
                 "Delivery_Counts": {
@@ -294,22 +348,26 @@
                 }
             },
             "Invoice": {
-                "Normal": {
+                "Purchase_Order": {
                     "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
-                            "Manual",
-                            "Automatic"
+                            "Fixed",
+                            "Automatic",
+                            "Prompt"
                         ],
                         "Automatic_Options": {
                             "Prefix": "INV"
+                        },
+                        "Fixed_Options": {
+                            "Number": ""
                         }
                     },
                     "Prices": {
                         "Price_Source_Method": "Price List",
                         "Price_Source_Method_List": [
-                            "Manual",
+                            "Prompt",
                             "Price List",
                             "Purchase Line",
                             "From Confirmation"
@@ -387,10 +445,14 @@
                         "Method": "Automatic",
                         "Methods_List": [
                             "Manual",
-                            "Automatic"
+                            "Automatic",
+                            "Prompt"
                         ],
                         "Automatic_Options": {
                             "Prefix": "BBINV"
+                        },
+                        "Manual_Options": {
+                            "Number": ""
                         }
                     },
                     "Quantity": {
@@ -471,12 +533,19 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
-                "Credit_Memo": {}
+                "Credit_Memo": {
+                    "Use": false,
+                    "PDF": {
+                        "Generate": false
+                    }
+                }
             },
-            "IAL": {}
+            "IAL": {
+                "Use": false
+            }
         }
     }
 }
