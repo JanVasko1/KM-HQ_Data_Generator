@@ -3,7 +3,7 @@ from pandas import DataFrame
 import requests
 import json
 
-from CTkMessagebox import CTkMessagebox
+import Libs.GUI.Elements as Elements
 
 # TODO --> if empty return DataFrames (if emmpty)
 
@@ -37,7 +37,7 @@ def Get_Rid_od_OData_Tag(My_dictionary: dict, Key: str) -> dict:
     My_dictionary.pop(Key)
     return My_dictionary
 
-def Request_Endpoint(headers: dict, params: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Table: str):
+def Request_Endpoint(Configuration: dict, headers: dict, params: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Table: str):
     response_values_List = []
     list_len = 0 
 
@@ -51,14 +51,13 @@ def Request_Endpoint(headers: dict, params: dict, tenant_id: str, NUS_version: s
         Error_dict = json.loads(response.text)
         Error_Code = Error_dict["error"]["code"]
         Error_Detail = Error_dict["error"]["message"]
-        Error_Message = CTkMessagebox(title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     return response_values_List, list_len
 
 # ---------------------------------------------------------- Main Functions ---------------------------------------------------------- #
 # ------------------- Company List ------------------- #
-def Get_Companies(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str) -> list:    
+def Get_Companies(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str) -> list:    
     url = f"https://api.businesscentral.dynamics.com/v2.0/{tenant_id}/NUS_{NUS_version}_{NOC}_{Environment}/api/v2.0/companies"
     response = requests.get(url=url, headers=headers)
     Companies_list = []
@@ -73,13 +72,12 @@ def Get_Companies(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  En
         Error_dict = json.loads(response.text)
         Error_Code = Error_dict["error"]["code"]
         Error_Detail = Error_dict["error"]["message"]
-        Error_Message = CTkMessagebox(title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     return Companies_list
 
 # ------------------- HQ_Testing_Purchase_Headers ------------------- #
-def Get_Purchase_Headers_list_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list):
+def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list):
     # Fields
     fields_list = ["No"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -92,7 +90,7 @@ def Get_Purchase_Headers_list_df(headers: dict, tenant_id: str, NUS_version: str
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
 
     # Prepare DataFrame
     Purchase_Order_No_list = []
@@ -102,7 +100,7 @@ def Get_Purchase_Headers_list_df(headers: dict, tenant_id: str, NUS_version: str
     return Purchase_Order_No_list
 
 
-def Get_Purchase_Headers_info_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
+def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
     # Fields
     fields_list = ["No", "Buy_from_Vendor_No", "HQ_Identification_No_NUS", "ShippingConditionFieldNUS", "CompleteDeliveryFieldNUS", "PDICenterFieldNUS", "HQCPDILevelRequestedFieldNUS", "Expected_Receipt_Date", "Promised_Receipt_Date", "Requested_Receipt_Date", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -115,7 +113,7 @@ def Get_Purchase_Headers_info_df(headers: dict, tenant_id: str, NUS_version: str
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
 
     # Prepare DataFrame
     Purchase_Order_No_list = []
@@ -174,8 +172,7 @@ def Get_Purchase_Headers_info_df(headers: dict, tenant_id: str, NUS_version: str
         Non_HQ_Orders = Get_Field_List_string(fields_list=Non_HQ_Orders, Join_sign=", ")
         Non_HQ_Vendors = list(set(Non_HQ_Vendors))
         Non_HQ_Vendors = Get_Field_List_string(fields_list=Non_HQ_Vendors, Join_sign=", ")
-        Error_Message = CTkMessagebox(title="Error", message=f"Program will not process these Purchase Orders: {Non_HQ_Orders} \n as this/these Vendors: {Non_HQ_Vendors}\n are not part of HQ Communication.", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Program will not process these Purchase Orders: {Non_HQ_Orders} \n as this/these Vendors: {Non_HQ_Vendors}\n are not part of HQ Communication.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
@@ -183,7 +180,7 @@ def Get_Purchase_Headers_info_df(headers: dict, tenant_id: str, NUS_version: str
     return Purchase_Headers_df, Purchase_Order_No_list
 
 # ------------------- HQ_Testing_Purchase_Lines ------------------- #
-def Get_Purchase_Lines_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list):
+def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list):
     # Fields
     fields_list = ["Document_No", "Type", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -196,7 +193,7 @@ def Get_Purchase_Lines_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Lines")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Lines")
 
     # Prepare DataFrame
     Purchase_Order_No_list = []
@@ -234,7 +231,7 @@ def Get_Purchase_Lines_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     return Purchase_Lines_df, Items_list
 
 # ------------------- HQ_Testing_HQ_Communication ------------------- #
-def Get_HQ_Communication_Setup_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_HQ_Communication_Setup_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
     # Fields
     fields_list = ["HQ_Vendor_Type", "HQ_Vendor_No", "HQ_Identification_No", "Zero_Date", "HQ_Confirm_File_Path", "HQ_PreAdvice_File_Path", "HQ_CPDI_Import_Path", "HQ_Delivery_File_Path", "HQ_Invoice_File_Path", "HQ_PDF_File_Path", "HQ_R_O_Confirm_File_Path", "HQ_R_O_Cr_Memo_File_Path", "File_Connector_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -246,7 +243,7 @@ def Get_HQ_Communication_Setup_df(headers: dict, tenant_id: str, NUS_version: st
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Communication")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Communication")
 
     # Prepare DataFrame
     HQ_Vendor_Type_list = []
@@ -304,7 +301,7 @@ def Get_HQ_Communication_Setup_df(headers: dict, tenant_id: str, NUS_version: st
     return HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendor_No_list
 
 # ------------------- HQ_Testing_Company_Information ------------------- #
-def Get_Company_Information_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Company_Information_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["English_Name_NUS", "English_Address_NUS", "English_Post_Code_NUS", "English_City_NUS", "English_Country_Reg_Code_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -316,14 +313,14 @@ def Get_Company_Information_df(headers: dict, tenant_id: str, NUS_version: str, 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Company_Information")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Company_Information")
     response_values_dict = Get_Rid_od_OData_Tag(My_dictionary=response_values_List[0], Key="@odata.etag")
     
     Company_Information_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     return Company_Information_df
 
 # ------------------- HQ_Testing_Country_Regions ------------------- #
-def Get_Country_Regions_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Country_Regions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "ISO_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -335,7 +332,7 @@ def Get_Country_Regions_df(headers: dict, tenant_id: str, NUS_version: str, NOC:
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Country_Regions")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Country_Regions")
 
     # Prepare DataFrame
     Code_list = []
@@ -355,7 +352,7 @@ def Get_Country_Regions_df(headers: dict, tenant_id: str, NUS_version: str, NOC:
     return Country_Regions_df
 
 # ------------------- HQ_Testing_HQ_CPDI_Levels ------------------- #
-def Get_HQ_CPDI_Levels_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_HQ_CPDI_Levels_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Level"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -367,7 +364,7 @@ def Get_HQ_CPDI_Levels_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Levels")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Levels")
 
     # Prepare DataFrame
     CPDI_Level_list = []
@@ -385,7 +382,7 @@ def Get_HQ_CPDI_Levels_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
 
 
 # ------------------- HQ_Testing_HQ_CPDI_Status ------------------- #
-def Get_HQ_CPDI_Status_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_HQ_CPDI_Status_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Status_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -397,7 +394,7 @@ def Get_HQ_CPDI_Status_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Status")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Status")
 
     # Prepare DataFrame
     CPDI_Status_list = []
@@ -414,7 +411,7 @@ def Get_HQ_CPDI_Status_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     return HQ_CPDI_Status_df
 
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
-def Get_HQ_Item_Transport_Register_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str):
+def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str):
     # Fields
     fields_list = ["Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -427,7 +424,7 @@ def Get_HQ_Item_Transport_Register_df(headers: dict, tenant_id: str, NUS_version
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Item_Transport_Register")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Item_Transport_Register")
 
     # Prepare DataFrame
     Document_Type_list = []
@@ -482,8 +479,7 @@ def Get_HQ_Item_Transport_Register_df(headers: dict, tenant_id: str, NUS_version
             Non_Exported_Purchase_Orders.append(Request_Order)
     if len(Non_Exported_Purchase_Orders) > 1:
         Non_Exported_Purchase_Orders = Get_Field_List_string(fields_list=Non_Exported_Purchase_Orders, Join_sign=", ")
-        Error_Message = CTkMessagebox(title="Error", message=f"Program will not process these Purchase Orders: {Non_Exported_Purchase_Orders}, because they were not Exported.", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Program will not process these Purchase Orders: {Non_Exported_Purchase_Orders}, because they were not Exported.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
         
@@ -491,7 +487,7 @@ def Get_HQ_Item_Transport_Register_df(headers: dict, tenant_id: str, NUS_version
 
 
 # ------------------- HQ_Testing_Items ------------------- #
-def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
+def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
     fields_list = ["No", "Description", "Vendor_No", "Vendor_Item_No", "Item_Tracking_Code", "Substitutes_Exist_NUS", "AssemblyBOM", "BEU_Set_NUS", "BEU_End_of_Life_NUS", "Material_Group_NUS", "Unit_Price"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -504,7 +500,7 @@ def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Env
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items")
 
     # Prepare DataFrame
     No_list = []
@@ -573,7 +569,7 @@ def Get_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Env
     return Items_df, Substitution_Item_list, BOM_Item_list, BEU_Set_Item_list, Item_Tracking_Code_list
 
 # ------------------- HQ_Testing_Items_BOM ------------------- #
-def Get_Items_BOM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
+def Get_Items_BOM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
     fields_list = ["Parent_Item_No_NUS", "Line_No", "Type", "No", "Quantity_per", "Unit_of_Measure_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -586,7 +582,7 @@ def Get_Items_BOM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str, 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_BOM")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_BOM")
 
     # Prepare DataFrame
     Parent_Item_No_NUS_list = []
@@ -628,7 +624,7 @@ def Get_Items_BOM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str, 
 
 
 # ------------------- HQ_Testing_Items_Substitution ------------------- #
-def Get_Items_Substitutions_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
+def Get_Items_Substitutions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
     fields_list = ["No", "Substitute_Type", "Substitute_No"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -641,7 +637,7 @@ def Get_Items_Substitutions_df(headers: dict, tenant_id: str, NUS_version: str, 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Substitution")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Substitution")
 
     # Prepare DataFrame
     No_list = []
@@ -673,7 +669,7 @@ def Get_Items_Substitutions_df(headers: dict, tenant_id: str, NUS_version: str, 
     return Items_Substitutions_df, Items_For_Substitution_df
 
 # ------------------- HQ_Testing_Items_Connected_Items ------------------- #
-def Get_Items_Connected_Items_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, Connection_Type_list: list) -> DataFrame:
+def Get_Items_Connected_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, Connection_Type_list: list) -> DataFrame:
     # Fields
     fields_list = ["Main_Item_No", "No", "Connection_Type", "Quantity"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -689,7 +685,7 @@ def Get_Items_Connected_Items_df(headers: dict, tenant_id: str, NUS_version: str
         params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
         # Request
-        sub_response_values_List, sub_list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Connected_Items")
+        sub_response_values_List, sub_list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Connected_Items")
         for sub_list in sub_response_values_List:
             response_values_List.append(sub_list)
 
@@ -727,7 +723,7 @@ def Get_Items_Connected_Items_df(headers: dict, tenant_id: str, NUS_version: str
     return Items_Connected_Items_df, Items_For_Connected_Items_df
 
 # ------------------- HQ_Testing_Items_Price_List ------------------- #
-def Get_Items_Price_Lists_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Items_Price_Lists_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "Status"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -739,7 +735,7 @@ def Get_Items_Price_Lists_df(headers: dict, tenant_id: str, NUS_version: str, NO
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Prices_List")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Prices_List")
 
     # Prepare DataFrame
     Code_list = []
@@ -769,7 +765,7 @@ def Get_Items_Price_Lists_df(headers: dict, tenant_id: str, NUS_version: str, NO
     return Active_Price_Lists_df, BEU_Price_list
 
 # ------------------- HQ_Testing_Items_Price_Detail_List ------------------- #
-def Get_Items_Price_List_detail_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, BEU_Price_list: str, Amount_Type_List: list) -> DataFrame:
+def Get_Items_Price_List_detail_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, BEU_Price_list: str, Amount_Type_List: list) -> DataFrame:
     # Fields
     fields_list = ["Price_List_Code", "SourceType", "SourceNo", "Asset_Type", "Asset_No", "Unit_of_Measure_Code", "StartingDate", "EndingDate", "DirectUnitCost"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -784,7 +780,7 @@ def Get_Items_Price_List_detail_df(headers: dict, tenant_id: str, NUS_version: s
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Price_Detail_List")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Price_Detail_List")
 
     # Prepare DataFrame
     Price_List_Code = []
@@ -826,7 +822,7 @@ def Get_Items_Price_List_detail_df(headers: dict, tenant_id: str, NUS_version: s
     return Items_Price_List_Detail_df 
 
 # ------------------- HQ_Testing_Items_Tracking_Codes ------------------- #
-def Get_Items_Tracking_Codes_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Item_Tracking_Code_list: list) -> DataFrame:
+def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Item_Tracking_Code_list: list) -> DataFrame:
     # Fields
     fields_list = ["Code", "SN_Purchase_Inbound_Tracking"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -839,7 +835,7 @@ def Get_Items_Tracking_Codes_df(headers: dict, tenant_id: str, NUS_version: str,
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Tracking_Codes")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_Tracking_Codes")
 
     # Prepare DataFrame
     Tracking_code_list = []
@@ -859,7 +855,7 @@ def Get_Items_Tracking_Codes_df(headers: dict, tenant_id: str, NUS_version: str,
     return Items_Tracking_df
 
 # ------------------- HQ_Testing_Items_UoM ------------------- #
-def Get_Items_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
+def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
     fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure", "Weight"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -872,7 +868,7 @@ def Get_Items_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str, 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_UoM")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Items_UoM")
 
     # Prepare DataFrame
     Item_No_list = []
@@ -898,7 +894,7 @@ def Get_Items_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str, 
     return Items_UoM_df
 
 # ------------------- HQ_Testing_NVR_FS_Connect ------------------- #
-def Get_NVR_FS_Connect_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, File_Connector_Code_list: list) -> DataFrame:
+def Get_NVR_FS_Connect_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, File_Connector_Code_list: list) -> DataFrame:
     # Fields
     fields_list = ["Code", "Root_Path_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -911,7 +907,7 @@ def Get_NVR_FS_Connect_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_NVR_FS_Connect")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_NVR_FS_Connect")
 
     # Prepare DataFrame
     NVR_FS_Connect_Code_list = []
@@ -931,7 +927,7 @@ def Get_NVR_FS_Connect_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     return NVR_FS_Connect_df
 
 # ------------------- HQ_Testing_Plans ------------------- #
-def Get_Plants_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Plants_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "VAT"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -943,7 +939,7 @@ def Get_Plants_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  En
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Plans")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Plans")
 
     # Prepare DataFrame
     Plants_Code_list = []
@@ -963,7 +959,7 @@ def Get_Plants_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  En
     return Plants_df
 
 # ------------------- HQ_Testing_Shipment_Method ------------------- #
-def Get_Shipment_Method_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Shipment_Method_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -975,7 +971,7 @@ def Get_Shipment_Method_df(headers: dict, tenant_id: str, NUS_version: str, NOC:
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Shipment_Method")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Shipment_Method")
 
     # Prepare DataFrame
     Shipment_Method_list = []
@@ -992,7 +988,7 @@ def Get_Shipment_Method_df(headers: dict, tenant_id: str, NUS_version: str, NOC:
     return Shipment_Method_df
 
 # ------------------- HQ_Testing_Shipping_Agent ------------------- #
-def Get_Shipping_Agent_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Shipping_Agent_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["BEU_Carrier_ID_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1004,7 +1000,7 @@ def Get_Shipping_Agent_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Shipping_Agent")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Shipping_Agent")
 
     # Prepare DataFrame
     Shipping_Agent_list = []
@@ -1022,7 +1018,7 @@ def Get_Shipping_Agent_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
 
 
 # ------------------- HQ_Testing_Tariff_Numbers ------------------- #
-def Get_Tariff_Numbers_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_Tariff_Numbers_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["No"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1034,7 +1030,7 @@ def Get_Tariff_Numbers_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Tariff_Numbers")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Tariff_Numbers")
 
     # Prepare DataFrame
     Tariff_Number_list = []
@@ -1051,7 +1047,7 @@ def Get_Tariff_Numbers_df(headers: dict, tenant_id: str, NUS_version: str, NOC: 
     return Tariff_Numbers_df
 
 # ------------------- HQ_Testing_UoM ------------------- #
-def Get_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "International_Standard_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1063,7 +1059,7 @@ def Get_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Envir
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_UoM")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_UoM")
 
     # Prepare DataFrame
     Code_list = []
@@ -1083,7 +1079,7 @@ def Get_UoM_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Envir
     return UoM_df
 
 # ------------------- HQ_Testing_Vendor_Service_Functions ------------------- #
-def Get_Vendor_Service_Functions_df(headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> DataFrame:
+def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> DataFrame:
     # Fields
     fields_list = ["Vendor_No", "Vendor_Service_ID", "Vendor_Service_Name"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1096,7 +1092,7 @@ def Get_Vendor_Service_Functions_df(headers: dict, tenant_id: str, NUS_version: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Vendor_Service_Functions")
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Vendor_Service_Functions")
 
     # Prepare DataFrame
     Vendor_No_list = []

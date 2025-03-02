@@ -23,7 +23,7 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
         pass
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
-def PO_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
+def PO_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Method"]
     Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Methods_List"])
@@ -35,14 +35,14 @@ def PO_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFr
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Confirmation Number.")
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Confirmation Number.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Number Method
     CON_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     CON_Number_Frame_Var = CON_Number_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     CON_Number_Frame_Var.configure(variable=Numbers_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CON_Number_Frame_Var, values=Numbers_Method_List, command=lambda CON_Number_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Number", "Method"], Information=CON_Number_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CON_Number_Frame_Var, values=Numbers_Method_List, command=lambda CON_Number_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Number", "Method"], Information=CON_Number_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Automatic Prefix
     AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
@@ -64,7 +64,7 @@ def PO_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFr
     return Frame_Main
 
 
-def PO_Prices(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
+def PO_Prices(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Price_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Prices"]["Method"]
     Price_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Prices"]["Methods_List"])
@@ -73,14 +73,14 @@ def PO_Prices(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFr
     # ------------------------- Local Functions -------------------------#
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Prices", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define prices for Items.")
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Prices", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define prices for Items.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Price Method
     Prices_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     Prices_Method_Frame_Var = Prices_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     Prices_Method_Frame_Var.configure(variable=Price_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Prices_Method_Frame_Var, values=Price_Method_List, command=lambda Prices_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Price_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Prices", "Method"], Information=Prices_Method_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Prices_Method_Frame_Var, values=Price_Method_List, command=lambda Prices_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Price_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Prices", "Method"], Information=Prices_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
 
     # Build look of Widget
@@ -88,7 +88,7 @@ def PO_Prices(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFr
 
     return Frame_Main
 
-def PO_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
+def PO_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Currency_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Method"]
     Currency_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Methods_List"])
@@ -99,14 +99,14 @@ def PO_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTk
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define currency in Confirmation.")
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define currency in Confirmation.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Number Method
     Currency_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     Currency_Method_Frame_Var = Currency_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     Currency_Method_Frame_Var.configure(variable=Currency_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Currency_Method_Frame_Var, values=Currency_Method_List, command=lambda Currency_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Currency_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Currency", "Method"], Information=Currency_Method_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Currency_Method_Frame_Var, values=Currency_Method_List, command=lambda Currency_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Currency_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Currency", "Method"], Information=Currency_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Currency
     Fixed_Currency_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Currency", Field_Type="Input_Normal") 
@@ -120,7 +120,7 @@ def PO_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTk
 
     return Frame_Main
 
-def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
+def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Line_Flags_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Use"]
     Line_Flag_Label_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Labels_always"]
@@ -134,7 +134,7 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> C
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Line Flags", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will treat Line Flags.")
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Line Flags", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will treat Line Flags.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Use
@@ -151,14 +151,14 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> C
     Line_Flags_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     Line_Flags_Method_Frame_Var = Line_Flags_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     Line_Flags_Method_Frame_Var.configure(variable=Line_Flags_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Line_Flags_Method_Frame_Var, values=Line_Flags_Method_List, command=lambda Line_Flags_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Line_Flags_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Method"], Information=Line_Flags_Method_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Line_Flags_Method_Frame_Var, values=Line_Flags_Method_List, command=lambda Line_Flags_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Line_Flags_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Method"], Information=Line_Flags_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
 
     return Frame_Main
 
-def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame:
+def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     ATP_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Use"]
     ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
@@ -184,7 +184,7 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="ATP", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will work on ATP for each line.")
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="ATP", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will work on ATP for each line.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Use
@@ -206,7 +206,7 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame
     ATP_QTY_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     ATP_QTY_Method_Frame_Var = ATP_QTY_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     ATP_QTY_Method_Frame_Var.configure(variable=ATP_Quantity_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # TODO --> Quantity Distribution Percentage --> somyslet jak to ukázat v DB
 
@@ -217,7 +217,7 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame
     ATP_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     ATP_Date_Method_Frame_Var = ATP_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     ATP_Date_Method_Frame_Var.configure(variable=ATP_Dates_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_Date_Method_Frame_Var, values=ATP_Dates_Method_List, command=lambda ATP_Date_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=ATP_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Method"], Information=ATP_Date_Method_Frame_Var))
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_Date_Method_Frame_Var, values=ATP_Dates_Method_List, command=lambda ATP_Date_Method_Frame_Var: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=ATP_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Method"], Information=ATP_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - ONH - From CD + Entry Field
     ATP_Interval_ONH_From_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH - From CD +", Field_Type="Input_Normal", Validation="Integer") 
@@ -253,9 +253,9 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame
     Button_Man_ONH_DateFrame_Var_Var = Man_ONH_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONH_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
     Man_ONH_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Manual_Dates", "ONH"], Information=Man_ONH_Date_Frame_Var.get()))
-    Button_Man_ONH_DateFrame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONH_Date_Frame_Var, Clicked_on_Button=Button_Man_ONH_DateFrame_Var_Var, width=200, height=230, Fixed=True))
+    Button_Man_ONH_DateFrame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONH_Date_Frame_Var, Clicked_on_Button=Button_Man_ONH_DateFrame_Var_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=Man_ONH_Date_Frame_Var, Value=ATP_ONH_Date)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONH_DateFrame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal")
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONH_DateFrame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Field - Date To
     Man_ONB_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB Date", Field_Type="Entry_DropDown", Validation="Date")
@@ -263,9 +263,9 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame) -> CTkFrame
     Button_Man_ONB_Date_Frame_Var_Var = Man_ONB_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONB_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
     Man_ONB_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Manual_Dates", "ONB"], Information=Man_ONB_Date_Frame_Var.get()))
-    Button_Man_ONB_Date_Frame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONB_Date_Frame_Var, Clicked_on_Button=Button_Man_ONB_Date_Frame_Var_Var, width=200, height=230, Fixed=True))
+    Button_Man_ONB_Date_Frame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONB_Date_Frame_Var, Clicked_on_Button=Button_Man_ONB_Date_Frame_Var_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=Man_ONB_Date_Frame_Var, Value=ATP_ONB_Date)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONB_Date_Frame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal")
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONB_Date_Frame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

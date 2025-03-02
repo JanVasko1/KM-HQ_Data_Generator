@@ -6,37 +6,41 @@ import Libs.GUI.Elements as Elements
 
 def Page_Settings(Settings: dict, Configuration: dict, window: CTk, Frame: CTk|CTkFrame):
     # ------------------------- Main Functions -------------------------#
-    Frame_Settings_Work_Detail_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Detail")
-    Frame_Settings_Work_Detail_Area.grid_propagate(flag=False)
+    Frame_Settings_Work_Area_Main = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)
 
     # ------------------------- Work Area -------------------------#
     # Tab View
-    TabView = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Settings_Work_Detail_Area, Tab_size="Normal")
+    TabView = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Settings_Work_Area_Main, Tab_size="Normal", GUI_Level_ID=1)
     TabView.pack_propagate(flag=False)
     Tab_App = TabView.add("Appearance")
-    Tab_App.pack_propagate(flag=False)
     Tab_Usr = TabView.add("User")
-    Tab_Usr.pack_propagate(flag=False)
     TabView.set("Appearance")
 
     Tab_App_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Tab_Usr_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_App_ToolTip_But, message="Application appearance Setup.", ToolTip_Size="Normal")
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_Usr_ToolTip_But, message="Setup related to Current User date.", ToolTip_Size="Normal")
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_App_ToolTip_But, message="Application appearance Setup.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_Usr_ToolTip_But, message="Setup related to Current User date.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
-    # General
-    Theme_Widget = Settings_Widgets.Settings_General_Theme(Settings=Settings, Configuration=Configuration, Frame=Tab_App, window=window)
-    Color_Palette_Widget = Settings_Widgets.Settings_General_Color(Settings=Settings, Configuration=Configuration, Frame=Tab_App)
+    # ---------- Appearance ---------- #
+    Frame_Tab_App_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_App, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_Tab_App_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_App, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    # User Page
-    Program_User_Access_Widget = Settings_Widgets.Settings_User_Access(Settings=Settings, Configuration=Configuration, Frame=Tab_Usr)
+    Theme_Widget = Settings_Widgets.Settings_General_Theme(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_App_Column_A, window=window, GUI_Level_ID=2)
+    Color_Palette_Widget = Settings_Widgets.Settings_General_Color(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_App_Column_B, GUI_Level_ID=2)
+
+    # ---------- User Page ---------- #
+    Frame_Tab_Usr_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Usr, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    Program_User_Access_Widget = Settings_Widgets.Settings_User_Access(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_Usr_Column_A, GUI_Level_ID=2)
 
     # Build look of Widget
-    Frame_Settings_Work_Detail_Area.pack(side="top", fill="both", expand=True, padx=0, pady=0)
+    Frame_Settings_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)
+    TabView.pack(side="top", fill="both", expand=True, padx=10, pady=10)
 
-    TabView.grid(row=0, column=0, padx=5, pady=0, sticky="n")
+    Frame_Tab_App_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_Tab_App_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Theme_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Color_Palette_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
-    Theme_Widget.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
-    Color_Palette_Widget.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
-
-    Program_User_Access_Widget.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
+    Frame_Tab_Usr_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Program_User_Access_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)

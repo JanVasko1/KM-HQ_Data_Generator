@@ -8,7 +8,6 @@ from glob import glob
 from shutil import rmtree, copy
 
 from customtkinter import CTkButton, StringVar, IntVar, BooleanVar, get_appearance_mode
-from CTkMessagebox import CTkMessagebox
 from CTkTable import CTkTable
 
 import Libs.GUI.Elements as Elements
@@ -108,10 +107,9 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Variable: StringVa
         else:
             pass
     except Exception as Error:
-        Error_Message = CTkMessagebox(title="Error", message=f"Not possible to update {Information} into Field: {JSON_path} of {File_Name}", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Not possible to update {Information} into Field: {JSON_path} of {File_Name}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Import_Data(Settings: dict, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str) -> None:
+def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str) -> None:
     Can_Import = True
     # Check if file is json
     File_Name = import_file_path[0]
@@ -121,8 +119,7 @@ def Import_Data(Settings: dict, import_file_path: str, Import_Type: str,  JSON_p
         pass
     else:
         Can_Import = False
-        Error_Message = CTkMessagebox(title="Error", message=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     # Check if file contain Supported Type
     if Can_Import == True:
@@ -134,8 +131,7 @@ def Import_Data(Settings: dict, import_file_path: str, Import_Type: str,  JSON_p
             pass
         else:
             Can_Import = False
-            Error_Message = CTkMessagebox(title="Error", message=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1)
-            Error_Message.get()
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
@@ -189,20 +185,18 @@ def Import_Data(Settings: dict, import_file_path: str, Import_Type: str,  JSON_p
 
 
 # --------------------------------------------- Folders / Files --------------------------------------------- #
-def Create_Folder(file_path: str) -> None:
+def Create_Folder(Configuration: dict, file_path: str) -> None:
     # Create Folder
     try: 
         os.makedirs(f"{file_path}")
     except Exception as Error:
-        Error_Message = CTkMessagebox(title="Error", message=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Copy_File(Source_Path: str, Destination_Path: str) -> None:
+def Copy_File(Configuration: dict, Source_Path: str, Destination_Path: str) -> None:
     try:
         copy(src=Source_Path, dst=Destination_Path)
     except Exception as Error:
-        Error_Message = CTkMessagebox(title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 def Delete_Folder(file_path: str) -> None:
     # Create Folder
@@ -290,35 +284,6 @@ def Count_coordinate_for_new_window(Clicked_on: CTkButton, New_Window_width: int
 
     # Top middle coordinate for new window
     return [Window_X + Clicked_On_X_difference, Window_Y + Clicked_on_Y_difference + 5]
-
-def Insert_Data_to_Table(Settings: dict, Table: CTkTable, JSON_path: list) -> None:
-    # Delete data in table just keep header
-    Table_rows = Table.cget("row")
-
-    for row_index in range(1, Table_rows):
-        Table.delete_row(row_index)
-
-    # Get Data
-    Current_Data = Load_Settings_Part(my_dict=Settings, JSON_path=JSON_path)
-
-    if type(Current_Data) is dict:
-        row_index = 1
-        for key, value in Current_Data.items():
-            # Prepare Values into list
-            Add_row = list(value.values())
-
-            # Insert
-            Table.add_row(index=row_index, values=Add_row)
-            row_index += 1
-
-    elif type(Current_Data) is list:
-        row_index = 1
-        for data in Current_Data:
-            Table.add_row(index=row_index, values=[data])
-            row_index += 1
-    else:
-        Error_Message = CTkMessagebox(title="Error", message=f"It is not possible to insert data to table. DAta are uploaded, just restart application.", icon="cancel", fade_in_duration=1)
-        Error_Message.get()
 
 def Disable_Enable_Fields(Enable_Elements_List: list, Disable_Elements_List: list) -> None:
     # Enable Fields

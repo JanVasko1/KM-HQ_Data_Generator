@@ -1,16 +1,16 @@
 # Import Libraries
 import requests
 
-from CTkMessagebox import CTkMessagebox
+import Libs.GUI.Elements as Elements
 
 # ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
-def Azure_OAuth(client_id: str, client_secret: str, tenant_id: str) -> str:
+def Azure_OAuth(Configuration: dict, client_id: str, client_secret: str, tenant_id: str) -> str:
     if not client_id:
-        CTkMessagebox(title="Error", message=f"No client_id found. Check your .env file.", icon="cancel", fade_in_duration=1)
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="No client_id found. Check your .env file.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     if not client_secret:
-        CTkMessagebox(title="Error", message=f"No client_secret found. Check your .env file.", icon="cancel", fade_in_duration=1)
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="No client_secret found. Check your .env file.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     if not tenant_id:
-        CTkMessagebox(title="Error", message=f"No tenant_id found. Check your .env file.", icon="cancel", fade_in_duration=1)
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="No tenant_id found. Check your .env file.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     # OAuth2 authentication at KM Azure
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"

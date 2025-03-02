@@ -2,8 +2,10 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "",
-                "Templates_List": []
+                "Last_Used": "BHN_BB_Invoice",
+                "Templates_List": [
+                    "BHN_BB_Invoice"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -48,7 +50,7 @@
         "HQ_Data_Handler": {
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -150,7 +152,7 @@
                 ]
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "",
                     "Method_List": [
@@ -172,7 +174,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
@@ -343,7 +345,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -430,11 +432,11 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -527,7 +529,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Credit_Memo": {
