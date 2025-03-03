@@ -27,9 +27,8 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Frame_PO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     
-    PO_Number_Widget = W_Confirmation.PO_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Prices_Widget = W_Confirmation.PO_Prices(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Currency_Widget = W_Confirmation.PO_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Number_Widget = W_Confirmation.PO_CON_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Currency_Widget = W_Confirmation.PO_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_ATP_Widget = W_Confirmation.PO_ATP(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
@@ -41,7 +40,6 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Frame_PO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
 
     PO_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Prices_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Line_Flags_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_ATP_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)

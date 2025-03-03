@@ -3,7 +3,7 @@ from customtkinter import CTk, CTkFrame, StringVar, BooleanVar
 
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
-import Libs.Defaults_Lists as Defaults_Lists
+import Libs.Data_Functions as Data_Functions
 import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
@@ -133,37 +133,37 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # Field - Use Confirmation
     Generate_Conf_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Confirmation", Field_Type="Input_CheckBox") 
     Generate_Conf_Frame_Var = Generate_Conf_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_Conf_Frame_Var.configure(variable=Generate_CON_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"], Information=Generate_CON_Variable))
+    Generate_Conf_Frame_Var.configure(variable=Generate_CON_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"], Information=Generate_CON_Variable))
 
     # Field - Use CPDI
     Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI", Field_Type="Input_CheckBox") 
     Generate_CPDI_Frame_Var = Generate_CPDI_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_CPDI_Frame_Var.configure(variable=Generate_CPD_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CPD_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Use"], Information=Generate_CPD_Variable))
+    Generate_CPDI_Frame_Var.configure(variable=Generate_CPD_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_CPD_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Use"], Information=Generate_CPD_Variable))
 
     # Field - Use PreAdvice
     Generate_PREA_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="PreAdvice", Field_Type="Input_CheckBox") 
     Generate_PREA_Frame_Var = Generate_PREA_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_PREA_Frame_Var.configure(variable=Generate_PRA_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRA_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"], Information=Generate_PRA_Variable))
+    Generate_PREA_Frame_Var.configure(variable=Generate_PRA_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRA_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"], Information=Generate_PRA_Variable))
 
     # Field - Use Delivery
     Generate_DEL_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Delivery", Field_Type="Input_CheckBox") 
     Generate_DEL_Frame_Var = Generate_DEL_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_DEL_Frame_Var.configure(variable=Generate_DEL_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_DEL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Use"], Information=Generate_DEL_Variable))
+    Generate_DEL_Frame_Var.configure(variable=Generate_DEL_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_DEL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Use"], Information=Generate_DEL_Variable))
 
     # Field - Use Invoice
     Generate_INV_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Invoice", Field_Type="Input_CheckBox") 
     Generate_INV_Frame_Var = Generate_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_INV_Frame_Var.configure(variable=Generate_INV_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Information=Generate_INV_Variable))
+    Generate_INV_Frame_Var.configure(variable=Generate_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Information=Generate_INV_Variable))
 
     # Field - Use Invoice PDF
-    Generate_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Invoice .pdf", Field_Type="Input_CheckBox") 
+    Generate_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Invoice PDF", Field_Type="Input_CheckBox") 
     Generate_INV_PDF_Frame_Var = Generate_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_INV_PDF_Frame_Var.configure(variable=Generate_INV_PDF_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"], Information=Generate_INV_PDF_Variable))
+    Generate_INV_PDF_Frame_Var.configure(variable=Generate_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"], Information=Generate_INV_PDF_Variable))
 
     # Field - Use IAL
     Generate_IAL_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="IAL", Field_Type="Input_CheckBox") 
     Generate_IAL_Frame_Var = Generate_IAL_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_IAL_Frame_Var.configure(variable=Generate_IAL_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_IAL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "IAL", "Use"], Information=Generate_IAL_Variable))
+    Generate_IAL_Frame_Var.configure(variable=Generate_IAL_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_IAL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "IAL", "Use"], Information=Generate_IAL_Variable))
 
     # Selected Purchase Orders List
     PO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Selected POs", Field_Type="Input_Normal") 
@@ -198,12 +198,12 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # Field - Use BackBone Billing Invoice
     Generate_BB_INV_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="Invoice", Field_Type="Input_CheckBox") 
     Generate_BB_INV_Frame_Var = Generate_BB_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_BB_INV_Frame_Var.configure(variable=Generate_BB_INV_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Information=Generate_BB_INV_Variable))
+    Generate_BB_INV_Frame_Var.configure(variable=Generate_BB_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Information=Generate_BB_INV_Variable))
 
     # Field - Use Invoice PDF
     Generate_BB_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="Invoice .pdf", Field_Type="Input_CheckBox") 
     Generate_BB_INV_PDF_Frame_Var = Generate_BB_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_BB_INV_PDF_Frame_Var.configure(variable=Generate_BB_INV_PDF_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], Information=Generate_BB_INV_PDF_Variable))
+    Generate_BB_INV_PDF_Frame_Var.configure(variable=Generate_BB_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], Information=Generate_BB_INV_PDF_Variable))
 
     # Button - Generate BAckBone Billing Invoice
     Button_Generate_BB = Elements.Get_Button(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
@@ -230,21 +230,21 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # Field - Use Confirmation
     Generate_PRO_Conf_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Confirmation", Field_Type="Input_CheckBox") 
     Generate_PRO_Conf_Frame_Var = Generate_PRO_Conf_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_PRO_Conf_Frame_Var.configure(variable=Generate_PRO_CON_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Use"], Information=Generate_PRO_CON_Variable))
+    Generate_PRO_Conf_Frame_Var.configure(variable=Generate_PRO_CON_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Use"], Information=Generate_PRO_CON_Variable))
 
     # Field - Use Credit Memo
     Generate_PRO_INV_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Credit Memo", Field_Type="Input_CheckBox") 
     Generate_PRO_INV_Frame_Var = Generate_PRO_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_PRO_INV_Frame_Var.configure(variable=Generate_PRO_INV_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Information=Generate_PRO_INV_Variable))
+    Generate_PRO_INV_Frame_Var.configure(variable=Generate_PRO_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Information=Generate_PRO_INV_Variable))
 
     # Field - Use Invoice PDF
     Generate_PRO_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Invoice .pdf", Field_Type="Input_CheckBox") 
     Generate_PRO_INV_PDF_Frame_Var = Generate_PRO_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_PRO_INV_PDF_Frame_Var.configure(variable=Generate_PRO_INV_PDF_Variable, text="", command=lambda : Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"], Information=Generate_PRO_INV_PDF_Variable))
+    Generate_PRO_INV_PDF_Frame_Var.configure(variable=Generate_PRO_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"], Information=Generate_PRO_INV_PDF_Variable))
 
     # Selected Purchase Orders List
-    PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected POs", Field_Type="Input_Normal") 
-    PRO_Selected_Frame_Var = PO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
+    PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected PROs", Field_Type="Input_Normal") 
+    PRO_Selected_Frame_Var = PRO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
     PRO_Selected_Frame_Var.configure(placeholder_text="Purchase Ret. Orders", placeholder_text_color="#949A9F")
 
     # Buttons

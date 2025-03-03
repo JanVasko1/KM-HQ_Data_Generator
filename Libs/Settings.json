@@ -50,9 +50,9 @@
         "HQ_Data_Handler": {
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
-                        "Method": "Automatic",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -76,7 +76,7 @@
                         "Labels_always": true
                     },
                     "Prices": {
-                        "Method": "Manual",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Prompt",
                             "Price List",
@@ -152,10 +152,10 @@
                 ]
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
-                    "Method": "",
-                    "Method_List": [
+                    "Method": "Delivery Date Shift",
+                    "Methods_List": [
                         "Fixed",
                         "Random",
                         "Prompt",
@@ -165,16 +165,16 @@
                         "Fix_Date": ""
                     },
                     "Random_Options": {
-                        "From_Date_Formula_days": "",
-                        "To_Date_Formula_days": ""
+                        "From": 0,
+                        "To": 0
                     },
                     "Delivery_Date_Shift_Options": {
-                        "Shift_by": ""
+                        "Shift_by": 1
                     }
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
@@ -190,38 +190,41 @@
                     }
                 },
                 "Delivery_Counts": {
-                    "Delivery_Count_Method": "Random",
-                    "Delivery_Count_Method_List": [
+                    "Method": "Prompt",
+                    "Methods_List": [
                         "Random",
+                        "Fixed",
                         "Prompt"
                     ],
                     "Random_Options": {
-                        "FreeOfCharge_with_Main": true,
-                        "Random_Method": "Lines and Qty",
-                        "Random_Method_List": [
+                        "Method": "Lines and Qty",
+                        "Methods_List": [
                             "Lines and Qty",
                             "Lines only"
-                        ]
+                        ],
+                        "FreeOfCharge_with_Main": true,
+                        "Random_Max_count": 5
                     },
-                    "Manual_Options": {
-                        "Manual_Count": 0
+                    "Fixed_Options": {
+                        "Count": 3
                     }
                 },
                 "Serial_Numbers": {
-                    "Method": "Automatic",
-                    "Methods_List": [
-                        "Manual",
-                        "Automatic"
-                    ],
-                    "Automatic_Options": {
-                        "Prefix": "SN",
-                        "Middle_Method": "DateTime Stamp",
-                        "Suffix_Method": "Counter"
-                    }
+                    "Prefix": "SN",
+                    "Middle": {
+                        "Method": "DateTime stamp",
+                        "Methods_List": [
+                            "Item No",
+                            "DateTime stamp",
+                            "Manual"
+                        ],
+                        "Manual": ""
+                    },
+                    "Suffix": "Counter"
                 },
                 "Delivery_Date": {
-                    "Method": "",
-                    "Method_List": [
+                    "Method": "Random",
+                    "Methods_List": [
                         "Fixed",
                         "Random",
                         "Prompt"
@@ -230,75 +233,86 @@
                         "Fix_Date": ""
                     },
                     "Random_Options": {
-                        "From_Date_Formula_days": "",
-                        "To_Date_Formula_days": ""
+                        "From": 1,
+                        "To": 2
                     }
                 },
                 "Carrier_ID": {
-                    "Method": "Random",
-                    "Method_List": [
-                        "Manual",
+                    "Method": "Fixed",
+                    "Methods_List": [
+                        "Fixed",
                         "Random",
-                        "Empty"
-                    ]
-                },
-                "Shipment_Method": {
-                    "Shipment_Method": "Manual",
-                    "Shipment_Method_List": [
-                        "Random",
-                        "Manual",
                         "Empty"
                     ],
-                    "Manual_Options": {
-                        "Manual_Shipment_Method": "CIP"
+                    "Fixed_Options": {
+                        "Fix_Carrier": ""
+                    }
+                },
+                "Shipment_Method": {
+                    "Method": "Manual",
+                    "Methods_List": [
+                        "Random",
+                        "Fixed",
+                        "Empty"
+                    ],
+                    "Fixed_Options": {
+                        "Fixed_Shipment_Method": "CIP"
                     }
                 },
                 "Delivery_Tracking_Information": {
                     "Packages": {
-                        "Max_Packages_Records": 10,
                         "Number": {
                             "Method": "Automatic",
                             "Methods_List": [
-                                "Manual",
+                                "Fixed",
                                 "Automatic"
                             ],
                             "Automatic_Options": {
-                                "Prefix": "PACK"
+                                "Prefix": "PACK",
+                                "Max_Packages_Records": 3
+                            },
+                            "Fixed_Options": {
+                                "Fixed_Package_No": ""
                             }
                         },
                         "Items": {
-                            "Assignment_Method": "Random Items",
-                            "Assignment_Method_List": [
+                            "Method": "Random Items and Qty",
+                            "Methods_List": [
                                 "Random Items",
                                 "Random Items and Qty"
                             ]
                         },
                         "Plants": {
-                            "Plants_Method": "Random",
-                            "Plants_Method_List": [
+                            "Method": "Random",
+                            "Methods_List": [
                                 "Random",
-                                "Manual",
+                                "Fixed",
                                 "Empty"
                             ],
-                            "Manual_Options": {
-                                "Manual_Plant": ""
+                            "Fixed_Options": {
+                                "Fixed_Plant": "1000",
+                                "Plant_List": [
+                                    "1000",
+                                    "1002",
+                                    "1004"
+                                ]
                             }
                         },
                         "Unit_Of_Measure": {
                             "Weight": {
-                                "Method": "Fixed",
-                                "Method_List": [
+                                "Method": "Random",
+                                "Methods_List": [
                                     "Random",
                                     "Fixed",
                                     "Empty"
                                 ],
                                 "Fixed_Options": {
-                                    "Fixed_Weight_UoM": "KGM"
+                                    "Fixed_Weight_UoM": "KG"
                                 }
                             },
                             "Volume": {
-                                "Method": "Fixed",
-                                "Method_List": [
+                                "Method": "Random",
+                                "Methods_List": [
                                     "Random",
                                     "Fixed",
                                     "Empty"
@@ -310,20 +324,23 @@
                         }
                     },
                     "EXIDV2": {
-                        "Assign_Method": "Per Package",
-                        "Assign_MEthod_List": [
+                        "Method": "Per Package",
+                        "Methods_List": [
                             "Per Package",
-                            "Per Delivery",
-                            "Empty"
+                            "Per Delivery"
                         ],
                         "Number": {
                             "Method": "Automatic",
                             "Methods_List": [
-                                "Manual",
-                                "Automatic"
+                                "Fixed",
+                                "Automatic",
+                                "Empty"
                             ],
                             "Automatic_Options": {
                                 "Prefix": "EXID"
+                            },
+                            "Fixed_Options": {
+                                "Fixed_EXIDV2": ""
                             }
                         }
                     },
@@ -331,16 +348,18 @@
                         "Number": {
                             "Method": "Automatic",
                             "Methods_List": [
-                                "Manual",
+                                "Fixed",
                                 "Automatic",
                                 "Empty"
                             ],
                             "Automatic_Options": {
                                 "Prefix": "BIL"
+                            },
+                            "Fixed_Options": {
+                                "Fixed_BOL": ""
                             }
                         }
-                    },
-                    "HQ_Del_Track_Random_Shipment_Method": true
+                    }
                 }
             },
             "Invoice": {
@@ -361,8 +380,8 @@
                         }
                     },
                     "Prices": {
-                        "Price_Source_Method": "Price List",
-                        "Price_Source_Method_List": [
+                        "Method": "From Confirmation",
+                        "Methods_List": [
                             "Prompt",
                             "Price List",
                             "Purchase Line",
@@ -370,8 +389,8 @@
                         ]
                     },
                     "Currency": {
-                        "Currency_Method": "Fixed",
-                        "Currency_Method_List": [
+                        "Method": "From Confirmation",
+                        "Methods_List": [
                             "Fixed",
                             "Purchase Line",
                             "From Confirmation"
@@ -381,35 +400,41 @@
                         }
                     },
                     "Posting_Date": {
-                        "Method": "Random",
-                        "Method_List": [
+                        "Method": "Fixed",
+                        "Methods_List": [
                             "Fixed",
                             "Random",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": ""
+                            "Fix_Date": "2025-03-20"
                         },
                         "Random_Options": {
-                            "From_Date_Formula_days": "",
-                            "To_Date_Formula_days": ""
+                            "From": 0,
+                            "To": 2
                         }
                     },
-                    "Plant": {
-                        "Method": "Random",
-                        "Method_List": [
+                    "Plants": {
+                        "Method": "Prompt",
+                        "Methods_List": [
                             "Fixed",
                             "Random",
                             "Prompt",
+                            "From Delivery",
                             "Empty"
                         ],
                         "Fixed_Options": {
-                            "Fix_Plant": ""
+                            "Fixed_Plant": "1004",
+                            "Plant_List": [
+                                "1000",
+                                "1002",
+                                "1004"
+                            ]
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Random",
-                        "Method_List": [
+                        "Method": "Fixed",
+                        "Methods_List": [
                             "Fixed",
                             "Random",
                             "Prompt",
@@ -421,7 +446,7 @@
                     },
                     "Tariff": {
                         "Method": "Random",
-                        "Method_List": [
+                        "Methods_List": [
                             "Fixed",
                             "Random",
                             "Prompt",

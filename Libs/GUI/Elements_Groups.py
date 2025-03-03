@@ -5,7 +5,8 @@ import calendar
 from customtkinter import CTk, CTkFrame, CTkToplevel, CTkEntry, CTkButton
 
 import Libs.GUI.Elements as Elements
-import Libs.Defaults_Lists as Defaults_Lists
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+import Libs.Data_Functions as Data_Functions
 
 
 def Get_Widget_Frame(Configuration:dict, Frame: CTk|CTkFrame, Name: str, Additional_Text: str, Widget_size: str, Widget_Label_Tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
@@ -67,6 +68,7 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame
     Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
     Label_text.configure(text=f"{Label}:")
     Label_text.pack(side="right", fill="none")
+    # TODO --> ToolTip na jednotlivé pole pro vysvětlení účelu pole
 
     # Frame Space between Label and Value
     Frame_Space = Elements.Get_Widget_Field_Frame_Space(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
@@ -152,7 +154,7 @@ def Get_Pop_up_window(Configuration:dict, title: str, width: int, height: int, T
     else:
         pass
     Pop_Up_Window.overrideredirect(boolean=True)
-    Pop_Up_Window.iconbitmap(bitmap=Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
+    Pop_Up_Window.iconbitmap(bitmap=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
     Pop_Up_Window.resizable(width=False, height=False)
 
     # Rounded corners 
@@ -171,7 +173,7 @@ def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkB
         return ""
 
     Dialog_Window_geometry = (width, height)
-    Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Dialog_Window_geometry[0])
+    Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Dialog_Window_geometry[0])
     Dialog_Window = Get_Pop_up_window(Configuration=Configuration, title=title,  width=Dialog_Window_geometry[0], height=Dialog_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
 
     # Frame - General
@@ -232,7 +234,7 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
         Picker_window.destroy()
 
     def build_calendar(Shown_Month: int, Shown_Year: int) -> None:
-        calendar_frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Body, Frame_Size="DatePicker", GUI_Level_ID=GUI_Level_ID)
+        calendar_frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Body, Frame_Size="DatePicker", GUI_Level_ID=GUI_Level_ID + 1)
         calendar_frame.grid(row=0, column=0)
 
         # Month and Year Selector
@@ -281,11 +283,11 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
                     day += 1
 
     Picker_window_geometry = (width, height)
-    Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Picker_window_geometry[0])
+    Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Picker_window_geometry[0])
     Picker_window = Get_Pop_up_window(Configuration=Configuration, title="Date Picker", width=Picker_window_geometry[0], height=Picker_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
 
     # Frame - General
-    Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Picker_window, Name="Date Picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Select date from calendar", GUI_Level_ID=GUI_Level_ID)
+    Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Picker_window, Name="Date Picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Select date from calendar", GUI_Level_ID=GUI_Level_ID + 1)
     Frame_Main.configure(bg_color = "#000001")
     Frame_Body = Frame_Main.children["!ctkframe2"]
 

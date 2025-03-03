@@ -7,7 +7,7 @@ from CTkColorPicker import CTkColorPicker
 from CTkToolTip import CTkToolTip
 from CTkMessagebox import CTkMessagebox
 
-import Libs.Defaults_Lists as Defaults_Lists
+import Libs.Data_Functions as Data_Functions
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
 from iconipy import IconFactory 
@@ -644,8 +644,8 @@ def Get_CTk_Icon(Configuration:dict, Icon_Name: str, Icon_Size: str) -> CTkImage
 
 def Get_Custom_Image(Configuration:dict, Frame: CTk|CTkFrame, Image_Name: str, postfix: str, width: int, heigh: int) -> CTkLabel:
     Picture = CTkImage(
-        light_image = Image.open(Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\{Image_Name}_Light.{postfix}")),
-        dark_image = Image.open(Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\{Image_Name}_Dark.{postfix}")),
+        light_image = Image.open(Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\{Image_Name}_Light.{postfix}")),
+        dark_image = Image.open(Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\{Image_Name}_Dark.{postfix}")),
         size = (width, heigh))
     Background_Image_Label = Get_Label(Configuration=Configuration, Frame=Frame, Label_Size="Main", Font_Size="Main")
     Background_Image_Label.configure(image=Picture, text="")

@@ -2,7 +2,6 @@
 from customtkinter import CTk, CTkFrame
 
 import Libs.GUI.Elements as Elements
-import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Widgets.W_CPDI as W_CPDI
 
 def Page_CPDI(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
@@ -28,5 +27,4 @@ def Page_CPDI(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     TabView.pack(side="top", fill="both", expand=True, padx=10, pady=10)
 
     Frame_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-
     CPDI_General_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)

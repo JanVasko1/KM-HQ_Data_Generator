@@ -1,6 +1,8 @@
 # Import Libraries
 
 import Libs.Defaults_Lists as Defaults_Lists
+import Libs.Data_Functions as Data_Functions
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
@@ -36,13 +38,13 @@ def Settings_General_Theme(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     # ------------------------- Local Functions ------------------------#
     def Appearance_Change_Theme(Theme_Frame_Var: CTkOptionMenu) ->  None:
         set_appearance_mode(mode_string=Theme_Frame_Var)
-        Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Theme_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Theme"], Information=Theme_Frame_Var)
+        Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Theme_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Theme"], Information=Theme_Frame_Var)
 
     def Appearance_Change_Win_Style(Win_Style_Selected: str, window: CTk|CTkFrame) -> None:
         # Base Windows style setup --> always keep normal before change
         pywinstyles.apply_style(window=window, style="normal")
         pywinstyles.apply_style(window=window, style=Win_Style_Selected)
-        Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Win_Style_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Style"], Information=Win_Style_Selected)
+        Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Win_Style_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Style"], Information=Win_Style_Selected)
 
     # ------------------------- Main Functions -------------------------#
     Theme_Variable = StringVar(master=Frame, value=Theme_Actual)
@@ -87,38 +89,38 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Accent only
-            Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "App Default":
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Both
             if Helper == "Accent":
-                Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
             elif Helper == "Hover":
-                Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "Accent Lighter":
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Hover only
-            Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "Manual":
             Entry_Field.configure(state="normal")
             Picker_Button.configure(state="normal")
             # Both
             if Helper == "Accent":
-                Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
             elif Helper == "Hover":
-                Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Accent Color Method not allowed", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     def Appearance_Pick_Manual_Color(Clicked_on: CTkButton, Color_Manual_Frame_Var: CTkEntry, Helper: str, GUI_Level_ID: int|None = None) -> None:
         def Quit_Save(Helper: str):
-            Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", f"{Helper}", f"{Helper}_Color_Manual"], Information=Color_Picker_Frame.get())
+            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", f"{Helper}", f"{Helper}_Color_Manual"], Information=Color_Picker_Frame.get())
             Color_Picker_window.destroy()
 
         Import_window_geometry = (300, 250)
-        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Import_window_geometry[0])
+        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Import_window_geometry[0])
         Color_Picker_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Color Picker", width=Import_window_geometry[0], height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
         Color_Picker_window.bind(sequence="<Escape>", func=lambda event: Quit_Save(Helper=Helper))
 
@@ -149,7 +151,7 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     Accent_Color_Manual_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Accent Color Manual", Field_Type="Entry_DropDown") 
     Accent_Color_Manual_Frame_Var = Accent_Color_Manual_Frame.children["!ctkframe3"].children["!ctkentry"]
     Accent_Color_Manual_Frame_Var.configure(placeholder_text=Accent_Color_Manual, placeholder_text_color="#949A9F")
-    Accent_Color_Manual_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Manual"], Information=Accent_Color_Manual_Frame_Var.get()))
+    Accent_Color_Manual_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Manual"], Information=Accent_Color_Manual_Frame_Var.get()))
     Button_Accent_Color_Frame_Var = Accent_Color_Manual_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Button_Accent_Color_Frame_Var.configure(command = lambda: Appearance_Pick_Manual_Color(Clicked_on=Button_Accent_Color_Frame_Var, Color_Manual_Frame_Var=Accent_Color_Manual_Frame_Var, Helper="Accent", GUI_Level_ID=GUI_Level_ID))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Accent_Color_Frame_Var, message="ColorPicker", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
@@ -167,7 +169,7 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     Hover_Color_Manual_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Hover Color Manual", Field_Type="Entry_DropDown") 
     Hover_Color_Manual_Frame_Var = Hover_Color_Manual_Frame.children["!ctkframe3"].children["!ctkentry"]
     Hover_Color_Manual_Frame_Var.configure(placeholder_text=Hover_Color_Manual, placeholder_text_color="#949A9F")
-    Hover_Color_Manual_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Manual"], Information=Hover_Color_Manual_Frame_Var.get()))
+    Hover_Color_Manual_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=None, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Manual"], Information=Hover_Color_Manual_Frame_Var.get()))
     Button_Hover_Color_Frame_Var = Hover_Color_Manual_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Button_Hover_Color_Frame_Var.configure(command = lambda: Appearance_Pick_Manual_Color(Clicked_on=Button_Hover_Color_Frame_Var, Color_Manual_Frame_Var=Hover_Color_Manual_Frame_Var, Helper="Hover", GUI_Level_ID=GUI_Level_ID))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Hover_Color_Frame_Var, message="ColorPicker", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
@@ -184,7 +186,7 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
 
 def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()
+    client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
     # ------------------------- Local Functions ------------------------#
     def Exchange_Request_Permissions() -> None:

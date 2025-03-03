@@ -23,8 +23,8 @@
             ],
             "Colors": {
                 "Accent": {
-                    "Accent_Color_Mode": "Windows",
-                    "Accent_Color_Manual": "#1f4cc1",
+                    "Accent_Color_Mode": "Manual",
+                    "Accent_Color_Manual": "#446b80",
                     "Accent_Color_List": [
                         "Windows",
                         "Manual",
@@ -45,41 +45,41 @@
         "GUI_Level_ID": {
             "0": {
                 "fg_color": [
-                    "#e7e7e7",
+                    "#c2c2c2",
                     "#222229"
                 ],
                 "border_color": [
-                    "#111219",
+                    "#4d4d55",
                     "#363641"
                 ]
             },
             "1": {
                 "fg_color": [
-                    "#dadada",
+                    "#cecece",
                     "#2A2A31"
                 ],
                 "border_color": [
-                    "#111219",
+                    "#4d4d55",
                     "#3d3d48"
                 ]
             },
             "2": {
                 "fg_color": [
-                    "#cecece",
+                    "#dadada",
                     "#323239"
                 ],
                 "border_color": [
-                    "#111219",
+                    "#4d4d55",
                     "#45454e"
                 ]
             },
             "3": {
                 "fg_color": [
-                    "#c2c2c2",
+                    "#e7e7e7",
                     "#3B3B41"
                 ],
                 "border_color": [
-                    "#111219",
+                    "#4d4d55",
                     "#4d4d55"
                 ]
             }

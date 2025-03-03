@@ -124,6 +124,7 @@ Permission Set: NUS_HQ_Data_WS
 - Delivery Count 
     --> počet Delviery které se vytvoří Inetger
     - Methods:
+        * Fixed --> zadat i na Downlaod page
         * Random (Option 1): 
             * Random Entity: 
                 - Lines only: random vybere jen mezi lines a plný Qty

@@ -5,7 +5,7 @@ import json
 
 import Libs.GUI.Elements as Elements
 
-# TODO --> if empty return DataFrames (if emmpty)
+# TODO --> if empty return DataFrames (if empty)
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
 def Get_Params(fields_list_string: str, filters_list_string: str) -> dict:

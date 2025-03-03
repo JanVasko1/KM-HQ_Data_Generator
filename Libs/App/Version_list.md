@@ -2,6 +2,7 @@
 #### 1.0.5
 - Settings Tables, nut the "Update" button is available
 - Drag&Drop into local settings (tables) updates the values in tables in GUI not only on Backend
+- Re-distribute local libraries to separate files to speed-up 
 
 #### 1.0.4
 - DatePicker Issue correction for get() during download

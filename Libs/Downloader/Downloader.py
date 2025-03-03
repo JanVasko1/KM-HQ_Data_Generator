@@ -7,7 +7,7 @@ import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Azure.Authorization as Authorization
 import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
-client_id, client_secret, tenant_id = Defaults_Lists.Load_Exchange_env()
+client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
 def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str,) -> list:
     Companies_list = []

@@ -16,7 +16,11 @@ from  markdown import markdown
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
+
 import Libs.Defaults_Lists as Defaults_Lists
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+import Libs.Data_Functions as Data_Functions
+import Libs.File_Manipulation as File_Manipulation
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
@@ -24,7 +28,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
     # ------------------------- Local Functions -------------------------#
     def Theme_Change():
-        Current_Theme = Defaults_Lists.Get_Current_Theme() 
+        Current_Theme = CustomTkinter_Functions.Get_Current_Theme() 
         if Current_Theme == "Dark":
             set_appearance_mode(mode_string="light")
         elif Current_Theme == "Light":
@@ -40,11 +44,11 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
         # TopUp Window
         Version_List_Window_geometry = (2000, 800)
-        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Version_List_Window_geometry[0])
+        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Version_List_Window_geometry[0])
         Version_List_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Version List", width=Version_List_Window_geometry[0], height=Version_List_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
 
          # Get Theme --> because of background color
-        Current_Theme = Defaults_Lists.Get_Current_Theme() 
+        Current_Theme = CustomTkinter_Functions.Get_Current_Theme() 
 
         if Current_Theme == "Dark":
             HTML_Background_Color = Work_Area_Detail_Background[1]
@@ -66,7 +70,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
         Frame_Information_Scrollable_Area = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=Frame_Body, Frame_Size="Double_size", GUI_Level_ID=2)
 
-        with open(Defaults_Lists.Absolute_path(relative_path=f"Libs\\App\\Version_list.md"), "r", encoding="UTF-8") as file:
+        with open(Data_Functions.Absolute_path(relative_path=f"Libs\\App\\Version_list.md"), "r", encoding="UTF-8") as file:
             html_markdown=markdown(text=file.read())
         file.close()
 
@@ -81,13 +85,13 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     def Save_Template(Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
         global Template_List
         # Define Name for new Template
-        File_Name = Defaults_Lists.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
+        File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
         if File_Name == None:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
             Template_List.append(File_Name)
-            Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
 
             # Save My_Team Dict into Downloads Folder
             Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
@@ -95,7 +99,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
                 "Type": "Template",
                 "Data": Actual_Template_Settings}
             
-            Save_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}.json")
+            Save_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}.json")
             with open(file=Save_Path, mode="w") as file: 
                 json.dump(Save_Template_dict, file)
 
@@ -105,13 +109,13 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
             Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Actual settings were saved into saved templates.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Apply_Template(Selected_Value: str, Settings: dict, Actual_Template_Variable: StringVar) -> None:
-        Load_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
-        Defaults_Lists.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
+        Load_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
-        Defaults_Lists.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
     def Export_Templates() -> None:
-        Source_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template")
+        Source_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template")
         Destination_Path = os.path.join(os.path.expanduser("~"), "Downloads")
         files = glob(pathname=os.path.join(Source_Path, "*"))
 
@@ -130,7 +134,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
             File_Name = Source_Path[Last_Div:]
            
             # Copy File to Template Folder
-            Destination_Path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}")
+            Destination_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}")
             Defaults_Lists.Copy_File(Configuration=Configuration, Source_Path=Source_Path, Destination_Path=Destination_Path)
 
             # Update Template List
@@ -143,7 +147,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
             Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Your settings file has been imported. You can close Window.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
         Import_window_geometry = (200, 200)
-        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Import_window_geometry[0])
+        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Import_window_geometry[0])
         Import_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Drop file", width=Import_window_geometry[0], height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
 
         Frame_Body = Elements.Get_Frame(Configuration=Configuration, Frame=Import_window, Frame_Size="Import_Drop", GUI_Level_ID=1)
@@ -181,8 +185,8 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
             # Delete
             for Template in Delete_Template_List:
-                file_path = Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\{Template}.json")
-                Defaults_Lists.Delete_File(file_path=file_path) 
+                file_path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Template}.json")
+                File_Manipulation.Delete_File(file_path=file_path) 
 
             # Update Template List
             Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
@@ -200,7 +204,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         # TopUp Window
         Delete_Activity_Correct_Window_geometry = (300, 250)
         # TODO --> Should make pop-up with fix width, now it is taken from sub-elements
-        Top_middle_point = Defaults_Lists.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Delete_Activity_Correct_Window_geometry[0])
+        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Delete_Activity_Correct_Window_geometry[0])
         Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Delete Templates.", width=Delete_Activity_Correct_Window_geometry[0], height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=False)
 
         # Frame - General
@@ -384,7 +388,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_PreAdvice, message="PreAdvice.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Delivery
-    Icon_Frame_Delivery = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="truck", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Delivery = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
     Icon_Frame_Delivery.configure(command = lambda: Show_Delivery_Page(Active_Window = Active_Window, Side_Bar_Row=4))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Delivery, message="Delivery.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
@@ -437,7 +441,7 @@ class Win(CTk):
         super().__init__()
         super().overrideredirect(True)
         super().title("Time Sheets")
-        super().iconbitmap(bitmap=Defaults_Lists.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
+        super().iconbitmap(bitmap=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
 
         display_width = self.winfo_screenwidth()
         display_height = self.winfo_screenheight()
@@ -480,12 +484,12 @@ if __name__ == "__main__":
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
 
     Template_Used = Settings["0"]["General"]["Template"]["Last_Used"]
-    Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
+    Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
 
     # Create folders if do not exists
     try:
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\"))
-        os.mkdir(Defaults_Lists.Absolute_path(relative_path=f"Operational\\Template\\"))
+        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
+        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"))
     except:
         pass
 
