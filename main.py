@@ -138,7 +138,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
             Defaults_Lists.Copy_File(Configuration=Configuration, Source_Path=Source_Path, Destination_Path=Destination_Path)
 
             # Update Template List
-            Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
+            Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
 
             # Update Option List
             Actual_Template_Frame_Var.configure(values=Template_List)
@@ -155,7 +155,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         pywinstyles.apply_dnd(widget=Frame_Body, func=lambda file: Template_drop_func(file=file))
         Frame_Body.pack(side="top", padx=15, pady=15)
 
-        Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Body, Icon_Name="circle-fading-plus", Icon_Size="Header", Button_Size="Picture_Theme")
+        Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Body, Icon_Name="circle-fading-plus", Icon_Size="Header", Button_Size="Picture_Transparent")
         Icon_Theme.configure(text="")
         Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Theme, message="Drop file here.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
@@ -189,7 +189,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
                 File_Manipulation.Delete_File(file_path=file_path) 
 
             # Update Template List
-            Template_List = Defaults_Lists.Get_All_Templates_List(Settings=Settings)
+            Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
 
             # Update Option List
             Actual_Template_Frame_Var.configure(values=Template_List)
@@ -238,36 +238,36 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Apply_Template(Selected_Value=Actual_Template_Frame_Var, Settings=Settings, Actual_Template_Variable=Actual_Template_Variable), GUI_Level_ID=0)
 
     # Theme Change - Button
-    Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="sun-moon", Icon_Size="Header", Button_Size="Picture_Theme")
+    Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="sun-moon", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Theme.configure(text="")
     Icon_Theme.configure(command = lambda: Theme_Change())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Theme, message="Change theme.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Version list
-    Icon_Versions = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="file-stack", Icon_Size="Header", Button_Size="Picture_Theme")
+    Icon_Versions = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="file-stack", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Versions.configure(command = lambda: Show_Version_List(Clicked_on=Icon_Versions))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Versions, message="Show version changes log.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Button - Save Template
-    Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Save_Template.configure(text="")
     Icon_Save_Template.configure(command = lambda: Save_Template(Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Save_Template, message="Save Current settings.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Button - Export Templates
-    Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="folder-output", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="folder-output", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Export_Templates.configure(text="")
     Icon_Export_Templates.configure(command = lambda: Export_Templates())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Export_Templates, message="Export all templates to Download folder.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Button - Import Templates
-    Icon_Import_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="import", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Import_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="import", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Import_Templates.configure(text="")
     Icon_Import_Templates.configure(command = lambda: Import_Template(Button=Icon_Import_Templates, Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Import_Templates, message="Import Template file to program.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Button - Delete Templates
-    Icon_Delete_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="file-x-2", Icon_Size="Header", Button_Size="Picture_SideBar")
+    Icon_Delete_Templates = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="file-x-2", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Delete_Templates.configure(text="")
     Icon_Delete_Templates.configure(command = lambda: Delete_Templates(Button=Icon_Delete_Templates, Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Delete_Templates, message="Delete Templates file from program.", ToolTip_Size="Normal", GUI_Level_ID=0)
@@ -368,47 +368,47 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
     Logo = Elements.Get_Custom_Image(Configuration=Configuration, Frame=Side_Bar_Frame, Image_Name="Company", postfix="png", width=70, heigh=50)
 
     # Page - Download
-    Icon_Frame_Download = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="cpu", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Download = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="cpu", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Download.configure(command = lambda: Show_Download_Page(Active_Window = Active_Window, Side_Bar_Row=0))    
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Download, message="Process.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Confirmation
-    Icon_Frame_Confirmation = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Confirmation = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Confirmation.configure(command = lambda: Show_Confirmation_Page(Active_Window = Active_Window, Side_Bar_Row=1))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Confirmation, message="Confirmation.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - CPDI
-    Icon_Frame_CPDI = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="wrench", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_CPDI = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="wrench", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_CPDI.configure(command = lambda: Show_CPDI_Page(Active_Window = Active_Window, Side_Bar_Row=2))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_CPDI, message="CPDI.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - PreAdvice
-    Icon_Frame_PreAdvice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-open", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_PreAdvice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-open", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_PreAdvice.configure(command = lambda: Show_PreAdvice_Page(Active_Window = Active_Window, Side_Bar_Row=3))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_PreAdvice, message="PreAdvice.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Delivery
-    Icon_Frame_Delivery = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Delivery = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Delivery.configure(command = lambda: Show_Delivery_Page(Active_Window = Active_Window, Side_Bar_Row=4))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Delivery, message="Delivery.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Invoice
-    Icon_Frame_Invoice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-text", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Invoice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-text", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Invoice.configure(command = lambda: Show_Invoice_Page(Active_Window = Active_Window, Side_Bar_Row=5))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Invoice, message="Invoice/BackBoneBilling/CreditMemo.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - IAL
-    Icon_Frame_IAL = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="coins", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_IAL = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="coins", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_IAL.configure(command = lambda: Show_IAL_Page(Active_Window = Active_Window, Side_Bar_Row=6))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_IAL, message="IAL.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Settings
-    Icon_Frame_Settings = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="settings", Icon_Size="Side_Bar_regular", Button_Size="Picture_SideBar")
+    Icon_Frame_Settings = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="settings", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Settings.configure(command = lambda: Show_Settings_Page(Active_Window = Active_Window, Side_Bar_Row=7))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Settings, message="Application settings page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Close Application
-    Icon_Frame_Close = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="power", Icon_Size="Side_Bar_close", Button_Size="Picture_SideBar")
+    Icon_Frame_Close = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="power", Icon_Size="Side_Bar_close", Button_Size="Picture_Transparent")
     Icon_Frame_Close.configure(command = lambda: window.quit())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Close, message="Close application.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
@@ -479,7 +479,6 @@ if __name__ == "__main__":
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
 
-    Win_Style_Actual = Configuration["Global_Appearance"]["Window"]["Style"]
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
 
@@ -498,7 +497,6 @@ if __name__ == "__main__":
     # Base Windows style setup --> always keep normal before change
     set_appearance_mode(mode_string=Theme_Actual)
     pywinstyles.apply_style(window=window, style="normal")
-    pywinstyles.apply_style(window=window, style=Win_Style_Actual)
 
     # ---------------------------------- Content ----------------------------------#
     # Background

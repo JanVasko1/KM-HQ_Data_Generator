@@ -86,7 +86,7 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=NOC_Frame, values=NOC_List, command=None, GUI_Level_ID=1)
 
     # Button - Download Company
-    Button_Download_Company = Elements.Get_Button(Configuration=Configuration, Frame=Frame_Download_State_Area, Button_Size="Normal")
+    Button_Download_Company = Elements.Get_Button_Text(Configuration=Configuration, Frame=Frame_Download_State_Area, Button_Size="Normal")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Download_Company, message="Download Companies list based on selected NUS Version, Environment and NOC.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
     # EnCompanies List
@@ -206,7 +206,7 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_BB_INV_PDF_Frame_Var.configure(variable=Generate_BB_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], Information=Generate_BB_INV_PDF_Variable))
 
     # Button - Generate BAckBone Billing Invoice
-    Button_Generate_BB = Elements.Get_Button(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
+    Button_Generate_BB = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
     Button_Generate_BB.configure(text="Generate", command = lambda:Generate_BackBone_Billing())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Generate_BB, message="Generate marked documents for selected BackBoneBilling Invoice.", ToolTip_Size="Normal", GUI_Level_ID=2)
 

@@ -121,7 +121,7 @@ def Get_Widget_Button_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_T
     Frame_Buttons.pack(side="right", fill="x", expand=True, padx=0, pady=0)
 
     for Button in range(Buttons_count): 
-        Button_Normal = Elements.Get_Button(Configuration=Configuration, Frame=Frame_Buttons, Button_Size=Button_Size)
+        Button_Normal = Elements.Get_Button_Text(Configuration=Configuration, Frame=Frame_Buttons, Button_Size=Button_Size)
         Button_Normal.pack(side="right", fill="none", expand=False, padx=(10,0))
 
     return Frame_Area
@@ -242,11 +242,11 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
         month_label.configure(text=f"{calendar.month_name[Shown_Month]}, {Shown_Year}")
         month_label.grid(row=0, column=1, columnspan=5)
 
-        prev_month_button = Elements.Get_Button(Configuration=Configuration, Frame=calendar_frame, Button_Size="Tiny")
+        prev_month_button = Elements.Get_Button_Text(Configuration=Configuration, Frame=calendar_frame, Button_Size="Tiny")
         prev_month_button.configure(text="<", command=lambda: prev_month(Shown_Month=Shown_Month, Shown_Year=Shown_Year))
         prev_month_button.grid(row=0, column=0)
 
-        next_month_button = Elements.Get_Button(Configuration=Configuration, Frame=calendar_frame, Button_Size="Tiny")
+        next_month_button = Elements.Get_Button_Text(Configuration=Configuration, Frame=calendar_frame, Button_Size="Tiny")
         next_month_button.configure(text=">", command=lambda: next_month(Shown_Month=Shown_Month, Shown_Year=Shown_Year))
         next_month_button.grid(row=0, column=6)
 
@@ -272,7 +272,7 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
                     lbl.configure(text=f"")
                     lbl.grid(row=week, column=day_col)
                 else:
-                    btn = Elements.Get_Button(Configuration=Configuration, Frame=calendar_frame, Button_Size="DatePicker_Days")
+                    btn = Elements.Get_Button_Text(Configuration=Configuration, Frame=calendar_frame, Button_Size="DatePicker_Days")
                     # Today with red color
                     if (Shown_Year==Current_Year) and (Shown_Month==Current_Month) and (day==Current_Day):
                         btn.configure(text_color="#FF9797")

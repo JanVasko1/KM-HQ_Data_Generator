@@ -27,54 +27,10 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
     else:
         pass
 
-# -------------------------------------------------------------------------- Tab Appearance --------------------------------------------------------------------------#
-def Settings_General_Theme(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, window: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     Theme_List = list(Configuration["Global_Appearance"]["Window"]["Theme_List"])
-    Win_Style_Actual = Configuration["Global_Appearance"]["Window"]["Style"]
-    Win_Style_List = list(Configuration["Global_Appearance"]["Window"]["Style_List"])
-
-    # ------------------------- Local Functions ------------------------#
-    def Appearance_Change_Theme(Theme_Frame_Var: CTkOptionMenu) ->  None:
-        set_appearance_mode(mode_string=Theme_Frame_Var)
-        Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Theme_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Theme"], Information=Theme_Frame_Var)
-
-    def Appearance_Change_Win_Style(Win_Style_Selected: str, window: CTk|CTkFrame) -> None:
-        # Base Windows style setup --> always keep normal before change
-        pywinstyles.apply_style(window=window, style="normal")
-        pywinstyles.apply_style(window=window, style=Win_Style_Selected)
-        Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Win_Style_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Style"], Information=Win_Style_Selected)
-
-    # ------------------------- Main Functions -------------------------#
-    Theme_Variable = StringVar(master=Frame, value=Theme_Actual)
-    Win_Style_Variable = StringVar(master=Frame, value=Win_Style_Actual)
-
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="General Appearance", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="General Appearance settings.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Theme
-    Theme_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Theme", Field_Type="Input_OptionMenu") 
-    Theme_Frame_Var = Theme_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Theme_Frame_Var.configure(variable=Theme_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Theme_Frame_Var, values=Theme_List, command = lambda Theme_Frame_Var: Appearance_Change_Theme(Theme_Frame_Var=Theme_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Windows Style
-    Win_Style_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Window Style", Field_Type="Input_OptionMenu") 
-    Win_Style_Frame_Var = Win_Style_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Win_Style_Frame_Var.configure(variable=Win_Style_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Win_Style_Frame_Var, values=Win_Style_List, command= lambda Win_Style_Selected: Appearance_Change_Win_Style(Win_Style_Selected=Win_Style_Selected, window=window), GUI_Level_ID=GUI_Level_ID)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-
-
-def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
     Accent_Color_Mode = Configuration["Global_Appearance"]["Window"]["Colors"]["Accent"]["Accent_Color_Mode"]
     Accent_Color_Mode_List = list(Configuration["Global_Appearance"]["Window"]["Colors"]["Accent"]["Accent_Color_List"])
     Accent_Color_Manual = Configuration["Global_Appearance"]["Window"]["Colors"]["Accent"]["Accent_Color_Manual"]
@@ -82,6 +38,10 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     Hover_Color_Mode = Configuration["Global_Appearance"]["Window"]["Colors"]["Hover"]["Hover_Color_Mode"]
     Hover_Color_Mode_List = list(Configuration["Global_Appearance"]["Window"]["Colors"]["Hover"]["Hover_Color_List"])
     Hover_Color_Manual = Configuration["Global_Appearance"]["Window"]["Colors"]["Hover"]["Hover_Color_Manual"]
+
+    Theme_Variable = StringVar(master=Frame, value=Theme_Actual)
+    Accent_Color_Mode_Variable = StringVar(master=Frame, value=Accent_Color_Mode)
+    Hover_Color_Mode_Variable = StringVar(master=Frame, value=Hover_Color_Mode)
 
     # ------------------------- Local Functions ------------------------#
     def Settings_Disabling_Color_Pickers(Selected_Value: str, Entry_Field: CTkEntry, Picker_Button: CTkButton, Variable: StringVar, Helper: str) -> None:
@@ -134,13 +94,23 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
         # Build look of Widget --> must be before inset
         Color_Picker_Frame.pack(padx=0, pady=0) 
 
-    # ------------------------- Main Functions -------------------------#
-    Accent_Color_Mode_Variable = StringVar(master=Frame, value=Accent_Color_Mode)
-    Hover_Color_Mode_Variable = StringVar(master=Frame, value=Hover_Color_Mode)
+    def Appearance_Change_Theme(Theme_Frame_Var: CTkOptionMenu) ->  None:
+        set_appearance_mode(mode_string=Theme_Frame_Var)
+        Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Theme_Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Theme"], Information=Theme_Frame_Var)
 
+    # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Colors", Additional_Text="SideBar applied after restart.", Widget_size="Single_size", Widget_Label_Tooltip="Colors", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
+
+    # Field - Theme
+    Theme_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Theme", Field_Type="Input_OptionMenu") 
+    Theme_Frame_Var = Theme_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    Theme_Frame_Var.configure(variable=Theme_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Theme_Frame_Var, values=Theme_List, command = lambda Theme_Frame_Var: Appearance_Change_Theme(Theme_Frame_Var=Theme_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+    # Section Quantities
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Accent color", Label_Size="Field_Label" , Font_Size="Column_Header")
 
     # Field - Accent Color Mode
     Accent_Color_Mode_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Accent Color Mode", Field_Type="Input_OptionMenu") 
@@ -159,6 +129,9 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     # Disabling fields --> Accent_Color_Mode_Variable
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Accent_Color_Mode_Frame_Var, values=Accent_Color_Mode_List, command = lambda Accent_Color_Mode_Frame_Var: Settings_Disabling_Color_Pickers(Selected_Value=Accent_Color_Mode_Frame_Var, Entry_Field=Accent_Color_Manual_Frame_Var, Picker_Button=Button_Accent_Color_Frame_Var, Variable=Accent_Color_Mode_Variable, Helper="Accent"), GUI_Level_ID=GUI_Level_ID)
     Settings_Disabling_Color_Pickers(Selected_Value=Accent_Color_Mode, Entry_Field=Accent_Color_Manual_Frame_Var, Picker_Button=Button_Accent_Color_Frame_Var, Variable=Accent_Color_Mode_Variable, Helper="Accent")  # Must be here because of initial value
+
+    # Section Quantities
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Hover color", Label_Size="Field_Label" , Font_Size="Column_Header")
 
     # Field - Hover Color Mode
     Hover_Color_Mode_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Hover Color Mode", Field_Type="Input_OptionMenu") 

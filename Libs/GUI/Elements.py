@@ -153,7 +153,7 @@ def Get_Label_Icon(Configuration: dict, Frame: CTk|CTkFrame, Label_Size: str, Fo
     return Frame_Label
 
 # ---------------------------------------------- Buttons ----------------------------------------------# 
-def Get_Button(Configuration:dict, Frame: CTk|CTkFrame, Button_Size: str) -> CTkButton:
+def Get_Button_Text(Configuration:dict, Frame: CTk|CTkFrame, Button_Size: str) -> CTkButton:
     Configuration_Button_Normal = Configuration["Buttons"][f"{Button_Size}"]
 
     if Button_Size == "DatePicker_Days":
@@ -183,11 +183,13 @@ def Get_Button(Configuration:dict, Frame: CTk|CTkFrame, Button_Size: str) -> CTk
 def Get_Button_Icon(Configuration:dict, Frame: CTk|CTkFrame, Icon_Name: str, Icon_Size: str, Button_Size: str) -> CTkFrame:
     Configuration_Button_Icon = Configuration["Buttons"][f"{Button_Size}"]
 
-    if Button_Size == "Picture_SideBar":
+    if Button_Size == "Picture_Transparent":
+        fg_color = "transparent"
         Accent_Color_help = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["Accent_Color_help"])
+        hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["hover_color"], Accent_Color=Accent_Color_help)
     else:
-        Accent_Color_help = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["fg_color"])
-    hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["hover_color"], Accent_Color=Accent_Color_help)
+        fg_color = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["fg_color"])
+        hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Button_Icon["hover_color"], Accent_Color=fg_color)
 
     Frame_Button = CTkButton(
         master = Frame,
@@ -196,7 +198,7 @@ def Get_Button_Icon(Configuration:dict, Frame: CTk|CTkFrame, Icon_Name: str, Ico
         corner_radius = Configuration_Button_Icon["corner_radius"],
         border_width = Configuration_Button_Icon["border_width"],
         bg_color = Configuration_Button_Icon["bg_color"],
-        fg_color = Configuration_Button_Icon["fg_color"],
+        fg_color = fg_color,
         hover = Configuration_Button_Icon["hover"],
         hover_color = hover_color,
         anchor = Configuration_Button_Icon["anchor"],
