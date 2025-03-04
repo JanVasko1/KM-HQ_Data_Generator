@@ -4,6 +4,7 @@ from customtkinter import CTk, CTkFrame, StringVar, BooleanVar
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 import Libs.Data_Functions as Data_Functions
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
@@ -12,12 +13,13 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Environment_List = Settings["0"]["Connection"]["Environment_List"]
     NOC_List = Settings["0"]["Connection"]["NOC_List"]
     Companies_List = []
-    
+    Log_Process_List = []
 
     NUS_Version_Variable = StringVar(master=Frame, value="Cloud", name="NUS_Version_Variable")
     Environment_Variable = StringVar(master=Frame, value="QA", name="Environment_Variable")
     NOC_Variable = StringVar(master=Frame, value="Core", name="NOC_Variable")
     Company_Variable = StringVar(master=Frame, value="-", name="Company_Variable")
+    Logistic_Process_Variable = StringVar(master=Frame, value="-", name="Logistic_Process_Variable")
 
     # ------------------------- Local Functions ------------------------#
     def Download_Companies(Companies_Frame_Var: CTkScrollableDropdown) -> list:
@@ -32,16 +34,37 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
         else:
             pass
 
+    def Get_Logistic_Process(PO_MUL_LOG_PROC_Frame: CTkFrame, Selected_Company: str) -> list:
+        global Log_Process_List
+        Company_Variable.set(value=Selected_Company)
+
+        Selected_Company = Selected_Company.replace(" ", "%20")
+        Log_Process_List = Downloader.Get_Logistic_Process_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company)
+
+        if len(Log_Process_List) > 0:
+            # Update Option List
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Process_List"], Information=Log_Process_List)
+            PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+            PO_MUL_LOG_PROC_Frame_Var.configure(values=Log_Process_List)
+            Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Log_Proc_Used_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
+        else:
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
+
     def Generate_Purchase_Orders() -> None:
         print("Generate_Purchase_Orders")
         pass
 
-    def Purchase_Orders_Show(Document_Type: str) -> None:
-        Purchase_Orders_List = []
-        print(Purchase_Orders_List)
-        Purchase_Orders_List = Downloader.Get_Orders_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Document_Type=Document_Type)
+    def Purchase_Orders_Show(PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown, Document_Type: str) -> None:
+        Logistic_Process_Variable.set(value=PO_MUL_LOG_PROC_Frame_Var.get())
 
-        print(Purchase_Orders_List)
+        Selected_Company = Company_Variable.get()
+        Selected_Company = Selected_Company.replace(" ", "%20")
+
+        Purchase_Orders_List = []
+        Purchase_Orders_List = Downloader.Get_Orders_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company, Document_Type=Document_Type, Logistic_Process_Filter=PO_MUL_LOG_PROC_Frame_Var.get())
+
+        # TODO --> Finish the Open page with selection of Purchase Orders
 
     def Generate_BackBone_Billing() -> None:
         print("Generate_BackBone_Billing")
@@ -50,7 +73,6 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     def Generate_Purchase_Return_Orders() -> None:
         print("Generate_Purchase_Return_Orders")
         pass
-
 
     # ------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
@@ -89,30 +111,31 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Button_Download_Company = Elements.Get_Button_Text(Configuration=Configuration, Frame=Frame_Download_State_Area, Button_Size="Normal")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Download_Company, message="Download Companies list based on selected NUS Version, Environment and NOC.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
-    # EnCompanies List
+    # Companies List
     Companies_Text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Download_State_Area, Label_Size="Field_Label", Font_Size="Field_Label")
     Companies_Text.configure(text="Companies: ")
 
     Companies_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame_Download_State_Area)
     Companies_Frame.configure(width=200)
     Companies_Frame.configure(variable=Company_Variable)
-    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command=None, GUI_Level_ID=1)
+    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command = lambda Selected_Company: Get_Logistic_Process(PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame, Selected_Company=Selected_Company) , GUI_Level_ID=1)
+    Button_Download_Company.configure(text="Get Companies", command = lambda: Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
     
-    Button_Download_Company.configure(text="Get Companies", command = lambda:Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
-
     # ------------------------- Work Area -------------------------#
     # Progress Bar
     Progress_Bar = Elements.Get_ProgressBar(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, orientation="Horizontal", Progress_Size="Download_Process", GUI_Level_ID=1)
     Progress_Bar.set(value=0)
 
-    # -------- Purchase Order Tab -------- #
+    Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    # ---------------- Purchase Order Tab ---------------- #
     Generate_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Use"]
     Generate_PreAdvice = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Use"]
     Generate_CPDI = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Use"]
     Generate_Delivery = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Use"]
     Generate_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Use"]
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
-    Generate_IAL = Settings["0"]["HQ_Data_Handler"]["IAL"]["Use"]
 
     Generate_CON_Variable = BooleanVar(master=Frame, value=Generate_Confirmation, name="Generate_CON_Variable")
     Generate_PRA_Variable = BooleanVar(master=Frame, value=Generate_PreAdvice, name="Generate_PRA_Variable")
@@ -120,10 +143,9 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_DEL_Variable = BooleanVar(master=Frame, value=Generate_Delivery, name="Generate_DEL_Variable")
     Generate_INV_Variable = BooleanVar(master=Frame, value=Generate_Invoice, name="Generate_INV_Variable")
     Generate_INV_PDF_Variable = BooleanVar(master=Frame, value=Generate_Invoice_PDF, name="Generate_INV_PDF_Variable")
-    Generate_IAL_Variable = BooleanVar(master=Frame, value=Generate_IAL, name="Generate_IAL_Variable")
 
     # Tab View - Purchase Order
-    TabView_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, Tab_size="Download", GUI_Level_ID=2)
+    TabView_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Column_A, Tab_size="Download", GUI_Level_ID=2)
     TabView_PO.pack_propagate(flag=False)
     Tab_PO = TabView_PO.add("Purchase Order")
     TabView_PO.set("Purchase Order")
@@ -153,42 +175,88 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # Field - Use Invoice
     Generate_INV_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Invoice", Field_Type="Input_CheckBox") 
     Generate_INV_Frame_Var = Generate_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_INV_Frame_Var.configure(variable=Generate_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Information=Generate_INV_Variable))
+    Generate_INV_Frame_Var.configure(variable=Generate_INV_Variable, text="")
+
+    if Generate_INV_Variable.get() == True:
+        pass
+    elif Generate_INV_Variable.get() == False:
+        Generate_INV_PDF_Variable.set(value=False)
+    else:
+        pass
 
     # Field - Use Invoice PDF
     Generate_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Invoice PDF", Field_Type="Input_CheckBox") 
     Generate_INV_PDF_Frame_Var = Generate_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_INV_PDF_Frame_Var.configure(variable=Generate_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"], Information=Generate_INV_PDF_Variable))
 
-    # Field - Use IAL
-    Generate_IAL_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="IAL", Field_Type="Input_CheckBox") 
-    Generate_IAL_Frame_Var = Generate_IAL_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_IAL_Frame_Var.configure(variable=Generate_IAL_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_IAL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "IAL", "Use"], Information=Generate_IAL_Variable))
+    if Generate_INV_Variable.get() == True:
+        Generate_INV_PDF_Frame_Var.configure(state="normal")
+    elif Generate_INV_Variable.get() == False:
+        Generate_INV_PDF_Frame_Var.configure(state="disabled")
+    else:
+        pass
 
+    PO_Block_Variable_list = [Generate_INV_PDF_Variable]
+    PO_Block_Field_list = [Generate_INV_PDF_Frame_Var]
+    PO_Block_JSON_path_list =[["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"]]
+    Generate_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_INV_Variable, Selected_Field=Generate_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Block_Variable_list=PO_Block_Variable_list, Block_Field_list=PO_Block_Field_list, Block_JSON_path_list=PO_Block_JSON_path_list))
+    
+    # -------- Select One -------- #
+    TabView_One_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Tab_PO, Tab_size="Download", GUI_Level_ID=3)
+    TabView_One_PO.pack_propagate(flag=False)
+    Tab_One_PO = TabView_One_PO.add("One Purchase Order")
+    TabView_One_PO.set("One Purchase Order")
+    Tab_One_PO_ToolTip_But = TabView_One_PO.children["!ctksegmentedbutton"].children["!ctkbutton"]
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_One_PO_ToolTip_But, message="Use to generate file only for one inserted Order.", ToolTip_Size="Normal", GUI_Level_ID=3)
+    
     # Selected Purchase Orders List
-    PO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="Selected POs", Field_Type="Input_Normal") 
+    PO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_One_PO, Field_Frame_Type="Half_size" , Label="Purchase Order", Field_Type="Input_Normal") 
     PO_Selected_Frame_Var = PO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
-    PO_Selected_Frame_Var.configure(placeholder_text="Purchase Orders", placeholder_text_color="#949A9F")
+    PO_Selected_Frame_Var.configure(placeholder_text="Purchase Order Number", placeholder_text_color="#949A9F")
+
+    # Buttons - Generate
+    Button_PO_One_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_One_PO, Button_Size="Normal")
+    Button_PO_One_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_One_Generate_Var, message="Generate selected documents for one Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=3)
+
+    # -------- Select Multiple -------- #
+    TabView_Multi_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Tab_PO, Tab_size="Download", GUI_Level_ID=3)
+    TabView_Multi_PO.pack_propagate(flag=False)
+    Tab_Multi_PO = TabView_Multi_PO.add("Multi POs")
+    TabView_Multi_PO.set("Multi POs")
+    Tab_Multi_PO_ToolTip_But = TabView_Multi_PO.children["!ctksegmentedbutton"].children["!ctkbutton"]
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_Multi_PO_ToolTip_But, message="Select More Purchase Orders from list, which can be pre-filtered by Logistic Process.", ToolTip_Size="Normal", GUI_Level_ID=3)
+
+    Log_Proc_Used = Settings["0"]["HQ_Data_Handler"]["Documents"]["Logistic_Process"]["Used"]
+    Log_Proc_Used_Variable = StringVar(master=Frame, value=Log_Proc_Used, name="Log_Proc_Used_Variable")
+
+    # Field - Logistic Process Filter
+    PO_MUL_LOG_PROC_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_Multi_PO, Field_Frame_Type="Half_size" , Label="Log. Process", Field_Type="Input_OptionMenu") 
+    PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    PO_MUL_LOG_PROC_Frame_Var.configure(variable=Log_Proc_Used_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda Selected_Value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Log_Proc_Used_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information=Selected_Value), GUI_Level_ID=3)
 
     # Buttons
-    Button_Frame = Elements_Groups.Get_Widget_Button_row(Frame=Tab_PO, Configuration=Configuration, Field_Frame_Type="Half_size" , Buttons_count=2, Button_Size="Normal") 
-    Button_PO_Generate_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-    Button_PO_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Generate_Var, message="Process selected files for filtered Purchase Orders.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    Button_PO_Show_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_Multi_PO, Button_Size="Normal")
+    Button_PO_Show_Var.configure(text="List", command = lambda: Purchase_Orders_Show(PO_MUL_LOG_PROC_Frame_Var=PO_MUL_LOG_PROC_Frame_Var, Document_Type="Order"))
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-    Button_PO_Show_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
-    Button_PO_Show_Var.configure(text="Select Multiple", command = lambda: Purchase_Orders_Show(Document_Type="Order"))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    # Buttons - Generate
+    Button_PO_Multi_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_Multi_PO, Button_Size="Normal")
+    Button_PO_Multi_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Multi_Generate_Var, message="Process selected files for filtered Purchase Orders.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-    # -------- BackBone Billing Tab -------- #
+    # ---------------- BackBone Billing Tab -------- #
     Generate_BB_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Use"]
     Generate_BB_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["PDF"]["Generate"]
+    Generate_BB_IAL = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["IAL"]["Use"]
 
     Generate_BB_INV_Variable = BooleanVar(master=Frame, value=Generate_BB_Invoice, name="Generate_BB_INV_Variable")
     Generate_BB_INV_PDF_Variable = BooleanVar(master=Frame, value=Generate_BB_Invoice_PDF, name="Generate_BB_INV_PDF_Variable")
+    Generate_BB_IAL_Variable = BooleanVar(master=Frame, value=Generate_BB_IAL, name="Generate_BB_IAL_Variable")
 
     # Tab View - BackBone Billing
-    TabView_BB = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, Tab_size="Download", GUI_Level_ID=2)
+    TabView_BB = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Column_B, Tab_size="Download", GUI_Level_ID=2)
     TabView_BB.pack_propagate(flag=False)
     Tab_BB = TabView_BB.add("BackBone Billing")
     TabView_BB.set("BackBone Billing")
@@ -198,19 +266,46 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     # Field - Use BackBone Billing Invoice
     Generate_BB_INV_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="Invoice", Field_Type="Input_CheckBox") 
     Generate_BB_INV_Frame_Var = Generate_BB_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    Generate_BB_INV_Frame_Var.configure(variable=Generate_BB_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Information=Generate_BB_INV_Variable))
+    Generate_BB_INV_Frame_Var.configure(variable=Generate_BB_INV_Variable, text="")
+
+    if Generate_BB_INV_Variable.get() == True:
+        pass
+    elif Generate_BB_INV_Variable.get() == False:
+        Generate_BB_INV_PDF_Variable.set(value=False)
+        Generate_BB_IAL_Variable.set(value=False)
+    else:
+        pass
 
     # Field - Use Invoice PDF
     Generate_BB_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="Invoice .pdf", Field_Type="Input_CheckBox") 
     Generate_BB_INV_PDF_Frame_Var = Generate_BB_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_BB_INV_PDF_Frame_Var.configure(variable=Generate_BB_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], Information=Generate_BB_INV_PDF_Variable))
 
-    # Button - Generate BAckBone Billing Invoice
+    # Field - Use IAL
+    Generate_IAL_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="IAL", Field_Type="Input_CheckBox") 
+    Generate_IAL_Frame_Var = Generate_IAL_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    Generate_IAL_Frame_Var.configure(variable=Generate_BB_IAL_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_BB_IAL_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "IAL", "Use"], Information=Generate_BB_IAL_Variable))
+
+    if Generate_BB_INV_Variable.get() == True:
+        Generate_BB_INV_PDF_Frame_Var.configure(state="normal")
+        Generate_IAL_Frame_Var.configure(state="normal")
+    elif Generate_BB_INV_Variable.get() == False:
+        Generate_BB_INV_PDF_Frame_Var.configure(state="disabled")
+        Generate_IAL_Frame_Var.configure(state="disabled")
+    else:
+        pass
+
+    BB_Block_Variable_list = [Generate_BB_INV_PDF_Variable, Generate_BB_IAL_Variable]
+    BB_Block_Field_list = [Generate_BB_INV_PDF_Frame_Var, Generate_IAL_Frame_Var]
+    BB_Block_JSON_path_list = [["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], ["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "IAL", "Use"]]
+    Generate_BB_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_BB_INV_Variable, Selected_Field=Generate_BB_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Block_Variable_list=BB_Block_Variable_list, Block_Field_list=BB_Block_Field_list, Block_JSON_path_list=BB_Block_JSON_path_list))
+
+    # Button - Generate BackBone Billing Invoice
     Button_Generate_BB = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
     Button_Generate_BB.configure(text="Generate", command = lambda:Generate_BackBone_Billing())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Generate_BB, message="Generate marked documents for selected BackBoneBilling Invoice.", ToolTip_Size="Normal", GUI_Level_ID=2)
 
-    # -------- Purchase Return Order Tab -------- #
+    # ---------------- Purchase Return Order Tab ---------------- #
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
     Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
     Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
@@ -220,7 +315,7 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_PRO_INV_PDF_Variable = BooleanVar(master=Frame, value=Generate_PRO_Invoice_PDF, name="Generate_PRO_INV_PDF_Variable")
 
     # Tab View - Purchase Return Order
-    TabView_PRO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Download_Work_Detail_Area, Tab_size="Download", GUI_Level_ID=2)
+    TabView_PRO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Column_B, Tab_size="Download", GUI_Level_ID=2)
     TabView_PRO.pack_propagate(flag=False)
     Tab_PRO = TabView_PRO.add("Return Order")
     TabView_PRO.set("Return Order")
@@ -237,10 +332,30 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Generate_PRO_INV_Frame_Var = Generate_PRO_INV_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_PRO_INV_Frame_Var.configure(variable=Generate_PRO_INV_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Information=Generate_PRO_INV_Variable))
 
+    if Generate_PRO_INV_Variable.get() == True:
+        pass
+    elif Generate_PRO_INV_Variable.get() == False:
+        Generate_PRO_INV_PDF_Variable.set(value=False)
+    else:
+        pass
+
     # Field - Use Invoice PDF
     Generate_PRO_INV_PDF_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Invoice .pdf", Field_Type="Input_CheckBox") 
     Generate_PRO_INV_PDF_Frame_Var = Generate_PRO_INV_PDF_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_PRO_INV_PDF_Frame_Var.configure(variable=Generate_PRO_INV_PDF_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Generate_PRO_INV_PDF_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"], Information=Generate_PRO_INV_PDF_Variable))
+
+    if Generate_PRO_INV_Variable.get() == True:
+        Generate_PRO_INV_PDF_Frame_Var.configure(state="normal")
+    elif Generate_PRO_INV_Variable.get() == False:
+        Generate_PRO_INV_PDF_Frame_Var.configure(state="disabled")
+    else:
+        pass
+
+    PRO_Block_Variable_list = [Generate_PRO_INV_PDF_Variable]
+    PRO_Block_Field_list = [Generate_PRO_INV_PDF_Frame_Var]
+    PRO_Block_JSON_path_list =[["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"]]
+    Generate_PRO_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_PRO_INV_Variable, Selected_Field=Generate_PRO_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Block_Variable_list=PRO_Block_Variable_list, Block_Field_list=PRO_Block_Field_list, Block_JSON_path_list=PRO_Block_JSON_path_list))
+    
 
     # Selected Purchase Orders List
     PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected PROs", Field_Type="Input_Normal") 
@@ -259,7 +374,7 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
 
     # Build look of Widget
     Frame_Download_State_Area.pack(side="top", fill="x", expand=False, padx=10, pady=10)
-    Frame_Download_Work_Detail_Area.pack(side="top", fill="none", expand=False, padx=0, pady=0)
+    Frame_Download_Work_Detail_Area.pack(side="top", fill="x", expand=False, padx=10, pady=10)
 
     NUS_Version_Text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
     NUS_Version_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
@@ -271,24 +386,33 @@ def Page_Download(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Companies_Text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
     Companies_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
 
-    Progress_Bar.pack(side="top", fill="x", expand=False, padx=5, pady=(10,5))
+    Progress_Bar.pack(side="top", fill="x", expand=True, padx=5, pady=(10,5))
+    Frame_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
 
-    TabView_PO.pack(side="left", fill="y", expand=False, padx=10, pady=10)
+    TabView_PO.pack(side="top", fill="both", expand=False, padx=10, pady=10)
     Generate_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_CPDI_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PREA_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_DEL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    
+    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
     PO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Button_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Button_PO_One_Generate_Var.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
-    TabView_BB.pack(side="left", fill="y", expand=False, padx=10, pady=10)
+    TabView_Multi_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+    PO_MUL_LOG_PROC_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Button_PO_Show_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
+    Button_PO_Multi_Generate_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
+
+    TabView_BB.pack(side="top", fill="y", expand=True, padx=10, pady=10)
     Generate_BB_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_BB_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_Generate_BB.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_PRO.pack(side="left", fill="y", expand=False, padx=10, pady=10)
+    TabView_PRO.pack(side="top", fill="y", expand=True, padx=10, pady=10)
     Generate_PRO_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)

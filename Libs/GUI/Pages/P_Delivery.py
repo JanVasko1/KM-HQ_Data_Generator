@@ -28,13 +28,13 @@ def Page_Delivery(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     Frame_Tab_DEL_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_DEL, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_Tab_DEL_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_DEL, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    PO_Count_Widget = W_Delivery.DEL_Count(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
-    PO_Carrier_Widget = W_Delivery.Carrier_ID(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
-    Ship_Method_Widget = W_Delivery.Shipment_Method(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
+    PO_Number_Widget = W_Delivery.DEL_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
+    PO_Serial_Numbers_Widget = W_Delivery.Serial_Numbers(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
+    PO_Delivery_Date_Widget = W_Delivery.Delivery_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_A, GUI_Level_ID=2)
     
-    PO_Number_Widget = W_Delivery.DEL_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
-    PO_Serial_Numbers_Widget = W_Delivery.Serial_Numbers(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
-    PO_Delivery_Date_Widget = W_Delivery.Delivery_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
+    PO_Count_Widget = W_Delivery.DEL_Count(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
+    PO_Carrier_Widget = W_Delivery.Carrier_ID(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
+    Ship_Method_Widget = W_Delivery.Shipment_Method(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_DEL_Column_B, GUI_Level_ID=2)
     
     # ---------- Tracking - Packages ---------- #
     Frame_Tab_T_P_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_T_P, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
@@ -58,13 +58,13 @@ def Page_Delivery(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
 
     Frame_Tab_DEL_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_Tab_DEL_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    PO_Count_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Carrier_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Ship_Method_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Serial_Numbers_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Delivery_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-
+    PO_Count_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Carrier_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Ship_Method_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    
     Frame_Tab_T_P_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_Tab_T_P_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Pack_Numbers_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)

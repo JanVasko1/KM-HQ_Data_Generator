@@ -8,7 +8,7 @@
             ],
             "Colors": {
                 "Accent": {
-                    "Accent_Color_Mode": "Manual",
+                    "Accent_Color_Mode": "App Default",
                     "Accent_Color_Manual": "#446b80",
                     "Accent_Color_List": [
                         "Windows",
@@ -18,7 +18,7 @@
                 },
                 "Hover": {
                     "Hover_Color_Mode": "Accent Lighter",
-                    "Hover_Color_Manual": "#00A9FF",
+                    "Hover_Color_Manual": "#446b80",
                     "Hover_Color_List": [
                         "Accent Lighter",
                         "Manual",
@@ -101,6 +101,14 @@
             "weight": "normal",
             "slant": "roman",
             "underline": false,
+            "overstrike": false
+        },
+        "Section_Separator": {
+            "family": "Roboto",
+            "size": 11,
+            "weight": "bold",
+            "slant": "roman",
+            "underline": true,
             "overstrike": false
         },
         "Field_Label": {
@@ -186,13 +194,13 @@
             ],
             "bg_color": "transparent",
             "fg_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "hover": true,
             "hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "anchor": "center",
             "text_color": [
@@ -211,13 +219,13 @@
             ],
             "bg_color": "transparent",
             "fg_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "hover": true,
             "hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "anchor": "center",
             "text_color": [
@@ -236,13 +244,13 @@
             ],
             "bg_color": "transparent",
             "fg_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "hover": true,
             "hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "anchor": "center",
             "text_color": [
@@ -252,8 +260,8 @@
         },
         "DatePicker_Days": {
             "Accent_Color_help": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "width": 3,
             "height": 3,
@@ -267,8 +275,8 @@
             "fg_color": "transparent",
             "hover": true,
             "hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "anchor": "center",
             "text_color": [
@@ -278,8 +286,8 @@
         },
         "Picture_Transparent": {
             "Accent_Color_help": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "width": 30,
             "height": 30,
@@ -290,8 +298,8 @@
             "fg_color": "transparent",
             "hover": false,
             "hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "anchor": "center"
         }
@@ -355,16 +363,16 @@
                 "border_width_unchecked": 3,
                 "border_width_checked": 6,
                 "fg_color": [
-                    "#00A9FF",
-                    "#00A9FF"
+                    "#446b80",
+                    "#446b80"
                 ],
                 "border_color": [
                     "#efefef",
                     "#111219"
                 ],
                 "hover_color": [
-                    "#33BAff",
-                    "#33BAff"
+                    "#4f7c94",
+                    "#4f7c94"
                 ],
                 "hover": true
             }
@@ -381,12 +389,12 @@
                         "#111219"
                     ],
                     "button_color": [
-                        "#00A9FF",
-                        "#00A9FF"
+                        "#446b80",
+                        "#446b80"
                     ],
                     "button_hover_color": [
-                        "#33BAff",
-                        "#33BAff"
+                        "#4f7c94",
+                        "#4f7c94"
                     ],
                     "text_color": [
                         "#2C2C2C",
@@ -401,8 +409,8 @@
                         "#2C2C2C"
                     ],
                     "dropdown_hover_color": [
-                        "#33BAff",
-                        "#33BAff"
+                        "#4f7c94",
+                        "#4f7c94"
                     ],
                     "dropdown_text_color": [
                         "#2C2C2C",
@@ -427,8 +435,8 @@
                         "#111219"
                     ],
                     "hover_color": [
-                        "#33BAff",
-                        "#33BAff"
+                        "#4f7c94",
+                        "#4f7c94"
                     ],
                     "button_height": 28,
                     "justify": "center",
@@ -444,8 +452,8 @@
                         "#B4B4B7"
                     ],
                     "scrollbar_button_hover_color": [
-                        "#33BAff",
-                        "#33BAff"
+                        "#4f7c94",
+                        "#4f7c94"
                     ],
                     "resize": true,
                     "text_color": [
@@ -467,12 +475,12 @@
                 "border_width": 3,
                 "bg_color": "transparent",
                 "fg_color": [
-                    "#00A9FF",
-                    "#00A9FF"
+                    "#446b80",
+                    "#446b80"
                 ],
                 "hover_color": [
-                    "#33BAff",
-                    "#33BAff"
+                    "#4f7c94",
+                    "#4f7c94"
                 ],
                 "border_color": [
                     "#efefef",
@@ -524,8 +532,8 @@
                     "#000001"
                 ],
                 "fg_color": [
-                    "#00A9FF",
-                    "#00A9FF"
+                    "#446b80",
+                    "#446b80"
                 ]
             },
             "SideBar_active": {
@@ -786,8 +794,8 @@
                 "Scrollable_Frames": {
                     "Double_size": {
                         "Accent_Color_help": [
-                            "#00A9FF",
-                            "#00A9FF"
+                            "#446b80",
+                            "#446b80"
                         ],
                         "width": 1000,
                         "corner_radius": 10,
@@ -805,8 +813,8 @@
                             "#B4B4B7"
                         ],
                         "scrollbar_button_hover_color": [
-                            "#33BAff",
-                            "#33BAff"
+                            "#4f7c94",
+                            "#4f7c94"
                         ]
                     }
                 }
@@ -971,20 +979,20 @@
                 "#efefef"
             ],
             "segmented_button_selected_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "segmented_button_selected_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "segmented_button_unselected_color": [
                 "#EDEDED",
                 "#2C2C2C"
             ],
             "segmented_button_unselected_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "text_color": [
                 "#2C2C2C",
@@ -1015,20 +1023,20 @@
                 "#efefef"
             ],
             "segmented_button_selected_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "segmented_button_selected_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "segmented_button_unselected_color": [
                 "#EDEDED",
                 "#2C2C2C"
             ],
             "segmented_button_unselected_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "text_color": [
                 "#2C2C2C",
@@ -1080,12 +1088,12 @@
                 "#FF9797"
             ],
             "button_fg_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "button_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "button_text_color": [
                 "#2C2C2C",
@@ -1115,12 +1123,12 @@
                 "#FF9797"
             ],
             "button_fg_color": [
-                "#00A9FF",
-                "#00A9FF"
+                "#446b80",
+                "#446b80"
             ],
             "button_hover_color": [
-                "#33BAff",
-                "#33BAff"
+                "#4f7c94",
+                "#4f7c94"
             ],
             "button_text_color": [
                 "#2C2C2C",
@@ -1144,7 +1152,7 @@
     "Sliders": {},
     "Color_Picker": {
         "width": 300,
-        "initial_color": "#00A9FF",
+        "initial_color": "#446b80",
         "fg_color": [
             "#f7f9f9",
             "#2C2C2C"

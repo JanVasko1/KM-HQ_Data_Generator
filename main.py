@@ -82,10 +82,12 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         Information_html.pack(side="top", fill="both", expand=False, padx=10, pady=10)
 
 
-    def Save_Template(Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
+    def Save_Template(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
         global Template_List
         # Define Name for new Template
-        File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation")
+        File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation", GUI_Level_ID=1)
+        #File_Name = Elements_Groups.My_Dialog_Window(Settings=Settings, Configuration=Configuration, Clicked_on_Button=Button, title="File Name", text="Write your desire Template name.", Password=False, width=150, height=150, tooltip="", Fixed=False, GUI_Level_ID=1)
+
         if File_Name == None:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
@@ -121,7 +123,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
         for Source_file in files:
             Destination_file = Source_file.replace(Source_Path, Destination_Path)
-            Defaults_Lists.Copy_File(Configuration=Configuration, Source_Path=Source_file, Destination_Path=Destination_file)
+            File_Manipulation.Copy_File(Configuration=Configuration, Source_Path=Source_file, Destination_Path=Destination_file)
 
         Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="All Templates exported to Download folder.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
@@ -135,7 +137,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
            
             # Copy File to Template Folder
             Destination_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}")
-            Defaults_Lists.Copy_File(Configuration=Configuration, Source_Path=Source_Path, Destination_Path=Destination_Path)
+            File_Manipulation.Copy_File(Configuration=Configuration, Source_Path=Source_Path, Destination_Path=Destination_Path)
 
             # Update Template List
             Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
@@ -251,7 +253,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
     # Button - Save Template
     Icon_Save_Template = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_Transparent")
     Icon_Save_Template.configure(text="")
-    Icon_Save_Template.configure(command = lambda: Save_Template(Actual_Template_Frame_Var=Actual_Template_Frame_Var))
+    Icon_Save_Template.configure(command = lambda: Save_Template(Button=Icon_Save_Template, Actual_Template_Frame_Var=Actual_Template_Frame_Var))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Save_Template, message="Save Current settings.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Button - Export Templates
@@ -361,6 +363,14 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         P_Settings.Page_Settings(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
+    def Exit_Program() -> None:
+        # Delete Operational data from SEttings
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information="")
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Process_List"], Information=[])
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Order", "Purchase_Order_List"], Information=[])
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+        window.quit()
+
     # ------------------------- Main Functions -------------------------#
     Active_Window = Elements.Get_Frame(Configuration=Configuration, Frame=Side_Bar_Frame, Frame_Size="SideBar_active")
 
@@ -409,7 +419,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
 
     # Close Application
     Icon_Frame_Close = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="power", Icon_Size="Side_Bar_close", Button_Size="Picture_Transparent")
-    Icon_Frame_Close.configure(command = lambda: window.quit())
+    Icon_Frame_Close.configure(command = lambda: Exit_Program())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Close, message="Close application.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Program Version
@@ -478,6 +488,12 @@ if __name__ == "__main__":
     Application = Defaults_Lists.Load_Application()
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
+
+    # Delete Operational data from SEttings
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information="")
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Process_List"], Information=[])
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Order", "Purchase_Order_List"], Information=[])
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]

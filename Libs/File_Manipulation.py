@@ -1,7 +1,7 @@
 # Import Libraries
 import os
 from glob import glob
-from shutil import rmtree
+from shutil import rmtree, copy
 
 import Libs.GUI.Elements as Elements
 
@@ -12,6 +12,13 @@ def Create_Folder(Configuration: dict, file_path: str) -> None:
         os.makedirs(f"{file_path}")
     except Exception as Error:
         Elements.Get_MessageBox(Configuration=Configuration, title=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
+def Copy_File(Configuration: dict, Source_Path: str, Destination_Path: str) -> None:
+    try:
+        copy(src=Source_Path, dst=Destination_Path)
+    except Exception as Error:
+        Elements.Get_MessageBox(Configuration=Configuration, title=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
 
 def Delete_Folder(file_path: str) -> None:
     # Create Folder

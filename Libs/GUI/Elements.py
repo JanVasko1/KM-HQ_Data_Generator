@@ -671,7 +671,7 @@ def Get_ProgressBar(Configuration:dict, Frame: CTk|CTkFrame, orientation: str, P
         corner_radius = Configuration_ProgressBar["corner_radius"],
         bg_color = Configuration_ProgressBar["bg_color"],
         fg_color = tuple(Configuration_ProgressBar["fg_color"]),
-        progress_color = tuple(Configuration_ProgressBar["progress_color"]),
+        progress_color = tuple(Configuration_ProgressBar["fg_color"]),
         orientation = Configuration_ProgressBar["orientation"],
         determinate_speed = Configuration_ProgressBar["determinate_speed"],
         indeterminate_speed = Configuration_ProgressBar["indeterminate_speed"],
@@ -680,25 +680,49 @@ def Get_ProgressBar(Configuration:dict, Frame: CTk|CTkFrame, orientation: str, P
 
 
 # ---------------------------------------------- InputDialog ----------------------------------------------# 
-def Get_DialogWindow(Configuration:dict, text: str, title: str, Dialog_Type: str) -> CTkInputDialog:
+def Get_DialogWindow(Configuration:dict, text: str, title: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> CTkInputDialog:
+    def drag_win():
+        x = Dialog.winfo_pointerx() - Dialog._offsetx
+        y = Dialog.winfo_pointery() - Dialog._offsety
+        Dialog.geometry(f"+{x}+{y}")
+
+    def click_win():
+        Dialog._offsetx = Dialog.winfo_pointerx() - Dialog.winfo_rootx()
+        Dialog._offsety = Dialog.winfo_pointery() - Dialog.winfo_rooty()
+
     Configuration_Dialog = Configuration["InputDialog"][f"{Dialog_Type}"]
     
     button_fg_color = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Dialog["button_fg_color"])
     button_hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Dialog["button_hover_color"], Accent_Color=button_fg_color)
 
+    if type(GUI_Level_ID) is int:
+        fg_color = tuple(Configuration["Global_Appearance"]["GUI_Level_ID"][f"{GUI_Level_ID}"]["fg_color"])
+        border_color = tuple(Configuration["Global_Appearance"]["GUI_Level_ID"][f"{GUI_Level_ID}"]["border_color"])
+    else:
+        border_color = tuple(Configuration_Dialog["entry_border_color"])
+        if Configuration_Dialog["fg_color"] == "transparent":
+            fg_color = Configuration_Dialog["fg_color"]
+        else:
+            fg_color = tuple(Configuration_Dialog["fg_color"])
+
     Dialog = CTkInputDialog(
         text=text,
         title=title,
         font = Get_Font(Configuration=Configuration, Font_Size="Field_Label"),
-        fg_color = tuple(Configuration_Dialog["fg_color"]),
+        fg_color = fg_color,
         text_color = tuple(Configuration_Dialog["text_color"]),
         button_fg_color = button_fg_color,
         button_hover_color = button_hover_color,
         button_text_color = tuple(Configuration_Dialog["button_text_color"]),
         entry_fg_color = tuple(Configuration_Dialog["entry_fg_color"]),
-        entry_border_color = tuple(Configuration_Dialog["entry_border_color"]),
+        entry_border_color = None,
         entry_text_color = tuple(Configuration_Dialog["entry_text_color"]),
         password = Configuration_Dialog["password"])
+    Dialog.overrideredirect(True)
+    Dialog.attributes("-transparentcolor", "#000001")
+    Dialog.bind(sequence="<Button-1>", func=lambda event:click_win())
+    Dialog.bind(sequence="<B1-Motion>", func=lambda event:drag_win())
+    Dialog.iconbitmap(bitmap=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
     return Dialog
 
 # ---------------------------------------------- Color_Picker ----------------------------------------------# 

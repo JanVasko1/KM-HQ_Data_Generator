@@ -50,7 +50,8 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_
 
     Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Area, Label_Size=Label_Size, Font_Size=Font_Size)
     Label_text.configure(text=f"{Label}")
-    Label_text.pack(side="left", fill="none", expand=False, padx=(20, 0), pady=5)
+    # TODO --> dodělat tak aby měl stejný rozložení jako normální pole a 
+    Label_text.pack(side="right", fill="none", expand=False, padx=(50, 0), pady=5)
 
     return Frame_Area
 
@@ -163,46 +164,55 @@ def Get_Pop_up_window(Configuration:dict, title: str, width: int, height: int, T
 
     return Pop_Up_Window
 
-def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkButton, title: str, tooltip: str, width: int, height: int, text: str, Password: bool, Fixed: bool, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # TODO --> must be finished to be used instead of Elements.Get_DialogWindow
-    def Confirm_Choice(Field_Normal: CTkEntry):
+def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkButton, title: str, text: str, Password: bool, width: int, height: int, Fixed: bool, tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
+    def Confirm_Choice(Field_Normal: CTkEntry) -> str:
+        Dialog_Window.destroy()
         return Field_Normal.get()
 
-    def Reject_Choice():
+    def Reject_Choice(Field_Normal: CTkEntry) -> str:
         Dialog_Window.destroy()
         return ""
+    
+    def Build_Dialog_Window(text: str, Password: bool) -> None:
+        Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Body, Label_Size="Field_Label", Font_Size="Field_Label")
+        Label_text.configure(text=f"{text}:")
+        Label_text.pack(side="top", fill="none", expand=True, padx=10, pady=5)
+
+        if Password == False:
+            Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Size="Normal")
+            Field_Normal.pack(side="top", fill="none", expand=True, padx=10, pady=5)
+        elif Password == True:
+            Field_Normal = Elements.Get_Password_Normal(Configuration=Configuration, Frame=Frame_Body)
+            Field_Normal.pack(side="top", fill="none", expand=True, padx=10, pady=5)
+
+        # Buttons
+        Button_Frame = Get_Widget_Button_row(Frame=Frame_Body, Configuration=Configuration, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Normal") 
+        Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+        Button_Confirm_Var.configure(text="Confirm", command = lambda Field_Normal=Field_Normal:Confirm_Choice(Field_Normal=Field_Normal))
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm.", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
+        Button_Confirm_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
+
+        Button_Reject_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
+        Button_Reject_Var.configure(text="Reject", command = lambda Field_Normal=Field_Normal:Reject_Choice(Field_Normal=Field_Normal))
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Reject_Var, message="Reject.", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
+        Button_Reject_Var.pack(side="right", fill="none", expand=True, padx=5, pady=5)
 
     Dialog_Window_geometry = (width, height)
     Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Dialog_Window_geometry[0])
-    Dialog_Window = Get_Pop_up_window(Configuration=Configuration, title=title,  width=Dialog_Window_geometry[0], height=Dialog_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
+    Dialog_Window =  Get_Pop_up_window(Configuration=Configuration, title=title, width=Dialog_Window_geometry[0], height=Dialog_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
 
     # Frame - General
     Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Dialog_Window, Name=title, Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=tooltip, GUI_Level_ID=GUI_Level_ID)
+    Frame_Main.configure(bg_color = "#000001")
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
-    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Body, Label_Size="Field_Label", Font_Size="Field_Label")
-    Label_text.configure(text=f"{text}:")
-    Label_text.pack(side="top", fill="none", expand=True, padx=10, pady=5)
+    Build_Dialog_Window(text=text, Password=Password)
 
-    if Password == False:
-        Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Size="Normal")
-        Field_Normal.pack(side="top", fill="none", expand=True, padx=10, pady=5)
-    elif Password == True:
-        Field_Normal = Elements.Get_Password_Normal(Configuration=Configuration, Frame=Frame_Body)
-        Field_Normal.pack(side="top", fill="none", expand=True, padx=10, pady=5)
-
-    # Buttons
-    Button_Frame = Get_Widget_Button_row(Frame=Frame_Body, Configuration=Configuration, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Normal") 
-    Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-    Button_Confirm_Var.configure(text="Confirm", command = lambda:Confirm_Choice(Field_Normal=Field_Normal))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm.", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
-
-    Button_Reject_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
-    Button_Reject_Var.configure(text="Reject", command = lambda:Reject_Choice())
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Reject_Var, message="Reject.", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
-
+    
 def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Clicked_on_Button: CTkButton, width: int, height: int, Fixed: bool, GUI_Level_ID: int|None = None) -> None:
     # Based on https://github.com/maxverwiebe/CTkDatePicker
+
+    # BUG --> Not saving value into Settings.json and Global Settins (must use Save as for normal fiels) --> same for Color Picker
 
     Current_Year = datetime.now().year
     Current_Month = datetime.now().month

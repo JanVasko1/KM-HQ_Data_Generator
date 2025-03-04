@@ -1,14 +1,15 @@
 # Import Libraries
 import pyautogui
-from customtkinter import CTkButton, get_appearance_mode
+from customtkinter import CTkButton, get_appearance_mode, BooleanVar, CTkCheckBox
 from CTkTable import CTkTable
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
+import Libs.Data_Functions as Data_Functions
 
 # --------------------------------------------- CustomTkinter --------------------------------------------- #
-def Dialog_Window_Request(Configuration: dict, title: str, text: str, Dialog_Type: str) -> str|None:
+def Dialog_Window_Request(Configuration: dict, title: str, text: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> str|None:
     # Password required
-    dialog = Elements.Get_DialogWindow(Configuration=Configuration, title=title, text=text, Dialog_Type=Dialog_Type)
+    dialog = Elements.Get_DialogWindow(Configuration=Configuration, title=title, text=text, Dialog_Type=Dialog_Type, GUI_Level_ID=GUI_Level_ID)
     Dialog_Input = dialog.get_input()
     return Dialog_Input
 
@@ -61,3 +62,15 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict, Table: CTkTable, J
             row_index += 1
     else:
         Elements.Get_MessageBox(Configuration=Configuration, title=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
+# ------------------ Blocking Fields Functions ------------------ #
+
+def Field_Block_Bool(Settings: dict, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
+    for i, Block_Variable in enumerate(Block_Variable_list):
+        if Selected_Variable.get() == True:
+            Block_Field_list[i].configure(state="normal")
+        elif Selected_Variable.get() == False:
+            Block_Field_list[i].configure(state="disabled")
+            Block_Variable_list[i].set(value=False)
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])

@@ -76,15 +76,43 @@ def Get_Companies(Configuration: dict, headers: dict, tenant_id: str, NUS_versio
 
     return Companies_list
 
+# ------------------- HQ_Testing_Logistic_Process ------------------- #
+def Get_HQ_Testing_Logistic_Process_list(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+    # Fields
+    fields_list = ["Process_Code"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_list_string = ""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Logistic_Process")
+
+    # Prepare DataFrame
+    Process_Code_List = []
+    for index in range(0, list_len):
+        Process_Code_List.append(response_values_List[index]["Process_Code"])
+
+    return Process_Code_List
+
+
 # ------------------- HQ_Testing_Purchase_Headers ------------------- #
-def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list):
+def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list, Logistic_Process_Filter: str):
     # Fields
     fields_list = ["No"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
-    filters_Purchase_Order = Get_Field_List_string(fields_list=HQ_Vendors_list, Join_sign="','")
-    filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Purchase_Order}')"""
+    Order_status_List = ["Exported", "Partially Confirmed", "Confirmed", "Partially PreAdviced", "PreAdviced", "Partially Dispatched", "Dispatched", "Partially Invoiced", "Partially Posted", "Partially Delivered"]
+    filters_Order_status = Get_Field_List_string(fields_list=Order_status_List, Join_sign="','")
+    filters_Vendors = Get_Field_List_string(fields_list=HQ_Vendors_list, Join_sign="','")
+    if Logistic_Process_Filter == "":
+        filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Vendors}') and HQ_Order_Status_NUS in ('{filters_Order_status}')"""
+    else:
+        filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Vendors}') and LogisticProcessFieldNUS eq '{Logistic_Process_Filter}' and HQ_Order_Status_NUS in ('{filters_Order_status}')"""
 
     # Params
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)

@@ -20,7 +20,18 @@ def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environm
     Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
     return Companies_list
 
-def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str) -> list:
+def Get_Logistic_Process_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str) -> list:
+    Log_Process_List = []
+
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'}
+
+    Log_Process_List = NAV_OData_API.Get_HQ_Testing_Logistic_Process_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    return Log_Process_List
+
+def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str, Logistic_Process_Filter: str) -> list:
     Can_Process = True
     Purchase_Order_list = []
 
@@ -39,8 +50,8 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_list_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list)
-        if Purchase_Order_list.empty:
+        Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_list_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
+        if len(Purchase_Order_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             pass

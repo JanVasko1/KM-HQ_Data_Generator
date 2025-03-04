@@ -15,15 +15,18 @@ def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     TabView = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Invoice_Work_Area_Main, Tab_size="Normal", GUI_Level_ID=1)
     TabView.pack_propagate(flag=False)
     Tab_PO = TabView.add("Purchase Order")
-    Tab_BB = TabView.add("BackBone Billing")
+    Tab_BB_A = TabView.add("BackBone Billing")
+    Tab_BB_B = TabView.add("BackBone Billing - Additional")
     Tab_PCM = TabView.add("Credit Memo")
     TabView.set("Purchase Order")
 
     Tab_PO_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
-    Tab_BB_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
-    Tab_PCM_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
+    Tab_BB_A_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
+    Tab_BB_B_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
+    Tab_PCM_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton4"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PO_ToolTip_But, message="Settings related to Invoice document created because of Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=1)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_ToolTip_But, message="Settings related to BackBone Billing document, send from BEU as Stand Alone Invoice for services.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_A_ToolTip_But, message="Settings related to BackBone Billing document, send from BEU as Stand Alone Invoice for services.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_B_ToolTip_But, message="Settings related to BackBone Billing document, send from BEU as Stand Alone Invoice for services.", ToolTip_Size="Normal", GUI_Level_ID=1)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PCM_ToolTip_But, message="Settings related to Credit Memo document created because of Return Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
     # ---------- Purchase Order ---------- #
@@ -38,8 +41,21 @@ def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     PO_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
     # ---------- BackBone Billing ---------- #
-    Frame_BB_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
-    Frame_BB_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_BB_A_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_BB_A_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    BB_INV_Number_Widget = W_Invoice.BB_INV_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Items_Widget = W_Invoice.BB_Items(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Quantity_Widget = W_Invoice.BB_Quantity(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Posting_Date_Widget = W_Invoice.BB_Posting_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_Order_reference_Widget = W_Invoice.BB_Order_reference(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_Price_Currency_Widget = W_Invoice.BB_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+
+    Frame_BB_B_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_B, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    BB_Plant_Widget = W_Invoice.BB_Plant(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_CountryOrigin_Widget = W_Invoice.BB_CountryOrigin(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_Tariff_Widget = W_Invoice.BB_Tariff(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
 
     # ---------- Purchase Return Order ---------- #
     Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
@@ -58,8 +74,21 @@ def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     PO_CountryOrigin_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Tariff_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
-    Frame_BB_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    Frame_BB_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_BB_A_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_BB_A_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    BB_INV_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Items_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Quantity_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Posting_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Order_reference_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Price_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    
+
+    Frame_BB_B_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    BB_Plant_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_CountryOrigin_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_Tariff_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    
 
     Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PRO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)

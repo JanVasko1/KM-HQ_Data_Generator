@@ -52,7 +52,7 @@ def DEL_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Lev
     Entry_field_Insert(Field=NUM_DEL_FIX_Frame_Var, Value=Fixed_Number)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Automatic Prefix
     AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
@@ -102,7 +102,7 @@ def DEL_Count(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Leve
     Entry_field_Insert(Field=DEL_Count_FIX_Frame_Var, Value=Fixed_Count)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Random Setup", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Random Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Random Method
     DEL_Random_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
@@ -110,17 +110,17 @@ def DEL_Count(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Leve
     DEL_Random_Frame_Var.configure(variable=DEL_Random_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Random_Frame_Var, values=DEL_Random_Method_List, command=lambda DEL_Random_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=DEL_Random_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Method"], Information=DEL_Random_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Free of Charge with Machine
-    DEL_Free_Main_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Label always", Field_Type="Input_CheckBox") 
-    DEL_Free_Main_Frame_Var = DEL_Free_Main_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    DEL_Free_Main_Frame_Var.configure(variable=DEL_Free_Main_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=DEL_Free_Main_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "FreeOfCharge_with_Main"], Information=DEL_Free_Main_Variable))
-
     # Field - Random Maximal count
     DEL_Random_Max_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maxima count", Field_Type="Input_Normal", Validation="Integer") 
     DEL_Random_Max_Frame_Var = DEL_Random_Max_Frame.children["!ctkframe3"].children["!ctkentry"]
     DEL_Random_Max_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
     DEL_Random_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Information=int(DEL_Random_Max_Frame_Var.get())))
     Entry_field_Insert(Field=DEL_Random_Max_Frame_Var, Value=Random_Max_count)
+
+    # Field - Free of Charge with Machine
+    DEL_Free_Main_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Label always", Field_Type="Input_CheckBox") 
+    DEL_Free_Main_Frame_Var = DEL_Free_Main_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    DEL_Free_Main_Frame_Var.configure(variable=DEL_Free_Main_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=DEL_Free_Main_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "FreeOfCharge_with_Main"], Information=DEL_Free_Main_Variable))
     
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -322,7 +322,7 @@ def Packages_Numbers(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, G
     Entry_field_Insert(Field=DEL_Pack_FIX_Frame_Var, Value=Pack_Fixed_Number)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Package Prefix
     DEL_Pack_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
@@ -410,7 +410,7 @@ def Packages_UOM(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_L
     Pack_Volume_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Methods_List"])
     Pack_Volume_UoM_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Fixed_Options"]["Fixed_Volume_UoM"]
 
-    Pack_Weight_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Weight_UoM_Method, name="Pack_Number_Method_Variable")
+    Pack_Weight_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Weight_UoM_Method, name="Pack_Weight_UoM_Method_Variable")
     Pack_Volume_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Volume_UoM_Method, name="Pack_Volume_UoM_Method_Variable")
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
@@ -420,7 +420,7 @@ def Packages_UOM(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_L
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Weight", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Weight", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Weight UoM Method
     Pack_Weight_UoM_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
@@ -429,14 +429,14 @@ def Packages_UOM(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_L
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Weight_UoM_Method_Frame_Var, values=Pack_Weight_UoM_Method_List, command=lambda Pack_Weight_UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Pack_Weight_UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Method"], Information=Pack_Weight_UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Package Number
-    Pack_Weight_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Manual Weight UoM", Field_Type="Input_Normal") 
+    Pack_Weight_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Weight UoM", Field_Type="Input_Normal") 
     Pack_Weight_UoM_Fixed_Frame_Var = Pack_Weight_UoM_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
     Pack_Weight_UoM_Fixed_Frame_Var.configure(placeholder_text="Fixed weight UoM", placeholder_text_color="#949A9F")
     Pack_Weight_UoM_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Fixed_Options", "Fixed_Weight_UoM"], Information=Pack_Weight_UoM_Fixed_Frame_Var.get()))
     Entry_field_Insert(Field=Pack_Weight_UoM_Fixed_Frame_Var, Value=Pack_Weight_UoM_Fixed)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Volume", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Volume", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Volume UoM Method
     Pack_Volume_UoM_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
@@ -445,7 +445,7 @@ def Packages_UOM(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_L
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Volume_UoM_Method_Frame_Var, values=Pack_Volume_UoM_Method_List, command=lambda Pack_Volume_UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Pack_Volume_UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Method"], Information=Pack_Volume_UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Package Number
-    Pack_Volume_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Manual Volume UoM", Field_Type="Input_Normal") 
+    Pack_Volume_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Volume UoM", Field_Type="Input_Normal") 
     Pack_Volume_UoM_Fixed_Frame_Var = Pack_Volume_UoM_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
     Pack_Volume_UoM_Fixed_Frame_Var.configure(placeholder_text="Fixed Volume UoM", placeholder_text_color="#949A9F")
     Pack_Volume_UoM_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Fixed_Options", "Fixed_Volume_UoM"], Information=Pack_Volume_UoM_Fixed_Frame_Var.get()))
@@ -495,7 +495,7 @@ def EXIDV2(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_I
     Entry_field_Insert(Field=NUM_EXIDV2_FIX_Frame_Var, Value=EXIDV2_Fixed_Number)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Automatic Prefix
     AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
@@ -539,7 +539,7 @@ def BillOfLanding(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_
     Entry_field_Insert(Field=NUM_BOL_FIX_Frame_Var, Value=BOL_Fixed_Number)
 
     # Section
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Column_Header")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Automatic Prefix
     AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 

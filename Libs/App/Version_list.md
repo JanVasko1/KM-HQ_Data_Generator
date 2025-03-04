@@ -1,10 +1,10 @@
 
-#### 1.0.5
+#### 0.0.6
 - Settings Tables, nut the "Update" button is available
 - Drag&Drop into local settings (tables) updates the values in tables in GUI not only on Backend
 - Re-distribute local libraries to separate files to speed-up 
 
-#### 1.0.4
+#### 0.0.5
 - DatePicker Issue correction for get() during download
 - ColorPicker Issue with save value to Configuration.json
 - Settings import split by 2 methods
@@ -14,7 +14,7 @@
 - Join Events corrected one issue with missing data
 - Join Events joining decision based on Busy status
 
-#### 1.0.3
+#### 0.0.4
 - DatePicker correction to react to Theme
 - DatePicker show Today Day
 - ColorPicker button harmonize look with DatePicker - in-line
@@ -23,7 +23,7 @@
 - All pop-up messages always wait for User response to continue
 - Drag&Drop crash issue solved
 
-#### 1.0.2
+#### 0.0.3
 - For Save into Settings "Drag&Drop" function available
 - Whole Settings file can be exported and imported back (used for Software updates)
 - All tables can be exported and saved (Drag&Drop) into program
@@ -31,9 +31,9 @@
 - correct position of Pop-Up pages (right below button pressed)
 - Exchange Change Color oc Category for non-Active Project
 
-#### 1.0.1
+#### 0.0.2
 - Logo picture change position from bottom side of SideBar into Tom of SideBar
 - SideBar prints Application Version
 
-### 1.0.0
+### 0.0.1
 - describe all program
