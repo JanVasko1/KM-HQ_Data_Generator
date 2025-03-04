@@ -66,11 +66,11 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict, Table: CTkTable, J
 # ------------------ Blocking Fields Functions ------------------ #
 
 def Field_Block_Bool(Settings: dict, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
     for i, Block_Variable in enumerate(Block_Variable_list):
         if Selected_Variable.get() == True:
             Block_Field_list[i].configure(state="normal")
         elif Selected_Variable.get() == False:
             Block_Field_list[i].configure(state="disabled")
             Block_Variable_list[i].set(value=False)
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])

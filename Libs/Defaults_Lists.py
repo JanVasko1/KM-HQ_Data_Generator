@@ -29,24 +29,11 @@ def Load_Configuration() -> dict:
     File.close()
     return Configuration
 
-def Load_Figures(Theme:str) -> dict:
-    File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Figure_settings_{Theme}.json"), mode="r", encoding="UTF-8", errors="ignore")
+def Load_Documents() -> dict:
+    File = open(file=Data_Functions.Absolute_path(relative_path=f"Operational\\Documents.json"), mode="r", encoding="UTF-8", errors="ignore")
     Configuration = json.load(fp=File)
     File.close()
     return Configuration
-
-def Busy_Status_List() -> list[str]:
-    Busy_Statuses = ["Free", "Tentative", "Busy", "Out of Office", "Working elsewhere"]
-    return Busy_Statuses
-
-def Exchange_Busy_Status_List() -> list[str]:
-    Busy_Statuses = ["free", "tentative", "busy", "oof", "workingElsewhere", "unknown"]
-    return Busy_Statuses
-
-def Busy_Status_Priorities_List() -> list[str]:
-    # Smaller Index = Higher priority
-    Busy_Statuses_Priorities = ["Busy", "Working elsewhere", "Tentative", "Free", "Out of Office"]
-    return Busy_Statuses_Priorities
 
 def Load_Azure_env() -> list[str, str, str]:
     load_dotenv(dotenv_path=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.env"))

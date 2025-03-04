@@ -46,18 +46,6 @@
             ]
         },
         "HQ_Data_Handler": {
-            "Documents": {
-                "Logistic_Process": {
-                    "Used": "",
-                    "Process_List": []
-                },
-                "Purchase_Order": {
-                    "Purchase_Order_List": []
-                },
-                "Purchase_Return_Order": {
-                    "Purchase_Return_Order_List": []
-                }
-            },
             "Confirmation": {
                 "Purchase_Order": {
                     "Use": true,

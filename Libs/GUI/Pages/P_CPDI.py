@@ -4,7 +4,7 @@ from customtkinter import CTk, CTkFrame
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Widgets.W_CPDI as W_CPDI
 
-def Page_CPDI(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
+def Page_CPDI(Settings: dict, Configuration: dict, Documents: dict, Frame: CTk|CTkFrame):
     # ------------------------- Main Functions -------------------------#
     # Define Frames
     Frame_CPDI_Work_Area_Main = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)
@@ -20,7 +20,7 @@ def Page_CPDI(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
 
     Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_CPDI, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    CPDI_General_Widget = W_CPDI.General(Settings=Settings, Configuration=Configuration, Frame=Frame_Column_A, GUI_Level_ID=2)
+    CPDI_General_Widget = W_CPDI.General(Settings=Settings, Configuration=Configuration, Documents=Documents, Frame=Frame_Column_A, GUI_Level_ID=2)
 
     # Build look of Widget
     Frame_CPDI_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)

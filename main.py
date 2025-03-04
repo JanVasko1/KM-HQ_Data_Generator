@@ -91,9 +91,9 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         if File_Name == None:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
             Template_List.append(File_Name)
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
 
             # Save My_Team Dict into Downloads Folder
             Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
@@ -112,7 +112,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
 
     def Apply_Template(Selected_Value: str, Settings: dict, Actual_Template_Variable: StringVar) -> None:
         Load_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
         Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
@@ -304,7 +304,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=(Side_Bar_Top_pady, Icon_Default_pady), sticky="e")
         time.sleep(0.1)
-        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, Documents=Documents, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_Confirmation_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -365,10 +365,10 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
 
     def Exit_Program() -> None:
         # Delete Operational data from SEttings
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information="")
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Process_List"], Information=[])
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Order", "Purchase_Order_List"], Information=[])
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
         window.quit()
 
     # ------------------------- Main Functions -------------------------#
@@ -488,12 +488,20 @@ if __name__ == "__main__":
     Application = Defaults_Lists.Load_Application()
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
+    Documents = Defaults_Lists.Load_Documents() 
+
+    # Create folders if do not exists
+    try:
+        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
+        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"))
+    except:
+        pass
 
     # Delete Operational data from SEttings
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Used"], Information="")
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Logistic_Process", "Process_List"], Information=[])
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Order", "Purchase_Order_List"], Information=[])
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Documents", "Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]

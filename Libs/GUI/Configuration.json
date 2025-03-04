@@ -41,24 +41,34 @@
             "1": {
                 "fg_color": [
                     "#cecece",
-                    "#2A2A31"
+                    "#28282F"
                 ],
                 "border_color": [
                     "#4d4d55",
-                    "#3d3d48"
+                    "#3b3b46"
                 ]
             },
             "2": {
                 "fg_color": [
                     "#dadada",
-                    "#323239"
+                    "#2F2F35"
                 ],
                 "border_color": [
                     "#4d4d55",
-                    "#45454e"
+                    "#42424b"
                 ]
             },
             "3": {
+                "fg_color": [
+                    "#e7e7e7",
+                    "#35353B"
+                ],
+                "border_color": [
+                    "#4d4d55",
+                    "#484850"
+                ]
+            },
+            "4": {
                 "fg_color": [
                     "#e7e7e7",
                     "#3B3B41"
@@ -792,7 +802,7 @@
                     }
                 },
                 "Scrollable_Frames": {
-                    "Double_size": {
+                    "Single_size": {
                         "Accent_Color_help": [
                             "#446b80",
                             "#446b80"

@@ -22,7 +22,7 @@ def General(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_
     CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     CPDI_Frame_Var = CPDI_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     CPDI_Frame_Var.configure(variable=CPDI_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Frame_Var, values=CPDI_Method_List, command=lambda CPDI_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Variable=CPDI_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Method"], Information=CPDI_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Frame_Var, values=CPDI_Method_List, command=lambda CPDI_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=CPDI_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Method"], Information=CPDI_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

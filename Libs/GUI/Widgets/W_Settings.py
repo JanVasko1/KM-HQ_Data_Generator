@@ -49,28 +49,28 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Accent only
-            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "App Default":
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Both
             if Helper == "Accent":
-                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
             elif Helper == "Hover":
-                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "Accent Lighter":
             Entry_Field.configure(state="disabled")
             Picker_Button.configure(state="disabled")
             # Hover only
-            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+            Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         elif Selected_Value == "Manual":
             Entry_Field.configure(state="normal")
             Picker_Button.configure(state="normal")
             # Both
             if Helper == "Accent":
-                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Accent", "Accent_Color_Mode"], Information=Selected_Value)
             elif Helper == "Hover":
-                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
+                Data_Functions.Save_Value(Settings=None, Configuration=Configuration, Documents=None, Variable=Variable, File_Name="Configuration", JSON_path=["Global_Appearance", "Window", "Colors", "Hover", "Hover_Color_Mode"], Information=Selected_Value)
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Accent Color Method not allowed", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 

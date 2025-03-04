@@ -109,7 +109,7 @@ def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: 
     Order_status_List = ["Exported", "Partially Confirmed", "Confirmed", "Partially PreAdviced", "PreAdviced", "Partially Dispatched", "Dispatched", "Partially Invoiced", "Partially Posted", "Partially Delivered"]
     filters_Order_status = Get_Field_List_string(fields_list=Order_status_List, Join_sign="','")
     filters_Vendors = Get_Field_List_string(fields_list=HQ_Vendors_list, Join_sign="','")
-    if Logistic_Process_Filter == "":
+    if (Logistic_Process_Filter == " ") or (Logistic_Process_Filter == ""):
         filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Vendors}') and HQ_Order_Status_NUS in ('{filters_Order_status}')"""
     else:
         filters_list_string = f"""Document_Type eq '{Document_Type}' and Buy_from_Vendor_No in ('{filters_Vendors}') and LogisticProcessFieldNUS eq '{Logistic_Process_Filter}' and HQ_Order_Status_NUS in ('{filters_Order_status}')"""

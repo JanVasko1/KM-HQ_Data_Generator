@@ -38,12 +38,12 @@ def Get_All_Templates_List(Settings: dict) -> list:
     Files_Templates = [x.replace(".json", "") for x in Files_Templates]
     Files_Templates = list(set(Files_Templates))
     Files_Templates.sort()
-    Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Files_Templates)
+    Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Files_Templates)
 
     return Files_Templates
 
 # --------------------------------------------- Global Settings update --------------------------------------------- #
-def Save_Value(Settings: dict|None, Configuration: dict|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict) -> None:
+def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict) -> None:
     def Value_change(my_dict: dict, JSON_path: list, Information: bool|int|str|list|dict) -> None:
         for key in JSON_path[:-1]:
             my_dict = my_dict.setdefault(key, {})
@@ -76,6 +76,14 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Variable: StringVa
             # Save to file
             with open(Absolute_path(relative_path=f"Libs\\GUI\\Configuration.json"), mode="wt", encoding="UTF-8", errors="ignore") as file:
                 json.dump(obj=Configuration, fp=file, indent=4, default=str, ensure_ascii=False)
+            file.close()
+        elif File_Name == "Documents":
+            # Update current Documents
+            Value_change(my_dict=Documents, JSON_path=JSON_path, Information=Information)
+
+            # Save to file
+            with open(Absolute_path(relative_path=f"Operational\\Documents.json"), mode="wt", encoding="UTF-8", errors="ignore") as file:
+                json.dump(obj=Documents, fp=file, indent=4, default=str, ensure_ascii=False)
             file.close()
         else:
             pass
