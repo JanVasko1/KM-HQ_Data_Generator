@@ -8,7 +8,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
-def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: CTk|CTkFrame):
+def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: dict, Frame: CTk|CTkFrame):
     NUS_Version_List = Settings["0"]["Connection"]["NUS_Version_List"]
     Environment_List = Settings["0"]["Connection"]["Environment_List"]
     NOC_List = Settings["0"]["Connection"]["NOC_List"]
@@ -59,10 +59,13 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-
     def Generate_Purchase_Orders() -> None:
-        print("Generate_Purchase_Orders")
-        pass
+        Purchase_Order_list = Documents["Purchase_Order"]["Purchase_Order_List"]
+        if len(Purchase_Order_list) == 0:
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list, Progress_Bar=Progress_Bar)
+            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Purchase_Orders_Show(Button: CTkButton, PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown|None, Document_Type: str) -> None:
         def Confirm_Choice(PO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
@@ -73,7 +76,7 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
 
                 if Marked_Value == True:
                     Purchase_Label = PO_Frame_row.children["!ctkframe"].children["!ctklabel"]
-                    Purchase_Order = Purchase_Label.cget("text")
+                    Purchase_Order = str(Purchase_Label.cget("text"))
                     Purchase_Order = Purchase_Order.replace(":", "")
                     Selected_POs_List.append(Purchase_Order)
                 else:
@@ -144,16 +147,16 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
         if len(Purchase_Orders_List) == 0:
             pass
         else:
-            Recalculate_window_geometry = (500, 0)
-            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Recalculate_window_geometry[0])
-            PO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Recalculate", width=Recalculate_window_geometry[0], height=Recalculate_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+            PO_Select_window_geometry = (500, 0)
+            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=PO_Select_window_geometry[0])
+            PO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Recalculate", width=PO_Select_window_geometry[0], height=PO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
 
             # Frame - General
             PO_Select_Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Select_window, Name="Multiple Purchase Order Select", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Helps to select more Purchase Orders.", GUI_Level_ID=3)
             PO_Select_Frame_Main.configure(bg_color = "#000001")
             PO_Select_Frame_Body = PO_Select_Frame_Main.children["!ctkframe2"]
 
-            PO_Select_Scrollable_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Select_Frame_Body, Frame_Size="Single_size", GUI_Level_ID=4)
+            PO_Select_Scrollable_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Select_Frame_Body, Frame_Size="PO_List", GUI_Level_ID=4)
 
             # Input Field + button in one line
             PO_Select_Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=PO_Select_Scrollable_Body, Frame_Size="Work_Area_Columns", GUI_Level_ID=4)
@@ -183,18 +186,132 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
             Elements.Get_ToolTip(Configuration=Configuration, widget=PO_Reject_Button_Confirm_Var, message="Reject Purchases Order selection.", ToolTip_Size="Normal", GUI_Level_ID=4)
 
             PO_Select_Scrollable_Body.pack(side="top", fill="both", expand=False, padx=10, pady=10)
-            PO_Select_Frame_Column_A.pack(side="left", fill="x", expand=False, padx=5, pady=5)
-            PO_Select_Frame_Column_B.pack(side="left", fill="x", expand=False, padx=5, pady=5)
-            PO_Select_Frame_Column_C.pack(side="left", fill="x", expand=False, padx=5, pady=5)
+            PO_Select_Frame_Column_A.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+            PO_Select_Frame_Column_B.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+            PO_Select_Frame_Column_C.pack(side="left", fill="none", expand=False, padx=5, pady=5)
 
-
-    def Purchase_Return_Orders_Show(Document_Type: str) -> None:
-        print("Purchase_Return_Orders_Show")
-        pass
         
     def Generate_BackBone_Billing() -> None:
         print("Generate_BackBone_Billing")
         pass
+
+    def Purchase_Return_Orders_Show(Button: CTkButton, Document_Type: str) -> None:
+        def Confirm_Choice(PRO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
+            Selected_PROs_List = []
+            def Find_if_Marked(PRO_Frame_row: CTkFrame, Selected_PROs_List: list) -> list:
+                # check if marked 
+                Marked_Value = PRO_Frame_row.children["!ctkframe3"].children["!ctkcheckbox"].get()
+
+                if Marked_Value == True:
+                    Purchase_Ret_Label = PRO_Frame_row.children["!ctkframe"].children["!ctklabel"]
+                    Purchase_Ret_Order = str(Purchase_Ret_Label.cget("text"))
+                    Purchase_Ret_Order = Purchase_Ret_Order.replace(":", "")
+                    Selected_PROs_List.append(Purchase_Ret_Order)
+                else:
+                    pass
+
+                return Selected_PROs_List
+
+            Column_PRO_A_Children = PRO_Select_Scrollable_Body.children["!ctkframe"]
+            Column_PRO_B_Children = PRO_Select_Scrollable_Body.children["!ctkframe2"]
+            Column_PRO_C_Children = PRO_Select_Scrollable_Body.children["!ctkframe3"]
+
+            # Column A
+            Frame_PRO_A_len = len(Column_PRO_A_Children.children)
+            for Counter in range(0, Frame_PRO_A_len - 1):
+                if Counter == 0:
+                    frame = ""
+                elif Counter > 0:
+                    frame = str(Counter + 1)
+                else:
+                    pass
+                
+                Selected_PROs_List = Find_if_Marked(PRO_Frame_row=Column_PRO_A_Children.children[f"!ctkframe{frame}"] ,Selected_PROs_List=Selected_PROs_List)
+                
+            # Column B
+            Frame_PRO_B_len = len(Column_PRO_B_Children.children)
+            for Counter in range(0, Frame_PRO_B_len - 1):
+                if Counter == 0:
+                    frame = ""
+                elif Counter > 0:
+                    frame = str(Counter + 1)
+                else:
+                    pass
+                
+                Selected_PROs_List = Find_if_Marked(PRO_Frame_row=Column_PRO_B_Children.children[f"!ctkframe{frame}"] ,Selected_PROs_List=Selected_PROs_List)
+
+            # Column C
+            Frame_PRO_C_len = len(Column_PRO_C_Children.children)
+            for Counter in range(0, Frame_PRO_C_len - 1):
+                if Counter == 0:
+                    frame = ""
+                elif Counter > 0:
+                    frame = str(Counter + 1)
+                else:
+                    pass
+                
+                Selected_PROs_List = Find_if_Marked(PRO_Frame_row=Column_PRO_C_Children.children[f"!ctkframe{frame}"] ,Selected_PROs_List=Selected_PROs_List)
+                
+            # Save Purchase Orders to Documents.json
+            Selected_PROs_List.sort()
+            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=Selected_PROs_List)
+            # BUG --> error when leaving
+            PRO_Select_window.destroy()
+
+        def Reject_Choice() -> None:
+            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+            # BUG --> error when leaving
+            PRO_Select_window.destroy()
+
+        Selected_Company = Company_Variable.get()
+        Selected_Company = Selected_Company.replace(" ", "%20")
+
+        Purchase_Return_Orders_List = []
+        Purchase_Return_Orders_List = Downloader.Get_Orders_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company, Document_Type=Document_Type, Logistic_Process_Filter="")
+
+        if len(Purchase_Return_Orders_List) == 0:
+            pass
+        else:
+            PRO_Select_window_geometry = (500, 0)
+            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=PRO_Select_window_geometry[0])
+            PRO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Recalculate", width=PRO_Select_window_geometry[0], height=PRO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+
+            # Frame - General
+            PRO_Select_Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PRO_Select_window, Name="Multiple Purchase Return Order Select", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Helps to select more Purchase Return Orders.", GUI_Level_ID=3)
+            PRO_Select_Frame_Main.configure(bg_color = "#000001")
+            PRO_Select_Frame_Body = PRO_Select_Frame_Main.children["!ctkframe2"]
+
+            PRO_Select_Scrollable_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PRO_Select_Frame_Body, Frame_Size="PRO_List", GUI_Level_ID=4)
+
+            # Input Field + button in one line
+            PRO_Select_Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=PRO_Select_Scrollable_Body, Frame_Size="Work_Area_Columns", GUI_Level_ID=4)
+            PRO_Select_Frame_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=PRO_Select_Scrollable_Body, Frame_Size="Work_Area_Columns", GUI_Level_ID=4)
+
+            Counter = 0
+            PROs_Columns_Frame_List = [PRO_Select_Frame_Column_A, PRO_Select_Frame_Column_B]
+            for Purchase_Ret_Order in Purchase_Return_Orders_List:
+                # Field - Monday
+                PRO_Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=PROs_Columns_Frame_List[Counter], Field_Frame_Type="Half_size" , Label=f"{Purchase_Ret_Order}", Field_Type="Input_CheckBox") 
+                PRO_Fields_Frame_Var = PRO_Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+                PRO_Fields_Frame_Var.configure(text="")
+                
+                Counter += 1
+                if Counter == 2:
+                    Counter = 0
+
+            # Buttons
+            PRO_Select_Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=PRO_Select_Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Small") 
+            PRO_Select_Button_Confirm_Var = PRO_Select_Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+            PRO_Select_Button_Confirm_Var.configure(text="Confirm", command = lambda: Confirm_Choice(PRO_Select_Scrollable_Body=PRO_Select_Scrollable_Body))
+            Elements.Get_ToolTip(Configuration=Configuration, widget=PRO_Select_Button_Confirm_Var, message="Confirm Purchases Return Order selection.", ToolTip_Size="Normal", GUI_Level_ID=4)
+
+            PRO_Reject_Button_Confirm_Var = PRO_Select_Button_Frame.children["!ctkframe"].children["!ctkbutton2"]
+            PRO_Reject_Button_Confirm_Var.configure(text="Reject", command = lambda: Reject_Choice())
+            Elements.Get_ToolTip(Configuration=Configuration, widget=PRO_Reject_Button_Confirm_Var, message="Reject Purchases Return Order selection.", ToolTip_Size="Normal", GUI_Level_ID=4)
+
+            PRO_Select_Scrollable_Body.pack(side="top", fill="both", expand=False, padx=10, pady=10)
+            PRO_Select_Frame_Column_A.pack(side="left", fill="x", expand=False, padx=5, pady=5)
+            PRO_Select_Frame_Column_B.pack(side="left", fill="x", expand=False, padx=5, pady=5)
 
     def Generate_Purchase_Return_Orders() -> None:
         print("Generate_Purchase_Return_Orders")
@@ -257,15 +374,15 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
 
     # ---------------- Purchase Order Tab ---------------- #
     Generate_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Use"]
-    Generate_PreAdvice = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Use"]
     Generate_CPDI = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Use"]
+    Generate_PreAdvice = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Use"]
     Generate_Delivery = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Use"]
     Generate_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Use"]
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
 
     Generate_CON_Variable = BooleanVar(master=Frame, value=Generate_Confirmation, name="Generate_CON_Variable")
-    Generate_PRA_Variable = BooleanVar(master=Frame, value=Generate_PreAdvice, name="Generate_PRA_Variable")
     Generate_CPD_Variable = BooleanVar(master=Frame, value=Generate_CPDI, name="Generate_CPD_Variable")
+    Generate_PRA_Variable = BooleanVar(master=Frame, value=Generate_PreAdvice, name="Generate_PRA_Variable")
     Generate_DEL_Variable = BooleanVar(master=Frame, value=Generate_Delivery, name="Generate_DEL_Variable")
     Generate_INV_Variable = BooleanVar(master=Frame, value=Generate_Invoice, name="Generate_INV_Variable")
     Generate_INV_PDF_Variable = BooleanVar(master=Frame, value=Generate_Invoice_PDF, name="Generate_INV_PDF_Variable")
@@ -482,22 +599,22 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
     PRO_Block_Field_list = [Generate_PRO_INV_PDF_Frame_Var]
     PRO_Block_JSON_path_list =[["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"]]
     Generate_PRO_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_PRO_INV_Variable, Selected_Field=Generate_PRO_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Block_Variable_list=PRO_Block_Variable_list, Block_Field_list=PRO_Block_Field_list, Block_JSON_path_list=PRO_Block_JSON_path_list))
-    
 
     # Selected Purchase Orders List
     PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected PROs", Field_Type="Input_Normal") 
     PRO_Selected_Frame_Var = PRO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
+    PRO_Selected_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[PRO_Selected_Frame_Var.get()]))
     PRO_Selected_Frame_Var.configure(placeholder_text="Purchase Ret. Orders", placeholder_text_color="#949A9F")
 
     # Buttons
-    Button_PRO_Frame = Elements_Groups.Get_Widget_Button_row(Frame=Tab_PRO, Configuration=Configuration, Field_Frame_Type="Half_size" , Buttons_count=2, Button_Size="Normal") 
-    Button_PRO_Generate_Var = Button_PRO_Frame.children["!ctkframe"].children["!ctkbutton"]
-    Button_PRO_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Return_Orders())
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Generate_Var, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    Button_PRO_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_PRO, Button_Size="Small")
+    Button_PRO_Generate_Var.configure(text="List", command = lambda: Purchase_Return_Orders_Show(Button=Button_PRO_Generate_Var, Document_Type="Return Order"))
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Generate_Var, message="Show Listbox with all available Purchase Return Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-    Button_PRO_Show_Var = Button_PRO_Frame.children["!ctkframe"].children["!ctkbutton2"]
-    Button_PRO_Show_Var.configure(text="Select Multiple", command = lambda: Purchase_Return_Orders_Show(Document_Type="Return Order"))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    # Buttons - Generate
+    Button_PRO_Show_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_PRO, Button_Size="Small")
+    Button_PRO_Show_Var.configure(text="Generate", command = lambda: Generate_Purchase_Return_Orders())
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Show_Var, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Build look of Widget
     Frame_Download_State_Area.pack(side="top", fill="x", expand=False, padx=10, pady=10)
@@ -544,4 +661,6 @@ def Page_Download(Settings: dict, Configuration: dict, Documents: dict, Frame: C
     Generate_PRO_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PRO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Button_PRO_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Button_PRO_Generate_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
+    Button_PRO_Show_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
+    

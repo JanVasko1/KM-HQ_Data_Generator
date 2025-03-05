@@ -6,9 +6,23 @@ import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Azure.Authorization as Authorization
 import Libs.Downloader.NAV_OData_API as NAV_OData_API
+import Libs.Process.Prepare_Files as Prepare_Files
+
+from customtkinter import CTkProgressBar, CTk
 
 client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
+# ---------------------------------------------------------- Local Function ---------------------------------------------------------- #
+def Progress_Bar_step(window: CTk, Progress_Bar: CTkProgressBar) -> None:
+    Progress_Bar.step()
+    window.update_idletasks()
+
+def Progress_Bar_set(window: CTk, Progress_Bar: CTkProgressBar, value: int) -> None:
+    Progress_Bar.set(value=value)
+    window.update_idletasks()
+
+
+# ---------------------------------------------------------- Main Program ---------------------------------------------------------- #
 def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str,) -> list:
     Companies_list = []
 
@@ -33,7 +47,7 @@ def Get_Logistic_Process_List(Configuration: dict, NUS_version: str, NOC: str, E
 
 def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str, Logistic_Process_Filter: str) -> list:
     Can_Process = True
-    Purchase_Order_list = []
+    Purchase_Header_list = []
 
     access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
@@ -50,18 +64,19 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_list_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
-        if len(Purchase_Order_list) == 0:
+        Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
+        if len(Purchase_Header_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             pass
     else:
         pass
 
-    return Purchase_Order_list
+    return Purchase_Header_list
 
-# Get Access Token
-def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> list[DataFrame]:
+
+def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> list[DataFrame]:
+    Progress_Bar.configure(determinate_speed = round(number=50 / 22, ndigits=3), progress_color="#517A31")
     Can_Process = True
 
     Purchase_Headers_df = DataFrame()
@@ -101,7 +116,8 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
         Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Process = False
     else:
-        pass
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+    
 
     # HQ_Testing_NVR_FS_Connect
     if Can_Process == True:
@@ -110,18 +126,18 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
-            pass
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list)
+        Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_info_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list)
         if Purchase_Headers_df.empty:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
-            pass
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
@@ -132,7 +148,7 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
-            pass
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
@@ -143,7 +159,7 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
-            pass
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
@@ -154,31 +170,35 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
-            pass
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Items_BOM
     if Can_Process == True:
         Items_BOMs_df, Items_For_BOM_df = NAV_OData_API.Get_Items_BOM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=BOM_Item_list)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Items_Substitutions
     if Can_Process == True:
         Items_Substitutions_df, Items_For_Substitution_df = NAV_OData_API.Get_Items_Substitutions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitution_Item_list)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Items_Connected_Items
     if Can_Process == True:
         Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"])
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
     
     # Concat Items
     if Can_Process == True:
         Items_df = pandas.concat(objs=[Items_df, Items_For_BOM_df, Items_For_Substitution_df, Items_For_Connected_Items_df])
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
@@ -186,76 +206,115 @@ def Download_Data_Purchase_Orders(Configuration: dict, NUS_version: str, NOC: st
     if Can_Process == True:
         Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"])
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Items_Tracking_Codes
     if Can_Process == True:
         Items_Tracking_df = NAV_OData_API.Get_Items_Tracking_Codes_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Item_Tracking_Code_list=Item_Tracking_Code_list)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Items_UoM
     if Can_Process == True:
         Items_UoM_df = NAV_OData_API.Get_Items_UoM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Plans
     if Can_Process == True:
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Shipment_Method
     if Can_Process == True:
         Shipment_Method_df = NAV_OData_API.Get_Shipment_Method_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Shipping_Agent
     if Can_Process == True:
         Shipping_Agent_df = NAV_OData_API.Get_Shipping_Agent_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Tariff_Numbers
     if Can_Process == True:
         Tariff_Numbers_df = NAV_OData_API.Get_Tariff_Numbers_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
      # HQ_Testing_Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_Country_Regions
     if Can_Process == True:
         Country_Regions_df = NAV_OData_API.Get_Country_Regions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_HQ_CPDI_Levels
     if Can_Process == True:
         HQ_CPDI_Levels_df = NAV_OData_API.Get_HQ_CPDI_Levels_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_HQ_CPDI_Status
     if Can_Process == True:
         HQ_CPDI_Status_df = NAV_OData_API.Get_HQ_CPDI_Status_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
     # HQ_Testing_UoM
     if Can_Process == True:
         UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
-    return Can_Process, Purchase_Headers_df, Purchase_Lines_df, HQ_Communication_Setup_df, Company_Information_df, Country_Regions_df, HQ_CPDI_Levels_df, HQ_CPDI_Status_df, HQ_Item_Transport_Register_df, Items_df, Items_BOMs_df, Items_Substitutions_df, Items_Connected_Items_df, Items_Price_List_Detail_df, Items_Tracking_df, Items_UoM_df, NVR_FS_Connect_df, Plants_df, Shipment_Method_df, Shipping_Agent_df, Tariff_Numbers_df, UoM_df
+    if Can_Process == True:
+        Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=1)
+        Prepare_Files.Process_Purchase_Orders(
+            Settings=Settings,
+            Can_Process=Can_Process, 
+            Purchase_Headers_df=Purchase_Headers_df, 
+            Purchase_Lines_df=Purchase_Lines_df, 
+            HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
+            Company_Information_df=Company_Information_df, 
+            Country_Regions_df=Country_Regions_df, 
+            HQ_CPDI_Levels_df=HQ_CPDI_Levels_df, 
+            HQ_CPDI_Status_df=HQ_CPDI_Status_df, 
+            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, 
+            Items_df=Items_df, 
+            Items_BOMs_df=Items_BOMs_df, 
+            Items_Substitutions_df=Items_Substitutions_df, 
+            Items_Connected_Items_df=Items_Connected_Items_df, 
+            Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
+            Items_Tracking_df=Items_Tracking_df, 
+            Items_UoM_df=Items_UoM_df, 
+            NVR_FS_Connect_df=NVR_FS_Connect_df, 
+            Plants_df=Plants_df, 
+            Shipment_Method_df=Shipment_Method_df, 
+            Shipping_Agent_df=Shipping_Agent_df, 
+            Tariff_Numbers_df=Tariff_Numbers_df, 
+            UoM_df=UoM_df)
+    else:
+        Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=1)
         
 
 def Download_Data_Purchase_Invoice(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> list[DataFrame]:

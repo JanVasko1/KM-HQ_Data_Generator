@@ -304,7 +304,7 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=(Side_Bar_Top_pady, Icon_Default_pady), sticky="e")
         time.sleep(0.1)
-        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, Documents=Documents, Frame=Frame_Work_Area_Main)
+        P_Download.Page_Download(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_Confirmation_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:

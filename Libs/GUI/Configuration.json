@@ -802,12 +802,37 @@
                     }
                 },
                 "Scrollable_Frames": {
-                    "Single_size": {
+                    "PO_List": {
                         "Accent_Color_help": [
                             "#446b80",
                             "#446b80"
                         ],
                         "width": 1000,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": "transparent",
+                        "orientation": "vertical",
+                        "scrollbar_fg_color": "transparent",
+                        "scrollbar_button_color": [
+                            "#2C2C2C",
+                            "#B4B4B7"
+                        ],
+                        "scrollbar_button_hover_color": [
+                            "#4f7c94",
+                            "#4f7c94"
+                        ]
+                    },
+                    "PRO_List": {
+                        "Accent_Color_help": [
+                            "#446b80",
+                            "#446b80"
+                        ],
+                        "width": 600,
                         "corner_radius": 10,
                         "border_width": 1,
                         "border_color": [

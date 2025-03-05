@@ -118,30 +118,23 @@ def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: 
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
     # Request
-    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+    if Document_Type == "Order":
+        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+    elif Document_Type == "Return Order":
+        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purch_Ret_Header")
 
     # Prepare DataFrame
-    Purchase_Order_No_list = []
+    Purchase_Header_No_list = []
     for index in range(0, list_len):
-        Purchase_Order_No_list.append(response_values_List[index]["No"])
+        Purchase_Header_No_list.append(response_values_List[index]["No"])
     
-    return Purchase_Order_No_list
+    return Purchase_Header_No_list
 
 
 def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
     # Fields
     fields_list = ["No", "Buy_from_Vendor_No", "HQ_Identification_No_NUS", "ShippingConditionFieldNUS", "CompleteDeliveryFieldNUS", "PDICenterFieldNUS", "HQCPDILevelRequestedFieldNUS", "Expected_Receipt_Date", "Promised_Receipt_Date", "Requested_Receipt_Date", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
-
-    # Filters
-    filters_Purchase_Order = Get_Field_List_string(fields_list=Purchase_Order_list, Join_sign="','")
-    filters_list_string = f"""Document_Type eq 'Order' and No in ('{filters_Purchase_Order}')"""
-
-    # Params
-    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
-
-    # Request
-    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
 
     # Prepare DataFrame
     Purchase_Order_No_list = []
@@ -159,22 +152,32 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
     Non_HQ_Orders = []
     Non_HQ_Vendors = []
 
-    for index in range(0, list_len):
-        if response_values_List[index]["Buy_from_Vendor_No"] in HQ_Vendors_list:
-            Purchase_Order_No_list.append(response_values_List[index]["No"])
-            Buy_from_Vendor_No_list.append(response_values_List[index]["Buy_from_Vendor_No"])
-            HQ_Identification_No_NUS_list.append(response_values_List[index]["HQ_Identification_No_NUS"])
-            ShippingConditionFieldNUS_list.append(response_values_List[index]["ShippingConditionFieldNUS"])
-            CompleteDeliveryFieldNUS_list.append(response_values_List[index]["CompleteDeliveryFieldNUS"])
-            PDICenterFieldNUS_list.append(response_values_List[index]["PDICenterFieldNUS"])
-            HQCPDILevelRequestedFieldNUS_list.append(response_values_List[index]["HQCPDILevelRequestedFieldNUS"])
-            Expected_Receipt_Date_list.append(response_values_List[index]["Expected_Receipt_Date"])
-            Promised_Receipt_Date_list.append(response_values_List[index]["Promised_Receipt_Date"])
-            Requested_Receipt_Date_list.append(response_values_List[index]["Requested_Receipt_Date"])
-            Order_Date_list.append(response_values_List[index]["Order_Date"])
-        else:
-            Non_HQ_Orders.append(response_values_List[index]["No"])
-            Non_HQ_Vendors.append(response_values_List[index]["Buy_from_Vendor_No"])
+    for Purchase_Order in Purchase_Order_list:
+        # Filters
+        filters_list_string = f"""Document_Type eq 'Order' and No eq '{Purchase_Order}'"""
+
+        # Params
+        params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+        # Request
+        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+
+        for index in range(0, list_len):
+            if response_values_List[index]["Buy_from_Vendor_No"] in HQ_Vendors_list:
+                Purchase_Order_No_list.append(response_values_List[index]["No"])
+                Buy_from_Vendor_No_list.append(response_values_List[index]["Buy_from_Vendor_No"])
+                HQ_Identification_No_NUS_list.append(response_values_List[index]["HQ_Identification_No_NUS"])
+                ShippingConditionFieldNUS_list.append(response_values_List[index]["ShippingConditionFieldNUS"])
+                CompleteDeliveryFieldNUS_list.append(response_values_List[index]["CompleteDeliveryFieldNUS"])
+                PDICenterFieldNUS_list.append(response_values_List[index]["PDICenterFieldNUS"])
+                HQCPDILevelRequestedFieldNUS_list.append(response_values_List[index]["HQCPDILevelRequestedFieldNUS"])
+                Expected_Receipt_Date_list.append(response_values_List[index]["Expected_Receipt_Date"])
+                Promised_Receipt_Date_list.append(response_values_List[index]["Promised_Receipt_Date"])
+                Requested_Receipt_Date_list.append(response_values_List[index]["Requested_Receipt_Date"])
+                Order_Date_list.append(response_values_List[index]["Order_Date"])
+            else:
+                Non_HQ_Orders.append(response_values_List[index]["No"])
+                Non_HQ_Vendors.append(response_values_List[index]["Buy_from_Vendor_No"])
 
     response_values_dict = {
         "No": Purchase_Order_No_list,
