@@ -1,0 +1,29 @@
+{
+    "line_item_id": 0,
+    "article_id": {
+        "supplier_aid": "",
+        "buyer_aid": "",
+        "description_long": ""
+    },
+    "quantity": 0,
+    "order_unit": "",
+    "article_price": {
+        "type": "net_list",
+        "price_amount": 0.0,
+        "price_line_amount": 0.0
+    },
+    "delivery_date": {
+        "delivery_start_date": "",
+        "delivery_end_date": ""
+    },
+    "remarks": {
+        "ordered_quantity": 0,
+        "supplier_order_item_id": "",
+        "item_category": "",
+        "discontinued": false,
+        "set": false,
+        "bom": false,
+        "bom_with_delivery_group": false
+    },
+    "schedules": []
+}

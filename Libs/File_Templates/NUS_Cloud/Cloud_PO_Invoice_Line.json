@@ -1,0 +1,31 @@
+{
+    "line_item_id": "",
+    "article_id": {
+        "supplier_aid": "",
+        "description_short": ""
+    },
+    "quantity": 0.0,
+    "order_unit": "",
+    "article_price": {
+        "type": "net_list",
+        "price_amount": 0.0,
+        "price_line_amount": 0.0
+    },
+    "order_reference": {
+        "order_id": "",
+        "line_item_id": "",
+        "order_date": ""
+    },
+    "supplier_order_reference": {
+        "supplier_order_id": "",
+        "supplier_order_item_id": ""
+    },
+    "delivery_reference": {
+        "delivery_note_id": "",
+        "line_item_id": ""
+    },
+    "remarks": {
+        "origin": "",
+        "plant": ""
+    }
+}

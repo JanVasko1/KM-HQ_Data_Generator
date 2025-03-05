@@ -80,7 +80,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, 
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Price Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Confirmation.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Confirmation.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Price Method

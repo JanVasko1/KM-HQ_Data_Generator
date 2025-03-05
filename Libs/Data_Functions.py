@@ -67,6 +67,8 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|No
     # Globals update with every change of setup
     try:
         if File_Name == "Settings":
+            # TODO --> with any save program have to delete value from template as after save the settings is not actually the template displayed
+
             # Update current Settings
             Value_change(my_dict=Settings, JSON_path=JSON_path, Information=Information)
 

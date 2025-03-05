@@ -220,6 +220,36 @@ Permission Set: NUS_HQ_Data_WS
         * Fixed: prostě použit fixní cenu pro všechny řádky
 
 
+
+
+
+
+
+
+
+
+# Purchase REturn Order
+## Confiramtion
+
+- Number --> stejna jako u Invoice
+- Price and Currency --> stejně jako u Invoice
+- Qty --> 
+	Metoda:
+        * Promt: Zeptat se kolik chci z původního množství Exportovaného potvrdit
+        * All Exported: vzít 1:1
+        * Reduce %: prostě procentuální random podíl že se neodsouhlasí všechno
+
+
+
+
+
+
+
+
+
+
+
+
 # Others Ideas
 -> možná udělat i templaty na výběr nastavení (jako pro Tendry, Consumables ... prsotě jakoby hlavní logistický procesy a k nim definovyný setupový .json, který by si uživatel měl možnost načíst --> pro rychlejší nasttavování)
 

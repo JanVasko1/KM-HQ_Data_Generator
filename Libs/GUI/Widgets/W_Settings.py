@@ -159,30 +159,31 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
 
 def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
-
-    # ------------------------- Local Functions ------------------------#
-    def Exchange_Request_Permissions() -> None:
-        print("Exchange_Request_Permissions")
-        # TODO --> show new popup and let fill password to let automatically be re-generated
-        pass
+    Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Azure Authorization", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Authorization for OAuth2 protocol.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
+    # Field - Display Name
+    NAV_Display_name_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Client Name", Field_Type="Input_Normal") 
+    NAV_Display_name_Frame_Var = NAV_Display_name_Frame.children["!ctkframe3"].children["!ctkentry"]
+    NAV_Display_name_Frame_Var.configure(placeholder_text="Enter Name of Auth app", placeholder_text_color="#949A9F")
+    NAV_Display_name_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_env(Key="Display_name", Value=NAV_Display_name_Frame_Var.get()))
+    Entry_field_Insert(Field=NAV_Display_name_Frame_Var, Value=Display_name)
+
     # Field - Client ID
     NAV_Client_ID_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Client ID", Field_Type="Input_Normal") 
     NAV_Client_ID_Frame_Var = NAV_Client_ID_Frame.children["!ctkframe3"].children["!ctkentry"]
-    NAV_Client_ID_Frame_Var.configure(placeholder_text=client_id, placeholder_text_color="#949A9F")
+    NAV_Client_ID_Frame_Var.configure(placeholder_text="Enter Client ID of Auth app", placeholder_text_color="#949A9F")
     NAV_Client_ID_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_env(Key="client_id", Value=NAV_Client_ID_Frame_Var.get()))
     Entry_field_Insert(Field=NAV_Client_ID_Frame_Var, Value=client_id)
 
     # Field - Client Secret
     NAV_Client_Secret_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Client Secret", Field_Type="Password_Normal")
     NAV_Client_Secret_Frame_Var = NAV_Client_Secret_Frame.children["!ctkframe3"].children["!ctkentry"]
-    NAV_Client_Secret_Frame_Var.configure(placeholder_text_color="#949A9F")
+    NAV_Client_Secret_Frame_Var.configure(placeholder_text="Enter Secret ID of Auth app", placeholder_text_color="#949A9F")
     NAV_Client_Secret_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_env(Key="client_secret", Value=NAV_Client_Secret_Frame_Var.get()))
     Entry_field_Insert(Field=NAV_Client_Secret_Frame_Var, Value=client_secret)
 
@@ -191,13 +192,6 @@ def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTk|CTkFram
     NAV_Tenant_ID_Frame_Var = NAV_Tenant_ID_Frame.children["!ctkframe3"].children["!ctkentry"]
     NAV_Tenant_ID_Frame_Var.configure(placeholder_text=tenant_id)
     NAV_Tenant_ID_Frame_Var.configure(state="disabled", placeholder_text_color="#949A9F")
-
-    # Update Request NEw Secret
-    Button_Frame = Elements_Groups.Get_Widget_Button_row(Frame=Frame_Body, Configuration=Configuration, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-    Button_MT_Del_One_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-    Button_MT_Del_One_Var.configure(text="Request", command = lambda:Exchange_Request_Permissions())
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_MT_Del_One_Var, message="Request access for your User-Client_ID to .", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
-
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "BHN_BB_Invoice",
+                "Last_Used": "",
                 "Templates_List": []
             },
             "Formats": {
@@ -172,7 +172,7 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Method": "All",
                 "Methods_List": [
                     "All",
@@ -417,7 +417,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "From Confirmation",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Line",
@@ -438,7 +438,7 @@
                             "Fix_Date": "2025-03-20"
                         },
                         "Random_Options": {
-                            "From": 0,
+                            "From": 1,
                             "To": 2
                         }
                     },
@@ -489,7 +489,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -613,7 +613,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Credit_Memo": {

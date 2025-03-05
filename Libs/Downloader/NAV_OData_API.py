@@ -1113,14 +1113,13 @@ def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: 
     return UoM_df
 
 # ------------------- HQ_Testing_Vendor_Service_Functions ------------------- #
-def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> DataFrame:
+def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No: str) -> DataFrame:
     # Fields
     fields_list = ["Vendor_No", "Vendor_Service_ID", "Vendor_Service_Name"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
-    filters_Vendors = Get_Field_List_string(fields_list=Buy_from_Vendor_No_list, Join_sign="','")
-    filters_list_string = f"""Vendor_No in ('{filters_Vendors}')"""
+    filters_list_string = f"""Vendor_No eq '{Buy_from_Vendor_No}'"""
 
     # Params
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)

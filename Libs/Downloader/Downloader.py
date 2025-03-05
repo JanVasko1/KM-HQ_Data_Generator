@@ -11,7 +11,7 @@ import Libs.Process.Prepare_Files as Prepare_Files
 
 from customtkinter import CTkProgressBar, CTk
 
-client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
+Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
 # ---------------------------------------------------------- Local Function ---------------------------------------------------------- #
 def Progress_Bar_step(window: CTk, Progress_Bar: CTkProgressBar) -> None:
@@ -417,7 +417,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
 
 
-def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No_list: list) -> list[DataFrame]:
+def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str) -> list[DataFrame]:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -467,7 +467,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: C
 
     # Vendor_Service_Function_df
     if Can_Process == True:
-        Vendor_Service_Function_df = NAV_OData_API.Get_Vendor_Service_Functions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Buy_from_Vendor_No_list=Buy_from_Vendor_No_list)
+        Vendor_Service_Function_df = NAV_OData_API.Get_Vendor_Service_Functions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Buy_from_Vendor_No=Buy_from_Vendor_No)
         print("\n----------Vendor_Service_Function_df----------")
         print(Vendor_Service_Function_df)
         if Vendor_Service_Function_df.empty:
@@ -523,7 +523,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: C
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         
 
-def Download_Data_Return_Order(Settings: dict, Configuration: dict,  window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> list[DataFrame]:
+def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> list[DataFrame]:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")

@@ -1,0 +1,63 @@
+{
+    "orderresponse": {
+        "orderresponse_header": {
+            "control_info": {
+                "generation_date": ""
+            },
+            "orderresponse_info": {
+                "order_id": "",
+                "supplier_order_id": "",
+                "order_date": "",
+                "orderresponse_date": "",
+                "buyer_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "COUNTRY": ""
+                        }
+                    }
+                },
+                "invoice_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "country": ""
+                        }
+                    }
+                },
+                "delivery_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "country": ""
+                        }
+                    }
+                },
+                "price_currency": ""
+            }
+        },
+        "orderresponse_item_list": [],
+        "orderresponse_summary": {
+            "total_item_num": 0,
+            "total_amount": 0.0
+        }
+    }
+}

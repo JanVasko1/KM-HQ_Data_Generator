@@ -1,0 +1,50 @@
+{
+    "preadvice": {
+        "dispatchnotification_header": {
+            "control_info": {
+                "generation_date": "",
+                "delivery_date": ""
+            },
+            "dispatchnotification_info": {
+                "dispatchnotification_id": "",
+                "buyer_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "country": ""
+                        }
+                    }
+                },
+                "shipment_parties": {
+                    "delivery_party": {
+                        "party": {
+                            "party_id": "",
+                            "address": {
+                                "name": "",
+                                "name2": "",
+                                "street": "",
+                                "zip": "",
+                                "city": "",
+                                "country": ""
+                            }
+                        }
+                    }
+                },
+                "remarks": {
+                    "exidv2": "",
+                    "bolnr": ""
+                }
+            }
+        },
+        "dispatchnotification_item_list": [],
+        "dispatchnotification_summary": {
+            "total_item_num": 0.0
+        }
+    }
+}

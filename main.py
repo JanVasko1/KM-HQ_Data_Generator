@@ -115,6 +115,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
         Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        # BUG --> Need to think how to update also FrontEnd
 
     def Export_Templates() -> None:
         Source_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template")
@@ -217,7 +218,7 @@ def Get_Header(Frame: CTk|CTkFrame) -> CTkFrame:
         # Fields - Templates
         No_Lines = 0
         for template in Template_List:
-            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}", Field_Type="Input_CheckBox") 
+            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}",  Field_Type="Input_CheckBox", Field_ToolTip=["", 2])  
             Var1 = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
             Var1.configure(text="")
             No_Lines += 1
@@ -364,7 +365,8 @@ def Get_Side_Bar(Side_Bar_Frame: CTk|CTkFrame) -> CTkFrame:
         window.update_idletasks()
 
     def Exit_Program() -> None:
-        # Delete Operational data from SEttings
+        # Delete Operational data from Settings
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="")
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
@@ -452,7 +454,7 @@ class Win(CTk):
     def __init__(self):
         super().__init__()
         super().overrideredirect(True)
-        super().title("HQ Generate JSON")
+        super().title("HQ Testing Tool")
         super().iconbitmap(bitmap=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
 
         display_width = self.winfo_screenwidth()

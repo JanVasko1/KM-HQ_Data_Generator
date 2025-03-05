@@ -10,27 +10,36 @@ def Process_Purchase_Orders(Settings: dict, Can_Process: bool, Purchase_Headers_
     Generate_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Use"]
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
 
+    # Generate Purchase Order List
+
     if Generate_Confirmation == True:
         print("Process_Confirmation")
     else:
         pass
 
     if Generate_CPDI == True:
+        # TIP --> Pozor na situaci, kdy CPDI bude generované v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
         print("Process_CPDI")
     else:
         pass
 
     if Generate_PreAdvice == True:
+        # TIP --> Pozor na situaci, kdy Preadvice bude generované v jiném běhu než Confirmation / Delivery --> pak by se měl program zeptat na základě čeho chceme PreAdvice dělat
+        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
         print("Process_PreAdvice")
     else:
         pass
 
     if Generate_Delivery == True:
+        # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
+        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
         print("Process_Delivery")
     else:
         pass
 
     if Generate_Invoice == True:
+        # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Invoice dělat
+        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
         print("Process_Invoice")
     else:
         pass
@@ -74,6 +83,7 @@ def Process_Purchase_Return_Orders(Settings: dict) -> None:
         pass
 
     if Generate_PRO_Invoice == True:
+        # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Invoice dělat (Většinou je Credit Memo = Confirmaiton)
         print("Generate_PRO_Invoice")
     else:
         pass

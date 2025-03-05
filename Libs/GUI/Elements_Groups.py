@@ -55,7 +55,7 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_
 
     return Frame_Area
 
-def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None) -> CTkFrame:
+def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -69,7 +69,10 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame
     Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
     Label_text.configure(text=f"{Label}:")
     Label_text.pack(side="right", fill="none")
-    # TODO --> ToolTip na jednotlivé pole pro vysvětlení účelu pole
+    if type(Field_ToolTip) == list:
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Label_text, message=Field_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=Field_ToolTip[1])
+    else:
+        pass
 
     # Frame Space between Label and Value
     Frame_Space = Elements.Get_Widget_Field_Frame_Space(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
