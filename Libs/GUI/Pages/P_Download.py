@@ -14,6 +14,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     NOC_List = Settings["0"]["Connection"]["NOC_List"]
     Companies_List = []
     Log_Process_List = []
+    Vendor_Lists = []
 
     NUS_Version_Variable = StringVar(master=Frame, value="Cloud", name="NUS_Version_Variable")
     Environment_Variable = StringVar(master=Frame, value="QA", name="Environment_Variable")
@@ -34,37 +35,51 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         else:
             pass
 
-    def Get_Logistic_Process(PO_MUL_LOG_PROC_Frame: CTkFrame, Selected_Company: str) -> list:
+    def Get_Logistic_Process(PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Frame: CTkFrame, Selected_Company: str) -> list:
         # Delete Operational data from Settings to clear lists
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=[])
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
-        global Log_Process_List
-        Company_Variable.set(value=Selected_Company)
+        global Log_Process_List, Vendor_Lists
+        Company_Variable.set(value=Selected_Company)       
 
-        Selected_Company = Selected_Company.replace(" ", "%20")
+        # Logistic Process
         Log_Process_List = Downloader.Get_Logistic_Process_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company)
-
         if len(Log_Process_List) > 0:
             # Add empty value for all
             Log_Process_List.append(" ")    # space because of OptionMenu full row list
             
             # Update Option List
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
+            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
             PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
             PO_MUL_LOG_PROC_Frame_Var.configure(values=Log_Process_List)
             Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=Log_Proc_Used_Variable, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
+        # Vendor List
+        Vendor_Lists = Downloader.Get_HQ_Vendors_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company)
+        if len(Vendor_Lists) > 0:
+            # Field - Vendor Filter
+            # Update Option List
+            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=Vendor_Lists)
+            BB_Vendor_Used_Frame_Var = BB_Vendor_Used_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+            BB_Vendor_Used_Frame_Var.configure(values=Vendor_Lists)
+            Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=Vendor_Lists, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
+        else:
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
+
     def Generate_Purchase_Orders() -> None:
         Purchase_Order_list = Documents["Purchase_Order"]["Purchase_Order_List"]
         if len(Purchase_Order_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list, Progress_Bar=Progress_Bar)
+            Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list)
             Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Purchase_Orders_Show(Button: CTkButton, PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown|None, Document_Type: str) -> None:
@@ -192,9 +207,13 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
 
         
     def Generate_BackBone_Billing() -> None:
-        print("Generate_BackBone_Billing")
-        pass
-
+        Buy_from_Vendor_No_list = Documents["BackBone_Billing"]["Vendors_List"]
+        if len(Buy_from_Vendor_No_list) == 0:
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no BEU Vendor selected, you have to select one before Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            Downloader.Download_Data_BackBoneBilling(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Buy_from_Vendor_No_list=Buy_from_Vendor_No_list)
+            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        
     def Purchase_Return_Orders_Show(Button: CTkButton, Document_Type: str) -> None:
         def Confirm_Choice(PRO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
             Selected_PROs_List = []
@@ -314,8 +333,13 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
             PRO_Select_Frame_Column_B.pack(side="left", fill="x", expand=False, padx=5, pady=5)
 
     def Generate_Purchase_Return_Orders() -> None:
-        print("Generate_Purchase_Return_Orders")
-        pass
+        Purchase_Return_Orders_List = Documents["Purchase_Return_Order"]["Purchase_Return_Order_List"]
+        if len(Purchase_Return_Orders_List) == 0:
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            Downloader.Download_Data_Return_Order(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Return_Orders_List=Purchase_Return_Orders_List)
+            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+
 
     # ------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
@@ -361,8 +385,6 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Companies_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame_Download_State_Area)
     Companies_Frame.configure(width=200)
     Companies_Frame.configure(variable=Company_Variable)
-    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command = lambda Selected_Company: Get_Logistic_Process(PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame, Selected_Company=Selected_Company) , GUI_Level_ID=1)
-    Button_Download_Company.configure(text="Get Companies", command = lambda: Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
     
     # ------------------------- Work Area -------------------------#
     # Progress Bar
@@ -544,6 +566,17 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     BB_Block_JSON_path_list = [["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], ["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "IAL", "Use"]]
     Generate_BB_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_BB_INV_Variable, Selected_Field=Generate_BB_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Block_Variable_list=BB_Block_Variable_list, Block_Field_list=BB_Block_Field_list, Block_JSON_path_list=BB_Block_JSON_path_list))
 
+    # Vendor
+    BB_Vendor_Used = Documents["BackBone_Billing"]["Vendors_List"]
+    BB_Vendor_Used_Variable = StringVar(master=Frame, value=BB_Vendor_Used, name="BB_Vendor_Used_Variable")
+
+    # Field - Vendor Filter
+    BB_Vendor_Used_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Tab_BB, Field_Frame_Type="Half_size" , Label="Vendor", Field_Type="Input_OptionMenu") 
+    BB_Vendor_Used_Frame_Var = BB_Vendor_Used_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    BB_Vendor_Used_Frame_Var.configure(variable=BB_Vendor_Used_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=Vendor_Lists, command=lambda Selected_Value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=Selected_Value), GUI_Level_ID=3)
+
+
     # Button - Generate BackBone Billing Invoice
     Button_Generate_BB = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
     Button_Generate_BB.configure(text="Generate", command = lambda:Generate_BackBone_Billing())
@@ -616,6 +649,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Button_PRO_Show_Var.configure(text="Generate", command = lambda: Generate_Purchase_Return_Orders())
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Show_Var, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
+    # Must be at the end !!!
+    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command = lambda Selected_Company: Get_Logistic_Process(PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Frame=BB_Vendor_Used_Frame, Selected_Company=Selected_Company) , GUI_Level_ID=1)
+    Button_Download_Company.configure(text="Get Companies", command = lambda: Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
+    
     # Build look of Widget
     Frame_Download_State_Area.pack(side="top", fill="x", expand=False, padx=10, pady=10)
     Frame_Download_Work_Detail_Area.pack(side="top", fill="x", expand=False, padx=10, pady=10)
@@ -630,11 +667,11 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Companies_Text.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=5)
     Companies_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
 
-    Progress_Bar.pack(side="top", fill="x", expand=True, padx=5, pady=(10,5))
+    Progress_Bar.pack(side="top", fill="x", expand=True, padx=5, pady=(5,0))
     Frame_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
 
-    TabView_PO.pack(side="top", fill="both", expand=False, padx=10, pady=10)
+    TabView_PO.pack(side="top", fill="both", expand=False, padx=10, pady=5)
     Generate_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_CPDI_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PREA_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
@@ -642,7 +679,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Generate_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=5)
     PO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_PO_One_Generate_Var.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
@@ -651,7 +688,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Button_PO_Show_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
     Button_PO_Multi_Generate_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
 
-    TabView_BB.pack(side="top", fill="y", expand=True, padx=10, pady=10)
+    TabView_BB.pack(side="top", fill="y", expand=True, padx=10, pady=5)
     Generate_BB_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_BB_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_Generate_BB.pack(side="top", fill="none", expand=False, padx=5, pady=5)

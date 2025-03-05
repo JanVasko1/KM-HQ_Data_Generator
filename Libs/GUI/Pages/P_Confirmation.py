@@ -14,16 +14,18 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     TabView = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Confirmation_Work_Detail_Area, Tab_size="Normal", GUI_Level_ID=1)
     TabView.pack_propagate(flag=False)
     Tab_PO = TabView.add("Purchase Order")
+    Tab_Free = TabView.add("Purchase Order - Free of Charge")
     Tab_PRO = TabView.add("Return Order")
     TabView.set("Purchase Order")
 
     Tab_PO_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
-    Tab_PRO_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
+    Tab_FREE_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
+    Tab_PRO_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PO_ToolTip_But, message="Settings related to Confirmation document created because of Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_FREE_ToolTip_But, message="Application Manual Free of Charge in case that are not downloadable from Business Central", ToolTip_Size="Normal", GUI_Level_ID=1)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PRO_ToolTip_But, message="Settings related to Confirmation document created because of Return Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
-    # ---------- Widgets ---------- #
-    # Purchase Order
+    # ---------- Purchase Order ---------- #
     Frame_PO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     
@@ -32,14 +34,36 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
     PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_ATP_Widget = W_Confirmation.PO_ATP(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
+    # ---------- Purchase Return Order ---------- #
+    Frame_FREE_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_FREE_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    PO_Items_Free_Method_Widget = W_Confirmation.PO_Items_Free_Method(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Cable_Widget = W_Confirmation.PO_Items_Free_Cable(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Documentation_Widget = W_Confirmation.PO_Items_Free_Documentation(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Other_Widget = W_Confirmation.PO_Items_Free_Other(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_B, GUI_Level_ID=2)
+
+    # ---------- Purchase Return Order ---------- #
+    Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PRO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PRO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PRO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    
     # ------------------------- Build look of Widget-------------------------#
     Frame_Confirmation_Work_Detail_Area.pack(side="top", fill="both", expand=True, padx=0, pady=0)
     TabView.pack(side="top", fill="both", expand=True, padx=10, pady=10)
 
     Frame_PO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-
     PO_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Line_Flags_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_ATP_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+
+    Frame_FREE_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_FREE_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    PO_Items_Free_Method_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Items_Free_Cable_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Items_Free_Documentation_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Items_Free_Other_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+
+    Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_PRO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)

@@ -160,7 +160,7 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
         params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
         # Request
-        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_Purchase_Headers")
+        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_PO_Header_Detail")
 
         for index in range(0, list_len):
             if response_values_List[index]["Buy_from_Vendor_No"] in HQ_Vendors_list:
@@ -192,7 +192,7 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
         "Requested_Receipt_Date": Requested_Receipt_Date_list,
         "Order_Date": Order_Date_list}
 
-    if list_len == 1:
+    if len(response_values_dict) == 1:
         Purchase_Headers_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Purchase_Headers_df = DataFrame(data=response_values_dict, columns=fields_list)
@@ -213,7 +213,7 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
 # ------------------- HQ_Testing_Purchase_Lines ------------------- #
 def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list):
     # Fields
-    fields_list = ["Document_No", "Type", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
+    fields_list = ["Document_No", "Type", "Line_No", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -229,6 +229,7 @@ def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NU
     # Prepare DataFrame
     Purchase_Order_No_list = []
     Type_list = []
+    Line_No_list = []
     No_list = []
     Description_list = []
     Quantity_list = []
@@ -238,6 +239,7 @@ def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NU
     for index in range(0, list_len):
         Purchase_Order_No_list.append(response_values_List[index]["Document_No"])
         Type_list.append(response_values_List[index]["Type"])
+        Line_No_list.append(response_values_List[index]["Line_No"])
         No_list.append(response_values_List[index]["No"])
         Description_list.append(response_values_List[index]["Description"])
         Quantity_list.append(response_values_List[index]["Quantity"])
@@ -247,6 +249,7 @@ def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NU
     response_values_dict = {
         "Document_No": Purchase_Order_No_list,
         "Type": Type_list,
+        "Line_No": Line_No_list,
         "No": No_list,
         "Description": Description_list,
         "Quantity": Quantity_list,
@@ -646,7 +649,7 @@ def Get_Items_BOM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_ver
     # Update Item list for new Items + Gent Items 
     No_list = list(set(No_list))
     if len(No_list) > 0:
-        Items_return_list = Get_Items_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=No_list)
+        Items_return_list = Get_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=No_list)
         Items_For_BOM_df = Items_return_list[0]
     else:
         Items_For_BOM_df = DataFrame()
@@ -692,7 +695,7 @@ def Get_Items_Substitutions_df(Configuration: dict, headers: dict, tenant_id: st
     # Update Item list for new Items + Gent Items 
     Substitute_No_list = list(set(Substitute_No_list))
     if len(Substitute_No_list) > 0:
-        Items_return_list = Get_Items_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitute_No_list)
+        Items_return_list = Get_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitute_No_list)
         Items_For_Substitution_df = Items_return_list[0]
     else:
         Items_For_Substitution_df = DataFrame()
@@ -746,7 +749,7 @@ def Get_Items_Connected_Items_df(Configuration: dict, headers: dict, tenant_id: 
     # Update Item list for new Items + Gent Items 
     No_list = list(set(No_list))
     if len(No_list) > 0:
-        Items_return_list = Get_Items_df(headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=No_list)
+        Items_return_list = Get_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=No_list)
         Items_For_Connected_Items_df = Items_return_list[0]
     else:
         Items_For_Connected_Items_df = DataFrame()

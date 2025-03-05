@@ -8,6 +8,11 @@ from customtkinter import StringVar, IntVar, BooleanVar
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 
+# ----------------------------------------------- String Operations ------------------------------------------------ #
+def Company_Name_prepare(Company: str) -> str:
+    Company = Company.replace(" ", "%20")
+    return Company
+
 # --------------------------------------------- List / Dict Operations --------------------------------------------- #
 def List_from_Dict(Dictionary: dict, Key_Argument: str) -> list:
     Return_List = []

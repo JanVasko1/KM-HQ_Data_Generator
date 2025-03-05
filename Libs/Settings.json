@@ -135,6 +135,36 @@
                                 "ONB": ""
                             }
                         }
+                    },
+                    "Application_Items": {
+                        "Free_Of_Charge": {
+                            "Method": "Fixed",
+                            "Methods_List": [
+                                "Fixed",
+                                "Connected Items",
+                                "Prompt"
+                            ],
+                            "Fixed_Options": {
+                                "Cable": {
+                                    "Number": "Cable1",
+                                    "Description": "Kabel do 220V",
+                                    "QTY_per_Machine": 1,
+                                    "Price": 9
+                                },
+                                "Documentation": {
+                                    "Number": "Document1",
+                                    "Description": "C220i documentation",
+                                    "QTY_per_Machine": 1,
+                                    "Price": 2
+                                },
+                                "Others": {
+                                    "Number": "Sticker1",
+                                    "Description": "Nice C220i sticker",
+                                    "QTY_per_Machine": 1,
+                                    "Price": 1
+                                }
+                            }
+                        }
                     }
                 },
                 "Return_Order": {
@@ -142,7 +172,7 @@
                 }
             },
             "CPDI": {
-                "Use": false,
+                "Use": true,
                 "Method": "All",
                 "Methods_List": [
                     "All",
@@ -362,7 +392,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -455,7 +485,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {

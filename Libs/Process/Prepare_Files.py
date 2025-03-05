@@ -10,7 +10,6 @@ def Process_Purchase_Orders(Settings: dict, Can_Process: bool, Purchase_Headers_
     Generate_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Use"]
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
 
-    
     if Generate_Confirmation == True:
         print("Process_Confirmation")
     else:
@@ -41,10 +40,45 @@ def Process_Purchase_Orders(Settings: dict, Can_Process: bool, Purchase_Headers_
     else:
         pass
 
-def Process_BackBoneBilling() -> None:
-    print("Process_Purchase_Return_Orders")
-    pass
+def Process_BackBoneBilling(Settings: dict, Can_Process: bool, HQ_Communication_Setup_df: DataFrame, NVR_FS_Connect_df: DataFrame, Vendor_Service_Function_df: DataFrame, Plants_df: DataFrame, Country_Regions_df: DataFrame, Tariff_Numbers_df: DataFrame) -> None:
+    # Get what should be prepared from Settings
+    Generate_BB_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Use"]
+    Generate_BB_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["PDF"]["Generate"]
+    Generate_BB_IAL = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["IAL"]["Use"]
 
-def Process_Purchase_Return_Orders() -> None:
-    print("Process_Purchase_Return_Orders")
-    pass
+
+    if Generate_BB_Invoice == True:
+        print("Generate_BB_Invoice")
+    else:
+        pass
+
+    if Generate_BB_Invoice_PDF == True:
+        print("Generate_BB_Invoice_PDF")
+    else:
+        pass
+
+    if Generate_BB_IAL == True:
+        print("Generate_BB_IAL")
+    else:
+        pass
+
+
+def Process_Purchase_Return_Orders(Settings: dict) -> None:
+    Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
+    Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
+    Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
+
+    if Generate_PRO_Confirmation == True:
+        print("Generate_PRO_Confirmation")
+    else:
+        pass
+
+    if Generate_PRO_Invoice == True:
+        print("Generate_PRO_Invoice")
+    else:
+        pass
+
+    if Generate_PRO_Invoice_PDF == True:
+        print("Generate_PRO_Invoice_PDF")
+    else:
+        pass
