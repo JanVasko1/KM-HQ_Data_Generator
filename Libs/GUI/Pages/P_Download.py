@@ -79,8 +79,11 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Purchase_Order_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list)
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Processed = Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list)
+            if Processed == True:
+                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
 
     def Purchase_Orders_Show(Button: CTkButton, PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown|None, Document_Type: str) -> None:
         def Confirm_Choice(PO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
@@ -211,8 +214,11 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Buy_from_Vendor_No) == "":
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no BEU Vendor selected, you have to select one before Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Downloader.Download_Data_BackBoneBilling(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Buy_from_Vendor_No=Buy_from_Vendor_No)
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Processed = Downloader.Download_Data_BackBoneBilling(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Buy_from_Vendor_No=Buy_from_Vendor_No)
+            if Processed == True:
+                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
         
     def Purchase_Return_Orders_Show(Button: CTkButton, Document_Type: str) -> None:
         def Confirm_Choice(PRO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
@@ -337,8 +343,11 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Purchase_Return_Orders_List) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Downloader.Download_Data_Return_Order(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Return_Orders_List=Purchase_Return_Orders_List)
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Processed = Downloader.Download_Data_Return_Order(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Return_Orders_List=Purchase_Return_Orders_List)
+            if Processed == True:
+                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
 
 
     # ------------------------- Main Functions -------------------------#

@@ -90,7 +90,7 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
     return Purchase_Header_list
 
 
-def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> list[DataFrame]:
+def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> bool:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 22, ndigits=3), progress_color="#517A31")
@@ -415,9 +415,10 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             UoM_df=UoM_df)
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
+    return Can_Process
 
 
-def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str) -> list[DataFrame]:
+def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str) -> bool:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -521,9 +522,11 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict, window: C
             Tariff_Numbers_df=Tariff_Numbers_df)
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
+
+    return Can_Process
         
 
-def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> list[DataFrame]:
+def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> bool:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -536,3 +539,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk,
         'Content-Type': 'application/json'}
 
     print("Finished")
+
+
+
+    return Can_Process
