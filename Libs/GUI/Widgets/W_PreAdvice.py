@@ -22,7 +22,7 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
     else:
         pass
 
-def Delivery_Date(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Delivery_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     PReAdvice_Dates_Method = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Delivery_Date"]["Method"]
     PReAdvice_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Delivery_Date"]["Methods_List"])

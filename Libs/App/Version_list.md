@@ -1,3 +1,7 @@
+#### 0.0.7
+- multiple file Drop
+- SideBar and Header on own page
+- template application issue correction
 
 #### 0.0.6
 - Settings Tables, nut the "Update" button is available

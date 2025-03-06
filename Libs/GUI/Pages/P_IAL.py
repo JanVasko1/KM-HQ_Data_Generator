@@ -4,7 +4,7 @@ from customtkinter import CTk, CTkFrame
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-def Page_IAL(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
+def Page_IAL(Settings: dict, Configuration: dict, Frame: CTkFrame):
     # ------------------------- Main Functions -------------------------#
     # Define Frames
     Frame_IAL_Work_Area_Main = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)

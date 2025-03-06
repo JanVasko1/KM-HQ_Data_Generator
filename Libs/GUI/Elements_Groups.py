@@ -9,7 +9,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Data_Functions as Data_Functions
 
 
-def Get_Widget_Frame(Configuration:dict, Frame: CTk|CTkFrame, Name: str, Additional_Text: str, Widget_size: str, Widget_Label_Tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Get_Widget_Frame(Configuration:dict, Frame: CTkFrame, Name: str, Additional_Text: str, Widget_size: str, Widget_Label_Tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
     # Build base Frame for Widget
     Frame_Single_Body = Elements.Get_Widget_Frame_Body(Configuration=Configuration, Frame=Frame, Widget_size=Widget_size, GUI_Level_ID=GUI_Level_ID)
 
@@ -42,7 +42,7 @@ def Get_Widget_Frame(Configuration:dict, Frame: CTk|CTkFrame, Name: str, Additio
 
     return Frame_Single_Body
 
-def Get_Widget_Section_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Label_Size: str, Font_Size: str) -> CTkFrame:
+def Get_Widget_Section_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Label_Size: str, Font_Size: str) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -55,7 +55,7 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_
 
     return Frame_Area
 
-def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -113,7 +113,7 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTk|CTkFrame
 
     return Frame_Area
 
-def Get_Widget_Button_row(Configuration:dict, Frame: CTk|CTkFrame, Field_Frame_Type: str, Buttons_count: int, Button_Size: str) -> CTkFrame:
+def Get_Widget_Button_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Buttons_count: int, Button_Size: str) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)

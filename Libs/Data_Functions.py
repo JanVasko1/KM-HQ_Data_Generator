@@ -5,6 +5,7 @@ from glob import glob
 
 from customtkinter import StringVar, IntVar, BooleanVar
 
+import Libs.GUI.Pages.P_Header as P_Header
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 
@@ -67,8 +68,6 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|No
     # Globals update with every change of setup
     try:
         if File_Name == "Settings":
-            # TODO --> with any save program have to delete value from template as after save the settings is not actually the template displayed
-
             # Update current Settings
             Value_change(my_dict=Settings, JSON_path=JSON_path, Information=Information)
 
@@ -166,7 +165,7 @@ def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Impo
             else:
                 pass
 
-        Save_Value(Settings=Settings, Configuration=None, Variable=None, File_Name="Settings", JSON_path=JSON_path, Information=Upload_updated_data)
+        Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=JSON_path, Information=Upload_updated_data)
 
     else:
         pass

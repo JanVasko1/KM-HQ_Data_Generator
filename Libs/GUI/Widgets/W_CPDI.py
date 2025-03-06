@@ -6,7 +6,7 @@ import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
 
-def General(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     CPDI_Method = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Method"]
     CPDI_Method_List = list(Settings["0"]["HQ_Data_Handler"]["CPDI"]["Methods_List"])

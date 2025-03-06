@@ -3,7 +3,10 @@
         "General": {
             "Template": {
                 "Last_Used": "",
-                "Templates_List": []
+                "Templates_List": [
+                    "all",
+                    "test2"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -172,7 +175,7 @@
                 }
             },
             "CPDI": {
-                "Use": false,
+                "Use": true,
                 "Method": "All",
                 "Methods_List": [
                     "All",
@@ -266,7 +269,7 @@
                     }
                 },
                 "Carrier_ID": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -489,7 +492,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -613,7 +616,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "Credit_Memo": {

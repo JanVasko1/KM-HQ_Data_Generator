@@ -23,7 +23,7 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
         pass
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
-def PO_INV_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_INV_Number(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Number"]["Method"]
     Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Number"]["Methods_List"])
@@ -66,7 +66,7 @@ def PO_INV_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_
 
     return Frame_Main
 
-def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Currency_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Currency"]["Method"]
     Currency_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Currency"]["Methods_List"])
@@ -107,7 +107,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, 
 
     return Frame_Main
 
-def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Method"]
     Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Methods_List"])
@@ -163,7 +163,7 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GU
     return Frame_Main
 
 
-def PO_Plant(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Plant(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Inv_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Plants"]["Method"]
     Inv_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Plants"]["Methods_List"])
@@ -196,7 +196,7 @@ def PO_Plant(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level
 
     return Frame_Main
 
-def PO_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Count_Origin_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Country_Of_Origin"]["Method"]
     Count_Origin_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Country_Of_Origin"]["Methods_List"])
@@ -217,7 +217,7 @@ def PO_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, G
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Count_Origin_Method_Frame_Var, values=Count_Origin_Method_List, command=lambda Count_Origin_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Count_Origin_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Country_Of_Origin", "Method"], Information=Count_Origin_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Count_Origin
-    Fixed_Count_Origin_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Count code", Field_Type="Input_Normal") 
+    Fixed_Count_Origin_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Country code", Field_Type="Input_Normal") 
     Fixed_Count_Origin_Frame_Var = Fixed_Count_Origin_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Count_Origin_Frame_Var.configure(placeholder_text="Manual Country Code", placeholder_text_color="#949A9F")
     Fixed_Count_Origin_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"], Information=Fixed_Count_Origin_Frame_Var.get()))
@@ -228,7 +228,7 @@ def PO_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, G
 
     return Frame_Main
 
-def PO_Tariff(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Tariff(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Tariff_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Tariff"]["Method"]
     Tariff_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Tariff"]["Methods_List"])
@@ -249,7 +249,7 @@ def PO_Tariff(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Leve
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Tariff_Method_Frame_Var, values=Tariff_Method_List, command=lambda Tariff_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Tariff_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Tariff", "Method"], Information=Tariff_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Tariff
-    Fixed_Tariff_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Count code", Field_Type="Input_Normal") 
+    Fixed_Tariff_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Tariff code", Field_Type="Input_Normal") 
     Fixed_Tariff_Frame_Var = Fixed_Tariff_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Tariff_Frame_Var.configure(placeholder_text="Manual Tariff Code", placeholder_text_color="#949A9F")
     Fixed_Tariff_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Tariff", "Fixed_Options", "Fix_Tariff"], Information=Fixed_Tariff_Frame_Var.get()))
@@ -260,7 +260,7 @@ def PO_Tariff(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Leve
 
     return Frame_Main
 
-def BB_INV_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_INV_Number(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Method"]
     BB_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Methods_List"])
@@ -304,7 +304,7 @@ def BB_INV_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_
     return Frame_Main
 
 
-def BB_Items(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Items(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     BB_Items_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Method"]
     BB_Items_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Methods_List"])
     BB_Fixed_Items = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Fixed_Options"]["Fix_Item"]
@@ -335,7 +335,7 @@ def BB_Items(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level
 
     return Frame_Main
 
-def BB_Quantity(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Quantity(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     BB_Quantity_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Quantity"]["Method"]
     BB_Quantity_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Quantity"]["Methods_List"])
 
@@ -358,7 +358,7 @@ def BB_Quantity(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Le
 
     return Frame_Main
 
-def BB_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Price_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Prices"]["Method"]
     BB_Price_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Prices"]["Methods_List"])
@@ -399,7 +399,7 @@ def BB_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, 
 
     return Frame_Main
 
-def BB_Posting_Date(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Posting_Date"]["Method"]
     BB_Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Posting_Date"]["Methods_List"])
@@ -434,7 +434,7 @@ def BB_Posting_Date(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GU
 
     return Frame_Main
 
-def BB_Order_reference(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Order_reference(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Order_id_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Order_reference"]["Order_id"]["Method"]
     BB_Order_id_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Order_reference"]["Order_id"]["Methods_List"])
@@ -463,9 +463,9 @@ def BB_Order_reference(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame,
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Order_id_Method_Frame_Var, values=BB_Order_id_Method_List, command=lambda BB_Order_id_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=BB_Order_id_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Order_reference", "Order_id", "Method"], Information=BB_Order_id_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Order_id
-    BB_Fixed_Order_id_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Count code", Field_Type="Input_Normal") 
+    BB_Fixed_Order_id_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Order id", Field_Type="Input_Normal") 
     BB_Fixed_Order_id_Frame_Var = BB_Fixed_Order_id_Frame.children["!ctkframe3"].children["!ctkentry"]
-    BB_Fixed_Order_id_Frame_Var.configure(placeholder_text="Manual Country Code", placeholder_text_color="#949A9F")
+    BB_Fixed_Order_id_Frame_Var.configure(placeholder_text="Manual Order id", placeholder_text_color="#949A9F")
     BB_Fixed_Order_id_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Order_reference", "Order_id", "Fixed_Options", "Fixed_Order_ID"], Information=BB_Fixed_Order_id_Frame_Var.get()))
     Entry_field_Insert(Field=BB_Fixed_Order_id_Frame_Var, Value=BB_Fixed_Order_id)
 
@@ -493,7 +493,7 @@ def BB_Order_reference(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame,
 
     return Frame_Main
 
-def BB_Plant(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Plant(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Inv_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Plants"]["Method"]
     BB_Inv_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Plants"]["Methods_List"])
@@ -526,7 +526,7 @@ def BB_Plant(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level
 
     return Frame_Main
 
-def BB_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Count_Origin_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Country_Of_Origin"]["Method"]
     BB_Count_Origin_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Country_Of_Origin"]["Methods_List"])
@@ -547,7 +547,7 @@ def BB_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, G
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Count_Origin_Method_Frame_Var, values=BB_Count_Origin_Method_List, command=lambda BB_Count_Origin_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=BB_Count_Origin_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Country_Of_Origin", "Method"], Information=BB_Count_Origin_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Count_Origin
-    BB_Fixed_Count_Origin_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Count code", Field_Type="Input_Normal") 
+    BB_Fixed_Count_Origin_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Country code", Field_Type="Input_Normal") 
     BB_Fixed_Count_Origin_Frame_Var = BB_Fixed_Count_Origin_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Count_Origin_Frame_Var.configure(placeholder_text="Manual Country Code", placeholder_text_color="#949A9F")
     BB_Fixed_Count_Origin_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"], Information=BB_Fixed_Count_Origin_Frame_Var.get()))
@@ -558,7 +558,7 @@ def BB_CountryOrigin(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, G
 
     return Frame_Main
 
-def BB_Tariff(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BB_Tariff(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Tariff_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Tariff"]["Method"]
     BB_Tariff_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Tariff"]["Methods_List"])
@@ -579,7 +579,7 @@ def BB_Tariff(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Leve
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Tariff_Method_Frame_Var, values=BB_Tariff_Method_List, command=lambda BB_Tariff_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=BB_Tariff_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Tariff", "Method"], Information=BB_Tariff_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Tariff
-    BB_Fixed_Tariff_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Count code", Field_Type="Input_Normal") 
+    BB_Fixed_Tariff_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Tariff", Field_Type="Input_Normal") 
     BB_Fixed_Tariff_Frame_Var = BB_Fixed_Tariff_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Tariff_Frame_Var.configure(placeholder_text="Manual Tariff Code", placeholder_text_color="#949A9F")
     BB_Fixed_Tariff_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Tariff", "Fixed_Options", "Fix_Tariff"], Information=BB_Fixed_Tariff_Frame_Var.get()))

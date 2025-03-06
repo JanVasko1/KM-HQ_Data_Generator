@@ -4,7 +4,7 @@ from customtkinter import CTk, CTkFrame
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Widgets.W_Invoice as W_Invoice
 
-def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame):
+def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTkFrame):
     #------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
     Frame_Invoice_Work_Area_Main = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)

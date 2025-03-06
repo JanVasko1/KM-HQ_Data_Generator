@@ -23,7 +23,7 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
         pass
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
-def PO_CON_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_CON_Number(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Method"]
     Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Methods_List"])
@@ -66,7 +66,7 @@ def PO_CON_Number(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_
 
     return Frame_Main
 
-def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Currency_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Method"]
     Currency_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Methods_List"])
@@ -107,7 +107,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, 
 
     return Frame_Main
 
-def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Line_Flags_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Use"]
     Line_Flag_Label_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Labels_always"]
@@ -145,7 +145,7 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_
 
     return Frame_Main
 
-def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     ATP_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Use"]
     ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
@@ -260,7 +260,7 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_I
     return Frame_Main
 
 
-def PO_Items_Free_Method(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Items_Free_Method(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Free_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Method"]
     Free_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Methods_List"])
@@ -284,7 +284,7 @@ def PO_Items_Free_Method(Settings: dict, Configuration: dict, Frame: CTk|CTkFram
 
     return Frame_Main
 
-def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Cable_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Number"]
     Cable_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Description"]
@@ -330,7 +330,7 @@ def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame
 
     return Frame_Main
 
-def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Documentation_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Number"]
     Documentation_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Description"]
@@ -377,7 +377,7 @@ def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTk|
     return Frame_Main
 
 
-def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Others_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Number"]
     Others_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Description"]

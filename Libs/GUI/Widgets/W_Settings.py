@@ -27,7 +27,7 @@ def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
     else:
         pass
 
-def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     Theme_List = list(Configuration["Global_Appearance"]["Window"]["Theme_List"])
@@ -157,7 +157,7 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTk|CTkFr
     return Frame_Main
 
 
-def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTk|CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
 
