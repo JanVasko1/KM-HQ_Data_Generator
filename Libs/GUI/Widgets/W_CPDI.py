@@ -1,5 +1,5 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame, StringVar
+from customtkinter import CTkFrame, StringVar
 
 import Libs.Data_Functions as Data_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups

@@ -5,7 +5,6 @@ from glob import glob
 
 from customtkinter import StringVar, IntVar, BooleanVar
 
-import Libs.GUI.Pages.P_Header as P_Header
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 

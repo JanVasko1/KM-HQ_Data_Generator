@@ -1,5 +1,5 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame
+from customtkinter import CTkFrame
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Widgets.W_CPDI as W_CPDI

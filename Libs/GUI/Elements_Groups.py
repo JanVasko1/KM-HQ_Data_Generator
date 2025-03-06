@@ -2,7 +2,7 @@
 from datetime import datetime
 import calendar
 
-from customtkinter import CTk, CTkFrame, CTkToplevel, CTkEntry, CTkButton
+from customtkinter import CTkFrame, CTkToplevel, CTkEntry, CTkButton
 
 import Libs.GUI.Elements as Elements
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
