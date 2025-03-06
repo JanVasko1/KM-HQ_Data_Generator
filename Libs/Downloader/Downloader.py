@@ -11,7 +11,7 @@ import Libs.Process.Prepare_Files as Prepare_Files
 
 from customtkinter import CTkProgressBar, CTk
 
-Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_env()
+Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
 
 # ---------------------------------------------------------- Local Function ---------------------------------------------------------- #
 def Progress_Bar_step(window: CTk, Progress_Bar: CTkProgressBar) -> None:

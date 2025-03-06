@@ -1,7 +1,9 @@
 #### 0.0.7
-- multiple file Drop
+- multiple file Drag&Drop
 - SideBar and Header on own page
 - template application issue correction
+- Exchange Authorization information stored in binary file format (not readable from outside)
+- OAuth2 status in program header
 
 #### 0.0.6
 - Settings Tables, nut the "Update" button is available

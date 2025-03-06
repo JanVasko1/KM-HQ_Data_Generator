@@ -34,7 +34,7 @@ def Load_Documents() -> dict:
     File.close()
     return Configuration
 
-def Load_Azure_env() -> list[str, str, str]:
+def Load_Azure_Auth() -> list[str, str, str]:
     with open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"), mode="rb") as Authorization:
         Aut_Data = pickle.load(Authorization)
     Display_name = Aut_Data["Display_name"]
@@ -43,7 +43,7 @@ def Load_Azure_env() -> list[str, str, str]:
     tenant_id = Aut_Data["tenant_id"]
     return Display_name, client_id, client_secret, tenant_id
 
-def Save_set_key_env(Key: str, Value: str) -> None:
+def Save_set_key_Auth(Key: str, Value: str) -> None:
     with open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"), mode="rb") as Authorization:
         Auth_Data = pickle.load(Authorization)
 

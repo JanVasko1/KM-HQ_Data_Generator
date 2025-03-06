@@ -4,17 +4,19 @@ import json
 from glob import glob
 
 import pywinstyles
-from customtkinter import CTk, CTkFrame, CTkButton, StringVar, set_appearance_mode
+from customtkinter import CTk, CTkFrame, CTkButton, StringVar, IntVar, set_appearance_mode
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 from tkhtmlview import HTMLLabel
 from markdown import markdown
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
+import Libs.Defaults_Lists as Defaults_Lists
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.File_Manipulation as File_Manipulation
 
 import Libs.Data_Functions as Data_Functions
+import Libs.Azure.Authorization as Authorization
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
 def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk, Frame: CTkFrame) -> CTkFrame:
@@ -113,7 +115,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
         Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
         Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
-        # TODO --> Load actual page -->to update all GUI 
+        # TODO --> Load actual page --> to update all GUI 
 
     def Export_Templates() -> None:
         Source_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template")
@@ -239,6 +241,17 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
 
     # ------------------------- Main Functions -------------------------#
+    # Authorization OAuth2 Flag
+    try:
+        Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
+        Auth_Result = Authorization.Azure_OAuth_Test(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    except:
+        Auth_Result = False
+    Auth_Result_Variable = IntVar(master=Frame, value=Auth_Result, name="Auth_Result_Variable")
+    Authorization_Frame = Elements.Get_RadioButton_Normal(Configuration=Configuration, Frame=Frame, Var_Value=True) 
+    Authorization_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=Auth_Result_Variable)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Authorization_Frame, message="Authorization status.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    
     # Actual Template
     Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
     Actual_Template_Frame.configure(variable=Actual_Template_Variable)
@@ -280,6 +293,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Delete_Templates, message="Delete Templates file from program.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Build look of Widget
+    Authorization_Frame.pack(side="right", fill="none", expand=False, padx=(0, 5), pady=(0, 40))
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
     Icon_Versions.pack(side="right", fill="none", expand=False, padx=5, pady=5)
 

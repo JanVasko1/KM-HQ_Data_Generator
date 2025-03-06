@@ -14,7 +14,6 @@ import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Data_Functions as Data_Functions
 
-# -------------------------------------------------------------------------------------------------------------------------------------------------- Main Program -------------------------------------------------------------------------------------------------------------------------------------------------- #
 class Win(CTk):
     def __init__(self):
         super().__init__()

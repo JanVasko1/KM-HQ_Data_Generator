@@ -226,7 +226,6 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
             def Find_if_Marked(PRO_Frame_row: CTkFrame, Selected_PROs_List: list) -> list:
                 # check if marked 
                 Marked_Value = PRO_Frame_row.children["!ctkframe3"].children["!ctkcheckbox"].get()
-
                 if Marked_Value == True:
                     Purchase_Ret_Label = PRO_Frame_row.children["!ctkframe"].children["!ctklabel"]
                     Purchase_Ret_Order = str(Purchase_Ret_Label.cget("text"))
@@ -234,7 +233,6 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
                     Selected_PROs_List.append(Purchase_Ret_Order)
                 else:
                     pass
-
                 return Selected_PROs_List
 
             Column_PRO_A_Children = PRO_Select_Scrollable_Body.children["!ctkframe"]
