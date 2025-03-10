@@ -24,8 +24,7 @@ def Generate_BB_Lines(Settings: dict,
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Lines_df = DataFrame(columns=["line_item_id", "supplier_aid", "description_short", "quantity", "order_unit", "price_amount", "price_line_amount", "order_id", "order_date", "supplier_order_id", "supplier_order_item_id", "delivery_note_id", "tariff_number", "origin", "plant"])
-    Template_Line = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="BB_Invoice_Line")
-
+    
     BB_Items_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Method"]
     BB_Fixed_Items = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Fixed_Options"]["Fix_Item"]
 
@@ -461,7 +460,7 @@ def Generate_BB_Lines(Settings: dict,
     BB_Invoice_Lines = []
     for row in Lines_df.iterrows():
         row_Series = Series(row[1])
-        Current_line_json = Template_Line.copy()
+        Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="BB_Invoice_Line")
 
         # Assign Values
         Current_line_json["line_item_id"] = row_Series["line_item_id"]
@@ -490,6 +489,7 @@ def Generate_BB_Lines(Settings: dict,
         Current_line_json["remarks"]["plant"] = row_Series["plant"]
 
         BB_Invoice_Lines.append(Current_line_json)
+        del Current_line_json
 
     # --------------------------------------------- PDF Table_Data --------------------------------------------- #
     Table_Data = []

@@ -494,7 +494,7 @@
                 "BackBone_Billing": {
                     "Use": true,
                     "Number": {
-                        "Method": "Prompt",
+                        "Method": "Automatic",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -508,7 +508,7 @@
                         }
                     },
                     "Items": {
-                        "Method": "All",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "All",
                             "Fixed",

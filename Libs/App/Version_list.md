@@ -1,3 +1,6 @@
+#### 0.1.1
+- Generate Invoice.json issue with lines Overwrite when transferring to json template from DataFrame
+
 ### 0.1.0
 - BackBoneBilling files process
 
