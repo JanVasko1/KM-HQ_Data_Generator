@@ -2,11 +2,8 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "all",
-                "Templates_List": [
-                    "all",
-                    "test2"
-                ]
+                "Last_Used": "",
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -49,6 +46,9 @@
             ]
         },
         "HQ_Data_Handler": {
+            "Export": {
+                "Download_Folder": true
+            },
             "Confirmation": {
                 "Purchase_Order": {
                     "Use": true,
@@ -397,7 +397,7 @@
                 "Purchase_Order": {
                     "Use": true,
                     "Number": {
-                        "Method": "Automatic",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -430,7 +430,7 @@
                             "Fix_Currency": "EUR"
                         }
                     },
-                    "Posting_Date": {
+                    "Invoice_Date": {
                         "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
@@ -492,7 +492,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -501,21 +501,21 @@
                             "Prompt"
                         ],
                         "Automatic_Options": {
-                            "Prefix": "BBINV"
+                            "Prefix": "BB"
                         },
                         "Fixed_Options": {
-                            "Number": ""
+                            "Number": "BBFIXED0001"
                         }
                     },
                     "Items": {
-                        "Method": "Prompt",
+                        "Method": "All",
                         "Methods_List": [
                             "All",
                             "Fixed",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Item": ""
+                            "Fix_Item": "Item1"
                         }
                     },
                     "Quantity": {
@@ -532,16 +532,16 @@
                             "Fixed"
                         ],
                         "Fixed_Options": {
-                            "Fix_Price": 20000
+                            "Fix_Price": 2000
                         }
                     },
                     "Currency": {
                         "Fix_Currency": "EUR"
                     },
-                    "Posting_Date": {
-                        "Method": "Current month",
+                    "Invoice_Date": {
+                        "Method": "Today",
                         "Methods_List": [
-                            "Current month",
+                            "Today",
                             "Fixed",
                             "Prompt"
                         ],
@@ -572,7 +572,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -589,7 +589,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -601,7 +601,7 @@
                         }
                     },
                     "Tariff": {
-                        "Method": "Empty",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -616,7 +616,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Credit_Memo": {

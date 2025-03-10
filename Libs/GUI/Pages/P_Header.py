@@ -4,7 +4,7 @@ import json
 from glob import glob
 
 import pywinstyles
-from customtkinter import CTk, CTkFrame, CTkButton, StringVar, IntVar, set_appearance_mode
+from customtkinter import CTk, CTkFrame, CTkButton, CTkRadioButton, StringVar, BooleanVar, IntVar, set_appearance_mode
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 from tkhtmlview import HTMLLabel
 from markdown import markdown
@@ -24,6 +24,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
     # Global Variables
     Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
     Actual_Template_Variable = StringVar(master=window, value=Settings["0"]["General"]["Template"]["Last_Used"], name="Actual_Template_Variable")
+    Export_folder_Variable = BooleanVar(master=Frame, value=Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"], name="Export_folder_Variable")
 
     # ------------------------- Local Functions -------------------------#
     def Theme_Change():
@@ -224,7 +225,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
         # Fields - Templates
         No_Lines = 0
         for template in Template_List:
-            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}",  Field_Type="Input_CheckBox", Field_ToolTip=["", 2])  
+            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}",  Field_Type="Input_CheckBox")  
             Var1 = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
             Var1.configure(text="")
             No_Lines += 1
@@ -241,16 +242,24 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
 
     # ------------------------- Main Functions -------------------------#
+    Status_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Columns", GUI_Level_ID=0)
+    Status_Frame.configure(width=15)
+
     # Authorization OAuth2 Flag
     try:
         Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
-        Auth_Result = Authorization.Azure_OAuth_Test(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+        Auth_Result = Authorization.Azure_OAuth_Test(client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     except:
         Auth_Result = False
-    Auth_Result_Variable = IntVar(master=Frame, value=Auth_Result, name="Auth_Result_Variable")
-    Authorization_Frame = Elements.Get_RadioButton_Normal(Configuration=Configuration, Frame=Frame, Var_Value=True) 
+    Auth_Result_Variable = IntVar(master=Status_Frame, value=Auth_Result, name="Auth_Result_Variable")
+    Authorization_Frame = Elements.Get_RadioButton_Normal(Configuration=Configuration, Frame=Status_Frame, Var_Value=True) 
     Authorization_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=Auth_Result_Variable)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Authorization_Frame, message="Authorization status.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Authorization_Frame, message="Initial Azure authorization status.", ToolTip_Size="Normal", GUI_Level_ID=0)
+
+    # Authorization OAuth2 Flag
+    Export_folder_Frame = Elements.Get_RadioButton_Normal(Configuration=Configuration, Frame=Status_Frame, Var_Value=True) 
+    Export_folder_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=Export_folder_Variable)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Export_folder_Frame, message="Export files to NAV folders.", ToolTip_Size="Normal", GUI_Level_ID=0)
     
     # Actual Template
     Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
@@ -293,7 +302,9 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
     Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Delete_Templates, message="Delete Templates file from program.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Build look of Widget
-    Authorization_Frame.pack(side="right", fill="none", expand=False, padx=(0, 5), pady=(0, 40))
+    Status_Frame.pack(side="right", fill="none", expand=False, padx=5, pady=(2,2))
+    Authorization_Frame.pack(side="top", fill="none", expand=False, padx=0, pady=2)
+    Export_folder_Frame.pack(side="top", fill="none", expand=False, padx=0, pady=2)
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
     Icon_Versions.pack(side="right", fill="none", expand=False, padx=5, pady=5)
 

@@ -579,7 +579,7 @@
                     "#2C2C2C"
                 ]
             },
-            "Work_Area_Header": {
+            "Header": {
                 "width": 1110,
                 "height": 70,
                 "corner_radius": 10,

@@ -6,7 +6,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTkFrame, CTkEntry, StringVar, CTkOptionMenu, CTkButton, set_appearance_mode
+from customtkinter import CTkFrame, CTkEntry, StringVar, BooleanVar, CTkOptionMenu, CTkButton, set_appearance_mode
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
 def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
@@ -158,6 +158,9 @@ def Settings_General_Color(Settings: dict, Configuration: dict, Frame: CTkFrame,
 def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
+    Export_folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
+
+    Export_folder_Variable = BooleanVar(master=Frame, value=Export_folder, name="Export_folder_Variable")
 
     # ------------------------- Main Functions -------------------------#
     # Frame - General
@@ -191,6 +194,12 @@ def Settings_User_Access(Settings: dict, Configuration: dict, Frame: CTkFrame, G
     NAV_Tenant_ID_Frame_Var.configure(placeholder_text=tenant_id)
     NAV_Tenant_ID_Frame_Var.configure(state="disabled", placeholder_text_color="#949A9F")
 
+    # Field - Use
+    Export_Download_Folder_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Export NAV folder", Field_Type="Input_CheckBox") 
+    Export_Download_Folder_Frame_Var = Export_Download_Folder_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    Export_Download_Folder_Frame_Var.configure(variable=Export_folder_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Export_folder_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Export", "Download_Folder"], Information=Export_folder_Variable))
+
+   
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
 

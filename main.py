@@ -1,4 +1,4 @@
-# TODO --> When anything saved to Settings must delete actual template value from Header
+# TODO --> When anything manually saved to Settings must delete actual template value from Header
 # TODO --> When Template Applied must be updated actual page
 
 # Import Libraries
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     Frame_Work_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Background, Frame_Size="Work_Area", GUI_Level_ID=0)
     Frame_Work_Area.pack(side="top", fill="both", expand=False)
 
-    Frame_Header = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Work_Area, Frame_Size="Work_Area_Header", GUI_Level_ID=0)
+    Frame_Header = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Work_Area, Frame_Size="Header", GUI_Level_ID=0)
     Frame_Header.pack_propagate(flag=False)
     Frame_Header.pack(side="top", fill="both", expand=False)
 

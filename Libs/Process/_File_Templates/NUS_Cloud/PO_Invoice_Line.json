@@ -24,6 +24,7 @@
         "delivery_note_id": "",
         "line_item_id": ""
     },
+    "tariff_number": "",
     "remarks": {
         "origin": "",
         "plant": ""

@@ -191,7 +191,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_HQ_Item_Transport_Register
     if Can_Process == True:
-        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order")
+        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type=["Export"])
         if HQ_Item_Transport_Register_df.empty:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
@@ -360,7 +360,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     else:
         pass
 
-     # HQ_Testing_Company_Information
+    # HQ_Testing_Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -413,6 +413,8 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=1)
         Prepare_Files.Process_Purchase_Orders(
             Settings=Settings,
+            Configuration=Configuration,
+            window=window,
             Can_Process=Can_Process, 
             Purchase_Headers_df=Purchase_Headers_df, 
             Purchase_Lines_df=Purchase_Lines_df, 
@@ -513,6 +515,17 @@ def Download_Data_BackBoneBilling(Settings: dict,
     else:
         pass
 
+    # HQ_Testing_Company_Information
+    if Can_Process == True:
+        Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
+        Company_Information_df.reset_index(drop=True, inplace=True)
+        print("\n----------Company_Information_df----------")
+        print(Company_Information_df)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+    else:
+        pass
+
     # HQ_Testing_Plans
     if Can_Process == True:
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
@@ -546,11 +559,14 @@ def Download_Data_BackBoneBilling(Settings: dict,
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=1)
         Prepare_Files.Process_BackBoneBilling(
             Settings=Settings,
+            Configuration=Configuration,
+            window=window,
             Can_Process=Can_Process, 
             Buy_from_Vendor_No=Buy_from_Vendor_No,
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
             NVR_FS_Connect_df=NVR_FS_Connect_df, 
             Vendor_Service_Function_df=Vendor_Service_Function_df,
+            Company_Information_df=Company_Information_df,
             Plants_df=Plants_df,
             Country_ISO_Code_list=Country_ISO_Code_list,  
             Tariff_Number_list=Tariff_Number_list)

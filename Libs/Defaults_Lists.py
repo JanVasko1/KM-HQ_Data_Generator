@@ -52,6 +52,12 @@ def Save_set_key_Auth(Key: str, Value: str) -> None:
     with open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"), mode="wb") as Authorization:
         pickle.dump(obj=Auth_Data, file=Authorization)
 
+def Load_Template(NUS_Version: str, Template: str) -> dict:
+    File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\{NUS_Version}\\{Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+    Template = json.load(fp=File)
+    File.close()
+    return Template
+
 # --------------------------------------------- List / Dict Operations --------------------------------------------- #
 def List_from_Dict(Dictionary: dict, Key_Argument: str) -> list:
     Return_List = []
@@ -73,3 +79,4 @@ def Dict_Main_Key_Change(Dictionary: dict, counter: int) -> dict:
         new_dict[new_key] = value
         counter += 1
     return new_dict
+

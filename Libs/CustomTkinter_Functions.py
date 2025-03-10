@@ -1,6 +1,6 @@
 # Import Libraries
 import pyautogui
-from customtkinter import CTkButton, get_appearance_mode, BooleanVar, CTkCheckBox
+from customtkinter import CTk, CTkButton, get_appearance_mode, BooleanVar, CTkCheckBox
 from CTkTable import CTkTable
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
@@ -34,6 +34,13 @@ def Count_coordinate_for_new_window(Clicked_on: CTkButton, New_Window_width: int
 
     # Top middle coordinate for new window
     return [Window_X + Clicked_On_X_difference, Window_Y + Clicked_on_Y_difference + 5]
+
+def Get_coordinate_Main_Window(Main_Window: CTk) -> list:
+    Main_Window.update_idletasks()  # Ensure the geometry information is updated
+    x = (Main_Window.winfo_width() // 2) + Main_Window.winfo_rootx()
+    y = (Main_Window.winfo_height() // 2) + Main_Window.winfo_rooty()
+    Coordinate = [x, y]
+    return Coordinate
 
 def Insert_Data_to_Table(Settings: dict, Configuration: dict, Table: CTkTable, JSON_path: list) -> None:
     # Delete data in table just keep header

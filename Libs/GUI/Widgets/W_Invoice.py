@@ -109,12 +109,12 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_
 
 def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Method"]
-    Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Methods_List"])
-    INV_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Fixed_Options"]["Fix_Date"]
+    Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Method"]
+    Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Methods_List"])
+    INV_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Fixed_Options"]["Fix_Date"]
 
-    INV_Rand_From_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Random_Options"]["From"]
-    INV_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Posting_Date"]["Random_Options"]["To"]
+    INV_Rand_From_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Random_Options"]["From"]
+    INV_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Random_Options"]["To"]
 
     Posting_Date_Method_Variable = StringVar(master=Frame, value=Posting_Date_Method, name="Posting_Date_Method_Variable")
     # ------------------------- Local Functions -------------------------#
@@ -128,14 +128,14 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Le
     Invoice_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     Invoice_Date_Method_Frame_Var = Invoice_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     Invoice_Date_Method_Frame_Var.configure(variable=Posting_Date_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Invoice_Date_Method_Frame_Var, values=Posting_Date_Method_List, command=lambda Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Posting_Date", "Method"], Information=Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Invoice_Date_Method_Frame_Var, values=Posting_Date_Method_List, command=lambda Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Method"], Information=Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
     INV_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
     INV_Fixed_Date_Frame_Var = INV_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_INV_Fixed_Date_Frame_Var = INV_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     INV_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-    INV_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Posting_Date", "Fixed_Options", "Fix_Date"], Information=INV_Fixed_Date_Frame_Var.get()))
+    INV_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Fixed_Options", "Fix_Date"], Information=INV_Fixed_Date_Frame_Var.get()))
     Button_INV_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=INV_Fixed_Date_Frame_Var, Clicked_on_Button=Button_INV_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=INV_Fixed_Date_Frame_Var, Value=INV_Fix_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_INV_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
@@ -147,14 +147,14 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Le
     INV_Random_From_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date - From CD +", Field_Type="Input_Normal", Validation="Integer") 
     INV_Random_From_Frame_Var = INV_Random_From_Frame.children["!ctkframe3"].children["!ctkentry"]
     INV_Random_From_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
-    INV_Random_From_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Posting_Date", "Random_Options", "From"], Information=int(INV_Random_From_Frame_Var.get())))
+    INV_Random_From_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Random_Options", "From"], Information=int(INV_Random_From_Frame_Var.get())))
     Entry_field_Insert(Field=INV_Random_From_Frame_Var, Value=INV_Rand_From_Date)
 
     # Field - Invoice Date - To CD + Entry Field
     INV_Random_To_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date - To CD +", Field_Type="Input_Normal", Validation="Integer") 
     INV_Random_To_Frame_Var = INV_Random_To_Frame.children["!ctkframe3"].children["!ctkentry"]
     INV_Random_To_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
-    INV_Random_To_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Posting_Date", "Random_Options", "To"], Information=int(INV_Random_To_Frame_Var.get())))
+    INV_Random_To_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Random_Options", "To"], Information=int(INV_Random_To_Frame_Var.get())))
     Entry_field_Insert(Field=INV_Random_To_Frame_Var, Value=INV_Rand_To_Date)
 
     # Build look of Widget
@@ -401,9 +401,9 @@ def BB_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_
 
 def BB_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    BB_Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Posting_Date"]["Method"]
-    BB_Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Posting_Date"]["Methods_List"])
-    BB_PD_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Posting_Date"]["Fixed_Options"]["Fix_Date"]
+    BB_Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Invoice_Date"]["Method"]
+    BB_Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Invoice_Date"]["Methods_List"])
+    BB_PD_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Invoice_Date"]["Fixed_Options"]["Fix_Date"]
 
     BB_Posting_Date_Method_Variable = StringVar(master=Frame, value=BB_Posting_Date_Method, name="BB_Posting_Date_Method_Variable")
     # ------------------------- Local Functions -------------------------#
@@ -417,14 +417,14 @@ def BB_Posting_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Le
     BB_Invoice_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     BB_Invoice_Date_Method_Frame_Var = BB_Invoice_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     BB_Invoice_Date_Method_Frame_Var.configure(variable=BB_Posting_Date_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Invoice_Date_Method_Frame_Var, values=BB_Posting_Date_Method_List, command=lambda BB_Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=BB_Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Posting_Date", "Method"], Information=BB_Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Invoice_Date_Method_Frame_Var, values=BB_Posting_Date_Method_List, command=lambda BB_Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=BB_Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Invoice_Date", "Method"], Information=BB_Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
     BB_PD_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
     BB_PD_Fixed_Date_Frame_Var = BB_PD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Button_INV_Fixed_Date_Frame_Var = BB_PD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     BB_PD_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-    BB_PD_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Posting_Date", "Fixed_Options", "Fix_Date"], Information=BB_PD_Fixed_Date_Frame_Var.get()))
+    BB_PD_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Invoice_Date", "Fixed_Options", "Fix_Date"], Information=BB_PD_Fixed_Date_Frame_Var.get()))
     BB_Button_INV_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=BB_PD_Fixed_Date_Frame_Var, Clicked_on_Button=BB_Button_INV_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=BB_PD_Fixed_Date_Frame_Var, Value=BB_PD_Fix_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=BB_Button_INV_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)

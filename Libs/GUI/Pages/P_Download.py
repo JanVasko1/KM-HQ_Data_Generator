@@ -9,9 +9,13 @@ import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
 def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: dict, Frame: CTkFrame):
-    NUS_Version_List = Settings["0"]["Connection"]["NUS_Version_List"]
-    Environment_List = Settings["0"]["Connection"]["Environment_List"]
-    NOC_List = Settings["0"]["Connection"]["NOC_List"]
+    NUS_Version_List = list(Settings["0"]["Connection"]["NUS_Version_List"])
+    Environment_List = list(Settings["0"]["Connection"]["Environment_List"])
+    try:
+        Environment_List.remove("PRD")
+    except:
+        pass
+    NOC_List = list(Settings["0"]["Connection"]["NOC_List"])
     Companies_List = []
     Log_Process_List = []
     Vendor_Lists = []
@@ -686,7 +690,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Generate_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=5)
+    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
     PO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_PO_One_Generate_Var.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
