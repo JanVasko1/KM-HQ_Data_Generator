@@ -47,7 +47,7 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": true
+                "Download_Folder": false
             },
             "Confirmation": {
                 "Purchase_Order": {
@@ -494,7 +494,7 @@
                 "BackBone_Billing": {
                     "Use": true,
                     "Number": {
-                        "Method": "Automatic",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",

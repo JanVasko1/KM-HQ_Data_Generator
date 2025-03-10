@@ -132,6 +132,7 @@ def Process_BackBoneBilling(Settings: dict,
             HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
             HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
             HQ_Path = str(HQ_Communication_Setup_df.iloc[0]["HQ_Invoice_File_Path"])
+            # BUG --> Not working Export to Server
             with open(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{BB_Number}.json", "w") as outfile: 
                 json.dump(BB_Invoice, outfile)
         else:
@@ -152,6 +153,7 @@ def Process_BackBoneBilling(Settings: dict,
             HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
             HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
             HQ_Path = str(HQ_Communication_Setup_df.iloc[0]["HQ_PDF_File_Path"])
+            # BUG --> Not working Export to Server
             BB_Invoice_PDF.output(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{BB_Number}.pdf")
         else:
             Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
