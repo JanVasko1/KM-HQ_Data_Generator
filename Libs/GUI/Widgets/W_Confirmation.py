@@ -66,6 +66,41 @@ def PO_CON_Number(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
 
     return Frame_Main
 
+def PO_Generation_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Generation_Date_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Method"]
+    Generation_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Methods_List"])
+    Gen_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Fixed_Options"]["Fix_Date"]
+
+    Generation_Date_Method_Variable = StringVar(master=Frame, value=Generation_Date_Method, name="Generation_Date_Method_Variable")
+    # ------------------------- Local Functions -------------------------#
+    # TODO --> Blocking Fields
+    # ------------------------- Main Functions -------------------------#
+    # Frame - General
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Generation Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Date of generation Confirmation.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Body = Frame_Main.children["!ctkframe2"]
+
+    # Field - Confirmation Date
+    Generation_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
+    Generation_Date_Method_Frame_Var = Generation_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    Generation_Date_Method_Frame_Var.configure(variable=Generation_Date_Method_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Generation_Date_Method_Frame_Var, values=Generation_Date_Method_List, command=lambda Generation_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Generation_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Generation_Date", "Method"], Information=Generation_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+    # Field - Fixed Date
+    Gen_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    Gen_Fixed_Date_Frame_Var = Gen_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Button_Gen_Fixed_Date_Frame_Var = Gen_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
+    Gen_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
+    Gen_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Generation_Date", "Fixed_Options", "Fix_Date"], Information=Gen_Fixed_Date_Frame_Var.get()))
+    Button_Gen_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Gen_Fixed_Date_Frame_Var, Clicked_on_Button=Button_Gen_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
+    Entry_field_Insert(Field=Gen_Fixed_Date_Frame_Var, Value=Gen_Fix_Date)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Gen_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
+
+    # Build look of Widget
+    Frame_Main.pack(side="top", padx=15, pady=15)
+
+    return Frame_Main
+
 def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Currency_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Method"]
@@ -145,7 +180,7 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
 
     return Frame_Main
 
-def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     ATP_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Use"]
     ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
@@ -155,14 +190,6 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: i
 
     ATP_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Method"]
     ATP_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Methods_List"])
-
-    ATP_Interval_ONH_From = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONH"]["From"]
-    ATP_Interval_ONH_To = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONH"]["To"]
-    ATP_Interval_ONB_From = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["From"]
-    ATP_Interval_ONB_To = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["To"]
-
-    ATP_ONH_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
-    ATP_ONB_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
 
     ATP_Enabled_Variable = BooleanVar(master=Frame, value=ATP_Enabled, name="ATP_Enabled_Variable")
     ATP_Quantity_Method_Variable = StringVar(master=Frame, value=ATP_Quantity_Method, name="ATP_Quantity_Method_Variable")
@@ -186,14 +213,6 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: i
     ATP_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Max_ATP_Records"], Information=int(ATP_Max_Frame_Var.get())))
     Entry_field_Insert(Field=ATP_Max_Frame_Var, Value=ATP_Max_Records)
 
-    # Field - Quantities Methods
-    ATP_QTY_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity Method", Field_Type="Input_OptionMenu") 
-    ATP_QTY_Method_Frame_Var = ATP_QTY_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    ATP_QTY_Method_Frame_Var.configure(variable=ATP_Quantity_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # TODO --> Quantity Distribution Percentage --> somyslet jak to ukázat v DB
-
     # Field - Dates Methods
     ATP_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date Method", Field_Type="Input_OptionMenu") 
     ATP_Date_Method_Frame_Var = ATP_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
@@ -201,7 +220,71 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: i
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_Date_Method_Frame_Var, values=ATP_Dates_Method_List, command=lambda ATP_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Method"], Information=ATP_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Dates", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity", Label_Size="Field_Label" , Font_Size="Section_Separator")
+
+    # Field - Quantities Methods
+    ATP_QTY_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity Method", Field_Type="Input_OptionMenu") 
+    ATP_QTY_Method_Frame_Var = ATP_QTY_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    ATP_QTY_Method_Frame_Var.configure(variable=ATP_Quantity_Method_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+    # Build look of Widget
+    Frame_Main.pack(side="top", padx=15, pady=15)
+
+    return Frame_Main
+
+def PO_ATP_Quantity_Distribution(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ---------------------------- Defaults ----------------------------#
+    ONH_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["ONH"]
+    ONB_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["ONB"]
+    BACK_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["BACK"]
+    # ------------------------- Local Functions -------------------------#
+    # TODO --> Blocking Fields
+    # ------------------------- Main Functions -------------------------#
+    # Frame - General
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Quantity distribution", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to Quantity distribution between each state.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Body = Frame_Main.children["!ctkframe2"]
+
+    # Field - ATP Distribution ONH
+    ONH_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH dist. %", Field_Type="Input_Normal", Validation="Integer") 
+    ONH_Distr_Frame_Var = ONH_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
+    ONH_Distr_Frame_Var.configure(placeholder_text="OnHand %", placeholder_text_color="#949A9F")
+    ONH_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "ONH"], Information=int(ONH_Distr_Frame_Var.get())))
+    Entry_field_Insert(Field=ONH_Distr_Frame_Var, Value=ONH_Distr_percentage)
+   
+    # Field - ATP Distribution ONB
+    ONB_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB dist. %", Field_Type="Input_Normal", Validation="Integer") 
+    ONB_Distr_Frame_Var = ONB_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
+    ONB_Distr_Frame_Var.configure(placeholder_text="OnBoard %", placeholder_text_color="#949A9F")
+    ONB_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "ONB"], Information=int(ONB_Distr_Frame_Var.get())))
+    Entry_field_Insert(Field=ONB_Distr_Frame_Var, Value=ONB_Distr_percentage)
+       
+    # Field - ATP Distribution BACK
+    BACK_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="BACK dist. %", Field_Type="Input_Normal", Validation="Integer") 
+    BACK_Distr_Frame_Var = BACK_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
+    BACK_Distr_Frame_Var.configure(placeholder_text="BackOrder %", placeholder_text_color="#949A9F")
+    BACK_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "BACK"], Information=int(BACK_Distr_Frame_Var.get())))
+    Entry_field_Insert(Field=BACK_Distr_Frame_Var, Value=BACK_Distr_percentage)
+
+
+
+    # Build look of Widget
+    Frame_Main.pack(side="top", padx=15, pady=15)
+
+    return Frame_Main
+
+
+def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ---------------------------- Defaults ----------------------------#
+    ATP_ONH_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
+    ATP_ONB_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
+
+    # ------------------------- Local Functions -------------------------#
+    # TODO --> Blocking Fields
+    # ------------------------- Main Functions -------------------------#
+    # Frame - General
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Fixed Dates", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will delivery Fixed Dates.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - On-Hand Date
     Man_ONH_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH Date", Field_Type="Entry_DropDown", Validation="Date") 
@@ -223,8 +306,24 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: i
     Entry_field_Insert(Field=Man_ONB_Date_Frame_Var, Value=ATP_ONB_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONB_Date_Frame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Interval Dates", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    # Build look of Widget
+    Frame_Main.pack(side="top", padx=15, pady=15)
+
+    return Frame_Main
+
+def PO_ATP_Interval_Dates(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ---------------------------- Defaults ----------------------------#
+    ATP_Interval_ONH_From = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONH"]["From"]
+    ATP_Interval_ONH_To = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONH"]["To"]
+    ATP_Interval_ONB_From = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["From"]
+    ATP_Interval_ONB_To = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["To"]
+
+    # ------------------------- Local Functions -------------------------#
+    # TODO --> Blocking Fields
+    # ------------------------- Main Functions -------------------------#
+    # Frame - General
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Interval Dates", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will delivery Interval Dates.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - ONH - From CD + Entry Field
     ATP_Interval_ONH_From_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH - From CD +", Field_Type="Input_Normal", Validation="Integer") 
@@ -262,22 +361,22 @@ def PO_ATP(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: i
 
 def PO_Items_Free_Method(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Free_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Method"]
-    Free_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Methods_List"])
+    Free_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Method"]
+    Free_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Methods_List"])
     
     Free_Method_Variable = StringVar(master=Frame, value=Free_Method, name="Free_Method_Variable")
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="ATP", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will work on ATP for each line.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Free of Charge", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will treat Free of Charge Items for Confirmation.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Price Method
     Free_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
     Free_Method_Frame_Var = Free_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     Free_Method_Frame_Var.configure(variable=Free_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Free_Method_Frame_Var, values=Free_Method_List, command=lambda Free_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Free_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Method"], Information=Free_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Free_Method_Frame_Var, values=Free_Method_List, command=lambda Free_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Free_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Method"], Information=Free_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -286,10 +385,10 @@ def PO_Items_Free_Method(Settings: dict, Configuration: dict, Frame: CTkFrame, G
 
 def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Cable_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Number"]
-    Cable_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Description"]
-    Cable_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["QTY_per_Machine"]
-    Cable_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Price"]
+    Cable_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Number"]
+    Cable_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Description"]
+    Cable_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["QTY_per_Machine"]
+    Cable_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Price"]
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
@@ -301,28 +400,28 @@ def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTkFrame, GU
     Cable_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Number", Field_Type="Input_Normal") 
     Cable_Number_Frame_Var = Cable_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
     Cable_Number_Frame_Var.configure(placeholder_text="Cable number", placeholder_text_color="#949A9F")
-    Cable_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Cable", "Number"], Information=Cable_Number_Frame_Var.get()))
+    Cable_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Cable", "Number"], Information=Cable_Number_Frame_Var.get()))
     Entry_field_Insert(Field=Cable_Number_Frame_Var, Value=Cable_Number)
 
     # Field - Cable Description
     Cable_Description_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Description", Field_Type="Input_Normal") 
     Cable_Description_Frame_Var = Cable_Description_Frame.children["!ctkframe3"].children["!ctkentry"]
     Cable_Description_Frame_Var.configure(placeholder_text="Cable Description", placeholder_text_color="#949A9F")
-    Cable_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Cable", "Description"], Information=Cable_Description_Frame_Var.get()))
+    Cable_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Cable", "Description"], Information=Cable_Description_Frame_Var.get()))
     Entry_field_Insert(Field=Cable_Description_Frame_Var, Value=Cable_Description)
 
     # Field - Cable QTY_per_Machine
     Cable_QTY_per_Machine_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="QTY per Machine", Field_Type="Input_Normal", Validation="Integer") 
     Cable_QTY_per_Machine_Frame_Var = Cable_QTY_per_Machine_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Cable_QTY_per_Machine_Frame_Var.configure(placeholder_text="Cable QTY_per_Machine", placeholder_text_color="#949A9F")
-    Cable_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Cable", "QTY_per_Machine"], Information=int(Cable_QTY_per_Machine_Frame_Var.get())))
+    Cable_QTY_per_Machine_Frame_Var.configure(placeholder_text="Cable QTY per Machine", placeholder_text_color="#949A9F")
+    Cable_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Cable", "QTY_per_Machine"], Information=int(Cable_QTY_per_Machine_Frame_Var.get())))
     Entry_field_Insert(Field=Cable_QTY_per_Machine_Frame_Var, Value=Cable_QTY_per_Machine)
 
     # Field - Cable Price
     Cable_Price_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Price", Field_Type="Input_Normal", Validation="Integer") 
     Cable_Price_Frame_Var = Cable_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
     Cable_Price_Frame_Var.configure(placeholder_text="Cable Price", placeholder_text_color="#949A9F")
-    Cable_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Cable", "Price"], Information=int(Cable_Price_Frame_Var.get())))
+    Cable_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Cable", "Price"], Information=int(Cable_Price_Frame_Var.get())))
     Entry_field_Insert(Field=Cable_Price_Frame_Var, Value=Cable_Price)
 
     # Build look of Widget
@@ -332,10 +431,10 @@ def PO_Items_Free_Cable(Settings: dict, Configuration: dict, Frame: CTkFrame, GU
 
 def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Documentation_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Number"]
-    Documentation_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Description"]
-    Documentation_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["QTY_per_Machine"]
-    Documentation_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Price"]
+    Documentation_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Number"]
+    Documentation_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Description"]
+    Documentation_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["QTY_per_Machine"]
+    Documentation_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Price"]
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
@@ -347,28 +446,28 @@ def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTkF
     Documentation_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Number", Field_Type="Input_Normal") 
     Documentation_Number_Frame_Var = Documentation_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
     Documentation_Number_Frame_Var.configure(placeholder_text="Documentation number", placeholder_text_color="#949A9F")
-    Documentation_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Documentation", "Number"], Information=Documentation_Number_Frame_Var.get()))
+    Documentation_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Documentation", "Number"], Information=Documentation_Number_Frame_Var.get()))
     Entry_field_Insert(Field=Documentation_Number_Frame_Var, Value=Documentation_Number)
 
     # Field - Documentation Description
     Documentation_Description_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Description", Field_Type="Input_Normal") 
     Documentation_Description_Frame_Var = Documentation_Description_Frame.children["!ctkframe3"].children["!ctkentry"]
     Documentation_Description_Frame_Var.configure(placeholder_text="Documentation Description", placeholder_text_color="#949A9F")
-    Documentation_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Documentation", "Description"], Information=Documentation_Description_Frame_Var.get()))
+    Documentation_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Documentation", "Description"], Information=Documentation_Description_Frame_Var.get()))
     Entry_field_Insert(Field=Documentation_Description_Frame_Var, Value=Documentation_Description)
 
     # Field - Documentation QTY_per_Machine
     Documentation_QTY_per_Machine_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="QTY per Machine", Field_Type="Input_Normal", Validation="Integer") 
     Documentation_QTY_per_Machine_Frame_Var = Documentation_QTY_per_Machine_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Documentation_QTY_per_Machine_Frame_Var.configure(placeholder_text="Documentation QTY_per_Machine", placeholder_text_color="#949A9F")
-    Documentation_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Documentation", "QTY_per_Machine"], Information=int(Documentation_QTY_per_Machine_Frame_Var.get())))
+    Documentation_QTY_per_Machine_Frame_Var.configure(placeholder_text="Documentation QTY per Machine", placeholder_text_color="#949A9F")
+    Documentation_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Documentation", "QTY_per_Machine"], Information=int(Documentation_QTY_per_Machine_Frame_Var.get())))
     Entry_field_Insert(Field=Documentation_QTY_per_Machine_Frame_Var, Value=Documentation_QTY_per_Machine)
 
     # Field - Documentation Price
     Documentation_Price_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Price", Field_Type="Input_Normal", Validation="Integer") 
     Documentation_Price_Frame_Var = Documentation_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
     Documentation_Price_Frame_Var.configure(placeholder_text="Documentation Price", placeholder_text_color="#949A9F")
-    Documentation_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Documentation", "Price"], Information=int(Documentation_Price_Frame_Var.get())))
+    Documentation_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Documentation", "Price"], Information=int(Documentation_Price_Frame_Var.get())))
     Entry_field_Insert(Field=Documentation_Price_Frame_Var, Value=Documentation_Price)
 
     # Build look of Widget
@@ -379,10 +478,10 @@ def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTkF
 
 def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Others_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Number"]
-    Others_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Description"]
-    Others_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["QTY_per_Machine"]
-    Others_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Application_Items"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Price"]
+    Others_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Number"]
+    Others_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Description"]
+    Others_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["QTY_per_Machine"]
+    Others_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Price"]
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
@@ -394,28 +493,28 @@ def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTkFrame, GU
     Others_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Number", Field_Type="Input_Normal") 
     Others_Number_Frame_Var = Others_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
     Others_Number_Frame_Var.configure(placeholder_text="Others number", placeholder_text_color="#949A9F")
-    Others_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Others", "Number"], Information=Others_Number_Frame_Var.get()))
+    Others_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Number"], Information=Others_Number_Frame_Var.get()))
     Entry_field_Insert(Field=Others_Number_Frame_Var, Value=Others_Number)
 
     # Field - Others Description
     Others_Description_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Description", Field_Type="Input_Normal") 
     Others_Description_Frame_Var = Others_Description_Frame.children["!ctkframe3"].children["!ctkentry"]
     Others_Description_Frame_Var.configure(placeholder_text="Others Description", placeholder_text_color="#949A9F")
-    Others_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Others", "Description"], Information=Others_Description_Frame_Var.get()))
+    Others_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Description"], Information=Others_Description_Frame_Var.get()))
     Entry_field_Insert(Field=Others_Description_Frame_Var, Value=Others_Description)
 
     # Field - Others QTY_per_Machine
     Others_QTY_per_Machine_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="QTY per Machine", Field_Type="Input_Normal", Validation="Integer") 
     Others_QTY_per_Machine_Frame_Var = Others_QTY_per_Machine_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Others_QTY_per_Machine_Frame_Var.configure(placeholder_text="Others QTY_per_Machine", placeholder_text_color="#949A9F")
-    Others_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Others", "QTY_per_Machine"], Information=int(Others_QTY_per_Machine_Frame_Var.get())))
+    Others_QTY_per_Machine_Frame_Var.configure(placeholder_text="Others QTY per Machine", placeholder_text_color="#949A9F")
+    Others_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "QTY_per_Machine"], Information=int(Others_QTY_per_Machine_Frame_Var.get())))
     Entry_field_Insert(Field=Others_QTY_per_Machine_Frame_Var, Value=Others_QTY_per_Machine)
 
     # Field - Others Price
     Others_Price_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Price", Field_Type="Input_Normal", Validation="Integer") 
     Others_Price_Frame_Var = Others_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
     Others_Price_Frame_Var.configure(placeholder_text="Others Price", placeholder_text_color="#949A9F")
-    Others_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Application_Items", "Free_Of_Charge", "Fixed_Options", "Others", "Price"], Information=int(Others_Price_Frame_Var.get())))
+    Others_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Price"], Information=int(Others_Price_Frame_Var.get())))
     Entry_field_Insert(Field=Others_Price_Frame_Var, Value=Others_Price)
 
     # Build look of Widget

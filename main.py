@@ -1,5 +1,6 @@
 # TODO --> When anything manually saved to Settings must delete actual template value from Header
 # TODO --> When Template Applied must be updated actual page
+# BUG --> sometimes it happends that "destroy for c in list(self.children.values()): c.destroy()" -- když přepínám Page
 
 # Import Libraries
 import os
@@ -12,6 +13,7 @@ import Libs.GUI.Pages.P_Side_Bar as P_Side_Bar
 import Libs.GUI.Elements as Elements
 
 import Libs.Defaults_Lists as Defaults_Lists
+import Libs.File_Manipulation as File_Manipulation
 import Libs.Data_Functions as Data_Functions
 
 class Win(CTk):
@@ -53,10 +55,8 @@ class Win(CTk):
 
 if __name__ == "__main__":
     deactivate_automatic_dpi_awareness()
-    Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
     Documents = Defaults_Lists.Load_Documents() 
-
     # Create folders if do not exists
     try:
         os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
@@ -64,7 +64,18 @@ if __name__ == "__main__":
     except:
         pass
 
-    # Delete Operational data from SEttings
+    # Copy Default Templates
+    try:
+        File_Manipulation.Copy_All_File(Configuration=Configuration, 
+                                        Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\"), 
+                                        Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"), 
+                                        include_hidden=True)
+    except:
+        pass
+
+    Settings = Defaults_Lists.Load_Settings()   # Must be after default templates are copied 
+
+    # Delete Operational data from Settings
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
@@ -74,13 +85,6 @@ if __name__ == "__main__":
 
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
-
-    # Create folders if do not exists
-    try:
-        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
-        os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"))
-    except:
-        pass
 
     window = Win()
     

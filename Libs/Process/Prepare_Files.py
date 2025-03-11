@@ -39,43 +39,76 @@ def Process_Purchase_Orders(Settings: dict,
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
 
     # Generate Purchase Order List
+    Purchase_Orders_List = Purchase_Headers_df["No"].to_list()
 
-    if Generate_Confirmation == True:
-        print("Process_Confirmation")
-    else:
-        pass
+    for Purchase_Order in Purchase_Orders_List:
+        if Generate_Confirmation == True:
+            import Libs.Process.Purchase_Orders.PO_CON_Header_Generator as PO_CON_Header_Generator
+            import Libs.Process.Purchase_Orders.PO_CON_Lines_Generator as PO_CON_Lines_Generator
+            import Libs.Process.Purchase_Orders.PO_CON_ATP_Generator as PO_CON_ATP_Generator
 
-    if Generate_CPDI == True:
-        # TIP --> Pozor na situaci, kdy CPDI bude generované v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
-        print("Process_CPDI")
-    else:
-        pass
+            # Header
+            PO_Confirmation_Header = PO_CON_Header_Generator.Generate_PO_CON_Header(Settings=Settings, 
+                                                                                    Configuration=Configuration, 
+                                                                                    window=window,
+                                                                                    Purchase_Order=Purchase_Order,
+                                                                                    Purchase_Headers_df=Purchase_Headers_df,
+                                                                                    Company_Information_df=Company_Information_df, 
+                                                                                    HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
+                                                                                    HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
+            
+            # Lines
+            PO_CON_Lines_Generator.Generate_PO_CON_Lines(Settings=Settings, 
+                                                         Configuration=Configuration, 
+                                                         window=window,
+                                                         Purchase_Order=Purchase_Order,
+                                                         Purchase_Lines_df=Purchase_Lines_df,
+                                                         HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
+                                                         Items_df=Items_df,
+                                                         Items_BOMs_df=Items_BOMs_df, 
+                                                         Items_Substitutions_df=Items_Substitutions_df, 
+                                                         Items_Connected_Items_df=Items_Connected_Items_df, 
+                                                         Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
+                                                         Items_Tracking_df=Items_Tracking_df, 
+                                                         Items_UoM_df=Items_UoM_df,
+                                                         UoM_df=UoM_df)
 
-    if Generate_PreAdvice == True:
-        # TIP --> Pozor na situaci, kdy Preadvice bude generované v jiném běhu než Confirmation / Delivery --> pak by se měl program zeptat na základě čeho chceme PreAdvice dělat
-        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
-        print("Process_PreAdvice")
-    else:
-        pass
+            # ATP
 
-    if Generate_Delivery == True:
-        # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
-        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
-        print("Process_Delivery")
-    else:
-        pass
+        else:
+            pass
 
-    if Generate_Invoice == True:
-        # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Invoice dělat
-        # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
-        print("Process_Invoice")
-    else:
-        pass
+        if Generate_CPDI == True:
+            # TIP --> Pozor na situaci, kdy CPDI bude generované v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
+            print("Process_CPDI")
+        else:
+            pass
 
-    if Generate_Invoice_PDF == True:
-        print("Generate_Invoice_PDF")
-    else:
-        pass
+        if Generate_PreAdvice == True:
+            # TIP --> Pozor na situaci, kdy Preadvice bude generované v jiném běhu než Confirmation / Delivery --> pak by se měl program zeptat na základě čeho chceme PreAdvice dělat
+            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
+            print("Process_PreAdvice")
+        else:
+            pass
+
+        if Generate_Delivery == True:
+            # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
+            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
+            print("Process_Delivery")
+        else:
+            pass
+
+        if Generate_Invoice == True:
+            # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Invoice dělat
+            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
+            print("Process_Invoice")
+        else:
+            pass
+
+        if Generate_Invoice_PDF == True:
+            print("Generate_Invoice_PDF")
+        else:
+            pass
 
 def Process_BackBoneBilling(Settings: dict, 
                             Configuration: dict,
@@ -99,11 +132,13 @@ def Process_BackBoneBilling(Settings: dict,
         import Libs.Process.BackBone_Billing.BB_Header_Generator as BB_Header_Generator
         import Libs.Process.BackBone_Billing.BB_Lines_Generator as BB_Lines_Generator
 
-        BB_Invoice, BB_Number, BB_Invoice_Date, BB_Order_ID, BB_supplier_order_id, BB_Order_Date = BB_Header_Generator.Generate_BB_Header(Settings=Settings, 
-                                                                                                                                        Configuration=Configuration, 
-                                                                                                                                        window=window, 
-                                                                                                                                        Company_Information_df=Company_Information_df, 
-                                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df)
+        # Header
+        BB_Invoice, BB_Number, BB_Order_ID, BB_supplier_order_id, BB_Order_Date = BB_Header_Generator.Generate_BB_Header(Settings=Settings, 
+                                                                                                                        Configuration=Configuration, 
+                                                                                                                        window=window, 
+                                                                                                                        Company_Information_df=Company_Information_df, 
+                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df)
+# Lines
         BB_Invoice_Lines, Lines_No, Total_Line_Amount, Table_Data = BB_Lines_Generator.Generate_BB_Lines(Settings=Settings, 
                                                                                                             Configuration=Configuration, 
                                                                                                             window=window, 
@@ -112,7 +147,6 @@ def Process_BackBoneBilling(Settings: dict,
                                                                                                             Country_ISO_Code_list=Country_ISO_Code_list,
                                                                                                             Tariff_Number_list=Tariff_Number_list,
                                                                                                             BB_Number=BB_Number, 
-                                                                                                            BB_Invoice_Date=BB_Invoice_Date, 
                                                                                                             BB_Order_ID=BB_Order_ID, 
                                                                                                             BB_supplier_order_id=BB_supplier_order_id,
                                                                                                             BB_Order_Date=BB_Order_Date)
@@ -157,7 +191,7 @@ def Process_BackBoneBilling(Settings: dict,
             BB_Invoice_PDF.output(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{BB_Number}.pdf")
         else:
             Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
-            BB_Invoice_PDF.output(f"{Export_Folder_Path}\{BB_Number}.pdf")
+            BB_Invoice_PDF.output(f"{Export_Folder_Path}\\{BB_Number}.pdf")
     else:
         pass
 

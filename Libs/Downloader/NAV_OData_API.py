@@ -4,8 +4,7 @@ import requests
 import json
 
 import Libs.GUI.Elements as Elements
-
-# TODO --> if empty return DataFrames (if empty)
+import Libs.Pandas_Functions as Pandas_Functions
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
 def Get_Params(fields_list_string: str, filters_list_string: str) -> dict:
@@ -98,9 +97,8 @@ def Get_HQ_Testing_Logistic_Process_list(Configuration: dict, headers: dict, ten
 
     return Process_Code_List
 
-
 # ------------------- HQ_Testing_Purchase_Headers ------------------- #
-def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list, Logistic_Process_Filter: str):
+def Get_Purchase_Headers_list(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Document_Type: str, HQ_Vendors_list: list, Logistic_Process_Filter: str):
     # Fields
     fields_list = ["No"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -133,7 +131,7 @@ def Get_Purchase_Headers_list_df(Configuration: dict, headers: dict, tenant_id: 
 
 def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, HQ_Vendors_list: list):
     # Fields
-    fields_list = ["No", "Buy_from_Vendor_No", "HQ_Identification_No_NUS", "ShippingConditionFieldNUS", "CompleteDeliveryFieldNUS", "PDICenterFieldNUS", "HQCPDILevelRequestedFieldNUS", "Expected_Receipt_Date", "Promised_Receipt_Date", "Requested_Receipt_Date", "Order_Date"]
+    fields_list = ["No", "Buy_from_Vendor_No", "HQ_Identification_No_NUS", "ShippingConditionFieldNUS", "CompleteDeliveryFieldNUS", "PDICenterFieldNUS", "HQCPDILevelRequestedFieldNUS", "Expected_Receipt_Date", "Promised_Receipt_Date", "Requested_Receipt_Date", "Order_Date", "Currency_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Prepare DataFrame
@@ -148,6 +146,7 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
     Promised_Receipt_Date_list = []
     Requested_Receipt_Date_list = []
     Order_Date_list = []
+    Currency_Code_list = []
 
     Non_HQ_Orders = []
     Non_HQ_Vendors = []
@@ -175,6 +174,7 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
                 Promised_Receipt_Date_list.append(response_values_List[index]["Promised_Receipt_Date"])
                 Requested_Receipt_Date_list.append(response_values_List[index]["Requested_Receipt_Date"])
                 Order_Date_list.append(response_values_List[index]["Order_Date"])
+                Currency_Code_list.append(response_values_List[index]["Currency_Code"])
             else:
                 Non_HQ_Orders.append(response_values_List[index]["No"])
                 Non_HQ_Vendors.append(response_values_List[index]["Buy_from_Vendor_No"])
@@ -190,12 +190,14 @@ def Get_Purchase_Headers_info_df(Configuration: dict, headers: dict, tenant_id: 
         "Expected_Receipt_Date": Expected_Receipt_Date_list,
         "Promised_Receipt_Date": Promised_Receipt_Date_list,
         "Requested_Receipt_Date": Requested_Receipt_Date_list,
-        "Order_Date": Order_Date_list}
+        "Order_Date": Order_Date_list,
+        "Currency_Code": Currency_Code_list}
 
     if len(response_values_dict) == 1:
         Purchase_Headers_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Purchase_Headers_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Purchase_Headers_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Purchase_Headers_df, Columns_list=["No"], Accenting_list=[True]) 
 
     # Non-HQ Purchase Orders Message
     if len(Non_HQ_Orders) > 0:
@@ -260,6 +262,7 @@ def Get_Purchase_Lines_df(Configuration: dict, headers: dict, tenant_id: str, NU
         Purchase_Lines_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Purchase_Lines_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Purchase_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Purchase_Lines_df, Columns_list=["Document_No", "Line_No"], Accenting_list=[True, True]) 
 
     Items_list = list(set(No_list))
     return Purchase_Lines_df, Items_list
@@ -422,7 +425,7 @@ def Get_CPDI_Status_list(Configuration: dict, headers: dict, tenant_id: str, NUS
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
 def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: list):
     # Fields
-    fields_list = ["Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
+    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -437,6 +440,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
     response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Item_Transport_Register")
 
     # Prepare DataFrame
+    Register_No_list = []
     Document_Type_list = []
     Document_No_list = []
     Document_Line_No_list = []
@@ -450,6 +454,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
     Order_Date_list = []
 
     for index in range(0, list_len):
+        Register_No_list.append(response_values_List[index]["Register_No"])
         Document_Type_list.append(response_values_List[index]["Document_Type"])
         Document_No_list.append(response_values_List[index]["Document_No"])
         Document_Line_No_list.append(response_values_List[index]["Document_Line_No"])
@@ -463,6 +468,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         Order_Date_list.append(response_values_List[index]["Order_Date"])
 
     response_values_dict = {
+        "Register_No": Register_No_list,
         "Document_Type": Document_Type_list,
         "Document_No": Document_No_list,
         "Document_Line_No": Document_Line_No_list,
@@ -479,6 +485,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         HQ_Item_Transport_Register_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         HQ_Item_Transport_Register_df = DataFrame(data=response_values_dict, columns=fields_list)
+    HQ_Item_Transport_Register_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=HQ_Item_Transport_Register_df, Columns_list=["Register_No"], Accenting_list=[True]) 
 
     # Final check non downloaded Purchase Orders list --> not exported
     Non_Exported_Purchase_Orders = []
@@ -494,7 +501,6 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         pass
         
     return HQ_Item_Transport_Register_df
-
 
 # ------------------- HQ_Testing_Items ------------------- #
 def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list):
@@ -554,6 +560,7 @@ def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version
         Items_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_df, Columns_list=["No"], Accenting_list=[True]) 
 
     # Substitutions list
     mask_substitution = Items_df["Substitutes_Exist_NUS"] == True
@@ -621,6 +628,7 @@ def Get_Items_BOM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_ver
         Items_BOMs_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_BOMs_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_BOMs_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_BOMs_df, Columns_list=["Parent_Item_No_NUS", "Line_No"], Accenting_list=[True, True]) 
     
     # Update Item list for new Items + Gent Items 
     No_list = list(set(No_list))
@@ -667,6 +675,7 @@ def Get_Items_Substitutions_df(Configuration: dict, headers: dict, tenant_id: st
         Items_Substitutions_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_Substitutions_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_Substitutions_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_Substitutions_df, Columns_list=["No"], Accenting_list=[True]) 
     
     # Update Item list for new Items + Gent Items 
     Substitute_No_list = list(set(Substitute_No_list))
@@ -721,6 +730,7 @@ def Get_Items_Connected_Items_df(Configuration: dict, headers: dict, tenant_id: 
         Items_Connected_Items_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_Connected_Items_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_Connected_Items_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_Connected_Items_df, Columns_list=["Main_Item_No", "No"], Accenting_list=[True, True]) 
     
     # Update Item list for new Items + Gent Items 
     No_list = list(set(No_list))
@@ -762,6 +772,7 @@ def Get_Items_Price_Lists_df(Configuration: dict, headers: dict, tenant_id: str,
         Active_Price_Lists_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Active_Price_Lists_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Active_Price_Lists_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Active_Price_Lists_df, Columns_list=["Code"], Accenting_list=[True]) 
     
     # BEU Price List Code
     BEU_Price_list = []
@@ -828,6 +839,7 @@ def Get_Items_Price_List_detail_df(Configuration: dict, headers: dict, tenant_id
         Items_Price_List_Detail_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_Price_List_Detail_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_Price_List_Detail_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_Price_List_Detail_df, Columns_list=["Price_List_Code", "Asset_No"], Accenting_list=[True, True]) 
 
     return Items_Price_List_Detail_df 
 
@@ -862,6 +874,8 @@ def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: s
         Items_Tracking_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_Tracking_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_Tracking_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_Tracking_df, Columns_list=["Code"], Accenting_list=[True]) 
+
     return Items_Tracking_df
 
 # ------------------- HQ_Testing_Items_UoM ------------------- #
@@ -901,6 +915,8 @@ def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_ver
         Items_UoM_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Items_UoM_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_UoM_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_UoM_df, Columns_list=["Item_No", "Code"], Accenting_list=[True, True]) 
+
     return Items_UoM_df
 
 # ------------------- HQ_Testing_NVR_FS_Connect ------------------- #
@@ -969,6 +985,8 @@ def Get_Plants_df(Configuration: dict, headers: dict, tenant_id: str, NUS_versio
         Plants_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Plants_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Plants_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Plants_df, Columns_list=["Code"], Accenting_list=[True]) 
+
     return Plants_df
 
 # ------------------- HQ_Testing_Shipment_Method ------------------- #
@@ -1068,6 +1086,8 @@ def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: 
         UoM_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         UoM_df = DataFrame(data=response_values_dict, columns=fields_list)
+    UoM_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=UoM_df, Columns_list=["Code"], Accenting_list=[True]) 
+
     return UoM_df
 
 # ------------------- HQ_Testing_Vendor_Service_Functions ------------------- #
@@ -1103,4 +1123,6 @@ def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_i
         Vendor_Service_Functions_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
     else:
         Vendor_Service_Functions_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Vendor_Service_Functions_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Vendor_Service_Functions_df, Columns_list=["Vendor_No"], Accenting_list=[True]) 
+
     return Vendor_Service_Functions_df

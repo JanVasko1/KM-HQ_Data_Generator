@@ -1,5 +1,4 @@
 # Import Libraries
-import json
 from pandas import DataFrame
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -12,11 +11,7 @@ import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
 
-def Generate_BB_Header(Settings: dict, 
-                       Configuration: dict, 
-                       window: CTk, 
-                       Company_Information_df: DataFrame, 
-                       HQ_Communication_Setup_df: DataFrame) -> json:
+def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     BB_Invoice_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="BB_Invoice_Header")
@@ -53,7 +48,7 @@ def Generate_BB_Header(Settings: dict,
             BB_Number = BB_Automatic_Prefix + Today_str
         elif BB_Numbers_Method == "Prompt":
             def Select_BB_Number(Prompt_Number_Frame: CTkFrame):
-                Invoice_Number_Var =  Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
+                Invoice_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
                 BB_Number = Invoice_Number_Var.get()
                 BB_Number_Variable.set(value=BB_Number)
                 BB_Number_Window.destroy()
@@ -209,4 +204,4 @@ def Generate_BB_Header(Settings: dict,
     else:
         pass
 
-    return BB_Invoice_Header, BB_Number, BB_Invoice_Date, BB_Order_ID, BB_supplier_order_id, BB_Order_Date
+    return BB_Invoice_Header, BB_Number, BB_Order_ID, BB_supplier_order_id, BB_Order_Date

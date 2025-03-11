@@ -15,6 +15,7 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     TabView.pack_propagate(flag=False)
     Tab_PO = TabView.add("Purchase Order")
     Tab_Free = TabView.add("Purchase Order - Free of Charge")
+    Tab_ATP = TabView.add("Purchase Order - ATP")
     Tab_PRO = TabView.add("Return Order")
     TabView.set("Purchase Order")
 
@@ -31,10 +32,10 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     
     PO_Number_Widget = W_Confirmation.PO_CON_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_Currency_Widget = W_Confirmation.PO_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_ATP_Widget = W_Confirmation.PO_ATP(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_Generation_Date_Widget = W_Confirmation.PO_Generation_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
-    # ---------- Purchase Return Order ---------- #
+    # ---------- Purchase Order Free Of Charge ---------- #
     Frame_FREE_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_FREE_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
@@ -42,6 +43,15 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     PO_Items_Free_Cable_Widget = W_Confirmation.PO_Items_Free_Cable(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
     PO_Items_Free_Documentation_Widget = W_Confirmation.PO_Items_Free_Documentation(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
     PO_Items_Free_Other_Widget = W_Confirmation.PO_Items_Free_Other(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_B, GUI_Level_ID=2)
+
+    # ---------- Purchase Order ATP ---------- #
+    Frame_ATP_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_ATP, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_ATP_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_ATP, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+
+    PO_ATP_General_Widget = W_Confirmation.PO_ATP_General(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
+    PO_ATP_Quantity_Distribution_Widget = W_Confirmation.PO_ATP_Quantity_Distribution(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
+    PO_ATP_Fixed_Dates_Widget = W_Confirmation.PO_ATP_Fixed_Dates(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
+    PO_ATP_Interval_Dates_Widget = W_Confirmation.PO_ATP_Interval_Dates(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
 
     # ---------- Purchase Return Order ---------- #
     Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PRO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
@@ -56,7 +66,7 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     PO_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Line_Flags_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_ATP_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Generation_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
     Frame_FREE_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_FREE_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
@@ -64,6 +74,13 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     PO_Items_Free_Cable_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Items_Free_Documentation_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Items_Free_Other_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+
+    Frame_ATP_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_ATP_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    PO_ATP_General_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_ATP_Quantity_Distribution_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_ATP_Fixed_Dates_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_ATP_Interval_Dates_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
     Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PRO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)

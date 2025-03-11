@@ -1,3 +1,9 @@
+### Contact
+**Author**: Jan Vaško<br>
+**Email**: Jan.Vasko@konicaminolta.eu<br>
+**Mobile**: +420 601 383 301<br>
+
+### Version List
 #### 0.1.1
 - Generate Invoice.json issue with lines Overwrite when transferring to json template from DataFrame
 

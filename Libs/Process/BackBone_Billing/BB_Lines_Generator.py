@@ -17,7 +17,6 @@ def Generate_BB_Lines(Settings: dict,
                       Country_ISO_Code_list: list,
                       Tariff_Number_list: list,
                       BB_Number: str, 
-                      BB_Invoice_Date: str, 
                       BB_Order_ID: str, 
                       BB_supplier_order_id: str,
                       BB_Order_Date: str) -> list:
@@ -118,7 +117,10 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
     
+    # Number of Lines in Document
     Lines_No = len(Lines_df)
 
     # --------------------------------------------- Quantity --------------------------------------------- #
@@ -180,6 +182,8 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
 
     # --------------------------------------------- Price --------------------------------------------- #
     if Can_Continue == True:
@@ -241,6 +245,8 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
 
     # --------------------------------------------- Price Line Amount --------------------------------------------- #
     Lines_df["price_line_amount"] = Lines_df["quantity"]*Lines_df["price_amount"]
@@ -312,6 +318,8 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
 
     # --------------------------------------------- Country of Origin --------------------------------------------- #
     if Can_Continue == True:
@@ -376,6 +384,8 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
 
     # --------------------------------------------- Tariff --------------------------------------------- #
     if Can_Continue == True:
@@ -440,6 +450,8 @@ def Generate_BB_Lines(Settings: dict,
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
+    else:
+        pass
 
     # --------------------------------------------- Apply Header information --------------------------------------------- #
     Lines_df["supplier_order_id"] = BB_supplier_order_id

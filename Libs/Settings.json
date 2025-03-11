@@ -2,8 +2,14 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "",
-                "Templates_List": []
+                "Last_Used": "JVA_TEst2",
+                "Templates_List": [
+                    "Default1",
+                    "Default2",
+                    "Default3",
+                    "Default4",
+                    "JVA_TEst2"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -53,7 +59,7 @@
                 "Purchase_Order": {
                     "Use": true,
                     "Number": {
-                        "Method": "Fixed",
+                        "Method": "Automatic",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -64,6 +70,17 @@
                         },
                         "Fixed_Options": {
                             "Number": "CON_JVA_001"
+                        }
+                    },
+                    "Generation_Date": {
+                        "Method": "Today",
+                        "Methods_List": [
+                            "Today",
+                            "Fixed",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_Date": "2025-03-10"
                         }
                     },
                     "Line_Flags": {
@@ -77,7 +94,7 @@
                         "Labels_always": true
                     },
                     "Prices": {
-                        "Method": "Prompt",
+                        "Method": "Purchase Line",
                         "Methods_List": [
                             "Prompt",
                             "Price List",
@@ -85,13 +102,13 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "Fixed",
+                        "Method": "Purchase Order",
                         "Methods_List": [
                             "Fixed",
-                            "Purchase Line"
+                            "Purchase Order"
                         ],
                         "Fixed_Options": {
-                            "Fix_Currency": "EUR"
+                            "Fix_Currency": "RON"
                         }
                     },
                     "ATP": {
@@ -111,11 +128,11 @@
                                 "Line Random",
                                 "Random Distribution"
                             ],
-                            "Random_Distribution_Percentage": [
-                                80,
-                                15,
-                                5
-                            ]
+                            "Random_Distribution_Percentage": {
+                                "ONH": 80,
+                                "ONB": 15,
+                                "BACK": 5
+                            }
                         },
                         "Dates_Intervals": {
                             "Method": "Intervals",
@@ -139,33 +156,31 @@
                             }
                         }
                     },
-                    "Application_Items": {
-                        "Free_Of_Charge": {
-                            "Method": "Fixed",
-                            "Methods_List": [
-                                "Fixed",
-                                "Connected Items",
-                                "Prompt"
-                            ],
-                            "Fixed_Options": {
-                                "Cable": {
-                                    "Number": "Cable1",
-                                    "Description": "Kabel do 220V",
-                                    "QTY_per_Machine": 1,
-                                    "Price": 9
-                                },
-                                "Documentation": {
-                                    "Number": "Document1",
-                                    "Description": "C220i documentation",
-                                    "QTY_per_Machine": 1,
-                                    "Price": 2
-                                },
-                                "Others": {
-                                    "Number": "Sticker1",
-                                    "Description": "Nice C220i sticker",
-                                    "QTY_per_Machine": 1,
-                                    "Price": 1
-                                }
+                    "Free_Of_Charge": {
+                        "Method": "Fixed",
+                        "Methods_List": [
+                            "Fixed",
+                            "Connected Items",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Cable": {
+                                "Number": "Cable1",
+                                "Description": "Kabel do 220V",
+                                "QTY_per_Machine": 2,
+                                "Price": 7
+                            },
+                            "Documentation": {
+                                "Number": "Document1",
+                                "Description": "C220i documentation",
+                                "QTY_per_Machine": 1,
+                                "Price": 3
+                            },
+                            "Others": {
+                                "Number": "Sticker1",
+                                "Description": "Nice C220i sticker",
+                                "QTY_per_Machine": 3,
+                                "Price": 1
                             }
                         }
                     }
@@ -175,7 +190,7 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Method": "All",
                 "Methods_List": [
                     "All",
@@ -183,7 +198,7 @@
                 ]
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -205,7 +220,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
@@ -395,7 +410,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Prompt",
                         "Methods_List": [
@@ -488,7 +503,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
@@ -526,7 +541,7 @@
                         ]
                     },
                     "Prices": {
-                        "Method": "Fixed",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Prompt",
                             "Fixed"
@@ -572,7 +587,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -589,7 +604,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -597,7 +612,7 @@
                             "Empty"
                         ],
                         "Fixed_Options": {
-                            "Fix_Country_Of_Origin": "CZ"
+                            "Fix_Country_Of_Origin": "DE"
                         }
                     },
                     "Tariff": {

@@ -79,7 +79,7 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
+        Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
         if len(Purchase_Header_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
