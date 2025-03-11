@@ -410,7 +410,7 @@ def Generate_BB_Lines(Settings: dict,
                     try:
                         Value_Tariff = Value_CTkEntry.get()
                     except:
-                        Value_Tariff = "JP"
+                        Value_Tariff = ""
                     Tariff_list.append(Value_Tariff)
 
                 Lines_df["tariff_number"] = Tariff_list

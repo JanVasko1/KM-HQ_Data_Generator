@@ -1,5 +1,5 @@
 # Import Libraries
-from pandas import DataFrame, Series, to_datetime
+from pandas import DataFrame, Series, to_datetime, concat
 
 # --------------------------------------------- Pandas --------------------------------------------- #
 def PD_Column_to_DateTime(PD_DataFrame: DataFrame, Column: str, Covert_Format: str) -> DataFrame:
@@ -13,6 +13,10 @@ def Dataframe_sort(Sort_Dataframe: DataFrame, Columns_list: list, Accenting_list
     Sort_Dataframe.drop(labels=["index"], inplace=True, axis=1)
     return Sort_Dataframe
 
+def Dataframe_Filter_on_Multiple(Filter_df: DataFrame, Filter_Column: str, Filter_Values: list) -> DataFrame:
+    filtered_df = Filter_df[Filter_df[f"{Filter_Column}"].isin(Filter_Values)]
+    return filtered_df
+
 def Dataframe_Apply_Value(row: Series, Fill_Column: str, Compare_Column_df1: list, Compare_Column_df2: list, Search_df: DataFrame, Search_Column: str):
     conditions = [Search_df[Compare_Column_df2[index]] == row[Compare_Column_df1[index]] for index, value in enumerate(Compare_Column_df1)]
     combined_condition = Series([True] * len(Search_df))
@@ -23,3 +27,10 @@ def Dataframe_Apply_Value(row: Series, Fill_Column: str, Compare_Column_df1: lis
         return new_val[0]
     else:
         return row[f"{Fill_Column}"]
+    
+def Dataframe_Insert_Row_at_position(Insert_DataFrame: DataFrame, Insert_At_index: int, New_Row: dict):
+    # Insert the new row
+    df1 = Insert_DataFrame.iloc[:Insert_At_index]
+    df2 = Insert_DataFrame.iloc[Insert_At_index:]
+    new_df = concat([df1, DataFrame([New_Row]), df2]).reset_index(drop=True)
+    return new_df

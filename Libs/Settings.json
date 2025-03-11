@@ -75,12 +75,24 @@
                     "Generation_Date": {
                         "Method": "Today",
                         "Methods_List": [
-                            "Today",
                             "Fixed",
+                            "Today",
                             "Prompt"
                         ],
                         "Fixed_Options": {
                             "Fix_Date": "2025-03-10"
+                        }
+                    },
+                    "Unit_of_Measure": {
+                        "Method": "HQ Item Transport Export",
+                        "Methods_List": [
+                            "Fixed",
+                            "Purchase Line",
+                            "HQ Item Transport Export",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_UoM": "JVA"
                         }
                     },
                     "Line_Flags": {
@@ -91,14 +103,15 @@
                             "Random Finished",
                             "Prompt"
                         ],
-                        "Labels_always": true
+                        "Labels_always": true,
+                        "Item_EOL_Finish": true
                     },
                     "Prices": {
                         "Method": "Purchase Line",
                         "Methods_List": [
-                            "Prompt",
                             "Price List",
-                            "Purchase Line"
+                            "Purchase Line",
+                            "Prompt"
                         ]
                     },
                     "Currency": {

@@ -106,37 +106,37 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
     # Page - Download
     Icon_Frame_Download = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="cpu", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Download.configure(command = lambda: Show_Download_Page(Active_Window = Active_Window, Side_Bar_Row=0))    
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Download, message="Process.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Download, message="Process page", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Confirmation
     Icon_Frame_Confirmation = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Confirmation.configure(command = lambda: Show_Confirmation_Page(Active_Window = Active_Window, Side_Bar_Row=1))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Confirmation, message="Confirmation.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Confirmation, message="Confirmation setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - CPDI
     Icon_Frame_CPDI = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="wrench", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_CPDI.configure(command = lambda: Show_CPDI_Page(Active_Window = Active_Window, Side_Bar_Row=2))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_CPDI, message="CPDI.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_CPDI, message="CPDI setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - PreAdvice
     Icon_Frame_PreAdvice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-open", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_PreAdvice.configure(command = lambda: Show_PreAdvice_Page(Active_Window = Active_Window, Side_Bar_Row=3))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_PreAdvice, message="PreAdvice.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_PreAdvice, message="PreAdvice setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Delivery
     Icon_Frame_Delivery = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="package-check", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Delivery.configure(command = lambda: Show_Delivery_Page(Active_Window = Active_Window, Side_Bar_Row=4))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Delivery, message="Delivery.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Delivery, message="Delivery setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Invoice
     Icon_Frame_Invoice = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="file-text", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_Invoice.configure(command = lambda: Show_Invoice_Page(Active_Window = Active_Window, Side_Bar_Row=5))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Invoice, message="Invoice/BackBoneBilling/CreditMemo.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_Invoice, message="Invoice setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - IAL
     Icon_Frame_IAL = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="coins", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")
     Icon_Frame_IAL.configure(command = lambda: Show_IAL_Page(Active_Window = Active_Window, Side_Bar_Row=6))
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_IAL, message="IAL.json setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Frame_IAL, message="IAL setup page.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
     # Page - Settings
     Icon_Frame_Settings = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Side_Bar_Frame, Icon_Name="settings", Icon_Size="Side_Bar_regular", Button_Size="Picture_Transparent")

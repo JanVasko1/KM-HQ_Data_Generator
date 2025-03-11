@@ -32,6 +32,7 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     
     PO_Number_Widget = W_Confirmation.PO_CON_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_Currency_Widget = W_Confirmation.PO_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Unit_of_Measure_Widget = W_Confirmation.PO_Unit_of_Measure(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
     PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
     PO_Generation_Date_Widget = W_Confirmation.PO_Generation_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
@@ -65,6 +66,7 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     Frame_PO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     PO_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_Unit_of_Measure_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Line_Flags_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     PO_Generation_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 

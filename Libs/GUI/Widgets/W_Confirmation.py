@@ -101,6 +101,38 @@ def PO_Generation_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI
 
     return Frame_Main
 
+def PO_Unit_of_Measure(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ---------------------------- Defaults ----------------------------#
+    UoM_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Unit_of_Measure"]["Method"]
+    UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Unit_of_Measure"]["Methods_List"])
+    Fixed_UoM = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Unit_of_Measure"]["Fixed_Options"]["Fix_UoM"]
+
+    UoM_Method_Variable = StringVar(master=Frame, value=UoM_Method, name="UoM_Method_Variable")
+    # ------------------------- Local Functions -------------------------#
+    # TODO --> Blocking Fields
+    # ------------------------- Main Functions -------------------------#
+    # Frame - General
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Unit of Measure in Confirmation.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Body = Frame_Main.children["!ctkframe2"]
+
+    # Field - Number Method
+    UoM_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Unit of Measure", Field_Type="Input_OptionMenu") 
+    UoM_Method_Frame_Var = UoM_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    UoM_Method_Frame_Var.configure(variable=UoM_Method_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=UoM_Method_Frame_Var, values=UoM_Method_List, command=lambda UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Unit_of_Measure", "Method"], Information=UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+    # Field - Fixed Currency
+    Fixed_UoM_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Unit of Measure", Field_Type="Input_Normal") 
+    Fixed_UoM_Frame_Var = Fixed_UoM_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Fixed_UoM_Frame_Var.configure(placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F")
+    Fixed_UoM_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Unit_of_Measure", "Fixed_Options", "Fix_UoM"], Information=Fixed_UoM_Frame_Var.get()))
+    Entry_field_Insert(Field=Fixed_UoM_Frame_Var, Value=Fixed_UoM)
+
+    # Build look of Widget
+    Frame_Main.pack(side="top", padx=15, pady=15)
+
+    return Frame_Main
+
 def PO_Price_Currency(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Currency_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Currency"]["Method"]
@@ -146,11 +178,13 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     # ---------------------------- Defaults ----------------------------#
     Line_Flags_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Use"]
     Line_Flag_Label_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Labels_always"]
+    Line_Flag_Item_EOL_Finished = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Item_EOL_Finish"]
     Line_Flags_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Method"]
     Line_Flags_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Methods_List"])
 
     Line_Flags_Enabled_Variable = BooleanVar(master=Frame, value=Line_Flags_Enabled, name="Line_Flags_Enabled_Variable")
     Line_Flag_Label_Enabled_Variable = BooleanVar(master=Frame, value=Line_Flag_Label_Enabled, name="Line_Flag_Label_Enabled_Variable")
+    Line_Flag_Item_EOL_Finished_Variable = BooleanVar(master=Frame, value=Line_Flag_Item_EOL_Finished, name="Line_Flag_Item_EOL_Finished_Variable")
     Line_Flags_Method_Variable = StringVar(master=Frame, value=Line_Flags_Method, name="Line_Flags_Method_Variable")
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
@@ -168,6 +202,11 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     Use_Line_Flag_Label_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Label always", Field_Type="Input_CheckBox") 
     Use_Line_Flag_Label_Frame_Var = Use_Line_Flag_Label_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Use_Line_Flag_Label_Frame_Var.configure(variable=Line_Flag_Label_Enabled_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flag_Label_Enabled_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Labels_always"], Information=Line_Flag_Label_Enabled_Variable))
+
+    # Field - Item End of Live always Finished
+    Finished_EOL_Item_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Finish EOL Item", Field_Type="Input_CheckBox") 
+    Finished_EOL_Item_Frame_Var = Finished_EOL_Item_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    Finished_EOL_Item_Frame_Var.configure(variable=Line_Flag_Item_EOL_Finished_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flag_Item_EOL_Finished_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Item_EOL_Finish"], Information=Line_Flag_Item_EOL_Finished_Variable))
 
     # Field - Number Method
     Line_Flags_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
