@@ -338,7 +338,7 @@ def Get_HQ_Communication_Setup_df(Configuration: dict, headers: dict, tenant_id:
     return HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendor_No_list
 
 # ------------------- HQ_Testing_Company_Information ------------------- #
-def Get_Company_Information_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_Company_Information_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["English_Name_NUS", "English_Address_NUS", "English_Post_Code_NUS", "English_City_NUS", "English_Country_Reg_Code_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -423,7 +423,7 @@ def Get_CPDI_Status_list(Configuration: dict, headers: dict, tenant_id: str, NUS
     return CPDI_Status_list
 
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
-def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: list):
+def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: list) -> DataFrame:
     # Fields
     fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -505,7 +505,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
 # ------------------- HQ_Testing_Items ------------------- #
 def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list):
     # Fields
-    fields_list = ["No", "Description", "Vendor_No", "Vendor_Item_No", "Item_Tracking_Code", "Substitutes_Exist_NUS", "AssemblyBOM", "BEU_Set_NUS", "BEU_End_of_Life_NUS", "Material_Group_NUS", "Unit_Price"]
+    fields_list = ["No", "Description", "Vendor_No", "Vendor_Item_No", "Item_Tracking_Code", "Substitutes_Exist_NUS", "AssemblyBOM", "BEU_Set_NUS", "BEU_End_of_Life_NUS", "Material_Group_NUS", "Unit_Price", "Distribution_Status_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -530,6 +530,7 @@ def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version
     Material_Group_NUS_list = []
     BEU_End_of_Life_NUS_list = []
     Unit_Price_List = []
+    Distribution_Status_NUS_List = []
     for index in range(0, list_len):
         No_list.append(response_values_List[index]["No"])
         Description_list.append(response_values_List[index]["Description"])
@@ -542,6 +543,7 @@ def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version
         BEU_End_of_Life_NUS_list.append(response_values_List[index]["BEU_End_of_Life_NUS"])
         Material_Group_NUS_list.append(response_values_List[index]["Material_Group_NUS"])
         Unit_Price_List.append(response_values_List[index]["Unit_Price"])
+        Distribution_Status_NUS_List.append(response_values_List[index]["Distribution_Status_NUS"])
 
     response_values_dict = {
         "No": No_list,
@@ -554,7 +556,8 @@ def Get_Items_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version
         "BEU_Set_NUS": BEU_Set_NUS_list,
         "BEU_End_of_Life_NUS": BEU_End_of_Life_NUS_list,
         "Material_Group_NUS": Material_Group_NUS_list,
-        "Unit_Price": Unit_Price_List}
+        "Unit_Price": Unit_Price_List,
+        "Distribution_Status_NUS": Distribution_Status_NUS_List}
     
     if list_len == 1:
         Items_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
@@ -786,7 +789,7 @@ def Get_Items_Price_Lists_df(Configuration: dict, headers: dict, tenant_id: str,
     return Active_Price_Lists_df, BEU_Price_list
 
 # ------------------- HQ_Testing_Items_Price_Detail_List ------------------- #
-def Get_Items_Price_List_detail_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, BEU_Price_list: str, Amount_Type_List: list):
+def Get_Items_Price_List_detail_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, BEU_Price_list: str, Amount_Type_List: list) -> DataFrame:
     # Fields
     fields_list = ["Price_List_Code", "SourceType", "SourceNo", "Asset_Type", "Asset_No", "Unit_of_Measure_Code", "StartingDate", "EndingDate", "DirectUnitCost"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -844,7 +847,7 @@ def Get_Items_Price_List_detail_df(Configuration: dict, headers: dict, tenant_id
     return Items_Price_List_Detail_df 
 
 # ------------------- HQ_Testing_Items_Tracking_Codes ------------------- #
-def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Item_Tracking_Code_list: list):
+def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Item_Tracking_Code_list: list) -> DataFrame:
     # Fields
     fields_list = ["Code", "SN_Purchase_Inbound_Tracking"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -879,7 +882,7 @@ def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: s
     return Items_Tracking_df
 
 # ------------------- HQ_Testing_Items_UoM ------------------- #
-def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list):
+def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
     fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure", "Weight"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -919,8 +922,43 @@ def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_ver
 
     return Items_UoM_df
 
+
+# ------------------- HQ_Testing_Items_UoM ------------------- #
+def Get_Items_Distr_Status_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
+    # Fields
+    fields_list = ["Distribution_Status", "Blocked_for_Purchase"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_list_string = ""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_BEU_Dist_Status")
+
+    # Prepare DataFrame
+    Distribution_Status_list = []
+    Blocked_for_Purchase_list = []
+    for index in range(0, list_len):
+        Distribution_Status_list.append(response_values_List[index]["Distribution_Status"])
+        Blocked_for_Purchase_list.append(response_values_List[index]["Blocked_for_Purchase"])
+
+    response_values_dict = {
+        "Distribution_Status": Distribution_Status_list, 
+        "Blocked_for_Purchase": Blocked_for_Purchase_list}
+    
+    if list_len == 1:
+        Items_Distr_Status_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        Items_Distr_Status_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Items_Distr_Status_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Items_Distr_Status_df, Columns_list=["Distribution_Status"], Accenting_list=[True]) 
+
+    return Items_Distr_Status_df
+
 # ------------------- HQ_Testing_NVR_FS_Connect ------------------- #
-def Get_NVR_FS_Connect_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, File_Connector_Code_list: list):
+def Get_NVR_FS_Connect_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, File_Connector_Code_list: list) -> DataFrame:
     # Fields
     fields_list = ["Code", "Root_Path_NUS", "Root_Path_Suffix_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -956,7 +994,7 @@ def Get_NVR_FS_Connect_df(Configuration: dict, headers: dict, tenant_id: str, NU
     return NVR_FS_Connect_df
 
 # ------------------- HQ_Testing_Plans ------------------- #
-def Get_Plants_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_Plants_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "VAT"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1057,7 +1095,7 @@ def Get_Tariff_Number_list(Configuration: dict, headers: dict, tenant_id: str, N
     return Tariff_Number_list
 
 # ------------------- HQ_Testing_UoM ------------------- #
-def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
     fields_list = ["Code", "International_Standard_Code"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
@@ -1091,7 +1129,7 @@ def Get_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: 
     return UoM_df
 
 # ------------------- HQ_Testing_Vendor_Service_Functions ------------------- #
-def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No: str):
+def Get_Vendor_Service_Functions_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Buy_from_Vendor_No: str) -> DataFrame:
     # Fields
     fields_list = ["Vendor_No", "Vendor_Service_ID", "Vendor_Service_Name"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")

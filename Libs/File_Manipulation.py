@@ -1,7 +1,10 @@
 # Import Libraries
 import os
+import json
 from glob import glob
 from shutil import rmtree, copy
+from pandas import DataFrame
+from fpdf import FPDF
 
 import Libs.GUI.Elements as Elements
 
@@ -61,3 +64,29 @@ def Get_Downloads_File_Path(File_Name: str, File_postfix: str):
     downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
     Destination_File = os.path.join(downloads_folder, os.path.basename(f"{File_Name}.{File_postfix}"))
     return Destination_File
+
+# --------------------------------------------- Exporting to --------------------------------------------- #
+def Export_NAV_Folders(NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Buy_from_Vendor_No: str, File_Content: dict|FPDF, HQ_File_Type_Path: str, File_Name: str, File_suffix: str) -> None:
+    # NVR Connector
+    Root_Path_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_NUS"])
+    Root_Path_Suffix_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_Suffix_NUS"])
+
+    # HQ Communication Filter
+    HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
+    HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
+    HQ_Path = str(HQ_Communication_Setup_df.iloc[0][HQ_File_Type_Path])
+    # BUG --> Not working Export to Server
+    # Export
+    if File_suffix == "json":
+        with open(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{File_Name}.{File_suffix}", "w") as outfile: 
+            json.dump(File_Content, outfile)
+    elif File_suffix == "pdf":
+        File_Content.output(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{File_Name}.{File_suffix}")
+
+def Export_Download_Folders(File_Content: dict|FPDF, File_Name: str, File_suffix: str) -> None:
+    Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
+    if File_suffix == "json":
+        with open(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}", "w") as outfile: 
+            json.dump(File_Content, outfile)
+    elif File_suffix == "pdf":
+        File_Content.output(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}")

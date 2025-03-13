@@ -23,7 +23,8 @@
         "discontinued": false,
         "set": false,
         "bom": false,
-        "bom_with_delivery_group": false
+        "bom_with_delivery_group": false,
+        "cancelled": false
     },
     "schedules": []
 }

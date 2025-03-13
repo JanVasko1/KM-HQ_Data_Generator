@@ -18,7 +18,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     PO_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Method"]
     PO_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Automatic_Options"]["Prefix"]
     PO_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Fixed_Options"]["Number"]
-    PO_Number = ""
+    PO_Confirmation_Number = ""
 
     PO_Generation_Date_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Method"]
     PO_Gen_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Fixed_Options"]["Fix_Date"]
@@ -38,11 +38,11 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     # --------------------------------------------- Confirmation Number --------------------------------------------- #
     if Can_Continue == True:
         if PO_Numbers_Method == "Fixed":
-            PO_Number = PO_Fixed_Number
+            PO_Confirmation_Number = PO_Fixed_Number
         elif PO_Numbers_Method == "Automatic":
             Today_dt = datetime.now()
             Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
-            PO_Number = PO_Automatic_Prefix + Today_str
+            PO_Confirmation_Number = PO_Automatic_Prefix + Today_str
         elif PO_Numbers_Method == "Prompt":
             def Select_PO_CON_Number(Prompt_Number_Frame: CTkFrame):
                 PO_CON_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
@@ -51,14 +51,14 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
                 PO_CON_Number_Window.destroy()
                 
             # TopUp Window
-            PO_CON_Number_Window_geometry = (300, 250)
+            PO_CON_Number_Window_geometry = (500, 250)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_CON_Number_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_CON_Number_Window_geometry[1] //2
-            PO_CON_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select Purchase Order Confirmation Number.", width=PO_CON_Number_Window_geometry[0], height=PO_CON_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            PO_CON_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Purchase Order Confirmation Number.", max_width=PO_CON_Number_Window_geometry[0], max_height=PO_CON_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_CON_Number_Window, Name="Select Purchase Order Confirmation Number.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select number of BEU Confirmation.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_CON_Number_Window, Name="Select Purchase Order Confirmation Number.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BEU Confirmation.", GUI_Level_ID=3)
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
@@ -73,13 +73,13 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_CON_Number(Prompt_Number_Frame=Prompt_Number_Frame))
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm PO Confirmation Number.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(PO_CON_Number_Variable)
-            PO_Number = PO_CON_Number_Variable.get()
+            PO_Confirmation_Number = PO_CON_Number_Variable.get()
         else:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Confirmation Number Method selected: {PO_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
         
         # Fill value in template
-        PO_Confirmation_Header["orderresponse"]["orderresponse_header"]["orderresponse_info"]["supplier_order_id"] = PO_Number
+        PO_Confirmation_Header["orderresponse"]["orderresponse_header"]["orderresponse_info"]["supplier_order_id"] = PO_Confirmation_Number
     else:
         pass
 
@@ -98,14 +98,14 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
                 PO_Gen_Date_Window.destroy()
                 
             # TopUp Window
-            PO_Gen_Date_Window_geometry = (300, 250)
+            PO_Gen_Date_Window_geometry = (500, 250)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Gen_Date_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Gen_Date_Window_geometry[1] //2
-            PO_Gen_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select Generation Date for Confirmation.", width=PO_Gen_Date_Window_geometry[0], height=PO_Gen_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            PO_Gen_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Generation Date for Confirmation.", max_width=PO_Gen_Date_Window_geometry[0], max_height=PO_Gen_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Gen_Date_Window, Name="Select Generation Date for Confirmation.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Gen_Date_Window, Name="Select Generation Date for Confirmation.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
@@ -192,4 +192,4 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     else:
         pass
 
-    return PO_Confirmation_Header
+    return PO_Confirmation_Header, PO_Confirmation_Number

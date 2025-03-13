@@ -17,7 +17,22 @@ def Dataframe_Filter_on_Multiple(Filter_df: DataFrame, Filter_Column: str, Filte
     filtered_df = Filter_df[Filter_df[f"{Filter_Column}"].isin(Filter_Values)]
     return filtered_df
 
-def Dataframe_Apply_Value(row: Series, Fill_Column: str, Compare_Column_df1: list, Compare_Column_df2: list, Search_df: DataFrame, Search_Column: str):
+def DataFrame_Get_One_Value(Search_df: DataFrame, Search_Column: str, Filter_Column: str, Filter_Value: str)-> str:
+    filtered_values = Search_df.loc[Search_df[Filter_Column] == Filter_Value, Search_Column]
+    try:
+        Value = str(filtered_values.values[0])
+    except:
+        Value = "False"
+    return Value
+
+def Dataframe_Set_Value_on_Condition(Set_df: DataFrame, conditions: list, Set_Column: str, Set_Value: int|str|bool) -> DataFrame:
+    combined_condition = conditions[0]
+    for condition in conditions[1:]:
+        combined_condition &= condition
+    Set_df.loc[combined_condition, Set_Column] = Set_Value
+    return Set_df
+
+def Dataframe_Apply_Value_from_df2(row: Series, Fill_Column: str, Compare_Column_df1: list, Compare_Column_df2: list, Search_df: DataFrame, Search_Column: str):
     conditions = [Search_df[Compare_Column_df2[index]] == row[Compare_Column_df1[index]] for index, value in enumerate(Compare_Column_df1)]
     combined_condition = Series([True] * len(Search_df))
     for condition in conditions:

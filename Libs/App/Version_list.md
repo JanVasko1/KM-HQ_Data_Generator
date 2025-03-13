@@ -6,6 +6,7 @@
 ### Version List
 #### 0.1.1
 - Generate Invoice.json issue with lines Overwrite when transferring to json template from DataFrame
+- dynamic PopUp Windows height according content with maximal parameter
 
 ### 0.1.0
 - BackBoneBilling files process

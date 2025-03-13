@@ -54,14 +54,14 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
                 BB_Number_Window.destroy()
                 
             # TopUp Window
-            BB_Number_Window_geometry = (300, 250)
+            BB_Number_Window_geometry = (500, 250)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Number_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Number_Window_geometry[1] //2
-            BB_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Invoice Number.", width=BB_Number_Window_geometry[0], height=BB_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            BB_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Number.", max_width=BB_Number_Window_geometry[0], max_height=BB_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Number_Window, Name="Select BackBone Billing Invoice Number.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select number of BackBone Billing Invoice.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Number_Window, Name="Select BackBone Billing Invoice Number.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
@@ -101,14 +101,14 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
                 BB_Inv_Date_Window.destroy()
                 
             # TopUp Window
-            BB_Inv_Date_Window_geometry = (300, 250)
+            BB_Inv_Date_Window_geometry = (500, 250)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Inv_Date_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Inv_Date_Window_geometry[1] //2
-            BB_Inv_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Invoice Date.", width=BB_Inv_Date_Window_geometry[0], height=BB_Inv_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            BB_Inv_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Date.", max_width=BB_Inv_Date_Window_geometry[0], max_height=BB_Inv_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Inv_Date_Window, Name="Select BackBone Billing Invoice Date.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select date of BackBone Billing Invoice.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Inv_Date_Window, Name="Select BackBone Billing Invoice Date.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select date of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 

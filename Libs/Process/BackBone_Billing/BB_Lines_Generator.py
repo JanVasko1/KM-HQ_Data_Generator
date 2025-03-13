@@ -76,15 +76,14 @@ def Generate_BB_Lines(Settings: dict,
 
 
             # TopUp Window
-            BB_Items_Window_geometry = (300, 250)
+            BB_Items_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Items_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Items_Window_geometry[1] //2
-            BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Items.", width=BB_Items_Window_geometry[0], height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Items.", max_width=BB_Items_Window_geometry[0], max_height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select Items of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Items of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -98,7 +97,14 @@ def Generate_BB_Lines(Settings: dict,
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_CheckBox") 
                 Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
                 Fields_Frame_Var.configure(text="")
-                
+
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Items_Window_geometry [1]:
+                content_height = BB_Items_Window_geometry [1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
+
             # Buttons
             BB_Items_Variable = StringVar(master=BB_Item_Window, value="", name="BB_Items_Variable")
             Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
@@ -150,15 +156,14 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Quantity_Window.destroy()
 
             # TopUp Window
-            BB_Quantity_Window_geometry = (300, 250)
+            BB_Quantity_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Quantity_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Quantity_Window_geometry[1] //2
-            BB_Quantity_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Qty for selected Items.", width=BB_Quantity_Window_geometry[0], height=BB_Quantity_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            BB_Quantity_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Qty for selected Items.", max_width=BB_Quantity_Window_geometry[0], max_height=BB_Quantity_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Quantity_Window, Name="Select BackBone Billing Qty for selected Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Quantity_Window, Name="Select BackBone Billing Qty for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -172,6 +177,13 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 BB_Fields_Frame_Var.configure(placeholder_text="Manual Quantity", placeholder_text_color="#949A9F")
                 
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Quantity_Window_geometry[1]:
+                content_height = BB_Quantity_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
+
             # Buttons
             BB_Quantity_Variable = StringVar(master=BB_Quantity_Window, value="", name="BB_Quantity_Variable")
             Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
@@ -213,15 +225,14 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Price_Window.destroy()
             
             # TopUp Window
-            BB_Price_Window_geometry = (300, 250)
+            BB_Price_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Price_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Price_Window_geometry[1] //2
-            BB_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Price for selected Items.", width=BB_Price_Window_geometry[0], height=BB_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            BB_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Price for selected Items.", max_width=BB_Price_Window_geometry[0], max_height=BB_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Price_Window, Name="Select BackBone Billing Price for selected Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select proper Price for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Price_Window, Name="Select BackBone Billing Price for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -235,6 +246,13 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 BB_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
                 
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Price_Window_geometry[1]:
+                content_height = BB_Price_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
+
             # Buttons
             BB_Price_Variable = StringVar(master=BB_Price_Window, value="", name="BB_Price_Variable")
             Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
@@ -286,15 +304,14 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Plant_Window.destroy()
             
             # TopUp Window
-            BB_Plant_Window_geometry = (300, 250)
+            BB_Plant_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Plant_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Plant_Window_geometry[1] //2
-            BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Plant for selected Items.", width=BB_Plant_Window_geometry[0], height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=False)
+            BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Plant for selected Items.", max_width=BB_Plant_Window_geometry[0], max_height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -307,6 +324,13 @@ def Generate_BB_Lines(Settings: dict,
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=BB_Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
+
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Plant_Window_geometry[1]:
+                content_height = BB_Plant_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons
             BB_Plant_Variable = StringVar(master=BB_Plant_Window, value="", name="BB_Plant_Variable")
@@ -352,15 +376,14 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Country_Origin_Window.destroy()
 
             # TopUp Window
-            BB_Country_Origin_Window_geometry = (300, 250)
+            BB_Country_Origin_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Country_Origin_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Country_Origin_Window_geometry[1] //2
-            BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Country of Origin  for selected Items.", width=BB_Country_Origin_Window_geometry[0], height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=False)
+            BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Country of Origin  for selected Items.", max_width=BB_Country_Origin_Window_geometry[0], max_height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -373,6 +396,13 @@ def Generate_BB_Lines(Settings: dict,
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
+
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Country_Origin_Window_geometry[1]:
+                content_height = BB_Country_Origin_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons
             BB_Country_Origin_Variable = StringVar(master=BB_Country_Origin_Window, value="", name="BB_Country_Origin_Variable")
@@ -418,15 +448,14 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Tariff_Window.destroy()
 
             # TopUp Window
-            BB_Tariff_Window_geometry = (300, 250)
+            BB_Tariff_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Tariff_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Tariff_Window_geometry[1] //2
-            BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Select BackBone Billing Tariff  for selected Items.", width=BB_Tariff_Window_geometry[0], height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=False)
+            BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Tariff  for selected Items.", max_width=BB_Tariff_Window_geometry[0], max_height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -439,6 +468,13 @@ def Generate_BB_Lines(Settings: dict,
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
+
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > BB_Tariff_Window_geometry[1]:
+                content_height = BB_Tariff_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons
             BB_Tariff_Variable = StringVar(master=BB_Tariff_Window, value="", name="BB_Tariff_Variable")

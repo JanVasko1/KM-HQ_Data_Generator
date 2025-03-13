@@ -93,7 +93,7 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
 def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> bool:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
-    Progress_Bar.configure(determinate_speed = round(number=50 / 22, ndigits=3), progress_color="#517A31")
+    Progress_Bar.configure(determinate_speed = round(number=50 / 23, ndigits=3), progress_color="#517A31")
     Can_Process = True
 
     Purchase_Headers_df = DataFrame()
@@ -322,6 +322,17 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     else:
         pass
 
+    # HQ_Testing_BEU_Dist_Status
+    if Can_Process == True:
+        Items_Distr_Status_df = NAV_OData_API.Get_Items_Distr_Status_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Items_Distr_Status_df.drop_duplicates(inplace=True, ignore_index=True)
+        Items_Distr_Status_df.reset_index(drop=True, inplace=True)
+        print("\n----------Items_Distr_Status_df----------")
+        print(Items_Distr_Status_df)
+        Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+    else:
+        pass
+
     # HQ_Testing_Plans
     if Can_Process == True:
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
@@ -431,6 +442,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
             Items_Tracking_df=Items_Tracking_df, 
             Items_UoM_df=Items_UoM_df, 
+            Items_Distr_Status_df=Items_Distr_Status_df,
             NVR_FS_Connect_df=NVR_FS_Connect_df, 
             Plants_df=Plants_df, 
             Shipment_Method_list=Shipment_Method_list, 

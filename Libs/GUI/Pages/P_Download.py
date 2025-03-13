@@ -169,13 +169,12 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Purchase_Orders_List) == 0:
             pass
         else:
-            PO_Select_window_geometry = (500, 0)
+            PO_Select_window_geometry = (1020, 400)
             Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=PO_Select_window_geometry[0])
-            PO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Recalculate", width=PO_Select_window_geometry[0], height=PO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+            PO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Recalculate", max_width=PO_Select_window_geometry[0], max_height=PO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             PO_Select_Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Select_window, Name="Multiple Purchase Order Select", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Helps to select more Purchase Orders.", GUI_Level_ID=3)
-            PO_Select_Frame_Main.configure(bg_color = "#000001")
             PO_Select_Frame_Body = PO_Select_Frame_Main.children["!ctkframe2"]
 
             PO_Select_Scrollable_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Select_Frame_Body, Frame_Size="PO_List", GUI_Level_ID=4)
@@ -196,6 +195,13 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
                 Counter += 1
                 if Counter == 3:
                     Counter = 0
+
+            # Dynamic PopUp Content height
+            content_row_count = len(PO_Select_Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30    # Lines multiplied + button
+            if content_height > PO_Select_window_geometry[1]:
+                content_height = PO_Select_window_geometry[1]
+            PO_Select_Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons
             PO_Select_Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=PO_Select_Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Small") 
@@ -301,11 +307,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         else:
             PRO_Select_window_geometry = (500, 0)
             Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=PRO_Select_window_geometry[0])
-            PRO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Recalculate", width=PRO_Select_window_geometry[0], height=PRO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+            PRO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Recalculate", max_width=PRO_Select_window_geometry[0], max_height=PRO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             PRO_Select_Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PRO_Select_window, Name="Multiple Purchase Return Order Select", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Helps to select more Purchase Return Orders.", GUI_Level_ID=3)
-            PRO_Select_Frame_Main.configure(bg_color = "#000001")
             PRO_Select_Frame_Body = PRO_Select_Frame_Main.children["!ctkframe2"]
 
             PRO_Select_Scrollable_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PRO_Select_Frame_Body, Frame_Size="PRO_List", GUI_Level_ID=4)
@@ -325,6 +330,13 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
                 Counter += 1
                 if Counter == 2:
                     Counter = 0
+
+            # Dynamic PopUp Content height
+            content_row_count = len(PRO_Select_Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30    # Lines multiplied + button
+            if content_height > PRO_Select_window_geometry[1]:
+                content_height = PRO_Select_window_geometry[1]
+            PRO_Select_Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons
             PRO_Select_Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=PRO_Select_Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Small") 

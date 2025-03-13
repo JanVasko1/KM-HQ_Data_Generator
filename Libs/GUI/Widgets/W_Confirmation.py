@@ -179,12 +179,14 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     Line_Flags_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Use"]
     Line_Flag_Label_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Labels_always"]
     Line_Flag_Item_EOL_Finished = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Item_EOL_Finish"]
+    Line_Flag_Always_Substitute = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Always_Substitute"]
     Line_Flags_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Method"]
     Line_Flags_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Methods_List"])
 
     Line_Flags_Enabled_Variable = BooleanVar(master=Frame, value=Line_Flags_Enabled, name="Line_Flags_Enabled_Variable")
     Line_Flag_Label_Enabled_Variable = BooleanVar(master=Frame, value=Line_Flag_Label_Enabled, name="Line_Flag_Label_Enabled_Variable")
     Line_Flag_Item_EOL_Finished_Variable = BooleanVar(master=Frame, value=Line_Flag_Item_EOL_Finished, name="Line_Flag_Item_EOL_Finished_Variable")
+    Line_Flag_Always_Substitute_Variable = BooleanVar(master=Frame, value=Line_Flag_Always_Substitute, name="Line_Flag_Always_Substitute_Variable")
     Line_Flags_Method_Variable = StringVar(master=Frame, value=Line_Flags_Method, name="Line_Flags_Method_Variable")
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
@@ -198,6 +200,15 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     Use_Line_Flags_Frame_Var = Use_Line_Flags_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Use_Line_Flags_Frame_Var.configure(variable=Line_Flags_Enabled_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flags_Enabled_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Use"], Information=Line_Flags_Enabled_Variable))
 
+    # Field - Number Method
+    Line_Flags_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
+    Line_Flags_Method_Frame_Var = Line_Flags_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    Line_Flags_Method_Frame_Var.configure(variable=Line_Flags_Method_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Line_Flags_Method_Frame_Var, values=Line_Flags_Method_List, command=lambda Line_Flags_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flags_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Method"], Information=Line_Flags_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+    # Section Quantities
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Global Flags", Label_Size="Field_Label" , Font_Size="Section_Separator")
+
     # Field - Label Use always
     Use_Line_Flag_Label_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Label always", Field_Type="Input_CheckBox") 
     Use_Line_Flag_Label_Frame_Var = Use_Line_Flag_Label_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
@@ -208,11 +219,10 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     Finished_EOL_Item_Frame_Var = Finished_EOL_Item_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Finished_EOL_Item_Frame_Var.configure(variable=Line_Flag_Item_EOL_Finished_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flag_Item_EOL_Finished_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Item_EOL_Finish"], Information=Line_Flag_Item_EOL_Finished_Variable))
 
-    # Field - Number Method
-    Line_Flags_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Line_Flags_Method_Frame_Var = Line_Flags_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Line_Flags_Method_Frame_Var.configure(variable=Line_Flags_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Line_Flags_Method_Frame_Var, values=Line_Flags_Method_List, command=lambda Line_Flags_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flags_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Method"], Information=Line_Flags_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Field - Always Substitute
+    Always_Substitute_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Always Substitute", Field_Type="Input_CheckBox") 
+    Always_Substitute_Frame_Var = Always_Substitute_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    Always_Substitute_Frame_Var.configure(variable=Line_Flag_Always_Substitute_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Line_Flag_Always_Substitute_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Line_Flags", "Always_Substitute"], Information=Line_Flag_Always_Substitute_Variable))
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -515,12 +525,12 @@ def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, Frame: CTkF
     return Frame_Main
 
 
-def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def PO_Items_Free_Face_Sheet(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    Others_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Number"]
-    Others_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Description"]
-    Others_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["QTY_per_Machine"]
-    Others_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Others"]["Price"]
+    Face_Sheet_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["Number"]
+    Face_Sheet_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["Description"]
+    Face_Sheet_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["QTY_per_Machine"]
+    Face_Sheet_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["Price"]
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
@@ -529,32 +539,32 @@ def PO_Items_Free_Other(Settings: dict, Configuration: dict, Frame: CTkFrame, GU
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Others Number
-    Others_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Number", Field_Type="Input_Normal") 
-    Others_Number_Frame_Var = Others_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Others_Number_Frame_Var.configure(placeholder_text="Others number", placeholder_text_color="#949A9F")
-    Others_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Number"], Information=Others_Number_Frame_Var.get()))
-    Entry_field_Insert(Field=Others_Number_Frame_Var, Value=Others_Number)
+    Face_Sheet_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Number", Field_Type="Input_Normal") 
+    Face_Sheet_Number_Frame_Var = Face_Sheet_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Face_Sheet_Number_Frame_Var.configure(placeholder_text="Others number", placeholder_text_color="#949A9F")
+    Face_Sheet_Number_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Face_Sheet", "Number"], Information=Face_Sheet_Number_Frame_Var.get()))
+    Entry_field_Insert(Field=Face_Sheet_Number_Frame_Var, Value=Face_Sheet_Number)
 
     # Field - Others Description
-    Others_Description_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Description", Field_Type="Input_Normal") 
-    Others_Description_Frame_Var = Others_Description_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Others_Description_Frame_Var.configure(placeholder_text="Others Description", placeholder_text_color="#949A9F")
-    Others_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Description"], Information=Others_Description_Frame_Var.get()))
-    Entry_field_Insert(Field=Others_Description_Frame_Var, Value=Others_Description)
+    Face_Sheet_Description_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Description", Field_Type="Input_Normal") 
+    Face_Sheet_Description_Frame_Var = Face_Sheet_Description_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Face_Sheet_Description_Frame_Var.configure(placeholder_text="Others Description", placeholder_text_color="#949A9F")
+    Face_Sheet_Description_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Face_Sheet", "Description"], Information=Face_Sheet_Description_Frame_Var.get()))
+    Entry_field_Insert(Field=Face_Sheet_Description_Frame_Var, Value=Face_Sheet_Description)
 
     # Field - Others QTY_per_Machine
-    Others_QTY_per_Machine_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="QTY per Machine", Field_Type="Input_Normal", Validation="Integer") 
-    Others_QTY_per_Machine_Frame_Var = Others_QTY_per_Machine_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Others_QTY_per_Machine_Frame_Var.configure(placeholder_text="Others QTY per Machine", placeholder_text_color="#949A9F")
-    Others_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "QTY_per_Machine"], Information=int(Others_QTY_per_Machine_Frame_Var.get())))
-    Entry_field_Insert(Field=Others_QTY_per_Machine_Frame_Var, Value=Others_QTY_per_Machine)
+    Face_Sheet_QTY_per_Machine_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="QTY per Machine", Field_Type="Input_Normal", Validation="Integer") 
+    Face_Sheet_QTY_per_Machine_Frame_Var = Face_Sheet_QTY_per_Machine_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Face_Sheet_QTY_per_Machine_Frame_Var.configure(placeholder_text="Others QTY per Machine", placeholder_text_color="#949A9F")
+    Face_Sheet_QTY_per_Machine_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Face_Sheet", "QTY_per_Machine"], Information=int(Face_Sheet_QTY_per_Machine_Frame_Var.get())))
+    Entry_field_Insert(Field=Face_Sheet_QTY_per_Machine_Frame_Var, Value=Face_Sheet_QTY_per_Machine)
 
     # Field - Others Price
-    Others_Price_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Price", Field_Type="Input_Normal", Validation="Integer") 
-    Others_Price_Frame_Var = Others_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Others_Price_Frame_Var.configure(placeholder_text="Others Price", placeholder_text_color="#949A9F")
-    Others_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Others", "Price"], Information=int(Others_Price_Frame_Var.get())))
-    Entry_field_Insert(Field=Others_Price_Frame_Var, Value=Others_Price)
+    Face_Sheet_Price_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Price", Field_Type="Input_Normal", Validation="Integer") 
+    Face_Sheet_Price_Frame_Var = Face_Sheet_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
+    Face_Sheet_Price_Frame_Var.configure(placeholder_text="Others Price", placeholder_text_color="#949A9F")
+    Face_Sheet_Price_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Free_Of_Charge", "Fixed_Options", "Face_Sheet", "Price"], Information=int(Face_Sheet_Price_Frame_Var.get())))
+    Entry_field_Insert(Field=Face_Sheet_Price_Frame_Var, Value=Face_Sheet_Price)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

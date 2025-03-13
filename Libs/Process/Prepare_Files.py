@@ -1,7 +1,7 @@
 # Import Libraries
-import os
-import json
 from pandas import DataFrame
+
+import Libs.File_Manipulation as File_Manipulation
 
 from customtkinter import CTk
 
@@ -24,6 +24,7 @@ def Process_Purchase_Orders(Settings: dict,
                             Items_Price_List_Detail_df: DataFrame, 
                             Items_Tracking_df: DataFrame, 
                             Items_UoM_df: DataFrame, 
+                            Items_Distr_Status_df: DataFrame,
                             NVR_FS_Connect_df: DataFrame, 
                             Plants_df: DataFrame, 
                             Shipment_Method_list: list, 
@@ -37,18 +38,25 @@ def Process_Purchase_Orders(Settings: dict,
     Generate_Delivery = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Use"]
     Generate_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Use"]
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
+    Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
     # Generate Purchase Order List
     Purchase_Orders_List = Purchase_Headers_df["No"].to_list()
 
     for Purchase_Order in Purchase_Orders_List:
+        # Get Vendor for correct Export NAV folders for each PO (might be different Vendors)
+        mask_PO = Purchase_Headers_df["No"] == Purchase_Order
+        Single_PO_df = Purchase_Headers_df[mask_PO]  
+        Buy_from_Vendor_No = Single_PO_df.iloc[0]["Buy_from_Vendor_No"]
+
+        # ---------------- Confirmation ---------------- #
         if Generate_Confirmation == True:
             import Libs.Process.Purchase_Orders.PO_CON_Header_Generator as PO_CON_Header_Generator
             import Libs.Process.Purchase_Orders.PO_CON_Lines_Generator as PO_CON_Lines_Generator
             import Libs.Process.Purchase_Orders.PO_CON_ATP_Generator as PO_CON_ATP_Generator
 
             # Header
-            PO_Confirmation_Header = PO_CON_Header_Generator.Generate_PO_CON_Header(Settings=Settings, 
+            PO_Confirmation, PO_Confirmation_Number = PO_CON_Header_Generator.Generate_PO_CON_Header(Settings=Settings, 
                                                                                     Configuration=Configuration, 
                                                                                     window=window,
                                                                                     Purchase_Order=Purchase_Order,
@@ -58,32 +66,51 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                     HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
             
             # Lines
-            PO_CON_Lines_Generator.Generate_PO_CON_Lines(Settings=Settings, 
-                                                         Configuration=Configuration, 
-                                                         window=window,
-                                                         Purchase_Order=Purchase_Order,
-                                                         Purchase_Lines_df=Purchase_Lines_df,
-                                                         HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
-                                                         Items_df=Items_df,
-                                                         Items_BOMs_df=Items_BOMs_df, 
-                                                         Items_Substitutions_df=Items_Substitutions_df, 
-                                                         Items_Connected_Items_df=Items_Connected_Items_df, 
-                                                         Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
-                                                         Items_Tracking_df=Items_Tracking_df, 
-                                                         Items_UoM_df=Items_UoM_df,
-                                                         UoM_df=UoM_df)
+            Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No = PO_CON_Lines_Generator.Generate_PO_CON_Lines(Settings=Settings, 
+                                                                                                                        Configuration=Configuration, 
+                                                                                                                        window=window,
+                                                                                                                        Purchase_Order=Purchase_Order,
+                                                                                                                        Purchase_Lines_df=Purchase_Lines_df,
+                                                                                                                        HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
+                                                                                                                        Items_df=Items_df,
+                                                                                                                        Items_Substitutions_df=Items_Substitutions_df, 
+                                                                                                                        Items_Connected_Items_df=Items_Connected_Items_df, 
+                                                                                                                        Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
+                                                                                                                        Items_Distr_Status_df=Items_Distr_Status_df,
+                                                                                                                        UoM_df=UoM_df)
 
             # ATP
+            PO_CON_ATP_Generator.Generate_PO_ATP_CON_Lines()
+
+
+            # Put Header, Lines and ATP together
+            # TODO --> put ATP first to lines
+            PO_Confirmation["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
+
+            # Update Footer
+            PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_item_num"] = Lines_No
+            PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
+
+            # Prepare Dataframe for Delivery
+            # TODO --> sould not be there canceled and Finished Lines
+
+            # Export 
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=PO_Confirmation_Number, File_suffix="json")
+            else:
+                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation, File_Name=PO_Confirmation_Number, File_suffix="json")
 
         else:
             pass
 
+        # ---------------- CPDI ---------------- #
         if Generate_CPDI == True:
             # TIP --> Pozor na situaci, kdy CPDI bude generované v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
             print("Process_CPDI")
         else:
             pass
 
+        # ---------------- PreAdvice ---------------- #
         if Generate_PreAdvice == True:
             # TIP --> Pozor na situaci, kdy Preadvice bude generované v jiném běhu než Confirmation / Delivery --> pak by se měl program zeptat na základě čeho chceme PreAdvice dělat
             # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
@@ -91,6 +118,7 @@ def Process_Purchase_Orders(Settings: dict,
         else:
             pass
 
+        # ---------------- Delivery ---------------- #
         if Generate_Delivery == True:
             # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
             # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
@@ -98,13 +126,15 @@ def Process_Purchase_Orders(Settings: dict,
         else:
             pass
 
+        # ---------------- Invoice ---------------- #
         if Generate_Invoice == True:
             # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Invoice dělat
             # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
             print("Process_Invoice")
         else:
             pass
-
+        
+        # ---------------- Invoice PDF ---------------- #
         if Generate_Invoice_PDF == True:
             print("Generate_Invoice_PDF")
         else:
@@ -128,6 +158,7 @@ def Process_BackBoneBilling(Settings: dict,
     Generate_BB_IAL = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["IAL"]["Use"]
     Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
+    # ---------------- Invoice ---------------- #
     if Generate_BB_Invoice == True:
         import Libs.Process.BackBone_Billing.BB_Header_Generator as BB_Header_Generator
         import Libs.Process.BackBone_Billing.BB_Lines_Generator as BB_Lines_Generator
@@ -138,7 +169,8 @@ def Process_BackBoneBilling(Settings: dict,
                                                                                                                         window=window, 
                                                                                                                         Company_Information_df=Company_Information_df, 
                                                                                                                         HQ_Communication_Setup_df=HQ_Communication_Setup_df)
-# Lines
+        
+        # Lines
         BB_Invoice_Lines, Lines_No, Total_Line_Amount, Table_Data = BB_Lines_Generator.Generate_BB_Lines(Settings=Settings, 
                                                                                                             Configuration=Configuration, 
                                                                                                             window=window, 
@@ -161,40 +193,26 @@ def Process_BackBoneBilling(Settings: dict,
 
         # Export 
         if Export_NAV_Folder == True:
-            Root_Path_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_NUS"])
-            Root_Path_Suffix_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_Suffix_NUS"])
-            HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
-            HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
-            HQ_Path = str(HQ_Communication_Setup_df.iloc[0]["HQ_Invoice_File_Path"])
-            # BUG --> Not working Export to Server
-            with open(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{BB_Number}.json", "w") as outfile: 
-                json.dump(BB_Invoice, outfile)
+            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Number, File_suffix="json")
         else:
-            Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
-            with open(f"{Export_Folder_Path}\\{BB_Number}.json", "w") as outfile: 
-                json.dump(BB_Invoice, outfile)
+            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice, File_Name=BB_Number, File_suffix="json")
     else:
         pass
 
+    # ---------------- Invoice PDF ---------------- #
     if Generate_BB_Invoice_PDF == True:
         import Libs.Process.PDF_Generator as PDF_Generator
         BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=BB_Invoice, Table_Data=Table_Data)
 
         # Export 
         if Export_NAV_Folder == True:
-            Root_Path_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_NUS"])
-            Root_Path_Suffix_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_Suffix_NUS"])
-            HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
-            HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
-            HQ_Path = str(HQ_Communication_Setup_df.iloc[0]["HQ_PDF_File_Path"])
-            # BUG --> Not working Export to Server
-            BB_Invoice_PDF.output(f"{Root_Path_NUS}{Root_Path_Suffix_NUS}\\{HQ_Path}{BB_Number}.pdf")
+            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf")
         else:
-            Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
-            BB_Invoice_PDF.output(f"{Export_Folder_Path}\\{BB_Number}.pdf")
+            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf")
     else:
         pass
 
+    # ---------------- IAL File ---------------- #
     if Generate_BB_IAL == True:
         print("Generate_BB_IAL")
     else:

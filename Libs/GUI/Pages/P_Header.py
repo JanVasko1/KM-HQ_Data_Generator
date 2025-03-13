@@ -45,7 +45,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
         # TopUp Window
         Version_List_Window_geometry = (1400, 800)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Version_List_Window_geometry[0])
-        Version_List_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Version List", width=Version_List_Window_geometry[0], height=Version_List_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
+        Version_List_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Version List", max_width=Version_List_Window_geometry[0], max_height=Version_List_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
 
          # Get Theme --> because of background color
         Current_Theme = CustomTkinter_Functions.Get_Current_Theme() 
@@ -65,7 +65,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
         # Frame - General
         Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Version_List_Window, Name="Version List", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Show software changes.", GUI_Level_ID=1)
-        Frame_Main.configure(bg_color = "#000001")
+        Frame_Main.configure(bg_color = "#000001", height=700)
         Frame_Body = Frame_Main.children["!ctkframe2"]
 
         Frame_Information_Scrollable_Area = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=Frame_Body, Frame_Size="Double_size", GUI_Level_ID=2)
@@ -152,7 +152,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
         Import_window_geometry = (200, 200)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Import_window_geometry[0])
-        Import_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Drop file", width=Import_window_geometry[0], height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
+        Import_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Drop file", max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=True)
 
         Frame_Body = Elements.Get_Frame(Configuration=Configuration, Frame=Import_window, Frame_Size="Import_Drop", GUI_Level_ID=1)
         Frame_Body.configure(bg_color = "#000001")
@@ -213,13 +213,12 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
             Delete_Activity_Correct_Window.destroy()
         
         # TopUp Window
-        Delete_Activity_Correct_Window_geometry = (300, 250)
+        Delete_Activity_Correct_Window_geometry = (320, 500)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Delete_Activity_Correct_Window_geometry[0])
-        Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration ,title="Delete Templates.", width=Delete_Activity_Correct_Window_geometry[0], height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=False, Always_on_Top=False)
+        Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Delete Templates.", max_width=Delete_Activity_Correct_Window_geometry[0], max_height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
 
         # Frame - General
-        Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Delete_Activity_Correct_Window, Name="Delete Templates:", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip="To delete unwanted templates.", GUI_Level_ID=1)
-        Frame_Main.configure(bg_color = "#000001")
+        Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=Delete_Activity_Correct_Window, Name=f"Delete Templates:", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip=f"To delete unwanted templates.", GUI_Level_ID=1)
         Frame_Body = Frame_Main.children["!ctkframe2"]
 
         # Fields - Templates
@@ -229,6 +228,13 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
             Var1 = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
             Var1.configure(text="")
             No_Lines += 1
+
+        # Dynamic Content height
+        content_row_count = len(Frame_Body.winfo_children())
+        content_height = content_row_count * 35 + 30 + 50  # Lines multiplied + button + additional space for header
+        if content_height > Delete_Activity_Correct_Window_geometry[1]:
+            content_height = Delete_Activity_Correct_Window_geometry[1]
+        Frame_Main.configure(bg_color = "#000001", height=content_height)
 
         # Buttons
         Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=2, Button_Size="Small") 

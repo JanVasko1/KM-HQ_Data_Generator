@@ -2,7 +2,7 @@
 from datetime import datetime
 import calendar
 
-from customtkinter import CTkFrame, CTkToplevel, CTkEntry, CTkButton
+from customtkinter import CTkFrame, CTkToplevel, CTkEntry, CTkButton, BooleanVar
 
 import Libs.GUI.Elements as Elements
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -41,6 +41,40 @@ def Get_Widget_Frame(Configuration:dict, Frame: CTkFrame, Name: str, Additional_
     Frame_Single_Data_Area.pack(side="top", fill="y", expand=True, padx=7, pady=7)
 
     return Frame_Single_Body
+
+def Get_Widget_Scrollable_Frame(Configuration:dict, Frame: CTkFrame, Name: str, Additional_Text: str, Widget_size: str, Widget_Label_Tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # Build base Frame for Widget
+    Frame_Single_Body = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=Frame, Frame_Size=Widget_size, GUI_Level_ID=GUI_Level_ID)
+
+    Frame_Single_Header = Elements.Get_Widget_Frame_Header(Configuration=Configuration, Frame=Frame_Single_Body, Widget_size=Widget_size)
+    
+    Header_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Single_Header, Label_Size="Column_Header", Font_Size="Column_Header")
+    Header_text.configure(text=f"{Name}")
+
+    Header_text_Additional = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Single_Header, Label_Size="Column_Header_Additional", Font_Size="Column_Header_Additional")
+    Header_text_Additional.configure(text=f"{Additional_Text}")
+
+    if Widget_Label_Tooltip == "":
+        pass
+    else:
+        Icon_Label_text = Elements.Get_Label_Icon(Configuration=Configuration, Frame=Frame_Single_Header, Label_Size="Column_Header", Font_Size="Column_Header", Icon_Name="circle-help", Icon_Size="Question")
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Icon_Label_text, message=Widget_Label_Tooltip, ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
+
+    Frame_Single_Data_Area = Elements.Get_Widget_Frame_Area(Configuration=Configuration, Frame=Frame_Single_Body, Widget_size=Widget_size)
+
+    # Build look of Widget
+    Frame_Single_Body.pack(side="top", fill="none", expand=False, padx=0, pady=0)
+    Frame_Single_Header.pack(side="top", fill="x", expand=False, padx=7, pady=7)
+    Header_text.pack(side="left", fill="x")
+    if Widget_Label_Tooltip == "":
+        pass
+    else:
+        Icon_Label_text.pack(side="left", fill="none", expand=False, padx=1, pady=0)
+    Header_text_Additional.pack(side="right", fill="x")
+    Frame_Single_Data_Area.pack(side="top", fill="y", expand=True, padx=7, pady=7)
+
+    return Frame_Single_Body
+
 
 def Get_Widget_Section_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Label_Size: str, Font_Size: str) -> CTkFrame:
     # Build one line for one input field
@@ -130,7 +164,7 @@ def Get_Widget_Button_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type:
 
     return Frame_Area
 
-def Get_Pop_up_window(Configuration:dict, title: str, width: int, height: int, Top_middle_point: list, Fixed: bool, Always_on_Top: bool) -> CTkToplevel:
+def Get_Pop_up_window(Configuration:dict, title: str, max_width: int, max_height: int, Top_middle_point: list, Fixed: bool, Always_on_Top: bool) -> CTkToplevel:
     def drag_win():
         x = Pop_Up_Window.winfo_pointerx() - Pop_Up_Window._offsetx
         y = Pop_Up_Window.winfo_pointery() - Pop_Up_Window._offsety
@@ -148,6 +182,7 @@ def Get_Pop_up_window(Configuration:dict, title: str, width: int, height: int, T
     left_position = Top_middle_point[0]
     top_position = Top_middle_point[1]
     Pop_Up_Window.geometry("+%d+%d" % (left_position, top_position))
+    Pop_Up_Window.maxsize(width=max_width, height=max_height)
 
     #Pop_Up_Window.geometry(f"{width}x{height}")
     Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: Pop_Up_Window.destroy())
@@ -202,7 +237,7 @@ def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkB
 
     Dialog_Window_geometry = (width, height)
     Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Dialog_Window_geometry[0])
-    Dialog_Window =  Get_Pop_up_window(Configuration=Configuration, title=title, width=Dialog_Window_geometry[0], height=Dialog_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
+    Dialog_Window =  Get_Pop_up_window(Configuration=Configuration, title=title, max_width=Dialog_Window_geometry[0], max_height=Dialog_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
 
     # Frame - General
     Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Dialog_Window, Name=title, Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=tooltip, GUI_Level_ID=GUI_Level_ID)
@@ -297,7 +332,7 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
 
     Picker_window_geometry = (width, height)
     Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Picker_window_geometry[0])
-    Picker_window = Get_Pop_up_window(Configuration=Configuration, title="Date Picker", width=Picker_window_geometry[0], height=Picker_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
+    Picker_window = Get_Pop_up_window(Configuration=Configuration, title="Date Picker", max_width=Picker_window_geometry[0], max_height=Picker_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
 
     # Frame - General
     Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Picker_window, Name="Date Picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Select date from calendar", GUI_Level_ID=GUI_Level_ID + 1)
@@ -306,4 +341,181 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
 
     build_calendar(Shown_Month=Current_Month, Shown_Year=Current_Year)
 
+# ------------------------------------- Only HQ Data Testing Tool ------------------------------------- #
+def Get_Prompt_Free_Of_Charge_Description_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+    # Build one line for one input field
+    Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
+    Frame_Area.pack_propagate(flag=False)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    # Frame Label
+    Frame_Label = Elements.Get_Widget_Field_Frame_Label(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Label.configure(width=100)
+    Frame_Label.pack_propagate(flag=False)
+    Frame_Label.pack(side="left", fill="x", expand=False, padx=0, pady=7)
+
+    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
+    Label_text.configure(text=f"")
+    Label_text.pack(side="right", fill="none")
+    if type(Field_ToolTip) == list:
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Label_text, message=Field_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=Field_ToolTip[1])
+    else:
+        pass
+
+    # Frame Value
+    Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Value.pack_propagate(flag=False)
+    Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
+
+    Item_No_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_No_text.configure(text="Item No")
+
+    Item_Description_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_Description_text.configure(text="Description")
+
+    Item_Qty_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_Qty_text.configure(text="Qty")
+
+    Item_Price_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_Price_text.configure(text="Price")
     
+    Item_No_text.pack(side="left", fill="x", expand=False, padx=(15, 0), pady=0)
+    Item_Description_text.pack(side="left", fill="x", expand=False, padx=(47, 0), pady=0)
+    Item_Qty_text.pack(side="left", fill="x", expand=False, padx=(46, 0), pady=0)
+    Item_Price_text.pack(side="left", fill="x", expand=False, padx=(28, 0), pady=0)
+
+    return Frame_Area
+
+def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+    # Build one line for one input field
+    Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
+    Frame_Area.pack_propagate(flag=False)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    # Frame Label
+    Frame_Label = Elements.Get_Widget_Field_Frame_Label(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Label.configure(width=100)
+    Frame_Label.pack_propagate(flag=False)
+    Frame_Label.pack(side="left", fill="x", expand=False, padx=0, pady=7)
+
+    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
+    Label_text.configure(text=f"{Label}:")
+    Label_text.pack(side="right", fill="none")
+    if type(Field_ToolTip) == list:
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Label_text, message=Field_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=Field_ToolTip[1])
+    else:
+        pass
+
+    # Frame Value
+    Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
+
+    Item_Number = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny")
+    Item_Number.configure(width=50)
+    Item_Description = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
+    Item_Description.configure(width=100)
+    Item_Qty_per_Machine = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation="Integer")
+    Item_Qty_per_Machine.configure(width=10)
+    Item_Price = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation="Float")
+    Item_Price.configure(width=20)
+    
+    Item_Number.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Item_Description.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Item_Qty_per_Machine.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Item_Price.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+
+    return Frame_Area
+
+def Get_Prompt_Flags_Of_Charge_Description_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+    # Build one line for one input field
+    Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
+    Frame_Area.pack_propagate(flag=False)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    # Frame Label
+    Frame_Label = Elements.Get_Widget_Field_Frame_Label(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Label.configure(width=130)
+    Frame_Label.pack_propagate(flag=False)
+    Frame_Label.pack(side="left", fill="x", expand=False, padx=0, pady=7)
+
+    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
+    Label_text.configure(text=f"")
+    Label_text.pack(side="right", fill="none")
+    if type(Field_ToolTip) == list:
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Label_text, message=Field_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=Field_ToolTip[1])
+    else:
+        pass
+
+    # Frame Value
+    Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Value.pack_propagate(flag=False)
+    Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
+
+    Substitution_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Substitution_text.configure(text="Substitution")
+
+    Substitution_Item_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Substitution_Item_text.configure(text="Sub. Item")
+
+    Cancel_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Cancel_text.configure(text="Cancel")
+
+    Finished_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Value, Label_Size="Field_Label", Font_Size="Field_Label")
+    Finished_text.configure(text="Finished")
+    
+    Substitution_text.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Substitution_Item_text.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Cancel_text.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+    Finished_text.pack(side="left", fill="x", expand=True, padx=5, pady=0)
+
+    return Frame_Area
+
+
+def Get_Prompt_Flags_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Item_Substituted: bool, Item_No_Substituted: str, Item_Finished: bool, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+    # Build one line for one input field
+    Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
+    Frame_Area.pack_propagate(flag=False)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    # Frame Label
+    Frame_Label = Elements.Get_Widget_Field_Frame_Label(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Label.configure(width=130)
+    Frame_Label.pack_propagate(flag=False)
+    Frame_Label.pack(side="left", fill="x", expand=False, padx=0, pady=7)
+
+    Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
+    Label_text.configure(text=f"{Label}:")
+    Label_text.pack(side="right", fill="none")
+    if type(Field_ToolTip) == list:
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Label_text, message=Field_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=Field_ToolTip[1])
+    else:
+        pass
+
+    # Frame Value
+    Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
+    Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
+
+    Use_Substitution = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
+    Use_Substitution.configure(width=30, text="")  
+    Sub_Item_No = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
+    Sub_Item_No.configure(width=90)
+    if Item_Substituted == True:
+        Use_Substitution.select()
+        Sub_Item_No.insert(index=0, string=Item_No_Substituted)
+    else:
+        Use_Substitution.deselect()
+    Use_Cancel = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
+    Use_Cancel.configure(width=30, text="")
+    Use_Finished = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
+    Use_Finished.configure(width=30, text="")
+    if Item_Finished == True:
+        Use_Finished.select()
+    else:
+        Use_Finished.deselect()
+
+    Use_Substitution.pack(side="left", fill="x", expand=False, padx=(45, 0), pady=0)
+    Sub_Item_No.pack(side="left", fill="x", expand=False, padx=(22, 0), pady=0)
+    Use_Cancel.pack(side="left", fill="x", expand=False, padx=(24, 0), pady=0)
+    Use_Finished.pack(side="left", fill="x", expand=False, padx=(45, 0), pady=0)
+
+    return Frame_Area

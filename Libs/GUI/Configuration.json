@@ -9,7 +9,7 @@
             "Colors": {
                 "Accent": {
                     "Accent_Color_Mode": "App Default",
-                    "Accent_Color_Manual": "#446b80",
+                    "Accent_Color_Manual": "#56ffbb",
                     "Accent_Color_List": [
                         "Windows",
                         "Manual",
@@ -341,6 +341,29 @@
             },
             "Small": {
                 "width": 125,
+                "height": 28,
+                "corner_radius": 10,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "bg_color": "transparent",
+                "fg_color": [
+                    "#efefef",
+                    "#111219"
+                ],
+                "text_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "placeholder_text_color": [
+                    "#FF9797",
+                    "#FF9797"
+                ]
+            },
+            "Tiny": {
+                "width": 50,
                 "height": 28,
                 "corner_radius": 10,
                 "border_width": 0,
@@ -802,6 +825,56 @@
                     }
                 },
                 "Scrollable_Frames": {
+                    "Half_size": {
+                        "Accent_Color_help": [
+                            "#446b80",
+                            "#446b80"
+                        ],
+                        "width": 300,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": "transparent",
+                        "orientation": "vertical",
+                        "scrollbar_fg_color": "transparent",
+                        "scrollbar_button_color": [
+                            "#2C2C2C",
+                            "#B4B4B7"
+                        ],
+                        "scrollbar_button_hover_color": [
+                            "#4f7c94",
+                            "#4f7c94"
+                        ]
+                    },
+                    "Single_size": {
+                        "Accent_Color_help": [
+                            "#446b80",
+                            "#446b80"
+                        ],
+                        "width": 500,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": "transparent",
+                        "orientation": "vertical",
+                        "scrollbar_fg_color": "transparent",
+                        "scrollbar_button_color": [
+                            "#2C2C2C",
+                            "#B4B4B7"
+                        ],
+                        "scrollbar_button_hover_color": [
+                            "#4f7c94",
+                            "#4f7c94"
+                        ]
+                    },
                     "Double_size": {
                         "Accent_Color_help": [
                             "#446b80",
