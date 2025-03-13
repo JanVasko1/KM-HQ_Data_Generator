@@ -56,3 +56,12 @@
 
 ### 0.0.1
 - describe all program
+
+## Fun facts
+### Setup Combination for Document
+- Confirmation - 19 440 possible setup combination
+- CPDI - 2 possible setup combination
+- PreAdvice - 4 possible setup combination
+- Delivery - 2 834 352 possible setup combination
+- Invoice - 8 640 possible setup combination
+- BB Invoice - 27 648 possible setup combination

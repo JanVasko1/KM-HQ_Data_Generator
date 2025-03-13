@@ -133,7 +133,6 @@
                             "ONB",
                             "BACK"
                         ],
-                        "Max_ATP_Records": 4,
                         "Quantities": {
                             "Method": "Ratio",
                             "Methods_List": [

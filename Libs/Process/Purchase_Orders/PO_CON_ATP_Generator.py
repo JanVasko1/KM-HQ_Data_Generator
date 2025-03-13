@@ -13,7 +13,6 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
 
     ATP_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Use"]
-    ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
     ATP_Quantity_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Method"]
 
     ATP_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Method"]
@@ -43,6 +42,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
 
         Lines_ATP_columns = ["quantity", "date", "stock_origin"]
         for Item_line in Lines_df.iterrows():
+            Item_Line_index = Item_line[0]
             row_Series = Series(Item_line[1])
             Item_line_qty = row_Series["quantity"]
 
@@ -140,7 +140,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
                 del Current_line_json
 
             # Assign Values into Lines_dict
-            # TODO
+            # TODO - podle Item_Line_index
 
             del Lines_ATP_df
     else:

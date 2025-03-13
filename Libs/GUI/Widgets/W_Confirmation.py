@@ -232,7 +232,6 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
 def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     ATP_Enabled = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Use"]
-    ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
     ATP_Quantity_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Method"]
     ATP_Quantity_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Methods_List"])
 
@@ -254,19 +253,11 @@ def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Lev
     Use_ATP_Frame_Var = Use_ATP_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Use_ATP_Frame_Var.configure(variable=ATP_Enabled_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Enabled_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Use"], Information=ATP_Enabled_Variable))
 
-    # Field - ATP Max Records per Item
-    ATP_Max_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Max Records", Field_Type="Input_Normal", Validation="Integer") 
-    ATP_Max_Frame_Var = ATP_Max_Frame.children["!ctkframe3"].children["!ctkentry"]
-    ATP_Max_Frame_Var.configure(placeholder_text="Max records per Item", placeholder_text_color="#949A9F")
-    ATP_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Max_ATP_Records"], Information=int(ATP_Max_Frame_Var.get())))
-    Entry_field_Insert(Field=ATP_Max_Frame_Var, Value=ATP_Max_Records)
-
     # Field - Quantities Methods
     ATP_QTY_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity Method", Field_Type="Input_OptionMenu") 
     ATP_QTY_Method_Frame_Var = ATP_QTY_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     ATP_QTY_Method_Frame_Var.configure(variable=ATP_Quantity_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
 
     # Field - Dates Methods
     ATP_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date Method", Field_Type="Input_OptionMenu") 
