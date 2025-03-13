@@ -67,7 +67,6 @@ def Generate_PO_CON_Lines(Settings: dict,
     Line_Flag_Item_EOL_Finished = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Item_EOL_Finish"]
     Line_Flag_Always_Substitute = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Line_Flags"]["Always_Substitute"]
     
-
     # Filter Dataframes by Purchase Order
     mask_HQ_Item_Tr_Reg = HQ_Item_Transport_Register_df["Document_No"] == Purchase_Order
     HQ_Item_Tr_Reg_Filtered = HQ_Item_Transport_Register_df[mask_HQ_Item_Tr_Reg]    
@@ -77,6 +76,8 @@ def Generate_PO_CON_Lines(Settings: dict,
 
     mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
     Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
+
+
     # --------------------------------------------- Items Definition --------------------------------------------- #
     Exported_Items_list = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
     Lines_df["buyer_aid"] = Exported_Items_list
@@ -638,5 +639,6 @@ def Generate_PO_CON_Lines(Settings: dict,
         PO_Confirmation_Lines.append(Current_line_json)
         del Current_line_json
 
+    Lines_df.to_csv(path_or_buf="Lines_df.csv", sep=";")
     Lines_No = len(Lines_df)
     return Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No

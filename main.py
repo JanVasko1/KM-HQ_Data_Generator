@@ -56,17 +56,19 @@ class Win(CTk):
 
 if __name__ == "__main__":
     deactivate_automatic_dpi_awareness()
+    Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
     Documents = Defaults_Lists.Load_Documents() 
-    # Create folders if do not exists
+
+    # Prepare Folders and Templates
     try:
+        # Create folders if do not exists
         os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
         os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"))
     except:
         pass
-
-    # Copy Default Templates
     try:
+        # Copy Default Templates
         File_Manipulation.Copy_All_File(Configuration=Configuration, 
                                         Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\"), 
                                         Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"), 
@@ -74,9 +76,7 @@ if __name__ == "__main__":
     except:
         pass
 
-    Settings = Defaults_Lists.Load_Settings()   # Must be after default templates are copied 
-
-    # Delete Operational data from Settings
+    # Delete Operational data from Documents
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")

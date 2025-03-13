@@ -235,7 +235,6 @@ def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Lev
     ATP_Max_Records = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Max_ATP_Records"]
     ATP_Quantity_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Method"]
     ATP_Quantity_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Methods_List"])
-    ATP_Quantity_Random_Distr_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"])
 
     ATP_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Method"]
     ATP_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Methods_List"])
@@ -262,20 +261,18 @@ def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Lev
     ATP_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Max_ATP_Records"], Information=int(ATP_Max_Frame_Var.get())))
     Entry_field_Insert(Field=ATP_Max_Frame_Var, Value=ATP_Max_Records)
 
-    # Field - Dates Methods
-    ATP_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date Method", Field_Type="Input_OptionMenu") 
-    ATP_Date_Method_Frame_Var = ATP_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    ATP_Date_Method_Frame_Var.configure(variable=ATP_Dates_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_Date_Method_Frame_Var, values=ATP_Dates_Method_List, command=lambda ATP_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Method"], Information=ATP_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
     # Field - Quantities Methods
     ATP_QTY_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Quantity Method", Field_Type="Input_OptionMenu") 
     ATP_QTY_Method_Frame_Var = ATP_QTY_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     ATP_QTY_Method_Frame_Var.configure(variable=ATP_Quantity_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_QTY_Method_Frame_Var, values=ATP_Quantity_Method_List, command=lambda ATP_QTY_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Quantity_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Method"], Information=ATP_QTY_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+
+
+    # Field - Dates Methods
+    ATP_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date Method", Field_Type="Input_OptionMenu") 
+    ATP_Date_Method_Frame_Var = ATP_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+    ATP_Date_Method_Frame_Var.configure(variable=ATP_Dates_Method_Variable)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=ATP_Date_Method_Frame_Var, values=ATP_Dates_Method_List, command=lambda ATP_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=ATP_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Method"], Information=ATP_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -284,38 +281,36 @@ def PO_ATP_General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Lev
 
 def PO_ATP_Quantity_Distribution(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    ONH_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["ONH"]
-    ONB_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["ONB"]
-    BACK_Distr_percentage = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Random_Distribution_Percentage"]["BACK"]
+    ONH_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["ONH"]
+    ONB_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["ONB"]
+    BACK_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["BACK"]
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Quantity distribution", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to Quantity distribution between each state.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Quantity distribution", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to Ratio between each state.\nGood to distribute values as percentage up to 100", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - ATP Distribution ONH
-    ONH_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH dist. %", Field_Type="Input_Normal", Validation="Integer") 
-    ONH_Distr_Frame_Var = ONH_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
-    ONH_Distr_Frame_Var.configure(placeholder_text="OnHand %", placeholder_text_color="#949A9F")
-    ONH_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "ONH"], Information=int(ONH_Distr_Frame_Var.get())))
-    Entry_field_Insert(Field=ONH_Distr_Frame_Var, Value=ONH_Distr_percentage)
+    ONH_Ratio_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH Ratio", Field_Type="Input_Normal", Validation="Integer") 
+    ONH_Ratio_Frame_Var = ONH_Ratio_Frame.children["!ctkframe3"].children["!ctkentry"]
+    ONH_Ratio_Frame_Var.configure(placeholder_text="OnHand Ratio", placeholder_text_color="#949A9F")
+    ONH_Ratio_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Ratio", "ONH"], Information=int(ONH_Ratio_Frame_Var.get())))
+    Entry_field_Insert(Field=ONH_Ratio_Frame_Var, Value=ONH_Ratio)
    
     # Field - ATP Distribution ONB
-    ONB_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB dist. %", Field_Type="Input_Normal", Validation="Integer") 
-    ONB_Distr_Frame_Var = ONB_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
-    ONB_Distr_Frame_Var.configure(placeholder_text="OnBoard %", placeholder_text_color="#949A9F")
-    ONB_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "ONB"], Information=int(ONB_Distr_Frame_Var.get())))
-    Entry_field_Insert(Field=ONB_Distr_Frame_Var, Value=ONB_Distr_percentage)
+    ONB_Ratio_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB Ratio", Field_Type="Input_Normal", Validation="Integer") 
+    ONB_Ratio_Frame_Var = ONB_Ratio_Frame.children["!ctkframe3"].children["!ctkentry"]
+    ONB_Ratio_Frame_Var.configure(placeholder_text="OnBoard Ratio", placeholder_text_color="#949A9F")
+    ONB_Ratio_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Ratio", "ONB"], Information=int(ONB_Ratio_Frame_Var.get())))
+    Entry_field_Insert(Field=ONB_Ratio_Frame_Var, Value=ONB_Ratio)
        
     # Field - ATP Distribution BACK
-    BACK_Distr_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="BACK dist. %", Field_Type="Input_Normal", Validation="Integer") 
-    BACK_Distr_Frame_Var = BACK_Distr_Frame.children["!ctkframe3"].children["!ctkentry"]
-    BACK_Distr_Frame_Var.configure(placeholder_text="BackOrder %", placeholder_text_color="#949A9F")
-    BACK_Distr_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Random_Distribution_Percentage", "BACK"], Information=int(BACK_Distr_Frame_Var.get())))
-    Entry_field_Insert(Field=BACK_Distr_Frame_Var, Value=BACK_Distr_percentage)
-
-
+    BACK_Ratio_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="BACK Ratio", Field_Type="Input_Normal", Validation="Integer") 
+    BACK_Ratio_Frame_Var = BACK_Ratio_Frame.children["!ctkframe3"].children["!ctkentry"]
+    BACK_Ratio_Frame_Var.configure(placeholder_text="BackOrder Ratio", placeholder_text_color="#949A9F")
+    BACK_Ratio_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Quantities", "Ratio", "BACK"], Information=int(BACK_Ratio_Frame_Var.get())))
+    Entry_field_Insert(Field=BACK_Ratio_Frame_Var, Value=BACK_Ratio)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -325,8 +320,8 @@ def PO_ATP_Quantity_Distribution(Settings: dict, Configuration: dict, Frame: CTk
 
 def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
-    ATP_ONH_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
-    ATP_ONB_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Manual_Dates"]["ONH"]
+    ATP_ONH_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Fixed_Dates"]["ONH"]
+    ATP_ONB_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Fixed_Dates"]["ONB"]
 
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
@@ -340,7 +335,7 @@ def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI
     Man_ONH_Date_Frame_Var = Man_ONH_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Man_ONH_DateFrame_Var_Var = Man_ONH_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONH_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-    Man_ONH_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Manual_Dates", "ONH"], Information=Man_ONH_Date_Frame_Var.get()))
+    Man_ONH_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Fixed_Dates", "ONH"], Information=Man_ONH_Date_Frame_Var.get()))
     Button_Man_ONH_DateFrame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONH_Date_Frame_Var, Clicked_on_Button=Button_Man_ONH_DateFrame_Var_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=Man_ONH_Date_Frame_Var, Value=ATP_ONH_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONH_DateFrame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
@@ -350,7 +345,7 @@ def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI
     Man_ONB_Date_Frame_Var = Man_ONB_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Man_ONB_Date_Frame_Var_Var = Man_ONB_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONB_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-    Man_ONB_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Manual_Dates", "ONB"], Information=Man_ONB_Date_Frame_Var.get()))
+    Man_ONB_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "ATP", "Dates_Intervals", "Fixed_Dates", "ONB"], Information=Man_ONB_Date_Frame_Var.get()))
     Button_Man_ONB_Date_Frame_Var_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Man_ONB_Date_Frame_Var, Clicked_on_Button=Button_Man_ONB_Date_Frame_Var_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
     Entry_field_Insert(Field=Man_ONB_Date_Frame_Var, Value=ATP_ONB_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONB_Date_Frame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)

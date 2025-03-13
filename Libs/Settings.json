@@ -135,15 +135,15 @@
                         ],
                         "Max_ATP_Records": 4,
                         "Quantities": {
-                            "Method": "Full Random",
+                            "Method": "Ratio",
                             "Methods_List": [
                                 "All On-Hand",
                                 "All On-Board",
                                 "Full Random",
                                 "Line Random",
-                                "Random Distribution"
+                                "Ratio"
                             ],
-                            "Random_Distribution_Percentage": {
+                            "Ratio": {
                                 "ONH": 80,
                                 "ONB": 15,
                                 "BACK": 5
@@ -165,9 +165,9 @@
                                     "To": 5
                                 }
                             },
-                            "Manual_Dates": {
-                                "ONH": "",
-                                "ONB": ""
+                            "Fixed_Dates": {
+                                "ONH": "2025-03-14",
+                                "ONB": "2025-03-16"
                             }
                         }
                     },

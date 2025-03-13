@@ -80,19 +80,14 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                         UoM_df=UoM_df)
 
             # ATP
-            PO_CON_ATP_Generator.Generate_PO_ATP_CON_Lines()
+            PO_CON_ATP_Generator.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Lines_df=Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
 
-
-            # Put Header, Lines and ATP together
-            # TODO --> put ATP first to lines
+            # Put Header, Lines with ATP together
             PO_Confirmation["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
 
             # Update Footer
             PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_item_num"] = Lines_No
             PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
-
-            # Prepare Dataframe for Delivery
-            # TODO --> sould not be there canceled and Finished Lines
 
             # Export 
             if Export_NAV_Folder == True:
@@ -100,6 +95,10 @@ def Process_Purchase_Orders(Settings: dict,
             else:
                 File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation, File_Name=PO_Confirmation_Number, File_suffix="json")
 
+            # Prepare Dataframe for Delivery
+            mask_Canceled_Lines = Lines_df["cancelled"] == False
+            mask_Canceled_Lines = Lines_df["discontinued"] == False
+            Lines_df = Lines_df[mask_Canceled_Lines & mask_Canceled_Lines]  
         else:
             pass
 

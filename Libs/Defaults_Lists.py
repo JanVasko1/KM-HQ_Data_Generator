@@ -1,6 +1,8 @@
 # Import Libraries
 import pickle
 import json
+import random
+from datetime import datetime, timedelta
 
 import Libs.Data_Functions as Data_Functions
 
@@ -79,4 +81,29 @@ def Dict_Main_Key_Change(Dictionary: dict, counter: int) -> dict:
         new_dict[new_key] = value
         counter += 1
     return new_dict
+
+# --------------------------------------------- Other Defaults --------------------------------------------- #
+def Date_str_to_Week_str(Date_str: str, Format: str) -> str:
+    Date_dt = datetime.strptime(Date_str, Format)
+    Week = Date_dt.isocalendar()[1]
+    Year = Date_dt.isocalendar()[0]
+    Year_Week_str = f"{Year}-{Week}"
+    return Year_Week_str
+
+def Date_Random_from_CurrentDay_plus_Interval(From_int: int, To_int: int, Format: str) -> str:
+    Today = datetime.now()
+    Start_Date_dt = Today + timedelta(days=From_int)
+    End_Date_dt = Today + timedelta(days=To_int)
+
+    date_list = []
+    current_date = Start_Date_dt
+    while current_date <= End_Date_dt:
+        date_list.append(current_date.strftime(Format))
+        current_date += timedelta(days=1)
+
+    Date_Selected = random.choice(date_list)
+    return Date_Selected
+
+
+
 
