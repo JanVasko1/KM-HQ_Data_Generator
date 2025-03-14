@@ -58,7 +58,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -85,7 +85,7 @@
                         }
                     },
                     "Unit_of_Measure": {
-                        "Method": "Prompt",
+                        "Method": "HQ Item Transport Export",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Line",
@@ -97,7 +97,7 @@
                         }
                     },
                     "Line_Flags": {
-                        "Use": true,
+                        "Use": false,
                         "Method": "Prompt",
                         "Methods_List": [
                             "Random Cancel",
@@ -109,7 +109,7 @@
                         "Always_Substitute": true
                     },
                     "Prices": {
-                        "Method": "Prompt",
+                        "Method": "Purchase Line",
                         "Methods_List": [
                             "Price List",
                             "Purchase Line",
@@ -134,11 +134,10 @@
                             "BACK"
                         ],
                         "Quantities": {
-                            "Method": "Ratio",
+                            "Method": "Line Random",
                             "Methods_List": [
                                 "All On-Hand",
                                 "All On-Board",
-                                "Full Random",
                                 "Line Random",
                                 "Ratio"
                             ],
@@ -156,12 +155,12 @@
                             ],
                             "Intervals_Dates": {
                                 "ONH": {
-                                    "From": 1,
-                                    "To": 10
+                                    "From": 2,
+                                    "To": 6
                                 },
                                 "ONB": {
-                                    "From": 3,
-                                    "To": 5
+                                    "From": 20,
+                                    "To": 30
                                 }
                             },
                             "Fixed_Dates": {
@@ -171,7 +170,7 @@
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Prompt",
+                        "Method": "Connected Items",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -204,12 +203,41 @@
                 }
             },
             "CPDI": {
-                "Use": false,
-                "Method": "All",
-                "Methods_List": [
-                    "All",
-                    "Prompt"
-                ]
+                "Use": true,
+                "Delivery_select": {
+                    "Method": "All Deliveries",
+                    "Methods_List": [
+                        "Fixed",
+                        "All Deliveries",
+                        "Prompt"
+                    ],
+                    "Fixed_Options": {
+                        "Fix_Delivery": ""
+                    }
+                },
+                "Level_Provided": {
+                    "Method": "Fixed",
+                    "Methods_List": [
+                        "Fixed",
+                        "Purchase Order",
+                        "Random",
+                        "Prompt"
+                    ],
+                    "Fixed_Options": {
+                        "Fix_Level": ""
+                    }
+                },
+                "Status": {
+                    "Method": "Prompt",
+                    "Methods_List": [
+                        "Fixed",
+                        "All Levels",
+                        "Prompt"
+                    ],
+                    "Fixed_Options": {
+                        "Fix_Status": ""
+                    }
+                }
             },
             "PreAdvice": {
                 "Use": false,

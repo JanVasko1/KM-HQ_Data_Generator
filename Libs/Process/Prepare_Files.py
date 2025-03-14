@@ -2,11 +2,18 @@
 from pandas import DataFrame
 
 import Libs.File_Manipulation as File_Manipulation
+import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk
 
 def Process_Purchase_Orders(Settings: dict, 
                             Configuration: dict,
+                            headers: dict, 
+                            tenant_id: str, 
+                            NUS_version: str, 
+                            NOC: str, 
+                            Environment: str, 
+                            Company: str,
                             window: CTk,
                             Can_Process: bool, 
                             Purchase_Headers_df: DataFrame, 
@@ -14,8 +21,8 @@ def Process_Purchase_Orders(Settings: dict,
                             HQ_Communication_Setup_df: DataFrame, 
                             Company_Information_df: DataFrame, 
                             Country_ISO_Code_list: list, 
-                            CPDI_Level_list: list, 
-                            CPDI_Status_list: list, 
+                            HQ_CPDI_Level_df: DataFrame, 
+                            HQ_CPDI_Status_df: DataFrame, 
                             HQ_Item_Transport_Register_df: DataFrame, 
                             Items_df: DataFrame, 
                             Items_BOMs_df: DataFrame, 
@@ -48,6 +55,7 @@ def Process_Purchase_Orders(Settings: dict,
         mask_PO = Purchase_Headers_df["No"] == Purchase_Order
         Single_PO_df = Purchase_Headers_df[mask_PO]  
         Buy_from_Vendor_No = Single_PO_df.iloc[0]["Buy_from_Vendor_No"]
+        PDICenterFieldNUS = Single_PO_df.iloc[0]["PDICenterFieldNUS"]
 
         # ---------------- Confirmation ---------------- #
         if Generate_Confirmation == True:
@@ -80,7 +88,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                         UoM_df=UoM_df)
 
             # ATP
-            PO_CON_ATP_Generator.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Lines_df=Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
+            PO_Confirmation_Lines = PO_CON_ATP_Generator.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Lines_df=Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
 
             # Put Header, Lines with ATP together
             PO_Confirmation["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
@@ -102,10 +110,11 @@ def Process_Purchase_Orders(Settings: dict,
         else:
             pass
 
-        # ---------------- CPDI ---------------- #
-        if Generate_CPDI == True:
-            # TIP --> Pozor na situaci, kdy CPDI bude generované v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
-            print("Process_CPDI")
+        # ---------------- Delivery ---------------- #
+        if Generate_Delivery == True:
+            # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
+            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
+            print("Process_Delivery")
         else:
             pass
 
@@ -117,11 +126,33 @@ def Process_Purchase_Orders(Settings: dict,
         else:
             pass
 
-        # ---------------- Delivery ---------------- #
-        if Generate_Delivery == True:
-            # TIP --> Pozor na situaci, kdy Delivery bude generované v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Delivery dělat
-            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
-            print("Process_Delivery")
+        # ---------------- CPDI ---------------- #
+        if Generate_CPDI == True:
+            if PDICenterFieldNUS == "BEU":      # Must check if PO is related to CPDI even if Generation enabled
+                if Generate_Delivery == False:      # Check if process is called from Delivery or standalone
+                    response = Elements.Get_MessageBox(Configuration=Configuration, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order}?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    if response == "Download":                    
+                        import Libs.Downloader.NAV_OData_API as NAV_OData_API
+
+                        # HQ_Testing_HQ_Item_Transport_Register
+                        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type=["Delivery"])
+                        if HQ_Item_Transport_Register_df.empty:
+                            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It is not possible to download Delivery for {Purchase_Order} during preparation of CPDI, when Delivery is not generated by full path script.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                            Deliveries_List = []
+                        else:
+                            # Drop Duplicate rows amd reset index
+                            HQ_Item_Transport_Register_df.drop_duplicates(inplace=True, ignore_index=True)
+                            HQ_Item_Transport_Register_df.reset_index(drop=True, inplace=True)
+                            print("\n----------HQ_Item_Transport_Register_df----------")
+                            print(HQ_Item_Transport_Register_df)
+                            Deliveries_List = HQ_Item_Transport_Register_df["Vendor_Document_No"].to_list()
+                    else:
+                        Deliveries_List = []
+                else:
+                    pass
+                # TODO --> process CPDI Generate
+            else:
+                pass
         else:
             pass
 

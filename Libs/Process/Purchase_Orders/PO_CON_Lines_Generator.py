@@ -473,7 +473,6 @@ def Generate_PO_CON_Lines(Settings: dict,
     else:
         pass
 
-    print(Lines_df)
     # -------- Lines Flags General -------- #
     if Can_Continue == True:
         # If Use
@@ -605,7 +604,9 @@ def Generate_PO_CON_Lines(Settings: dict,
         line_item_id_list.append((f"{line_item_id :06d}"))
     Lines_df["supplier_order_item_id"] = line_item_id_list
 
-    # Round Prices
+    # Round Values
+    Lines_df["quantity"] = Lines_df["quantity"].round(2)
+    Lines_df["ordered_quantity"] = Lines_df["ordered_quantity"].round(2)
     Lines_df["price_amount"] = Lines_df["price_amount"].round(2)
     Lines_df["price_line_amount"] = Lines_df["price_line_amount"].round(2)
 

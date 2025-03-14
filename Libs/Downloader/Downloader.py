@@ -24,7 +24,7 @@ def Progress_Bar_set(window: CTk, Progress_Bar: CTkProgressBar, value: int) -> N
 
 
 # ---------------------------------------------------------- Main Program ---------------------------------------------------------- #
-def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str,) -> list:
+def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str) -> list:
     Companies_list = []
 
     access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
@@ -101,8 +101,8 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     HQ_Communication_Setup_df = DataFrame()
     Company_Information_df = DataFrame()
     Country_ISO_Code_list = []
-    CPDI_Level_list = []
-    CPDI_Status_list = []
+    HQ_CPDI_Level_df = DataFrame()
+    HQ_CPDI_Status_df = DataFrame()
     HQ_Item_Transport_Register_df = DataFrame()
     Items_df = DataFrame()
     Items_For_BOM_df = DataFrame()
@@ -391,20 +391,24 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     else:
         pass
 
-    # HQ_Testing_HQ_CPDI_Levels
+    # HQ_Testing_HQ_CPDI_Level_df
     if Can_Process == True:
-        CPDI_Level_list = NAV_OData_API.Get_CPDI_Level_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------CPDI_Level_list----------")
-        print(CPDI_Level_list)
+        HQ_CPDI_Level_df = NAV_OData_API.Get_CPDI_Level_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        print("\n----------HQ_CPDI_Level_df----------")
+        print(HQ_CPDI_Level_df)
+        HQ_CPDI_Level_df.drop_duplicates(inplace=True, ignore_index=True)
+        HQ_CPDI_Level_df.reset_index(drop=True, inplace=True)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
 
-    # CPDI_Status_list
+    # HQ_Testing_HQ_CPDI_Status_df
     if Can_Process == True:
-        CPDI_Status_list = NAV_OData_API.Get_CPDI_Status_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------CPDI_Status_list----------")
-        print(CPDI_Status_list)
+        HQ_CPDI_Status_df = NAV_OData_API.Get_CPDI_Status_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        print("\n----------HQ_CPDI_Status_df----------")
+        print(HQ_CPDI_Status_df)
+        HQ_CPDI_Status_df.drop_duplicates(inplace=True, ignore_index=True)
+        HQ_CPDI_Status_df.reset_index(drop=True, inplace=True)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -425,6 +429,12 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Prepare_Files.Process_Purchase_Orders(
             Settings=Settings,
             Configuration=Configuration,
+            headers=headers, 
+            tenant_id=tenant_id, 
+            NUS_version=NUS_version, 
+            NOC=NOC, 
+            Environment=Environment, 
+            Company=Company,
             window=window,
             Can_Process=Can_Process, 
             Purchase_Headers_df=Purchase_Headers_df, 
@@ -432,8 +442,8 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
             Company_Information_df=Company_Information_df, 
             Country_ISO_Code_list=Country_ISO_Code_list, 
-            CPDI_Level_list=CPDI_Level_list, 
-            CPDI_Status_list=CPDI_Status_list, 
+            HQ_CPDI_Level_df=HQ_CPDI_Level_df, 
+            HQ_CPDI_Status_df=HQ_CPDI_Status_df, 
             HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, 
             Items_df=Items_df, 
             Items_BOMs_df=Items_BOMs_df, 

@@ -31,10 +31,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
 
     # --------------------------------------------- Lines iteration --------------------------------------------- #
     if ATP_Enabled == True:
-        if ATP_Quantity_Method == "Full Random":
-            # TODO --> need to do some precallculation so in main loop only assignmnt of Qty to status will be done
-            pass
-        elif ATP_Quantity_Method == "Ratio":
+        if ATP_Quantity_Method == "Ratio":
             ratio = [ONH_Ratio, ONB_Ratio, BACK_Ratio]
             ratio_sum = sum(ratio)
         else:
@@ -55,9 +52,6 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
             elif ATP_Quantity_Method == "All On-Board":
                 new_row = {"quantity": Item_line_qty, "date": "", "stock_origin": "ONB"}
                 Lines_ATP_df.loc[len(Lines_ATP_df)] = new_row
-            elif ATP_Quantity_Method == "Full Random":
-                # TODO
-                pass
             elif ATP_Quantity_Method == "Line Random":
                 ONH_qty = random.randint(a=0, b=Item_line_qty)
                 ONB_qty = Item_line_qty - ONH_qty
@@ -128,6 +122,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
 
             # Create ATP Dictionary
             PO_ATP_Lines = []
+            Lines_ATP_df["quantity"] = Lines_ATP_df["quantity"].round(2)
             for row in Lines_ATP_df.iterrows():
                 row_Series = Series(row[1])
                 Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Confirmation_ATP")
@@ -140,9 +135,18 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
                 del Current_line_json
 
             # Assign Values into Lines_dict
-            # TODO - podle Item_Line_index
+            PO_Confirmation_Lines[Item_Line_index]["schedules"] = PO_ATP_Lines
 
+            if ATP_ONH_Date != "":
+                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONH_Date
+                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONH_Date
+            else:
+                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONB_Date
+                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONB_Date
+            
             del Lines_ATP_df
     else:
         # TODO --> search how it looks without ATP in real document
         pass
+
+    return PO_Confirmation_Lines

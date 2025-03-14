@@ -379,9 +379,9 @@ def Get_Country_ISO_Code_list(Configuration: dict, headers: dict, tenant_id: str
     return Country_ISO_Code_list
 
 # ------------------- HQ_Testing_HQ_CPDI_Levels ------------------- #
-def Get_CPDI_Level_list(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_CPDI_Level_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
-    fields_list = ["Level"]
+    fields_list = ["Level", "Description", "Level_Content"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -394,16 +394,31 @@ def Get_CPDI_Level_list(Configuration: dict, headers: dict, tenant_id: str, NUS_
     response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Levels")
 
     # Prepare DataFrame
-    CPDI_Level_list = []
+    Level_list = []
+    Description_list = []
+    Level_Content_list = []
     for index in range(0, list_len):
-        CPDI_Level_list.append(response_values_List[index]["Level"])
+        Level_list.append(response_values_List[index]["Level"])
+        Description_list.append(response_values_List[index]["Description"])
+        Level_Content_list.append(response_values_List[index]["Level_Content"])
 
-    return CPDI_Level_list
+    response_values_dict = {
+        "Level": Level_list,
+        "Description": Description_list,
+        "Level_Content": Level_Content_list}
+    
+    if list_len == 1:
+        HQ_CPDI_Level_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        HQ_CPDI_Level_df = DataFrame(data=response_values_dict, columns=fields_list)
+    HQ_CPDI_Level_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=HQ_CPDI_Level_df, Columns_list=["Level"], Accenting_list=[True]) 
+
+    return HQ_CPDI_Level_df
 
 # ------------------- HQ_Testing_HQ_CPDI_Status ------------------- #
-def Get_CPDI_Status_list(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str):
+def Get_CPDI_Status_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str) -> DataFrame:
     # Fields
-    fields_list = ["Status_Code"]
+    fields_list = ["Status_Code", "Status_Description", "PDI_Finished"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -416,16 +431,31 @@ def Get_CPDI_Status_list(Configuration: dict, headers: dict, tenant_id: str, NUS
     response_values_List, list_len = Request_Endpoint(Configuration=Configuration, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_CPDI_Status")
 
     # Prepare DataFrame
-    CPDI_Status_list = []
+    Status_Code_list = []
+    Status_Description_list = []
+    PDI_Finished_list = []
     for index in range(0, list_len):
-        CPDI_Status_list.append(response_values_List[index]["Status_Code"])
+        Status_Code_list.append(response_values_List[index]["Status_Code"])
+        Status_Description_list.append(response_values_List[index]["Status_Description"])
+        PDI_Finished_list.append(response_values_List[index]["PDI_Finished"])
 
-    return CPDI_Status_list
+    response_values_dict = {
+        "Status_Code": Status_Code_list,
+        "Status_Description": Status_Description_list,
+        "PDI_Finished": PDI_Finished_list}
+    
+    if list_len == 1:
+        HQ_CPDI_Status_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        HQ_CPDI_Status_df = DataFrame(data=response_values_dict, columns=fields_list)
+    HQ_CPDI_Status_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=HQ_CPDI_Status_df, Columns_list=["Status_Code"], Accenting_list=[True]) 
+
+    return HQ_CPDI_Status_df
 
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
 def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: list) -> DataFrame:
     # Fields
-    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
+    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -446,6 +476,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
     Document_Line_No_list = []
     Exported_Line_No_list = []
     Vendor_Document_Type_list = []
+    Vendor_Document_No_list = []
     Line_Type_list = []
     Item_No_list = []
     Quantity_list = []
@@ -460,6 +491,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         Document_Line_No_list.append(response_values_List[index]["Document_Line_No"])
         Exported_Line_No_list.append(response_values_List[index]["Exported_Line_No"])
         Vendor_Document_Type_list.append(response_values_List[index]["Vendor_Document_Type"])
+        Vendor_Document_No_list.append(response_values_List[index]["Vendor_Document_No"])
         Line_Type_list.append(response_values_List[index]["Line_Type"])
         Item_No_list.append(response_values_List[index]["Item_No"])
         Quantity_list.append(response_values_List[index]["Quantity"])
@@ -474,6 +506,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         "Document_Line_No": Document_Line_No_list,
         "Exported_Line_No": Exported_Line_No_list,
         "Vendor_Document_Type": Vendor_Document_Type_list,
+        "Vendor_Document_No": Vendor_Document_No_list,
         "Line_Type": Line_Type_list,
         "Item_No": Item_No_list,
         "Quantity": Quantity_list,

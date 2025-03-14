@@ -121,7 +121,7 @@ def PO_Unit_of_Measure(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI
     UoM_Method_Frame_Var.configure(variable=UoM_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=UoM_Method_Frame_Var, values=UoM_Method_List, command=lambda UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Unit_of_Measure", "Method"], Information=UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Fixed Currency
+    # Field - Fixed UoM
     Fixed_UoM_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Unit of Measure", Field_Type="Input_Normal") 
     Fixed_UoM_Frame_Var = Fixed_UoM_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_UoM_Frame_Var.configure(placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F")
