@@ -36,7 +36,6 @@ def General(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID: 
     CPDI_Status_Method_List = list(Settings["0"]["HQ_Data_Handler"]["CPDI"]["Status"]["Methods_List"])
     Fixed_CPDI_Status = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Status"]["Fixed_Options"]["Fix_Status"]
 
-
     CPDI_Delivery_Method_Variable = StringVar(master=Frame, value=CPDI_Delivery_Method, name="CPDI_Delivery_Method_Variable")
     CPDI_Level_Method_Variable = StringVar(master=Frame, value=CPDI_Level_Method, name="CPDI_Level_Method_Variable")
     CPDI_Status_Method_Variable = StringVar(master=Frame, value=CPDI_Status_Method, name="CPDI_Status_Method_Variable")

@@ -191,7 +191,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_HQ_Item_Transport_Register
     if Can_Process == True:
-        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type=["Export"])
+        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type="Export")
         if HQ_Item_Transport_Register_df.empty:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False

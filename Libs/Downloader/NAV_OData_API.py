@@ -453,16 +453,17 @@ def Get_CPDI_Status_df(Configuration: dict, headers: dict, tenant_id: str, NUS_v
     return HQ_CPDI_Status_df
 
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
-def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: list) -> DataFrame:
+def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: str) -> DataFrame:
     # Fields
-    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date"]
+    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date", "Line_Flag"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
     filters_Purchase_Order = Get_Field_List_string(fields_list=Purchase_Order_list, Join_sign="','")
-    filters_Vendor_Document_Type = Get_Field_List_string(fields_list=Vendor_Document_Type, Join_sign="','")
-    filters_list_string = f"""Document_Type eq '{Document_Type}' and Document_No in ('{filters_Purchase_Order}') and Vendor_Document_Type in ('{filters_Vendor_Document_Type}')"""
-
+    if Vendor_Document_Type == "Export":
+        filters_list_string = f"""Document_Type eq '{Document_Type}' and Document_No in ('{filters_Purchase_Order}') and Vendor_Document_Type eq '{Vendor_Document_Type}'"""
+    else:
+        filters_list_string = f"""Document_Type eq '{Document_Type}' and Document_No in ('{filters_Purchase_Order}') and Vendor_Document_Type eq '{Vendor_Document_Type}' and Updated eq true and Cancelled eq false"""
     # Params
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 
@@ -483,6 +484,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
     Unit_of_Measure_list = []
     Currency_Code_list = []
     Order_Date_list = []
+    Line_Flag_list = []
 
     for index in range(0, list_len):
         Register_No_list.append(response_values_List[index]["Register_No"])
@@ -498,6 +500,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         Unit_of_Measure_list.append(response_values_List[index]["Unit_of_Measure"])
         Currency_Code_list.append(response_values_List[index]["Currency_Code"])
         Order_Date_list.append(response_values_List[index]["Order_Date"])
+        Line_Flag_list.append(response_values_List[index]["Line_Flag"])
 
     response_values_dict = {
         "Register_No": Register_No_list,
@@ -512,7 +515,8 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, headers: dict, tenant
         "Quantity": Quantity_list,
         "Unit_of_Measure": Unit_of_Measure_list,
         "Currency_Code": Currency_Code_list,
-        "Order_Date": Order_Date_list}
+        "Order_Date": Order_Date_list,
+        "Line_Flag": Line_Flag_list}
     
     if list_len == 1:
         HQ_Item_Transport_Register_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])

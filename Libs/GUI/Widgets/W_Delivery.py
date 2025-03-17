@@ -73,14 +73,14 @@ def DEL_Count(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID
 
     DEL_Random_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Method"]
     DEL_Random_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Methods_List"])
-    DEL_Free_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["FreeOfCharge_with_Main"]
+    DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["FreeOfCharge_with_Main"]
     Random_Max_count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Random_Max_count"]
 
     Fixed_Count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Fixed_Options"]["Count"]
 
     DEL_Count_Method_Variable = StringVar(master=Frame, value=DEL_Count_Method, name="DEL_Count_Method_Variable")
     DEL_Random_Method_Variable = StringVar(master=Frame, value=DEL_Random_Method, name="DEL_Random_Method_Variable")
-    DEL_Free_Main_Variable = BooleanVar(master=Frame, value=DEL_Free_Main, name="DEL_Free_Main_Variable")
+    DEL_FOCH_with_Main_Variable = BooleanVar(master=Frame, value=DEL_FOCH_with_Main, name="DEL_FOCH_with_Main_Variable")
     # ------------------------- Local Functions -------------------------#
     # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
@@ -94,12 +94,24 @@ def DEL_Count(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID
     DEL_Count_Frame_Var.configure(variable=DEL_Count_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Count_Frame_Var, values=DEL_Count_Method_List, command=lambda DEL_Count_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=DEL_Count_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Method"], Information=DEL_Count_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
+    # Field - Random Maximal count
+    DEL_Random_Max_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maximal count", Field_Type="Input_Normal", Validation="Integer") 
+    DEL_Random_Max_Frame_Var = DEL_Random_Max_Frame.children["!ctkframe3"].children["!ctkentry"]
+    DEL_Random_Max_Frame_Var.configure(placeholder_text="Maximal delivery Count", placeholder_text_color="#949A9F")
+    DEL_Random_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Information=int(DEL_Random_Max_Frame_Var.get())))
+    Entry_field_Insert(Field=DEL_Random_Max_Frame_Var, Value=Random_Max_count)
+
     # Field - Count Fix
     DEL_Count_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed count", Field_Type="Input_Normal", Validation="Integer") 
     DEL_Count_FIX_Frame_Var = DEL_Count_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
     DEL_Count_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
     DEL_Count_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Fixed_Options", "Count"], Information=int(DEL_Count_FIX_Frame_Var.get())))
     Entry_field_Insert(Field=DEL_Count_FIX_Frame_Var, Value=Fixed_Count)
+
+    # Field - Free of Charge with Machine
+    DEL_FOCH_with_Main_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="FOCHs with Machine", Field_Type="Input_CheckBox") 
+    DEL_FOCH_with_Main_Frame_Var = DEL_FOCH_with_Main_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    DEL_FOCH_with_Main_Frame_Var.configure(variable=DEL_FOCH_with_Main_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=DEL_FOCH_with_Main_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "FreeOfCharge_with_Main"], Information=DEL_FOCH_with_Main_Variable))
 
     # Section Quantities
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Random Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -110,18 +122,6 @@ def DEL_Count(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Level_ID
     DEL_Random_Frame_Var.configure(variable=DEL_Random_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Random_Frame_Var, values=DEL_Random_Method_List, command=lambda DEL_Random_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=DEL_Random_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Method"], Information=DEL_Random_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Random Maximal count
-    DEL_Random_Max_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maxima count", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Random_Max_Frame_Var = DEL_Random_Max_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Random_Max_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
-    DEL_Random_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Information=int(DEL_Random_Max_Frame_Var.get())))
-    Entry_field_Insert(Field=DEL_Random_Max_Frame_Var, Value=Random_Max_count)
-
-    # Field - Free of Charge with Machine
-    DEL_Free_Main_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Label always", Field_Type="Input_CheckBox") 
-    DEL_Free_Main_Frame_Var = DEL_Free_Main_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    DEL_Free_Main_Frame_Var.configure(variable=DEL_Free_Main_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=DEL_Free_Main_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "FreeOfCharge_with_Main"], Information=DEL_Free_Main_Variable))
-    
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
 

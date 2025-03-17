@@ -58,7 +58,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -203,16 +203,16 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Delivery_select": {
-                    "Method": "All Deliveries",
+                    "Method": "Prompt",
                     "Methods_List": [
                         "Fixed",
                         "All Deliveries",
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Delivery": ""
+                        "Fix_Delivery": "JVADELIVERY1"
                     }
                 },
                 "Level_Provided": {
@@ -224,18 +224,18 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Level": ""
+                        "Fix_Level": "PR1"
                     }
                 },
                 "Status": {
                     "Method": "Prompt",
                     "Methods_List": [
                         "Fixed",
-                        "All Levels",
+                        "All Statuses",
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Status": ""
+                        "Fix_Status": "11"
                     }
                 }
             },
@@ -262,7 +262,7 @@
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
@@ -274,14 +274,14 @@
                         "Prefix": "DEL"
                     },
                     "Fixed_Options": {
-                        "Number": ""
+                        "Number": "DELIVERY_JVA_001"
                     }
                 },
                 "Delivery_Counts": {
-                    "Method": "Prompt",
+                    "Method": "Fixed",
                     "Methods_List": [
-                        "Random",
                         "Fixed",
+                        "Random",
                         "Prompt"
                     ],
                     "Random_Options": {
@@ -318,11 +318,11 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": ""
+                        "Fix_Date": "2025-03-20"
                     },
                     "Random_Options": {
                         "From": 1,
-                        "To": 2
+                        "To": 5
                     }
                 },
                 "Carrier_ID": {
@@ -333,14 +333,14 @@
                         "Empty"
                     ],
                     "Fixed_Options": {
-                        "Fix_Carrier": ""
+                        "Fix_Carrier": "CARRIER01"
                     }
                 },
                 "Shipment_Method": {
-                    "Method": "Manual",
+                    "Method": "Empty",
                     "Methods_List": [
-                        "Random",
                         "Fixed",
+                        "Random",
                         "Empty"
                     ],
                     "Fixed_Options": {
@@ -434,7 +434,7 @@
                     },
                     "BillOfLanding": {
                         "Number": {
-                            "Method": "Automatic",
+                            "Method": "Empty",
                             "Methods_List": [
                                 "Fixed",
                                 "Automatic",
@@ -444,7 +444,7 @@
                                 "Prefix": "BIL"
                             },
                             "Fixed_Options": {
-                                "Fixed_BOL": ""
+                                "Fixed_BOL": "BOL00001"
                             }
                         }
                     }

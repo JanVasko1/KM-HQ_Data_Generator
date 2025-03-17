@@ -77,7 +77,6 @@ def Generate_PO_CON_Lines(Settings: dict,
     mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
     Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
 
-
     # --------------------------------------------- Items Definition --------------------------------------------- #
     Exported_Items_list = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
     Lines_df["buyer_aid"] = Exported_Items_list
@@ -364,7 +363,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                                 # Add to Lines_df
                                 Free_Item_dict = dict(zip(Lines_df_Columns, Free_Item_Line_list))
                                 Insert_Index += 1
-                                # BUG --> do not write to Global Lines_df somehow !!! -> zkusit nastavit prázdný dataframe hned po načtení knihoven
+                                # BUG --> do not write to Global Lines_df somehow !!! -> zkusit nastavit prázdný dataframe hned po načtení knihoven (funguje u CPDI Delivery --> asi že hned pod Global je zapsano přiřazení do promněné)
                                 Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
                             else:
                                 pass
@@ -562,7 +561,7 @@ def Generate_PO_CON_Lines(Settings: dict,
 
                     # Analyze Finished
                     Item_Finished = row_Series["discontinued"]
-
+                    
                     Item_Row = Elements_Groups.Get_Prompt_Flags_Of_Charge_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label=f"{Item_Line} - {Item_No}", Item_Substituted=Item_Substituted, Item_No_Substituted=Item_No_Substituted, Item_Finished=Item_Finished)
                 
                 # Dynamic Content height

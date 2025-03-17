@@ -104,6 +104,9 @@ def Date_Random_from_CurrentDay_plus_Interval(From_int: int, To_int: int, Format
     Date_Selected = random.choice(date_list)
     return Date_Selected
 
-
-
+def DateString_minus_Number_Day(Date_str: str, No_Days: int, Format: str) -> str:
+    Date_dt = datetime.strptime(Date_str, Format)
+    New_Date_dt = Date_dt + timedelta(days=No_Days)
+    New_Date = New_Date_dt.strftime(Format)
+    return New_Date
 

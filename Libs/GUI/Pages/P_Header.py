@@ -309,8 +309,8 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
     # Build look of Widget
     Status_Frame.pack(side="right", fill="none", expand=False, padx=5, pady=(2,2))
-    Authorization_Frame.pack(side="top", fill="none", expand=False, padx=0, pady=2)
-    Export_folder_Frame.pack(side="top", fill="none", expand=False, padx=0, pady=2)
+    Authorization_Frame.pack(side="top", fill="none", expand=False, padx=(0, 3), pady=2)
+    Export_folder_Frame.pack(side="top", fill="none", expand=False, padx=(0, 3), pady=2)
     Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
     Icon_Versions.pack(side="right", fill="none", expand=False, padx=5, pady=5)
 

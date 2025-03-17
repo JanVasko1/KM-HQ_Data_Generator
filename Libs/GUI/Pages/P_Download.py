@@ -149,12 +149,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
             # Save Purchase Orders to Documents.json
             Selected_POs_List.sort()
             Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=Selected_POs_List)
-            # BUG --> error when leaving
             PO_Select_window.destroy()
 
         def Reject_Choice() -> None:
             Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
-            # BUG --> error when leaving
             PO_Select_window.destroy()
 
 
@@ -288,12 +286,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
             # Save Purchase Orders to Documents.json
             Selected_PROs_List.sort()
             Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=Selected_PROs_List)
-            # BUG --> error when leaving
             PRO_Select_window.destroy()
 
         def Reject_Choice() -> None:
             Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
-            # BUG --> error when leaving
             PRO_Select_window.destroy()
 
         Selected_Company = Company_Variable.get()
