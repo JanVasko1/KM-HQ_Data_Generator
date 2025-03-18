@@ -1,4 +1,6 @@
 # Import Libraries
+import threading
+
 from customtkinter import CTk, CTkFrame, CTkButton, CTkScrollableFrame, StringVar, BooleanVar
 
 import Libs.GUI.Elements_Groups as Elements_Groups
@@ -27,17 +29,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Logistic_Process_Variable = StringVar(master=Frame, value="-", name="Logistic_Process_Variable")
 
     # ------------------------- Local Functions ------------------------#
-    def Download_Companies(Companies_Frame_Var: CTkScrollableDropdown) -> list:
-        global Companies_list
-        Companies_list = Downloader.Get_Companies_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get())
-
-        if len(Companies_list) > 0:
-            # Update Option List
-            Companies_Frame_Var.configure(values=Companies_list)
-
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Companies downloaded.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-        else:
-            pass
+    def Download_Companies(Companies_Frame_Var: CTkScrollableDropdown) -> None:
+        Companies_thread = threading.Thread(target=Downloader.Get_Companies_List, args=(Configuration, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Companies_Frame_Var))
+        Companies_thread.start()
+        Companies_thread.join(timeout=0.1) 
 
     def Get_Logistic_Process(PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Frame: CTkFrame, Selected_Company: str) -> list:
         # Delete Operational data from Settings to clear lists
@@ -48,46 +43,35 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
-        global Log_Process_List, Vendor_Lists
         Company_Variable.set(value=Selected_Company)       
+        NUS_Version = NUS_Version_Variable.get()
+        NOC = NOC_Variable.get()
+        Environment = Environment_Variable.get()
 
         # Logistic Process
-        Log_Process_List = Downloader.Get_Logistic_Process_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company)
-        if len(Log_Process_List) > 0:
-            # Add empty value for all
-            Log_Process_List.append(" ")    # space because of OptionMenu full row list
-            
-            # Update Option List
-            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
-            PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-            PO_MUL_LOG_PROC_Frame_Var.configure(values=Log_Process_List)
-            Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=Log_Proc_Used_Variable, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
-        else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Log_Proc_thread = threading.Thread(target=Downloader.Get_Logistic_Process_List, args=(Configuration, Documents, NUS_Version, NOC, Environment, Selected_Company, Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame))
+        Log_Proc_thread.start()
+        Log_Proc_thread.join(timeout=0.1) 
 
         # Vendor List
-        Vendor_Lists = Downloader.Get_HQ_Vendors_List(Configuration=Configuration, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Selected_Company)
-        if len(Vendor_Lists) > 0:
-            # Field - Vendor Filter
-            # Update Option List
-            Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=Vendor_Lists)
-            BB_Vendor_Used_Frame_Var = BB_Vendor_Used_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-            BB_Vendor_Used_Frame_Var.configure(values=Vendor_Lists)
-            Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=Vendor_Lists, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
-        else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-
+        Vendors_thread = threading.Thread(target=Downloader.Get_HQ_Vendors_List, args=(Configuration, Documents, NUS_Version, NOC, Environment, Selected_Company, BB_Vendor_Used_Variable, BB_Vendor_Used_Frame))
+        Vendors_thread.start()
+        Vendors_thread.join(timeout=0.1) 
+        
 
     def Generate_Purchase_Orders() -> None:
         Purchase_Order_list = Documents["Purchase_Order"]["Purchase_Order_List"]
         if len(Purchase_Order_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Processed = Downloader.Download_Data_Purchase_Orders(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Order_list=Purchase_Order_list)
-            if Processed == True:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-            else:
-                pass
+            Generate_PO_thread = threading.Thread(target=Downloader.Download_Data_Purchase_Orders, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Order_list))
+            Generate_PO_thread.start()
+            Generate_PO_thread.join(timeout=0.1) 
+
+    def Start_Order_Show_Thread(Button: CTkButton, PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown|None, Document_Type: str) -> None:
+        Show_PO_List_thread = threading.Thread(target=Purchase_Orders_Show, args=(Button, PO_MUL_LOG_PROC_Frame_Var, Document_Type))
+        Show_PO_List_thread.start()
+        Show_PO_List_thread.join(timeout=0.1) 
 
     def Purchase_Orders_Show(Button: CTkButton, PO_MUL_LOG_PROC_Frame_Var: CTkScrollableDropdown|None, Document_Type: str) -> None:
         def Confirm_Choice(PO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
@@ -222,12 +206,15 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Buy_from_Vendor_No) == "":
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no BEU Vendor selected, you have to select one before Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Processed = Downloader.Download_Data_BackBoneBilling(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Buy_from_Vendor_No=Buy_from_Vendor_No)
-            if Processed == True:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-            else:
-                pass
-        
+            Generate_BB_Invoice_thread = threading.Thread(target=Downloader.Download_Data_BackBoneBilling, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Buy_from_Vendor_No))
+            Generate_BB_Invoice_thread.start()
+            Generate_BB_Invoice_thread.join(timeout=0.1) 
+
+    def Start_Order_Return_Show_Thread(Button: CTkButton, Document_Type: str) -> None:
+        Show_PRO_List_thread = threading.Thread(target=Purchase_Return_Orders_Show, args=(Button, Document_Type))
+        Show_PRO_List_thread.start()
+        Show_PRO_List_thread.join(timeout=0.1) 
+
     def Purchase_Return_Orders_Show(Button: CTkButton, Document_Type: str) -> None:
         def Confirm_Choice(PRO_Select_Scrollable_Body: CTkScrollableFrame) -> None:
             Selected_PROs_List = []
@@ -353,12 +340,9 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
         if len(Purchase_Return_Orders_List) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Processed = Downloader.Download_Data_Return_Order(Settings=Settings, Configuration=Configuration, window=window, Progress_Bar=Progress_Bar, NUS_version=NUS_Version_Variable.get(), NOC=NOC_Variable.get(), Environment=Environment_Variable.get(), Company=Company_Variable.get(), Purchase_Return_Orders_List=Purchase_Return_Orders_List)
-            if Processed == True:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-            else:
-                pass
-
+            Generate_PRO_thread = threading.Thread(target=Downloader.Download_Data_Return_Order, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Return_Orders_List))
+            Generate_PRO_thread.start()
+            Generate_PRO_thread.join(timeout=0.1) 
 
     # ------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
@@ -523,7 +507,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
 
     # Buttons
     Button_PO_Show_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_Multi_PO, Button_Size="Normal")
-    Button_PO_Show_Var.configure(text="List", command = lambda: Purchase_Orders_Show(Button=Button_PO_Show_Var, PO_MUL_LOG_PROC_Frame_Var=PO_MUL_LOG_PROC_Frame_Var, Document_Type="Order"))
+    Button_PO_Show_Var.configure(text="List", command = lambda: Start_Order_Show_Thread(Button=Button_PO_Show_Var, PO_MUL_LOG_PROC_Frame_Var=PO_MUL_LOG_PROC_Frame_Var, Document_Type="Order"))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Buttons - Generate
@@ -660,7 +644,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
 
     # Buttons
     Button_PRO_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_PRO, Button_Size="Small")
-    Button_PRO_Generate_Var.configure(text="List", command = lambda: Purchase_Return_Orders_Show(Button=Button_PRO_Generate_Var, Document_Type="Return Order"))
+    Button_PRO_Generate_Var.configure(text="List", command = lambda: Start_Order_Return_Show_Thread(Button=Button_PRO_Generate_Var, Document_Type="Return Order"))
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Generate_Var, message="Show Listbox with all available Purchase Return Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Buttons - Generate

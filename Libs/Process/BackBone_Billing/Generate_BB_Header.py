@@ -16,6 +16,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
     Can_Continue = True
     BB_Invoice_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="BB_Invoice_Header")
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
+    Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
     
     BB_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Method"]
     BB_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Automatic_Options"]["Prefix"]
@@ -44,7 +45,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             BB_Number = BB_Fixed_Number
         elif BB_Numbers_Method == "Automatic":
             Today_dt = datetime.now()
-            Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
+            Today_str = Today_dt.strftime(Numbers_DateTime_format)
             BB_Number = BB_Automatic_Prefix + Today_str
         elif BB_Numbers_Method == "Prompt":
             def Select_BB_Number(Prompt_Number_Frame: CTkFrame):

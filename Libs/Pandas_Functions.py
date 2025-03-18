@@ -49,3 +49,8 @@ def Dataframe_Insert_Row_at_position(Insert_DataFrame: DataFrame, Insert_At_inde
     df2 = Insert_DataFrame.iloc[Insert_At_index:]
     new_df = concat([df1, DataFrame([New_Row]), df2]).reset_index(drop=True)
     return new_df
+
+def Dataframe_Insert_Row_at_End(Insert_DataFrame: DataFrame, New_Row: dict|list):
+    # Insert the new row
+    Insert_DataFrame.loc[len(Insert_DataFrame)] = New_Row
+    return Insert_DataFrame

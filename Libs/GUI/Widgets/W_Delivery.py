@@ -132,7 +132,7 @@ def Serial_Numbers(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Lev
     SN_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Prefix"]
     SN_Middle_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Method"]
     SN_Middle_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Methods_List"])
-    SN_Middle_Manual = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Manual"]
+    SN_Middle_Manual = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Fixed"]
     SN_Suffix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Suffix"]
 
     SN_Middle_Method_Variable = StringVar(master=Frame, value=SN_Middle_Method, name="Serial_Number_Method_Variable")
@@ -332,9 +332,9 @@ def Packages_Numbers(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_L
     Entry_field_Insert(Field=DEL_Pack_Prefix_Frame_Var, Value=Pack_Prefix)
 
     # Field - Maximal Records per delivery
-    DEL_Pack_MAX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed count", Field_Type="Input_Normal", Validation="Integer") 
+    DEL_Pack_MAX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maximal Package Count", Field_Type="Input_Normal", Validation="Integer") 
     DEL_Pack_MAX_Frame_Var = DEL_Pack_MAX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Pack_MAX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
+    DEL_Pack_MAX_Frame_Var.configure(placeholder_text="Fill maximal Package count per Delivery", placeholder_text_color="#949A9F")
     DEL_Pack_MAX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Automatic_Options", "Max_Packages_Records"], Information=int(DEL_Pack_MAX_Frame_Var.get())))
     Entry_field_Insert(Field=DEL_Pack_MAX_Frame_Var, Value=Pack_Max_Records)
 

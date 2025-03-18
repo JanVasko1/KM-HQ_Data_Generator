@@ -15,6 +15,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
+    Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
     Delivery_Header_Template_List = []
     
     DEL_Count_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Method"]
@@ -144,7 +145,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 PO_Delivery_Number_list.append(PO_Fixed_Number)
             elif PO_Numbers_Method == "Automatic":
                 Today_dt = datetime.now()
-                Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
+                Today_str = Today_dt.strftime(Numbers_DateTime_format)
                 PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str)
             else:
                 pass
@@ -157,7 +158,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
 
             if PO_Numbers_Method == "Automatic":
                 Today_dt = datetime.now()
-                Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
+                Today_str = Today_dt.strftime(Numbers_DateTime_format)
                 for i in range(1, Delivery_Count + 1 ):
                     PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str + "_" + str(i))
             else:
@@ -369,7 +370,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 BOL_List.append(BOL_Fixed_Number)
             elif BOL_Numbers_Method == "Automatic":
                 Today_dt = datetime.now()
-                Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
+                Today_str = Today_dt.strftime(Numbers_DateTime_format)
                 BOL_List.append(BOL_Automatic_Prefix + Today_str + "_" + str(i))
             elif BOL_Numbers_Method == "Empty":
                 BOL_List.append("")

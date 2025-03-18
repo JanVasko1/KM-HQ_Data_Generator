@@ -9,7 +9,8 @@ import Libs.Azure.Authorization as Authorization
 import Libs.Downloader.NAV_OData_API as NAV_OData_API
 import Libs.Process.Prepare_Files as Prepare_Files
 
-from customtkinter import CTkProgressBar, CTk
+from customtkinter import CTkProgressBar, CTk, CTkFrame, StringVar
+from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
 Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
 
@@ -24,7 +25,7 @@ def Progress_Bar_set(window: CTk, Progress_Bar: CTkProgressBar, value: int) -> N
 
 
 # ---------------------------------------------------------- Main Program ---------------------------------------------------------- #
-def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str) -> list:
+def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Companies_Frame_Var: CTkScrollableDropdown) -> list:
     Companies_list = []
 
     access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
@@ -33,9 +34,15 @@ def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environm
         'Content-Type': 'application/json'}
 
     Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
-    return Companies_list
+    
+    if len(Companies_list) > 0:
+        # Update Option List
+        Companies_Frame_Var.configure(values=Companies_list)
+        Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Companies downloaded.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+    else:
+        pass
 
-def Get_Logistic_Process_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str) -> list:
+def Get_Logistic_Process_List(Configuration: dict, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
     Log_Process_List = []
 
@@ -45,9 +52,20 @@ def Get_Logistic_Process_List(Configuration: dict, NUS_version: str, NOC: str, E
         'Content-Type': 'application/json'}
 
     Log_Process_List = NAV_OData_API.Get_HQ_Testing_Logistic_Process_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-    return Log_Process_List
+    
+    if len(Log_Process_List) > 0:
+        # Add empty value for all
+        Log_Process_List.append(" ")    # space because of OptionMenu full row list
+        
+        # Update Option List
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
+        PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+        PO_MUL_LOG_PROC_Frame_Var.configure(values=Log_Process_List)
+        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=Log_Proc_Used_Variable, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
+    else:
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Get_HQ_Vendors_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str) -> list:
+def Get_HQ_Vendors_List(Configuration: dict, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
     HQ_Vendors_list = []
 
@@ -57,7 +75,16 @@ def Get_HQ_Vendors_List(Configuration: dict, NUS_version: str, NOC: str, Environ
         'Content-Type': 'application/json'}
 
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-    return HQ_Vendors_list
+    
+    if len(HQ_Vendors_list) > 0:
+        # Update Option List
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=HQ_Vendors_list)
+        BB_Vendor_Used_Frame_Var = BB_Vendor_Used_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+        BB_Vendor_Used_Frame_Var.configure(values=HQ_Vendors_list)
+        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=HQ_Vendors_list, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
+    else:
+        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+
 
 def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str, Logistic_Process_Filter: str) -> list:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
@@ -81,7 +108,7 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
     if Can_Process == True:
         Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
         if len(Purchase_Header_list) == 0:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header for {Document_Type} downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             pass
     else:
@@ -90,7 +117,7 @@ def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment
     return Purchase_Header_list
 
 
-def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> bool:
+def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 23, ndigits=3), progress_color="#517A31")
@@ -462,7 +489,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
     
-    return Can_Process
+    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
 
 def Download_Data_BackBoneBilling(Settings: dict, 
@@ -473,7 +500,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
                                   NOC: str,
                                   Environment: str, 
                                   Company: str, 
-                                  Buy_from_Vendor_No: str) -> bool:
+                                  Buy_from_Vendor_No: str) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -595,10 +622,10 @@ def Download_Data_BackBoneBilling(Settings: dict,
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
 
-    return Can_Process
+    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
         
 
-def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> bool:
+def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -612,4 +639,4 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk,
     
     # TODO - Completaly finish
 
-    return Can_Process
+    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)

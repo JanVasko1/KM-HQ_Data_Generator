@@ -80,12 +80,11 @@ def Delivery_Date(Settings: dict, Configuration: dict, Frame: CTkFrame, GUI_Leve
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Shift", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Delivery Date Shift by Entry field
-    Pre_Del_Shift_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Date minus", Field_Type="Input_Normal", Validation="Integer") 
+    Pre_Del_Shift_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Date shift by", Field_Type="Input_Normal", Validation="Integer") 
     Pre_Del_Shift_Frame_Var = Pre_Del_Shift_Frame.children["!ctkframe3"].children["!ctkentry"]
     Pre_Del_Shift_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
     Pre_Del_Shift_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "PreAdvice", "Delivery_Date", "Delivery_Date_Shift_Options", "Shift_by"], Information=int(Pre_Del_Shift_Frame_Var.get())))
     Entry_field_Insert(Field=Pre_Del_Shift_Frame_Var, Value=Pre_Delivery_Shift)
-
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

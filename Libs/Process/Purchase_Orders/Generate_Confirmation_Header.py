@@ -14,6 +14,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     Can_Continue = True
     PO_Confirmation_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Confirmation_Header")
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
+    Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
 
     PO_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Method"]
     PO_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Automatic_Options"]["Prefix"]
@@ -41,7 +42,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             PO_Confirmation_Number = PO_Fixed_Number
         elif PO_Numbers_Method == "Automatic":
             Today_dt = datetime.now()
-            Today_str = Today_dt.strftime("%Y%m%d%H%M%S")
+            Today_str = Today_dt.strftime(Numbers_DateTime_format)
             PO_Confirmation_Number = PO_Automatic_Prefix + Today_str
         elif PO_Numbers_Method == "Prompt":
             def Select_PO_CON_Number(Prompt_Number_Frame: CTkFrame):

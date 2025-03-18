@@ -921,7 +921,7 @@ def Get_Items_Tracking_Codes_df(Configuration: dict, headers: dict, tenant_id: s
 # ------------------- HQ_Testing_Items_UoM ------------------- #
 def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list) -> DataFrame:
     # Fields
-    fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure", "Weight"]
+    fields_list = ["Item_No", "Code", "Qty_per_Unit_of_Measure", "Weight", "Cubage"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -939,17 +939,20 @@ def Get_Items_UoM_df(Configuration: dict, headers: dict, tenant_id: str, NUS_ver
     Code_list = []
     Qty_per_Unit_of_Measure_list = []
     Weight_List = []
+    Cubage_List = []
     for index in range(0, list_len):
         Item_No_list.append(response_values_List[index]["Item_No"])
         Code_list.append(response_values_List[index]["Code"])
         Qty_per_Unit_of_Measure_list.append(response_values_List[index]["Qty_per_Unit_of_Measure"])
         Weight_List.append(response_values_List[index]["Weight"])
+        Cubage_List.append(response_values_List[index]["Cubage"])
 
     response_values_dict = {
         "Item_No": Item_No_list, 
         "Code": Code_list,
         "Qty_per_Unit_of_Measure": Qty_per_Unit_of_Measure_list,
-        "Weight": Weight_List}
+        "Weight": Weight_List,
+        "Cubage": Cubage_List}
     
     if list_len == 1:
         Items_UoM_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])

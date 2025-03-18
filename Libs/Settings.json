@@ -14,7 +14,8 @@
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
-                "Time": "%H:%M"
+                "Time": "%H:%M",
+                "Numbers_DateTime": "%Y%m%d%H%M%S"
             }
         },
         "Connection": {
@@ -81,7 +82,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-10"
+                            "Fix_Date": "2025-03-19"
                         }
                     },
                     "Unit_of_Measure": {
@@ -257,7 +258,7 @@
                         "To": 0
                     },
                     "Delivery_Date_Shift_Options": {
-                        "Shift_by": 1
+                        "Shift_by": -1
                     }
                 }
             },
@@ -278,14 +279,14 @@
                     }
                 },
                 "Delivery_Counts": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
                         "Prompt"
                     ],
                     "Random_Options": {
-                        "Method": "Lines and Qty",
+                        "Method": "Lines only",
                         "Methods_List": [
                             "Lines and Qty",
                             "Lines only"
@@ -302,11 +303,11 @@
                     "Middle": {
                         "Method": "DateTime stamp",
                         "Methods_List": [
+                            "Fixed",
                             "Item No",
-                            "DateTime stamp",
-                            "Manual"
+                            "DateTime stamp"
                         ],
-                        "Manual": ""
+                        "Fixed": ""
                     },
                     "Suffix": "Counter"
                 },
@@ -360,7 +361,7 @@
                                 "Max_Packages_Records": 3
                             },
                             "Fixed_Options": {
-                                "Fixed_Package_No": ""
+                                "Fixed_Package_No": "PACKAGE0001"
                             }
                         },
                         "Items": {
@@ -373,9 +374,10 @@
                         "Plants": {
                             "Method": "Random",
                             "Methods_List": [
-                                "Random",
                                 "Fixed",
-                                "Empty"
+                                "Random",
+                                "Empty",
+                                "Prompt"
                             ],
                             "Fixed_Options": {
                                 "Fixed_Plant": "1000",
@@ -388,10 +390,10 @@
                         },
                         "Unit_Of_Measure": {
                             "Weight": {
-                                "Method": "Random",
+                                "Method": "Fixed",
                                 "Methods_List": [
-                                    "Random",
                                     "Fixed",
+                                    "Random",
                                     "Empty"
                                 ],
                                 "Fixed_Options": {
@@ -399,10 +401,10 @@
                                 }
                             },
                             "Volume": {
-                                "Method": "Random",
+                                "Method": "Fixed",
                                 "Methods_List": [
-                                    "Random",
                                     "Fixed",
+                                    "Random",
                                     "Empty"
                                 ],
                                 "Fixed_Options": {
@@ -428,7 +430,7 @@
                                 "Prefix": "EXID"
                             },
                             "Fixed_Options": {
-                                "Fixed_EXIDV2": ""
+                                "Fixed_EXIDV2": "EXIDV20001"
                             }
                         }
                     },
@@ -503,7 +505,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Prompt",
+                        "Method": "From Delivery",
                         "Methods_List": [
                             "Fixed",
                             "Random",

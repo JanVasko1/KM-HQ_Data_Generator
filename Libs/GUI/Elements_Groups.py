@@ -2,6 +2,8 @@
 from datetime import datetime
 import calendar
 
+import pyautogui
+
 from customtkinter import CTkFrame, CTkToplevel, CTkEntry, CTkButton, BooleanVar
 
 import Libs.GUI.Elements as Elements
@@ -250,8 +252,6 @@ def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkB
 def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Clicked_on_Button: CTkButton, width: int, height: int, Fixed: bool, GUI_Level_ID: int|None = None) -> None:
     # Based on https://github.com/maxverwiebe/CTkDatePicker
 
-    # BUG --> Not saving value into Settings.json and Global Settins (must use Save as for normal fiels) --> same for Color Picker
-
     Current_Year = datetime.now().year
     Current_Month = datetime.now().month
     Current_Day = datetime.now().day
@@ -279,6 +279,8 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
         date_entry.configure(state='normal')
         date_entry.delete(0, 30)
         date_entry.insert(0, selected_date.strftime(Date_format))
+        date_entry.focus_force()
+        pyautogui.press("tab") 
         Picker_window.destroy()
 
     def build_calendar(Shown_Month: int, Shown_Year: int) -> None:

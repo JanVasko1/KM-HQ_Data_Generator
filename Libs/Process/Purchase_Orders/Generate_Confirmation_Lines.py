@@ -585,8 +585,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             pass
     else:
         pass
-    
-    print(Lines_df)
+
     # --------------------------------------------- Solution Items --------------------------------------------- #
     # Set: "item_category": "TAS" --> cannot create PreAdvice and Delivery for that Item marked this way
 
@@ -639,6 +638,5 @@ def Generate_PO_CON_Lines(Settings: dict,
         PO_Confirmation_Lines.append(Current_line_json)
         del Current_line_json
 
-    Lines_df.to_csv(path_or_buf="Lines_df.csv", sep=";")
     Lines_No = len(Lines_df)
     return Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No

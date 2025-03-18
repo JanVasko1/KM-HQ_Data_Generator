@@ -4,6 +4,20 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+### 0.3.0
+- Purchase Order Delivery files process
+
+#### 0.2.1
+- threading implemented for all major processes of Download and process 
+    * Purchase Order
+    * BackBone Billing
+    * Purchase Return Order
+    * Download Companies
+    * Company Select
+
+### 0.2.0
+- Purchase Order Confirmation files process
+
 #### 0.1.1
 - Generate Invoice.json issue with lines Overwrite when transferring to json template from DataFrame
 - dynamic PopUp Windows height according content with maximal parameter
