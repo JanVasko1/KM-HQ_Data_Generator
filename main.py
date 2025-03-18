@@ -75,6 +75,15 @@ if __name__ == "__main__":
                                         include_hidden=True)
     except:
         pass
+    try:
+        # Crate authentication file if not exists
+        File_Exists = os.path.isfile(path=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"))
+        if File_Exists == True:
+            pass
+        else:
+            Defaults_Lists.Create_Azure_Auth()
+    except:
+        pass
 
     # Delete Operational data from Documents
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")

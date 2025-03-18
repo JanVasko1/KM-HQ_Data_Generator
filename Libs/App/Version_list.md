@@ -14,6 +14,7 @@
     * Purchase Return Order
     * Download Companies
     * Company Select
+- Better Authorization secure
 
 ### 0.2.0
 - Purchase Order Confirmation files process
