@@ -25,90 +25,92 @@ def Progress_Bar_set(window: CTk, Progress_Bar: CTkProgressBar, value: int) -> N
 
 
 # ---------------------------------------------------------- Main Program ---------------------------------------------------------- #
-def Get_Companies_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Companies_Frame_Var: CTkScrollableDropdown) -> list:
+def Get_Companies_List(Configuration: dict, window: CTk, NUS_version: str, NOC: str, Environment: str, Companies_Frame_Var: CTkScrollableDropdown) -> list:
     Companies_list = []
 
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
+    Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
     
     if len(Companies_list) > 0:
         # Update Option List
         Companies_Frame_Var.configure(values=Companies_list)
-        Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Companies downloaded.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Companies downloaded.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
-def Get_Logistic_Process_List(Configuration: dict, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame) -> None:
+def Get_Logistic_Process_List(Configuration: dict, window: CTk, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
     Log_Process_List = []
 
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    Log_Process_List = NAV_OData_API.Get_HQ_Testing_Logistic_Process_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    Log_Process_List = NAV_OData_API.Get_HQ_Testing_Logistic_Process_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     
     if len(Log_Process_List) > 0:
         # Add empty value for all
         Log_Process_List.append(" ")    # space because of OptionMenu full row list
         
         # Update Option List
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
         PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
         PO_MUL_LOG_PROC_Frame_Var.configure(values=Log_Process_List)
-        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=Log_Proc_Used_Variable, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
+        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=PO_MUL_LOG_PROC_Frame_Var, values=Log_Process_List, command=lambda PO_MUL_LOG_PROC_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=Log_Proc_Used_Variable, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information=PO_MUL_LOG_PROC_Frame_Var), GUI_Level_ID=3)
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download Logistic Process or Table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Get_HQ_Vendors_List(Configuration: dict, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame) -> None:
+def Get_HQ_Vendors_List(Configuration: dict, window: CTk, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
     HQ_Vendors_list = []
 
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     
     if len(HQ_Vendors_list) > 0:
         # Update Option List
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=HQ_Vendors_list)
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=HQ_Vendors_list)
         BB_Vendor_Used_Frame_Var = BB_Vendor_Used_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
         BB_Vendor_Used_Frame_Var.configure(values=HQ_Vendors_list)
-        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=HQ_Vendors_list, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
+        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=HQ_Vendors_list, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
+        # Last step to confirm that company is selected and all data downloaded
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Company Selected, you can continue.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 
-def Get_Orders_List(Configuration: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str, Logistic_Process_Filter: str) -> list:
+def Get_Orders_List(Configuration: dict, window: CTk, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Type: str, Logistic_Process_Filter: str) -> list:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
     Can_Process = True
     Purchase_Header_list = []
 
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
     # HQ_Testing_HQ_Communication
-    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     if HQ_Communication_Setup_df.empty:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Process = False
     else:
         pass
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
+        Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
         if len(Purchase_Header_list) == 0:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header for {Document_Type} downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase header for {Document_Type} downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             pass
     else:
@@ -149,15 +151,15 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     UoM_df = DataFrame()
 
     # Headers for all pages
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
     # HQ_Testing_HQ_Communication
-    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     if HQ_Communication_Setup_df.empty:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -170,9 +172,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_NVR_FS_Connect
     if Can_Process == True:
-        NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list)
+        NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list)
         if NVR_FS_Connect_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -186,9 +188,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Purchase_Headers
     if Can_Process == True:
-        Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_info_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list)
+        Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_info_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list)
         if Purchase_Headers_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -202,9 +204,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Purchase_Lines
     if Can_Process == True:
-        Purchase_Lines_df, Items_list = NAV_OData_API.Get_Purchase_Lines_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list)
+        Purchase_Lines_df, Items_list = NAV_OData_API.Get_Purchase_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list)
         if Purchase_Lines_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -218,9 +220,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_HQ_Item_Transport_Register
     if Can_Process == True:
-        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type="Export")
+        HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type="Export")
         if HQ_Item_Transport_Register_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -234,9 +236,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items
     if Can_Process == True:
-        Items_df, Substitution_Item_list, BOM_Item_list, BEU_Set_Item_list, Item_Tracking_Code_list = NAV_OData_API.Get_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
+        Items_df, Substitution_Item_list, BOM_Item_list, BEU_Set_Item_list, Item_Tracking_Code_list = NAV_OData_API.Get_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
         if Items_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -250,7 +252,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_BOM
     if Can_Process == True:
-        Items_BOMs_df, Items_For_BOM_df = NAV_OData_API.Get_Items_BOM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=BOM_Item_list)
+        Items_BOMs_df, Items_For_BOM_df = NAV_OData_API.Get_Items_BOM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=BOM_Item_list)
         Items_BOMs_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_BOMs_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_BOMs_df----------")
@@ -265,7 +267,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_Substitutions
     if Can_Process == True:
-        Items_Substitutions_df, Items_For_Substitution_df = NAV_OData_API.Get_Items_Substitutions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitution_Item_list)
+        Items_Substitutions_df, Items_For_Substitution_df = NAV_OData_API.Get_Items_Substitutions_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitution_Item_list)
         Items_Substitutions_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Substitutions_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_Substitutions_df----------")
@@ -280,7 +282,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_Connected_Items
     if Can_Process == True:
-        Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"])
+        Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"])
         Items_Connected_Items_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Connected_Items_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_Connected_Items_df----------")
@@ -314,10 +316,10 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_Price_Detail_List
     if Can_Process == True:
-        Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Active_Price_Lists_df----------")
         print(Active_Price_Lists_df)
-        Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"])
+        Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"])
         # Drop Duplicate rows
         Items_Price_List_Detail_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Price_List_Detail_df.reset_index(drop=True, inplace=True)
@@ -329,7 +331,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_Tracking_Codes
     if Can_Process == True:
-        Items_Tracking_df = NAV_OData_API.Get_Items_Tracking_Codes_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Item_Tracking_Code_list=Item_Tracking_Code_list)
+        Items_Tracking_df = NAV_OData_API.Get_Items_Tracking_Codes_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Item_Tracking_Code_list=Item_Tracking_Code_list)
         Items_Tracking_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Tracking_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_Tracking_df----------")
@@ -340,7 +342,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Items_UoM
     if Can_Process == True:
-        Items_UoM_df = NAV_OData_API.Get_Items_UoM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
+        Items_UoM_df = NAV_OData_API.Get_Items_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
         Items_UoM_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_UoM_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_UoM_df----------")
@@ -351,7 +353,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_BEU_Dist_Status
     if Can_Process == True:
-        Items_Distr_Status_df = NAV_OData_API.Get_Items_Distr_Status_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Items_Distr_Status_df = NAV_OData_API.Get_Items_Distr_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Items_Distr_Status_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Distr_Status_df.reset_index(drop=True, inplace=True)
         print("\n----------Items_Distr_Status_df----------")
@@ -362,7 +364,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Plans
     if Can_Process == True:
-        Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
         Plants_df.reset_index(drop=True, inplace=True)
         print("\n----------Plants_df----------")
@@ -373,7 +375,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Shipment_Method
     if Can_Process == True:
-        Shipment_Method_list = NAV_OData_API.Get_Shipment_Method_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Shipment_Method_list = NAV_OData_API.Get_Shipment_Method_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Shipment_Method_list----------")
         print(Shipment_Method_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -382,7 +384,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Shipping_Agent
     if Can_Process == True:
-        Shipping_Agent_list = NAV_OData_API.Get_Shipping_Agent_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Shipping_Agent_list = NAV_OData_API.Get_Shipping_Agent_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Shipping_Agent_list----------")
         print(Shipping_Agent_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -391,7 +393,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Tariff_Numbers
     if Can_Process == True:
-        Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Tariff_Number_list----------")
         print(Tariff_Number_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -400,7 +402,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Company_Information
     if Can_Process == True:
-        Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
         Company_Information_df.reset_index(drop=True, inplace=True)
         print("\n----------Company_Information_df----------")
@@ -411,7 +413,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_Country_Regions
     if Can_Process == True:
-        Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Country_ISO_Code_list----------")
         print(Country_ISO_Code_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -420,7 +422,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_HQ_CPDI_Level_df
     if Can_Process == True:
-        HQ_CPDI_Level_df = NAV_OData_API.Get_CPDI_Level_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        HQ_CPDI_Level_df = NAV_OData_API.Get_CPDI_Level_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------HQ_CPDI_Level_df----------")
         print(HQ_CPDI_Level_df)
         HQ_CPDI_Level_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -431,7 +433,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_HQ_CPDI_Status_df
     if Can_Process == True:
-        HQ_CPDI_Status_df = NAV_OData_API.Get_CPDI_Status_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        HQ_CPDI_Status_df = NAV_OData_API.Get_CPDI_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------HQ_CPDI_Status_df----------")
         print(HQ_CPDI_Status_df)
         HQ_CPDI_Status_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -442,7 +444,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
 
     # HQ_Testing_UoM
     if Can_Process == True:
-        UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         UoM_df.drop_duplicates(inplace=True, ignore_index=True)
         UoM_df.reset_index(drop=True, inplace=True)
         print("\n----------UoM_df----------")
@@ -456,13 +458,13 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Prepare_Files.Process_Purchase_Orders(
             Settings=Settings,
             Configuration=Configuration,
+            window=window,
             headers=headers, 
             tenant_id=tenant_id, 
             NUS_version=NUS_version, 
             NOC=NOC, 
             Environment=Environment, 
             Company=Company,
-            window=window,
             Can_Process=Can_Process, 
             Purchase_Headers_df=Purchase_Headers_df, 
             Purchase_Lines_df=Purchase_Lines_df, 
@@ -489,7 +491,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
     
-    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
 
 def Download_Data_BackBoneBilling(Settings: dict, 
@@ -514,17 +516,17 @@ def Download_Data_BackBoneBilling(Settings: dict,
     Tariff_Number_list = []
 
     # Headers for all pages
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
     # HQ_Testing_HQ_Communication
-    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     print("\n----------HQ_Communication_Setup_df----------")
     print(HQ_Communication_Setup_df)
     if HQ_Communication_Setup_df.empty:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -534,11 +536,11 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_NVR_FS_Connect
     if Can_Process == True:
-        NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list)
+        NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list)
         print("\n----------NVR_FS_Connect_df----------")
         print(NVR_FS_Connect_df)
         if NVR_FS_Connect_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -550,11 +552,11 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # Vendor_Service_Function_df
     if Can_Process == True:
-        Vendor_Service_Function_df = NAV_OData_API.Get_Vendor_Service_Functions_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Buy_from_Vendor_No=Buy_from_Vendor_No)
+        Vendor_Service_Function_df = NAV_OData_API.Get_Vendor_Service_Functions_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Buy_from_Vendor_No=Buy_from_Vendor_No)
         print("\n----------Vendor_Service_Function_df----------")
         print(Vendor_Service_Function_df)
         if Vendor_Service_Function_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -566,7 +568,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_Company_Information
     if Can_Process == True:
-        Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
         Company_Information_df.reset_index(drop=True, inplace=True)
         print("\n----------Company_Information_df----------")
@@ -577,7 +579,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_Plans
     if Can_Process == True:
-        Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
         Plants_df.reset_index(drop=True, inplace=True)
         print("\n----------Plants_df----------")
@@ -588,7 +590,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_Country_Regions
     if Can_Process == True:
-        Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Country_ISO_Code_list----------")
         print(Country_ISO_Code_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -597,7 +599,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_Tariff_Numbers
     if Can_Process == True:
-        Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+        Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         print("\n----------Tariff_Number_list----------")
         print(Tariff_Number_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -622,7 +624,7 @@ def Download_Data_BackBoneBilling(Settings: dict,
     else:
         Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
 
-    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
         
 
 def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk, Progress_Bar: CTkProgressBar, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list) -> None:
@@ -632,11 +634,11 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict, window: CTk,
     Can_Process = True
 
     # Headers for all pages
-    access_token = Authorization.Azure_OAuth(Configuration=Configuration, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
+    access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
     
     # TODO - Completaly finish
 
-    Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)

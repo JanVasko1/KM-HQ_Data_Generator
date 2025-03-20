@@ -6,7 +6,7 @@ def PD_Column_to_DateTime(PD_DataFrame: DataFrame, Column: str, Covert_Format: s
     PD_DataFrame[Column] = to_datetime(arg=PD_DataFrame[Column], format=Covert_Format)
     return PD_DataFrame
 
-def Dataframe_sort(Sort_Dataframe: DataFrame, Columns_list: list, Accenting_list: list) -> None:
+def Dataframe_sort(Sort_Dataframe: DataFrame, Columns_list: list, Accenting_list: list) -> DataFrame:
     # Sort Dataframe and reindex 
     Sort_Dataframe.sort_values(by=Columns_list, ascending=Accenting_list, axis=0, inplace = True)
     Sort_Dataframe.reset_index(inplace=True)
@@ -43,14 +43,14 @@ def Dataframe_Apply_Value_from_df2(row: Series, Fill_Column: str, Compare_Column
     else:
         return row[f"{Fill_Column}"]
     
-def Dataframe_Insert_Row_at_position(Insert_DataFrame: DataFrame, Insert_At_index: int, New_Row: dict):
+def Dataframe_Insert_Row_at_position(Insert_DataFrame: DataFrame, Insert_At_index: int, New_Row: dict) -> DataFrame:
     # Insert the new row
     df1 = Insert_DataFrame.iloc[:Insert_At_index]
     df2 = Insert_DataFrame.iloc[Insert_At_index:]
     new_df = concat([df1, DataFrame([New_Row]), df2]).reset_index(drop=True)
     return new_df
 
-def Dataframe_Insert_Row_at_End(Insert_DataFrame: DataFrame, New_Row: dict|list):
+def Dataframe_Insert_Row_at_End(Insert_DataFrame: DataFrame, New_Row: dict|list) -> DataFrame:
     # Insert the new row
     Insert_DataFrame.loc[len(Insert_DataFrame)] = New_Row
     return Insert_DataFrame

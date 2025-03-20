@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.3.1
+- Pop-Up message box shows always in the middle of main window
+
 ### 0.3.0
 - Purchase Order Delivery files process
 
@@ -71,7 +74,7 @@
 - SideBar prints Application Version
 
 ### 0.0.1
-- describe all program
+- Start
 
 ## Fun facts
 ### Setup Combination for Document

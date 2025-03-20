@@ -22,8 +22,8 @@ def Page_Settings(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Frame_Tab_Gen_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Gen, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_Tab_Gen_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Gen, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    Appearance_Widget = Settings_Widgets.Settings_General_Color(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_Gen_Column_A, GUI_Level_ID=2)
-    Program_User_Access_Widget = Settings_Widgets.Settings_User_Access(Settings=Settings, Configuration=Configuration, Frame=Frame_Tab_Gen_Column_B, GUI_Level_ID=2)
+    Appearance_Widget = Settings_Widgets.Settings_General_Color(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Tab_Gen_Column_A, GUI_Level_ID=2)
+    Program_User_Access_Widget = Settings_Widgets.Settings_User_Access(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Tab_Gen_Column_B, GUI_Level_ID=2)
 
     # Build look of Widget
     Frame_Settings_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)

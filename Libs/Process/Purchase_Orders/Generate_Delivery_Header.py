@@ -19,11 +19,12 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
     Delivery_Header_Template_List = []
     
     DEL_Count_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Method"]
-    DEL_Random_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Method"]
-    DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["FreeOfCharge_with_Main"]
     Random_Max_count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Random_Max_count"]
     Fixed_Count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Fixed_Options"]["Count"]
     Delivery_Count = 0
+
+    DEL_Assignment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Method"]
+    DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["FreeOfCharge_with_Main"]
 
     PO_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Method"]
     PO_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Automatic_Options"]["Prefix"]
@@ -59,12 +60,12 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
 
     if CompleteDeliveryFieldNUS == True:
         Delivery_Count = 1
-        Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Count", message=f"Program set Delivery Count = 1 as Purchase Order is marked as Complete Delivery.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = 1 as Purchase Order is marked as Complete Delivery.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
     else:
         if DEL_Count_Method == "Fixed":
             Delivery_Count = Fixed_Count
         elif DEL_Count_Method == "Random":
-            if DEL_Random_Method == "Lines and Qty":
+            if DEL_Assignment_Method == "Full random":
                 Sum_Qty = Confirmed_Lines_df["quantity"].sum()
                 if DEL_FOCH_with_Main == True:
                     # TODO --> Minus FOCH Qty from whole Sum_Qty --> not to separate them on Delivery later 
@@ -72,7 +73,16 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 else:
                     pass
                 Delivery_Count = random.randint(1, Sum_Qty)
-            elif DEL_Random_Method == "Lines only":
+            elif DEL_Assignment_Method == "Lines random":
+                Sum_Lines = len(Confirmed_Lines_df)
+                if DEL_FOCH_with_Main == True:
+                    # TODO --> Minus FOCH lines count from whole Sum_Lines --> not to separate them on Delivery later 
+                    pass 
+                else:
+                    pass
+                Delivery_Count = random.randint(1, Sum_Lines)
+            elif DEL_Assignment_Method == "Prompt":
+                # Should define same Delivery Count as in whole Line Random
                 Sum_Lines = len(Confirmed_Lines_df)
                 if DEL_FOCH_with_Main == True:
                     # TODO --> Minus FOCH lines count from whole Sum_Lines --> not to separate them on Delivery later 
@@ -81,7 +91,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                     pass
                 Delivery_Count = random.randint(1, Sum_Lines)
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Random Method selected: {DEL_Random_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
         elif DEL_Count_Method == "Prompt":
             def Select_PO_DEL_Number(Prompt_Count_Frame: CTkFrame):
@@ -102,7 +112,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Count_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal", Validation="Integer")  
+            Prompt_Count_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal", Validation="Integer")  
             Prompt_Count_Frame_Var = Prompt_Count_Frame.children["!ctkframe3"].children["!ctkentry"]
             Prompt_Count_Frame_Var.configure(placeholder_text="Insert Delivery Count", placeholder_text_color="#949A9F")
 
@@ -115,20 +125,20 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Button_Confirm_Var.wait_variable(PO_DEL_Count_Variable)
             Delivery_Count = PO_DEL_Count_Variable.get()
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
     # Max Delivery Count
     if Delivery_Count > Random_Max_count:
         Delivery_Count = Random_Max_count
-        Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
     Sum_Confirmed_Lines = Confirmed_Lines_df["quantity"].sum()
     if Delivery_Count > Sum_Confirmed_Lines:
         Delivery_Count = Sum_Confirmed_Lines
-        Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
@@ -152,7 +162,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
         elif Delivery_Count > 1:
             if PO_Numbers_Method == "Fixed":
                 PO_Numbers_Method = "Prompt"
-                Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Count", message=f"Combination of Delivery Count = {Delivery_Count} and Number Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Combination of Delivery Count = {Delivery_Count} and Number Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
             else:
                 pass
 
@@ -191,7 +201,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                     PO_DEL_Number_Variable.set(value=PO_Delivery_Number_list_joined)
                     PO_DEL_Number_Window.destroy()
                 else:
-                    Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Count", message=f"All Deliveries must have an number, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"All Deliveries must have an number, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
 
             # TopUp Window
             PO_DEL_Number_Window_geometry = (520, 500)
@@ -207,7 +217,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             # Vendor_Service_ID
             for i in range(1, Delivery_Count + 1):
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Delivery {i}", Field_Type="Input_Normal") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Delivery {i}", Field_Type="Input_Normal") 
                 PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 PO_Fields_Frame_Var.configure(placeholder_text="Manual Delivery Number", placeholder_text_color="#949A9F")
                 
@@ -248,7 +258,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
         elif Delivery_Count > 1:
             if Delivery_Dates_Method == "Fixed":
                 Delivery_Dates_Method = "Prompt"
-                Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Date", message=f"Combination of Delivery Count = {Delivery_Count} and Date Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"Combination of Delivery Count = {Delivery_Count} and Date Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
             else:
                 pass
 
@@ -286,7 +296,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                     PO_DEL_Date_Variable.set(value=PO_Delivery_Date_list_joined)
                     PO_DEL_Date_Window.destroy()
                 else:
-                    Elements.Get_MessageBox(Configuration=Configuration, title="Delivery Date", message=f"All Deliveries must have an date, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"All Deliveries must have an date, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
 
             # TopUp Window
             PO_DEL_Date_Window_geometry = (520, 500)
@@ -302,7 +312,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             # Vendor_Service_ID
             for Delivery in PO_Delivery_Number_list:
                 # Fields
-                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Entry_DropDown")  
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Entry_DropDown")  
                 Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                 Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
                 Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -357,7 +367,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif Carrier_ID_Method == "Empty":
                 Carrier_ID_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -375,7 +385,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif BOL_Numbers_Method == "Empty":
                 BOL_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -393,7 +403,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif Shipment_Method == "Empty":
                 Shipment_Method_Select_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):

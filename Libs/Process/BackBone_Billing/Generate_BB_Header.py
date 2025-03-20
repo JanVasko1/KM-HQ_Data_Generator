@@ -66,7 +66,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Number",  Field_Type="Input_Normal")  
+            Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Number",  Field_Type="Input_Normal")  
             Prompt_Number_Frame_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
             Prompt_Number_Frame_Var.configure(placeholder_text="Insert your Invoice Number", placeholder_text_color="#949A9F")
 
@@ -79,7 +79,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Button_Confirm_Var.wait_variable(BB_Number_Variable)
             BB_Number = BB_Number_Variable.get()
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
         
         # Fill value in template
@@ -113,7 +113,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Entry_DropDown")  
+            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Entry_DropDown")  
             Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
             Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
             Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -130,7 +130,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             BB_Invoice_Date = BB_Invoice_Date_Variable.get()
             
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
         # Fill value in template
@@ -148,7 +148,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             previous_month_date = Today_dt - relativedelta(months=1)
             BB_Order_ID = previous_month_date.strftime("%B_%Y")
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
         # Fill value in template
@@ -167,7 +167,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
         elif BB_Order_date_Method == "Invoice date":
             BB_Order_Date = BB_Invoice_Date
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
         # Fill value in template

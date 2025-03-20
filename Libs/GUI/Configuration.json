@@ -793,6 +793,37 @@
                         "fg_color": "transparent"
                     }
                 },
+                "Double_size": {
+                    "Body": {
+                        "width": 900,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#efefef"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": [
+                            "#DBDBDB",
+                            "#2C2C2C"
+                        ]
+                    },
+                    "Header": {
+                        "width": 898,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Data_Area": {
+                        "width": 898,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    }
+                },
                 "Triple_size": {
                     "Body": {
                         "width": 1560,
@@ -818,6 +849,37 @@
                     },
                     "Data_Area": {
                         "width": 1550,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    }
+                },
+                "Item_Del_Assign": {
+                    "Body": {
+                        "width": 1000,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": [
+                            "#DBDBDB",
+                            "#2C2C2C"
+                        ]
+                    },
+                    "Header": {
+                        "width": 980,
+                        "height": 28,
+                        "corner_radius": 0,
+                        "border_width": 0,
+                        "bg_color": "transparent",
+                        "fg_color": "transparent"
+                    },
+                    "Data_Area": {
+                        "width": 980,
                         "corner_radius": 0,
                         "border_width": 0,
                         "bg_color": "transparent",
@@ -900,6 +962,31 @@
                             "#4f7c94"
                         ]
                     },
+                    "Triple_size": {
+                        "Accent_Color_help": [
+                            "#446b80",
+                            "#446b80"
+                        ],
+                        "width": 1200,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": "transparent",
+                        "orientation": "vertical",
+                        "scrollbar_fg_color": "transparent",
+                        "scrollbar_button_color": [
+                            "#2C2C2C",
+                            "#B4B4B7"
+                        ],
+                        "scrollbar_button_hover_color": [
+                            "#4f7c94",
+                            "#4f7c94"
+                        ]
+                    },
                     "PO_List": {
                         "Accent_Color_help": [
                             "#446b80",
@@ -931,6 +1018,31 @@
                             "#446b80"
                         ],
                         "width": 600,
+                        "corner_radius": 10,
+                        "border_width": 1,
+                        "border_color": [
+                            "#2C2C2C",
+                            "#FFFFFF"
+                        ],
+                        "bg_color": "transparent",
+                        "fg_color": "transparent",
+                        "orientation": "vertical",
+                        "scrollbar_fg_color": "transparent",
+                        "scrollbar_button_color": [
+                            "#2C2C2C",
+                            "#B4B4B7"
+                        ],
+                        "scrollbar_button_hover_color": [
+                            "#4f7c94",
+                            "#4f7c94"
+                        ]
+                    },
+                    "Item_Del_Assign": {
+                        "Accent_Color_help": [
+                            "#446b80",
+                            "#446b80"
+                        ],
+                        "width": 1000,
                         "corner_radius": 10,
                         "border_width": 1,
                         "border_color": [

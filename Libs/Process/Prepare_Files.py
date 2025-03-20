@@ -8,15 +8,15 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
-def Get_Confirmed_HQ_Lines_for_Delivery(Configuration: dict, Purchase_Order: str, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str) -> DataFrame:
-    response = Elements.Get_MessageBox(Configuration=Configuration, title="Delivery document generation.", message=f"Do you want to download Confirmation from HQ Item Transport Register related to {Purchase_Order} to build data for Delivery?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+def Get_Confirmed_HQ_Lines_for_Delivery(Configuration: dict, window: CTk, Purchase_Order: str, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str) -> DataFrame:
+    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery document generation.", message=f"Do you want to download Confirmation from HQ Item Transport Register related to {Purchase_Order} to build data for Delivery?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
     if response == "Download":                    
         import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
         # HQ_Testing_HQ_Item_Transport_Register
-        Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
+        Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
         if Confirmed_Lines_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             # Set Cancelled
             Confirmed_Lines_df["cancelled"] = False
@@ -47,13 +47,13 @@ def Get_Confirmed_HQ_Lines_for_Delivery(Configuration: dict, Purchase_Order: str
 # ---------------------------------------------------------- Main Functions ---------------------------------------------------------- #
 def Process_Purchase_Orders(Settings: dict, 
                             Configuration: dict,
+                            window: CTk,
                             headers: dict, 
                             tenant_id: str, 
                             NUS_version: str, 
                             NOC: str, 
                             Environment: str, 
                             Company: str,
-                            window: CTk,
                             Can_Process: bool, 
                             Purchase_Headers_df: DataFrame, 
                             Purchase_Lines_df: DataFrame, 
@@ -148,8 +148,7 @@ def Process_Purchase_Orders(Settings: dict,
             mask_Label = Confirmation_Lines_df["bom"] == False
             # BUG --> if Machine is discontinued or canecelled also Label and FOCH should be removed
             Confirmed_Lines_df = Confirmation_Lines_df[mask_Canceled_Lines & mask_Discontinued_Lines & mask_Label]  
-            Confirmed_Lines_df.reset_index(inplace=True)
-            Confirmed_Lines_df.drop(labels=["index"], inplace=True, axis=1)
+            Confirmed_Lines_df.reset_index(drop=True, inplace=True)
         else:
             pass
 
@@ -163,15 +162,15 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Confirmation lines existing
             if Generate_Confirmation == True:
                 if Confirmed_Lines_df.empty:
-                    Elements.Get_MessageBox(Configuration=Configuration, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty, program will use Exported data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty, program will use Exported data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                     # TODO --> transfer HQ Export to Confirmed_Lines_df so it can be used as source for Delivery + to finish all data transfered to Delviery_Generators like "PO_Confirmation_Number"
                     # TODO --> Data of "Confirmed_Lines_df" msut be exactly same as if it would be generated by program
                 else:
                     pass
             else:
-                response = Elements.Get_MessageBox(Configuration=Configuration, title="Data for Delivery", message=f"Do you want to use Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Do you want to use Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                 if response == "Confirmation":    
-                    Confirmed_Lines_df = Get_Confirmed_HQ_Lines_for_Delivery(Configuration=Configuration, Purchase_Order=Purchase_Order, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+                    Confirmed_Lines_df = Get_Confirmed_HQ_Lines_for_Delivery(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
                     # TODO --> Data of "Confirmed_Lines_df" msut be exactly same as if it would be generated by program
                 elif response == "Export":  
                     # TODO --> transfer HQ Export to Confirmed_Lines_df so it can be used as source for Delivery + to finish all data transfered to Delviery_Generators like "PO_Confirmation_Number"
@@ -205,23 +204,40 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                 Items_df=Items_df)
 
             # Package Headers
-            PO_Deliveries, Package_Header_df = Generate_Delivery_Packages_Headers.Generate_Delivery_Packages_Headers(Settings=Settings, 
-                                                                                                                    Configuration=Configuration, 
-                                                                                                                    PO_Deliveries=PO_Deliveries, 
-                                                                                                                    PO_Delivery_Number_list=PO_Delivery_Number_list, 
-                                                                                                                    Delivery_Lines_df=Delivery_Lines_df, 
-                                                                                                                    UoM_df=UoM_df)
+            PO_Deliveries, Package_Header_df, Weight_UoM, Volume_UoM = Generate_Delivery_Packages_Headers.Generate_Delivery_Packages_Headers(Settings=Settings, 
+                                                                                                                                            Configuration=Configuration, 
+                                                                                                                                            window=window,
+                                                                                                                                            PO_Deliveries=PO_Deliveries, 
+                                                                                                                                            PO_Delivery_Number_list=PO_Delivery_Number_list, 
+                                                                                                                                            Delivery_Lines_df=Delivery_Lines_df, 
+                                                                                                                                            UoM_df=UoM_df)
 
             # Package Lines
-            PO_Deliveries = Generate_Delivery_Packages_Lines.Generate_Delivery_Packages_Lines(Settings=Settings, 
-                                                                                            Configuration=Configuration, 
-                                                                                            PO_Deliveries=PO_Deliveries, 
-                                                                                            PO_Delivery_Number_list=PO_Delivery_Number_list, 
-                                                                                            Delivery_Lines_df=Delivery_Lines_df, 
-                                                                                            Package_Header_df=Package_Header_df, 
-                                                                                            Items_UoM_df=Items_UoM_df, 
-                                                                                            UoM_df=UoM_df)
-            
+            PO_Deliveries, Delivery_Lines_df, Package_Lines_df = Generate_Delivery_Packages_Lines.Generate_Delivery_Packages_Lines(Settings=Settings, 
+                                                                                                                                    Configuration=Configuration, 
+                                                                                                                                    window=window,
+                                                                                                                                    PO_Deliveries=PO_Deliveries, 
+                                                                                                                                    PO_Delivery_Number_list=PO_Delivery_Number_list, 
+                                                                                                                                    Delivery_Lines_df=Delivery_Lines_df, 
+                                                                                                                                    Package_Header_df=Package_Header_df, 
+                                                                                                                                    Items_UoM_df=Items_UoM_df, 
+                                                                                                                                    UoM_df=UoM_df)
+
+            # Update Footer
+            for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
+                mask_Delivery = Package_Lines_df["Delivery_No"] == Delivery_Number
+                Package_Lines_df_Filtered = Package_Lines_df[mask_Delivery]
+
+                Delivery_total_item_num = Package_Lines_df_Filtered.shape[0]
+                Delivery_total_weight = round(number=Package_Lines_df_Filtered["Package_Line_Total_Weight"].sum(), ndigits=2)
+                Delivery_total_volume = round(number=Package_Lines_df_Filtered["Package_Line_Total_Volume"].sum(), ndigits=2)
+
+                PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["total_item_num"] = Delivery_total_item_num
+                PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["total_weight"] = Delivery_total_weight
+                PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["weight_unit"] = Weight_UoM
+                PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["volume"] = Delivery_total_volume
+                PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["volume_unit"] = Volume_UoM
+
             # Export 
             for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
                 Delivery_Content = PO_Deliveries[Delivery_Index]
@@ -247,14 +263,14 @@ def Process_Purchase_Orders(Settings: dict,
 
                 if Generate_Delivery == False:      # Check if process is called from Delivery or standalone
                     PO_Delivery_Number_list = []
-                    response = Elements.Get_MessageBox(Configuration=Configuration, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order} to make an choice?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order} to make an choice?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
                     if response == "Download":                    
                         import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
                         # HQ_Testing_HQ_Item_Transport_Register
-                        Deliveries_HQ_Item_Tr_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery")
+                        Deliveries_HQ_Item_Tr_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery")
                         if Deliveries_HQ_Item_Tr_df.empty:
-                            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"It is not possible to download Delivery for {Purchase_Order} during preparation of CPDI, when Delivery is not generated by full path script.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery for {Purchase_Order} during preparation of CPDI, when Delivery is not generated by full path script.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                         else:
                             # Drop Duplicate rows amd reset index
                             Deliveries_HQ_Item_Tr_df.drop_duplicates(inplace=True, ignore_index=True)

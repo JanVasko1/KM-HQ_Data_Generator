@@ -3,7 +3,7 @@ import json
 import os
 from glob import glob
 
-from customtkinter import StringVar, IntVar, BooleanVar
+from customtkinter import CTk, StringVar, IntVar, BooleanVar
 
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
@@ -35,7 +35,7 @@ def Dict_Main_Key_Change(Dictionary: dict, counter: int) -> dict:
         counter += 1
     return new_dict
 
-def Get_All_Templates_List(Settings: dict) -> list:
+def Get_All_Templates_List(Settings: dict, window: CTk) -> list:
     file_path = Absolute_path(relative_path=f"Operational\\Template")
     Files = glob(pathname=os.path.join(file_path, "*"))
     Files_Templates = [x.replace(file_path, "") for x in Files]
@@ -43,12 +43,12 @@ def Get_All_Templates_List(Settings: dict) -> list:
     Files_Templates = [x.replace(".json", "") for x in Files_Templates]
     Files_Templates = list(set(Files_Templates))
     Files_Templates.sort()
-    Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Files_Templates)
+    Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Files_Templates)
 
     return Files_Templates
 
 # --------------------------------------------- Global Settings update --------------------------------------------- #
-def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict) -> None:
+def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|None, window: CTk, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict) -> None:
     def Value_change(my_dict: dict, JSON_path: list, Information: bool|int|str|list|dict) -> None:
         for key in JSON_path[:-1]:
             my_dict = my_dict.setdefault(key, {})
@@ -93,9 +93,9 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|No
         else:
             pass
     except Exception as Error:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Not possible to update {Information} into Field: {JSON_path} of {File_Name}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to update {Information} into Field: {JSON_path} of {File_Name}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str) -> None:
+def Import_Data(Settings: dict, Configuration: dict, window: CTk, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str) -> None:
     Can_Import = True
     # Check if file is json
     File_Name = import_file_path[0]
@@ -105,7 +105,7 @@ def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Impo
         pass
     else:
         Can_Import = False
-        Elements.Get_MessageBox(Configuration=Configuration, title=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     # Check if file contain Supported Type
     if Can_Import == True:
@@ -117,7 +117,7 @@ def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Impo
             pass
         else:
             Can_Import = False
-            Elements.Get_MessageBox(Configuration=Configuration, title=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 
@@ -164,7 +164,7 @@ def Import_Data(Settings: dict, Configuration: dict, import_file_path: str, Impo
             else:
                 pass
 
-        Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=JSON_path, Information=Upload_updated_data)
+        Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=JSON_path, Information=Upload_updated_data)
 
     else:
         pass

@@ -140,7 +140,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Item_No = row_Series["buyer_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
                 PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 PO_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
                 
@@ -159,7 +159,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(PO_Price_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -216,7 +216,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Item_No = row_Series["buyer_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal") 
                 PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 PO_Fields_Frame_Var.configure(placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F")
                 
@@ -236,7 +236,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             Button_Confirm_Var.wait_variable(PO_UoM_Variable)
 
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -384,9 +384,9 @@ def Generate_PO_CON_Lines(Settings: dict,
                     Frame_Body = Frame_Main.children["!ctkframe2"]
 
                     Description = Elements_Groups.Get_Prompt_Free_Of_Charge_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
-                    Cable_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Cable")
-                    Documentation_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Documentation")
-                    FaceSheet_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Face Sheet")
+                    Cable_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Cable")
+                    Documentation_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Documentation")
+                    FaceSheet_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Face Sheet")
 
                     # Buttons
                     PO_Free_Variable = StringVar(master=PO_Free_Window, value="", name="PO_Free_Variable")
@@ -396,7 +396,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Free of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                     Button_Confirm_Var.wait_variable(PO_Free_Variable)
                 else:
-                    Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     Can_Continue = False
             else:
                 pass
@@ -537,7 +537,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Flags_Window, Name=f"Select Line Flags of Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=f"To select proper Line Flags Items in Confirmation.", GUI_Level_ID=3)
                 Frame_Body = Frame_Main.children["!ctkframe2"]
 
-                Description = Elements_Groups.Get_Prompt_Flags_Of_Charge_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
+                Description = Elements_Groups.Get_Prompt_Line_Flags_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
 
                 # Vendor_Service_ID
                 for row in Lines_df.iterrows():
@@ -562,7 +562,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                     # Analyze Finished
                     Item_Finished = row_Series["discontinued"]
                     
-                    Item_Row = Elements_Groups.Get_Prompt_Flags_Of_Charge_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label=f"{Item_Line} - {Item_No}", Item_Substituted=Item_Substituted, Item_No_Substituted=Item_No_Substituted, Item_Finished=Item_Finished)
+                    Item_Row = Elements_Groups.Get_Prompt_Line_Flags_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label=f"{Item_Line} - {Item_No}", Item_Substituted=Item_Substituted, Item_No_Substituted=Item_No_Substituted, Item_Finished=Item_Finished)
                 
                 # Dynamic Content height
                 content_row_count = len(Frame_Body.winfo_children())
@@ -579,7 +579,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Flags of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PO_Flags_Variable)
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
         else:
             pass

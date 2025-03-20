@@ -42,7 +42,7 @@ def Get_coordinate_Main_Window(Main_Window: CTk) -> list:
     Coordinate = [x, y]
     return Coordinate
 
-def Insert_Data_to_Table(Settings: dict, Configuration: dict, Table: CTkTable, JSON_path: list) -> None:
+def Insert_Data_to_Table(Settings: dict, Configuration: dict, window: CTk, Table: CTkTable, JSON_path: list) -> None:
     # Delete data in table just keep header
     Table_rows = Table.cget("row")
 
@@ -68,16 +68,16 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict, Table: CTkTable, J
             Table.add_row(index=row_index, values=[data])
             row_index += 1
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, title=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 # ------------------ Blocking Fields Functions ------------------ #
 
 def Field_Block_Bool(Settings: dict, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
+    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
     for i, Block_Variable in enumerate(Block_Variable_list):
         if Selected_Variable.get() == True:
             Block_Field_list[i].configure(state="normal")
         elif Selected_Variable.get() == False:
             Block_Field_list[i].configure(state="disabled")
             Block_Variable_list[i].set(value=False)
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])

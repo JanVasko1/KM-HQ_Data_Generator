@@ -2,14 +2,10 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "Default_DD__Consumables",
+                "Last_Used": "Test_1",
                 "Templates_List": [
-                    "Default1",
-                    "Default2",
-                    "Default3",
-                    "Default4",
-                    "Default_DD__Consumables",
-                    "JVA_TEst2"
+                    "Confirmation_Only",
+                    "Test_1"
                 ]
             },
             "Formats": {
@@ -264,6 +260,20 @@
             },
             "Delivery": {
                 "Use": true,
+                "Delivery_Counts": {
+                    "Method": "Fixed",
+                    "Methods_List": [
+                        "Fixed",
+                        "Random",
+                        "Prompt"
+                    ],
+                    "Random_Options": {
+                        "Random_Max_count": 3
+                    },
+                    "Fixed_Options": {
+                        "Count": 3
+                    }
+                },
                 "Number": {
                     "Method": "Automatic",
                     "Methods_List": [
@@ -278,25 +288,14 @@
                         "Number": "DELIVERY_JVA_001"
                     }
                 },
-                "Delivery_Counts": {
-                    "Method": "Random",
+                "Item_Delivery_Assignment": {
+                    "Method": "Full random",
                     "Methods_List": [
-                        "Fixed",
-                        "Random",
+                        "Full random",
+                        "Lines random",
                         "Prompt"
                     ],
-                    "Random_Options": {
-                        "Method": "Lines only",
-                        "Methods_List": [
-                            "Lines and Qty",
-                            "Lines only"
-                        ],
-                        "FreeOfCharge_with_Main": true,
-                        "Random_Max_count": 5
-                    },
-                    "Fixed_Options": {
-                        "Count": 3
-                    }
+                    "FreeOfCharge_with_Main": true
                 },
                 "Serial_Numbers": {
                     "Prefix": "SN",
@@ -338,7 +337,7 @@
                     }
                 },
                 "Shipment_Method": {
-                    "Method": "Empty",
+                    "Method": "Fixed",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -436,7 +435,7 @@
                     },
                     "BillOfLanding": {
                         "Number": {
-                            "Method": "Empty",
+                            "Method": "Automatic",
                             "Methods_List": [
                                 "Fixed",
                                 "Automatic",
@@ -635,8 +634,8 @@
                         "Methods_List": [
                             "Fixed",
                             "Random",
-                            "Prompt",
-                            "Empty"
+                            "Empty",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
                             "Fixed_Plant": "1000",
@@ -652,8 +651,8 @@
                         "Methods_List": [
                             "Fixed",
                             "Random",
-                            "Prompt",
-                            "Empty"
+                            "Empty",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
                             "Fix_Country_Of_Origin": "DE"

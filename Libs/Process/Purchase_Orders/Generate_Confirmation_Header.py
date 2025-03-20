@@ -63,7 +63,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Confirmation Number",  Field_Type="Input_Normal")  
+            Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Confirmation Number",  Field_Type="Input_Normal")  
             Prompt_Number_Frame_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
             Prompt_Number_Frame_Var.configure(placeholder_text="Insert your Confirmation Number", placeholder_text_color="#949A9F")
 
@@ -76,7 +76,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Button_Confirm_Var.wait_variable(PO_CON_Number_Variable)
             PO_Confirmation_Number = PO_CON_Number_Variable.get()
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Confirmation Number Method selected: {PO_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Confirmation Number Method selected: {PO_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
         
         # Fill value in template
@@ -110,7 +110,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generation Date",  Field_Type="Entry_DropDown")  
+            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generation Date",  Field_Type="Entry_DropDown")  
             Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
             Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
             Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -126,7 +126,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Button_Confirm_Var.wait_variable(PO_Gen_Date_Date_Variable)
             PO_Generation_Date = PO_Gen_Date_Date_Variable.get()
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Generation Date Method selected: {PO_Generation_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Generation Date Method selected: {PO_Generation_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
         # Fill value in template
@@ -142,7 +142,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
         elif PO_Currency_Method == "Purchase Order":
             PO_Currency = Purchase_Headers_df_Filtered.iloc[0]["Currency_Code"]
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Currency Method selected: {PO_Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {PO_Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
 
         # Fill value in template

@@ -4,7 +4,7 @@ import calendar
 
 import pyautogui
 
-from customtkinter import CTkFrame, CTkToplevel, CTkEntry, CTkButton, BooleanVar
+from customtkinter import CTk, CTkFrame, CTkToplevel, CTkEntry, CTkButton, BooleanVar
 
 import Libs.GUI.Elements as Elements
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -91,7 +91,7 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type
 
     return Frame_Area
 
-def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Widget_Input_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -120,13 +120,13 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Fi
     Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
 
     if Field_Type == "Input_Normal":
-        Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Normal", Validation=Validation)
+        Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Normal", Validation=Validation)
         Field_Normal.pack(side="left", fill="x", expand=True)
     elif Field_Type == "Password_Normal":
         Field_Normal = Elements.Get_Password_Normal(Configuration=Configuration, Frame=Frame_Value)
         Field_Normal.pack(side="left", fill="x", expand=True)
     elif Field_Type == "Input_Small":
-        Field_Small = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Small", Validation=Validation)
+        Field_Small = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Small", Validation=Validation)
         Frame_Area.configure(width=300)
         Field_Small.pack(side="left", fill="none")
     elif Field_Type == "Input_RadioButton":
@@ -139,13 +139,13 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Fi
         Input_Check_Box = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
         Input_Check_Box.pack(side="left", fill="x", expand=True)
     elif Field_Type == "Entry_DropDown":
-        Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Normal", Validation=Validation)
+        Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Normal", Validation=Validation)
         Button_Drop_Down = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Value, Icon_Name="chevron-down", Icon_Size="Entry_DropDown", Button_Size="Tiny")
         Field_Normal.configure(width = Field_Normal._current_width - Button_Drop_Down._current_width)
         Field_Normal.pack(side="left", fill="x", expand=True)
         Button_Drop_Down.pack(side="left", fill="none", expand=True)
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Field type: {Field_Type} not supported.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Field type: {Field_Type} not supported.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     return Frame_Area
 
@@ -204,7 +204,7 @@ def Get_Pop_up_window(Configuration:dict, title: str, max_width: int, max_height
 
     return Pop_Up_Window
 
-def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkButton, title: str, text: str, Password: bool, width: int, height: int, Fixed: bool, tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
+def My_Dialog_Window(Settings: dict, Configuration:dict, window: CTk, Clicked_on_Button: CTkButton, title: str, text: str, Password: bool, width: int, height: int, Fixed: bool, tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
     def Confirm_Choice(Field_Normal: CTkEntry) -> str:
         Dialog_Window.destroy()
         return Field_Normal.get()
@@ -219,7 +219,7 @@ def My_Dialog_Window(Settings: dict, Configuration:dict, Clicked_on_Button: CTkB
         Label_text.pack(side="top", fill="none", expand=True, padx=10, pady=5)
 
         if Password == False:
-            Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Size="Normal")
+            Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Size="Normal")
             Field_Normal.pack(side="top", fill="none", expand=True, padx=10, pady=5)
         elif Password == True:
             Field_Normal = Elements.Get_Password_Normal(Configuration=Configuration, Frame=Frame_Body)
@@ -388,7 +388,7 @@ def Get_Prompt_Free_Of_Charge_Description_row(Settings: dict, Configuration:dict
 
     return Frame_Area
 
-def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -412,13 +412,13 @@ def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTk
     Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=Configuration, Frame=Frame_Area, Field_Frame_Type=Field_Frame_Type)
     Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
 
-    Item_Number = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny")
+    Item_Number = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Tiny")
     Item_Number.configure(width=50)
-    Item_Description = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
+    Item_Description = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
     Item_Description.configure(width=100)
-    Item_Qty_per_Machine = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation="Integer")
+    Item_Qty_per_Machine = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Tiny", Validation="Integer")
     Item_Qty_per_Machine.configure(width=10)
-    Item_Price = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation="Float")
+    Item_Price = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Tiny", Validation="Float")
     Item_Price.configure(width=20)
     
     Item_Number.pack(side="left", fill="x", expand=True, padx=5, pady=0)
@@ -428,7 +428,7 @@ def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTk
 
     return Frame_Area
 
-def Get_Prompt_Flags_Of_Charge_Description_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Prompt_Line_Flags_Description_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -473,7 +473,7 @@ def Get_Prompt_Flags_Of_Charge_Description_row(Settings: dict, Configuration:dic
     return Frame_Area
 
 
-def Get_Prompt_Flags_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Item_Substituted: bool, Item_No_Substituted: str, Item_Finished: bool, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Prompt_Line_Flags_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Item_Substituted: bool, Item_No_Substituted: str, Item_Finished: bool, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -499,7 +499,7 @@ def Get_Prompt_Flags_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CT
 
     Use_Substitution = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
     Use_Substitution.configure(width=30, text="")  
-    Sub_Item_No = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
+    Sub_Item_No = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Tiny", Validation=Validation)
     Sub_Item_No.configure(width=90)
     if Item_Substituted == True:
         Use_Substitution.select()
@@ -519,5 +519,46 @@ def Get_Prompt_Flags_Of_Charge_row(Settings: dict, Configuration:dict, Frame: CT
     Sub_Item_No.pack(side="left", fill="x", expand=False, padx=(22, 0), pady=0)
     Use_Cancel.pack(side="left", fill="x", expand=False, padx=(24, 0), pady=0)
     Use_Finished.pack(side="left", fill="x", expand=False, padx=(45, 0), pady=0)
+
+    return Frame_Area
+
+def Get_Prompt_Delivery_Assignment(Settings: dict, Configuration:dict, Frame: CTkFrame, Line_Item_No: str, Line_Item_Desc: str, Line_Qty: int, PO_Delivery_Number_list: list, Validation: str|None = None, Field_ToolTip: list|None = None, GUI_Level_ID: int|None = None) -> CTkFrame: 
+    Frame_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Columns", GUI_Level_ID=GUI_Level_ID)
+    Frame_Area.configure(width=700, height=28)
+    Frame_Area.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+    Item_text_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=GUI_Level_ID)
+    Item_text_Frame.pack_propagate(flag=False)
+    Item_text_Frame.configure(width=200, height=28)
+    Item_text = Elements.Get_Label(Configuration=Configuration, Frame=Item_text_Frame, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_text.configure(text=f"{Line_Item_No}")
+
+    Item_Desc_text_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=GUI_Level_ID)
+    Item_Desc_text_Frame.pack_propagate(flag=False)
+    Item_Desc_text_Frame.configure(width=300, height=28)
+    Item_Desc_text = Elements.Get_Label(Configuration=Configuration, Frame=Item_Desc_text_Frame, Label_Size="Field_Label", Font_Size="Field_Label")
+    Item_Desc_text.configure(text=f"{Line_Item_Desc}")
+
+    Line_Qty_Text_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=GUI_Level_ID)
+    Line_Qty_Text_Frame.pack_propagate(flag=False)
+    Line_Qty_Text_Frame.configure(width=20, height=28)
+    Line_Qty_Text = Elements.Get_Label(Configuration=Configuration, Frame=Line_Qty_Text_Frame, Label_Size="Field_Label", Font_Size="Field_Label")
+    Line_Qty_Text.configure(text=f"{Line_Qty}")
+
+    Input_OptionMenu_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame_Area, Frame_Size="Work_Area_Columns", GUI_Level_ID=GUI_Level_ID)
+    Input_OptionMenu_Frame.pack_propagate(flag=False)
+    Input_OptionMenu_Frame.configure(width=200, height=28)
+    Input_OptionMenu = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Input_OptionMenu_Frame)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Input_OptionMenu, values=PO_Delivery_Number_list, command=None, GUI_Level_ID=3)
+
+    Item_text_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=0)
+    Item_Desc_text_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=0)
+    Line_Qty_Text_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=0)
+    Input_OptionMenu_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=0)
+
+    Item_text.pack(side="left", fill="x", expand=False, padx=0, pady=0)
+    Item_Desc_text.pack(side="left", fill="x", expand=False, padx=0, pady=0)
+    Line_Qty_Text.pack(side="left", fill="x", expand=False, padx=0, pady=0)
+    Input_OptionMenu.pack(side="left", fill="x", expand=False, padx=0, pady=0)
 
     return Frame_Area

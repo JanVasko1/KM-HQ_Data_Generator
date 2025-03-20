@@ -68,7 +68,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Delivery_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal")  
+            Prompt_Delivery_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal")  
             Prompt_Delivery_Frame_Var = Prompt_Delivery_Frame.children["!ctkframe3"].children["!ctkentry"]
             Prompt_Delivery_Frame_Var.configure(placeholder_text="Insert your Delivery Number", placeholder_text_color="#949A9F")
 
@@ -81,7 +81,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
             Button_Confirm_Var.wait_variable(CPDI_Delivery_Variable)
             CPDI_Delivery_list.append(CPDI_Delivery_Variable.get())
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     elif len(PO_Delivery_Number_list) > 0:
         if CPDI_Delivery_Method == "Fixed":
@@ -125,7 +125,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
             Lines_No = len(PO_Delivery_Number_list)
             for Delivery in PO_Delivery_Number_list:
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}", Field_Type="Input_CheckBox") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}", Field_Type="Input_CheckBox") 
                 Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
                 Fields_Frame_Var.configure(text="")
 
@@ -144,10 +144,10 @@ def Generate_PO_CPDI_Messages(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(CPDI_Delivery_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Delivery length is not supported, canceling  CPDI Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery length is not supported, canceling  CPDI Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Continue = False 
         
     # --------------------------------------------- Level --------------------------------------------- #
@@ -181,7 +181,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 Frame_Body = Frame_Main.children["!ctkframe2"]
 
                 # CPDI Level
-                CPDI_Level_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"CPDI Level", Field_Type="Input_OptionMenu") 
+                CPDI_Level_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"CPDI Level", Field_Type="Input_OptionMenu") 
                 CPDI_Level_Frame_Var = CPDI_Level_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Level_Frame_Var, values=CPDI_Levels_List, command=None, GUI_Level_ID=3)
 
@@ -195,7 +195,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 CPDI_Level = CPDI_Level_Variable.get()
 
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"CPDI Level Method selected: {CPDI_Level_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"CPDI Level Method selected: {CPDI_Level_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
 
             # --------------------------------------------- Status --------------------------------------------- #
@@ -243,7 +243,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                     Lines_No = len(Status_List_description)
                     for Status in Status_List_description:
                         # Fields
-                        Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Status}", Field_Type="Input_CheckBox") 
+                        Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Status}", Field_Type="Input_CheckBox") 
                         Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
                         Fields_Frame_Var.configure(text="")
 

@@ -2,7 +2,7 @@
 from PIL import Image
 from datetime import datetime
 
-from customtkinter import CTkButton, CTkFrame, CTkScrollableFrame, CTkEntry, CTkLabel, CTkFont, CTkImage, CTkRadioButton, CTkTabview, CTkOptionMenu, CTkCheckBox, CTkProgressBar, CTkInputDialog, CTkComboBox, get_appearance_mode
+from customtkinter import CTk, CTkButton, CTkFrame, CTkScrollableFrame, CTkEntry, CTkLabel, CTkFont, CTkImage, CTkRadioButton, CTkTabview, CTkOptionMenu, CTkCheckBox, CTkProgressBar, CTkInputDialog, CTkComboBox, get_appearance_mode
 from CTkColorPicker import CTkColorPicker
 from CTkToolTip import CTkToolTip
 from CTkMessagebox import CTkMessagebox
@@ -14,7 +14,7 @@ from iconipy import IconFactory
 import winaccent
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def Time_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
+def Time_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
     Time_Format = Settings["0"]["General"]["Formats"]["Time"]
     Value = Field.get()
 
@@ -22,12 +22,12 @@ def Time_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
         try:
             datetime.strptime(Value, Time_Format)
         except:
-            Get_MessageBox(Configuration=Configuration, title="Error", message=f"Value: {Value} in not proper Time format, should be: HH:MM.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Value: {Value} in not proper Time format, should be: HH:MM.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Field.delete(first_index=0, last_index=100)
     else:
         pass
 
-def Date_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
+def Date_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
     Date_Format = Settings["0"]["General"]["Formats"]["Date"]
     Value = Field.get()
 
@@ -35,31 +35,31 @@ def Date_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
         try:
             datetime.strptime(Value, Date_Format)
         except:
-            Get_MessageBox(Configuration=Configuration, title="Error", message=f"Value: {Value} in not in proper Date format, should be: YYYY-MM-DD.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Value: {Value} in not in proper Date format, should be: YYYY-MM-DD.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Field.delete(first_index=0, last_index=100)
     else:
         pass
 
-def Int_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
+def Int_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
     Value = Field.get()
 
     if Value != "":
         try:
             int(Value)
         except:
-            Get_MessageBox(Configuration=Configuration, title="Error", message=f"Value: {Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Value: {Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Field.delete(first_index=0, last_index=100)
     else:
         pass
 
-def Float_Validate(Settings: dict, Configuration: dict, Field: CTkEntry) -> None:
+def Float_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
     Value = Field.get()
 
     if Value != "":
         try:
             float(Value)
         except:
-            Get_MessageBox(Configuration=Configuration, title="Error", message=f"Value: {Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Value: {Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Field.delete(first_index=0, last_index=100)
     else:
         pass
@@ -218,7 +218,7 @@ def Get_Button_Icon(Configuration:dict, Frame: CTkFrame, Icon_Name: str, Icon_Si
     return Frame_Button
 
 # ---------------------------------------------- Fields ----------------------------------------------# 
-def Get_Entry_Field(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_Size: str, Validation: str|None = None) -> CTkEntry:
+def Get_Entry_Field(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Size: str, Validation: str|None = None) -> CTkEntry:
     Configuration_Field = Configuration["Fields"]["Entry"][f"{Field_Size}"]
 
     Field = CTkEntry(
@@ -236,13 +236,13 @@ def Get_Entry_Field(Settings: dict, Configuration:dict, Frame: CTkFrame, Field_S
         validate="focusout")
     
     if Validation == "Time":
-        Field.configure(validatecommand=lambda: Time_Validate(Settings=Settings, Configuration=Configuration, Field=Field))
+        Field.configure(validatecommand=lambda: Time_Validate(Settings=Settings, Configuration=Configuration, window=window, Field=Field))
     elif Validation == "Date":
-        Field.configure(validatecommand=lambda: Date_Validate(Settings=Settings, Configuration=Configuration, Field=Field))
+        Field.configure(validatecommand=lambda: Date_Validate(Settings=Settings, Configuration=Configuration, window=window, Field=Field))
     elif Validation == "Integer":
-        Field.configure(validatecommand=lambda: Int_Validate(Settings=Settings, Configuration=Configuration, Field=Field))
+        Field.configure(validatecommand=lambda: Int_Validate(Settings=Settings, Configuration=Configuration, window=window, Field=Field))
     elif Validation == "Float":
-        Field.configure(validatecommand=lambda: Float_Validate(Settings=Settings, Configuration=Configuration, Field=Field))
+        Field.configure(validatecommand=lambda: Float_Validate(Settings=Settings, Configuration=Configuration, window=window, Field=Field))
     else:
         pass
 
@@ -815,7 +815,7 @@ def Get_ToolTip(Configuration:dict, widget: any, message: str, ToolTip_Size: str
         padding = tuple(Configuration_ToolTip["padding"]))
     return ToolTip
 
-def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None) -> None:
+def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None, window: CTk|None = None) -> None:
     Button_Normal = Configuration["Buttons"]["Small"]
     Label_Title_Label = Configuration["Labels"]["Field_Label"]
     if title == "Error":
@@ -831,10 +831,11 @@ def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade
     bg_color = tuple(Configuration["Global_Appearance"]["GUI_Level_ID"][f"{GUI_Level_ID - 1}"]["fg_color"])
 
     MessageBox = CTkMessagebox(
+        master=window,
         title = title,
         message = message,
         font = Get_Font(Configuration=Configuration, Font_Size="Field_Label"),
-        topmost = False,
+        topmost = True,
         border_color = border_color,
         bg_color = bg_color,
         fg_color = fg_color,

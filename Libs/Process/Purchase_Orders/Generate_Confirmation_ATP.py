@@ -95,7 +95,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
                     pass
 
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"ATP Quantity Method selected: {ATP_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"ATP Quantity Method selected: {ATP_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
 
             # Dates

@@ -94,7 +94,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["Vendor_Service_ID"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_CheckBox") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_CheckBox") 
                 Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
                 Fields_Frame_Var.configure(text="")
 
@@ -121,7 +121,7 @@ def Generate_BB_Lines(Settings: dict,
                 result = Vendor_Service_Function_df.loc[Vendor_Service_Function_df["Vendor_Service_ID"] == Item_No, "Vendor_Service_Name"].values[0]
                 Lines_df.at[row[0], "description_short"] = result
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -173,7 +173,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["supplier_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Integer") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Integer") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 BB_Fields_Frame_Var.configure(placeholder_text="Manual Quantity", placeholder_text_color="#949A9F")
                 
@@ -192,7 +192,7 @@ def Generate_BB_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Quantity selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Quantity_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -242,7 +242,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["supplier_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                 BB_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
                 
@@ -261,7 +261,7 @@ def Generate_BB_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Price_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -321,7 +321,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["supplier_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=BB_Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
 
@@ -340,7 +340,7 @@ def Generate_BB_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Plant selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Plant_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -393,7 +393,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["supplier_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
 
@@ -412,7 +412,7 @@ def Generate_BB_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Country of Origin selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Country_Origin_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass
@@ -465,7 +465,7 @@ def Generate_BB_Lines(Settings: dict,
                 Item_No = row_Series["supplier_aid"]
 
                 # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                 BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
                 Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
 
@@ -484,7 +484,7 @@ def Generate_BB_Lines(Settings: dict,
             Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Tariff selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Tariff_Variable)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
     else:
         pass

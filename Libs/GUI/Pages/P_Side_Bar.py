@@ -36,7 +36,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_Confirmation.Page_Confirmation(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_Confirmation.Page_Confirmation(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_CPDI_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -44,7 +44,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_CPDI.Page_CPDI(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_CPDI.Page_CPDI(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_PreAdvice_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -52,7 +52,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_PreAdvice.Page_PreAdvice(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_PreAdvice.Page_PreAdvice(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_Delivery_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -60,7 +60,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_Delivery.Page_Delivery(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_Delivery.Page_Delivery(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_Invoice_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -68,7 +68,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_Invoice.Page_Invoice(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_Invoice.Page_Invoice(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_IAL_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -76,7 +76,7 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
         time.sleep(0.1)
-        P_IAL.Page_IAL(Settings=Settings, Configuration=Configuration, Frame=Frame_Work_Area_Main)
+        P_IAL.Page_IAL(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
         window.update_idletasks()
 
     def Show_Settings_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
@@ -89,12 +89,12 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
 
     def Exit_Program() -> None:
         # Delete Operational data from Settings
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=[])
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
-        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
+        Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
         window.quit()
 
     # ------------------------- Main Functions -------------------------#

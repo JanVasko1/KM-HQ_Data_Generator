@@ -1,10 +1,10 @@
 # Import Libraries
-from customtkinter import CTkFrame
+from customtkinter import CTk, CTkFrame
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Widgets.W_Confirmation as W_Confirmation
 
-def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
+def Page_Confirmation(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame):
     #------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
     Frame_Confirmation_Work_Detail_Area = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)
@@ -30,29 +30,29 @@ def Page_Confirmation(Settings: dict, Configuration: dict, Frame: CTkFrame):
     Frame_PO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     
-    PO_Number_Widget = W_Confirmation.PO_CON_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Currency_Widget = W_Confirmation.PO_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Unit_of_Measure_Widget = W_Confirmation.PO_Unit_of_Measure(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Generation_Date_Widget = W_Confirmation.PO_Generation_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
-    PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_Number_Widget = W_Confirmation.PO_CON_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Currency_Widget = W_Confirmation.PO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Unit_of_Measure_Widget = W_Confirmation.PO_Unit_of_Measure(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Generation_Date_Widget = W_Confirmation.PO_Generation_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_Line_Flags_Widget = W_Confirmation.PO_Line_Flags(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
     # ---------- Purchase Order Free Of Charge ---------- #
     Frame_FREE_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_FREE_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_Free, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    PO_Items_Free_Method_Widget = W_Confirmation.PO_Items_Free_Method(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
-    PO_Items_Free_Cable_Widget = W_Confirmation.PO_Items_Free_Cable(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
-    PO_Items_Free_Documentation_Widget = W_Confirmation.PO_Items_Free_Documentation(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
-    PO_Items_Free_Face_Sheet_Widget = W_Confirmation.PO_Items_Free_Face_Sheet(Settings=Settings, Configuration=Configuration, Frame=Frame_FREE_Column_B, GUI_Level_ID=2)
+    PO_Items_Free_Method_Widget = W_Confirmation.PO_Items_Free_Method(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Cable_Widget = W_Confirmation.PO_Items_Free_Cable(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Documentation_Widget = W_Confirmation.PO_Items_Free_Documentation(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_FREE_Column_A, GUI_Level_ID=2)
+    PO_Items_Free_Face_Sheet_Widget = W_Confirmation.PO_Items_Free_Face_Sheet(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_FREE_Column_B, GUI_Level_ID=2)
 
     # ---------- Purchase Order ATP ---------- #
     Frame_ATP_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_ATP, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_ATP_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_ATP, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    PO_ATP_General_Widget = W_Confirmation.PO_ATP_General(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
-    PO_ATP_Quantity_Distribution_Widget = W_Confirmation.PO_ATP_Quantity_Distribution(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
-    PO_ATP_Fixed_Dates_Widget = W_Confirmation.PO_ATP_Fixed_Dates(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
-    PO_ATP_Interval_Dates_Widget = W_Confirmation.PO_ATP_Interval_Dates(Settings=Settings, Configuration=Configuration, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
+    PO_ATP_General_Widget = W_Confirmation.PO_ATP_General(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
+    PO_ATP_Quantity_Distribution_Widget = W_Confirmation.PO_ATP_Quantity_Distribution(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_ATP_Column_A, GUI_Level_ID=2)
+    PO_ATP_Fixed_Dates_Widget = W_Confirmation.PO_ATP_Fixed_Dates(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
+    PO_ATP_Interval_Dates_Widget = W_Confirmation.PO_ATP_Interval_Dates(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_ATP_Column_B, GUI_Level_ID=2)
 
     # ---------- Purchase Return Order ---------- #
     Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PRO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)

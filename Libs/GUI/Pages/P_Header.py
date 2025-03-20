@@ -19,10 +19,10 @@ import Libs.Data_Functions as Data_Functions
 import Libs.Azure.Authorization as Authorization
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
-def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk, Frame: CTkFrame) -> CTkFrame:
+def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict, Frame: CTkFrame) -> CTkFrame:
     global Actual_Template_Variable
     # Global Variables
-    Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
+    Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
     Actual_Template_Variable = StringVar(master=window, value=Settings["0"]["General"]["Template"]["Last_Used"], name="Actual_Template_Variable")
     Export_folder_Variable = BooleanVar(master=Frame, value=Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"], name="Export_folder_Variable")
 
@@ -83,17 +83,17 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
 
     def Save_Template(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
-        Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
+        Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
         # Define Name for new Template
         File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation", GUI_Level_ID=1)
 
         if File_Name == None:
-            Elements.Get_MessageBox(Configuration=Configuration, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
             Template_List.append(File_Name)
             Template_List = list(set(Template_List))
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
 
             # Save My_Team Dict into Downloads Folder
             Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
@@ -108,14 +108,14 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
             # Update Option List
             Actual_Template_Frame_Var.configure(values=Template_List)
 
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Actual settings were saved into saved templates.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Actual settings were saved into saved templates.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Apply_Template(Selected_Value: str, Settings: dict) -> None:
         global Actual_Template_Variable
         Load_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
-        Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, window=window, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")       
         # TODO --> Load actual page --> to update all GUI 
 
     def Export_Templates() -> None:
@@ -125,9 +125,9 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
 
         for Source_file in files:
             Destination_file = Source_file.replace(Source_Path, Destination_Path)
-            File_Manipulation.Copy_File(Configuration=Configuration, Source_Path=Source_file, Destination_Path=Destination_file)
+            File_Manipulation.Copy_File(Configuration=Configuration, window=window, Source_Path=Source_file, Destination_Path=Destination_file)
 
-        Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="All Templates exported to Download folder.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="All Templates exported to Download folder.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Import_Template(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
         def Template_drop_func(file: str) -> None:
@@ -139,16 +139,16 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
             
                 # Copy File to Template Folder
                 Destination_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{File_Name}")
-                File_Manipulation.Copy_File(Configuration=Configuration, Source_Path=Source_Path, Destination_Path=Destination_Path)
+                File_Manipulation.Copy_File(Configuration=Configuration, window=window, Source_Path=Source_Path, Destination_Path=Destination_Path)
 
                 # Update Template List
-                Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
+                Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
 
                 # Update Option List
                 Actual_Template_Frame_Var.configure(values=Template_List)
 
             Import_window.destroy()  
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Your settings file has been imported. You can close Window.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Your settings file has been imported. You can close Window.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
         Import_window_geometry = (200, 200)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Import_window_geometry[0])
@@ -166,7 +166,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
         Icon_Theme.pack(side="top", padx=50, pady=50)
        
     def Delete_Templates(Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
-        Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
+        Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
         def Delete_Templates_Confirm(Frame_Body: CTkFrame, Actual_Template_Frame_Var: CTkScrollableDropdown, No_Lines: int) -> None:
             global Template_List, Actual_Template_Variable
             Delete_Template_List = []
@@ -191,7 +191,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
                     # Update Template Variable if needed
                     if Delete_Label == Actual_Template_Variable.get():
                         Actual_Template_Variable.set(value="")
-                        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="")
+                        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="")
                     else:
                         pass
 
@@ -201,13 +201,13 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
                 File_Manipulation.Delete_File(file_path=file_path) 
 
             # Update Template List
-            Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings)
+            Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
 
             # Update Option List
             Actual_Template_Frame_Var.configure(values=Template_List)
 
             Delete_Activity_Correct_Close() 
-            Elements.Get_MessageBox(Configuration=Configuration, title="Success", message="Selected Templates were deleted.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected Templates were deleted.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
         def Delete_Activity_Correct_Close() -> None:
             Delete_Activity_Correct_Window.destroy()
@@ -224,7 +224,7 @@ def Get_Header(Settings: dict, Configuration: dict, Documents: dict, window: CTk
         # Fields - Templates
         No_Lines = 0
         for template in Template_List:
-            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}",  Field_Type="Input_CheckBox")  
+            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{template}",  Field_Type="Input_CheckBox")  
             Var1 = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
             Var1.configure(text="")
             No_Lines += 1

@@ -1,10 +1,10 @@
 # Import Libraries
-from customtkinter import CTkFrame
+from customtkinter import CTk, CTkFrame
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Widgets.W_Invoice as W_Invoice
 
-def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTkFrame):
+def Page_Invoice(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame):
     #------------------------- Main Functions -------------------------#
     # Divide Working Page into 2 parts
     Frame_Invoice_Work_Area_Main = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Main", GUI_Level_ID=0)
@@ -33,29 +33,29 @@ def Page_Invoice(Settings: dict, Configuration: dict, Frame: CTkFrame):
     Frame_PO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    PO_INV_Number_Widget = W_Invoice.PO_INV_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Price_Currency_Widget = W_Invoice.PO_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Plant_Widget = W_Invoice.PO_Plant(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Posting_Date_Widget = W_Invoice.PO_Posting_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
-    PO_CountryOrigin_Widget = W_Invoice.PO_CountryOrigin(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
-    PO_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_INV_Number_Widget = W_Invoice.PO_INV_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Price_Currency_Widget = W_Invoice.PO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Plant_Widget = W_Invoice.PO_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_Posting_Date_Widget = W_Invoice.PO_Posting_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_CountryOrigin_Widget = W_Invoice.PO_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
     # ---------- BackBone Billing ---------- #
     Frame_BB_A_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_BB_A_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    BB_INV_Number_Widget = W_Invoice.BB_INV_Number(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Items_Widget = W_Invoice.BB_Items(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Quantity_Widget = W_Invoice.BB_Quantity(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Posting_Date_Widget = W_Invoice.BB_Posting_Date(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
-    BB_Order_reference_Widget = W_Invoice.BB_Order_reference(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
-    BB_Price_Currency_Widget = W_Invoice.BB_Price_Currency(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_INV_Number_Widget = W_Invoice.BB_INV_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Items_Widget = W_Invoice.BB_Items(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Quantity_Widget = W_Invoice.BB_Quantity(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_Posting_Date_Widget = W_Invoice.BB_Posting_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_Order_reference_Widget = W_Invoice.BB_Order_reference(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_Price_Currency_Widget = W_Invoice.BB_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
 
     Frame_BB_B_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_B, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
 
-    BB_Plant_Widget = W_Invoice.BB_Plant(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
-    BB_CountryOrigin_Widget = W_Invoice.BB_CountryOrigin(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
-    BB_Tariff_Widget = W_Invoice.BB_Tariff(Settings=Settings, Configuration=Configuration, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_Plant_Widget = W_Invoice.BB_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_CountryOrigin_Widget = W_Invoice.BB_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_Tariff_Widget = W_Invoice.BB_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
 
     # ---------- Purchase Return Order ---------- #
     Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)

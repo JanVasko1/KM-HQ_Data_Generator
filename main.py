@@ -1,7 +1,8 @@
 # TODO --> When anything manually saved to Settings must delete actual template value from Header
 # TODO --> When Template Applied must be updated actual page
-# BUG --> sometimes it happends that "destroy for c in list(self.children.values()): c.destroy()" -- když přepínám Page
+# BUG --> sometimes it happened that "destroy for c in list(self.children.values()): c.destroy()" --> when page changes
 # BUG --> When PopUp window in Backend is turned off by ESC whole program crash
+# BUG --> Threat --> when open CTk it flickers a lot
 
 # Import Libraries
 import os
@@ -55,6 +56,7 @@ class Win(CTk):
         self._offsety = super().winfo_pointery() - super().winfo_rooty()
 
 if __name__ == "__main__":
+    window = Win()
     deactivate_automatic_dpi_awareness()
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
@@ -70,6 +72,7 @@ if __name__ == "__main__":
     try:
         # Copy Default Templates
         File_Manipulation.Copy_All_File(Configuration=Configuration, 
+                                        window=window,
                                         Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\"), 
                                         Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"), 
                                         include_hidden=True)
@@ -86,19 +89,16 @@ if __name__ == "__main__":
         pass
 
     # Delete Operational data from Documents
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=[])
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
-    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information="")
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
+    Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
+    # Base Windows style setup --> always keep normal before change
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
-
-    window = Win()
-    
-    # Base Windows style setup --> always keep normal before change
     set_appearance_mode(mode_string=Theme_Actual)
     pywinstyles.apply_style(window=window, style="normal")
 
@@ -123,8 +123,8 @@ if __name__ == "__main__":
     Frame_Work_Area_Main.pack_propagate(flag=False)
     Frame_Work_Area_Main.pack(side="left", fill="none", expand=False)
 
-    P_Header.Get_Header(Settings=Settings, Configuration=Configuration, Documents=Documents, window=window, Frame=Frame_Header)
-    P_Side_Bar.Get_Side_Bar(Settings=Settings, Configuration=Configuration, Documents=Documents, window=window, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
+    P_Side_Bar.Get_Side_Bar(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
+    P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
     
     # run
     window.mainloop()
