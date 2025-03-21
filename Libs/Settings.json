@@ -239,7 +239,7 @@
             "PreAdvice": {
                 "Use": true,
                 "Delivery_Date": {
-                    "Method": "Fixed",
+                    "Method": "Prompt",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -251,7 +251,7 @@
                     },
                     "Random_Options": {
                         "From": -4,
-                        "To": -2
+                        "To": 0
                     },
                     "Shift_Options": {
                         "Generation_Date_Shift_by": -5,
@@ -551,7 +551,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -675,7 +675,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "Credit_Memo": {

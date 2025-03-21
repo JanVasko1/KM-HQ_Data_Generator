@@ -38,6 +38,7 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
             PreAdvice_Date_dt = Delivery_Date_dt + timedelta(days=Pre_Delivery_Shift)
             PreAdvice_Date = PreAdvice_Date_dt.strftime(Date_format)
         elif PreAdvice_Dates_Method == "Prompt":
+            Delivery_Number = PO_PreAdvice["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["dispatchnotification_id"]
             def Select_PO_Pre_Date_Date(Prompt_Date_Frame: CTkFrame):
                 Generation_Date_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                 PO_Pre_Date_Date = Generation_Date_Var.get()
@@ -49,10 +50,10 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Pre_Date_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Pre_Date_Window_geometry[1] //2
-            PO_Pre_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery Date for PreAdvice.", max_width=PO_Pre_Date_Window_geometry[0], max_height=PO_Pre_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            PO_Pre_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", max_width=PO_Pre_Date_Window_geometry[0], max_height=PO_Pre_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Pre_Date_Window, Name="Select Delivery Date for PreAdvice.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Pre_Date_Window, Name=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 

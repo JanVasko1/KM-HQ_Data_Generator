@@ -72,7 +72,7 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict, window: CTk, Table
 
 # ------------------ Blocking Fields Functions ------------------ #
 
-def Field_Block_Bool(Settings: dict, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
+def Field_Block_Bool(Settings: dict, window: CTk, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
     Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
     for i, Block_Variable in enumerate(Block_Variable_list):
         if Selected_Variable.get() == True:

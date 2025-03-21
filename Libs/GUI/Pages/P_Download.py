@@ -425,7 +425,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Generate_Conf_Frame_Var.configure(variable=Generate_CON_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Generate_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"], Information=Generate_CON_Variable))
 
     # Field - Use CPDI
-    Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI",  Field_Type="Input_CheckBox")  
+    Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI",  Field_Type="Input_CheckBox", Field_ToolTip=["Works only when Purchase Order is PDI Center = BEU", 3])  
     Generate_CPDI_Frame_Var = Generate_CPDI_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_CPDI_Frame_Var.configure(variable=Generate_CPD_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Generate_CPD_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Use"], Information=Generate_CPD_Variable))
 
@@ -466,7 +466,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     PO_Block_Variable_list = [Generate_INV_PDF_Variable]
     PO_Block_Field_list = [Generate_INV_PDF_Frame_Var]
     PO_Block_JSON_path_list =[["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"]]
-    Generate_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_INV_Variable, Selected_Field=Generate_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Block_Variable_list=PO_Block_Variable_list, Block_Field_list=PO_Block_Field_list, Block_JSON_path_list=PO_Block_JSON_path_list))
+    Generate_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, window=window, Selected_Variable=Generate_INV_Variable, Selected_Field=Generate_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Block_Variable_list=PO_Block_Variable_list, Block_Field_list=PO_Block_Field_list, Block_JSON_path_list=PO_Block_JSON_path_list))
     
     # -------- Select One -------- #
     TabView_One_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Tab_PO, Tab_size="Download", GUI_Level_ID=3)
@@ -566,7 +566,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     BB_Block_Variable_list = [Generate_BB_INV_PDF_Variable, Generate_BB_IAL_Variable]
     BB_Block_Field_list = [Generate_BB_INV_PDF_Frame_Var, Generate_IAL_Frame_Var]
     BB_Block_JSON_path_list = [["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"], ["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "IAL", "Use"]]
-    Generate_BB_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_BB_INV_Variable, Selected_Field=Generate_BB_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Block_Variable_list=BB_Block_Variable_list, Block_Field_list=BB_Block_Field_list, Block_JSON_path_list=BB_Block_JSON_path_list))
+    Generate_BB_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, window=window, Selected_Variable=Generate_BB_INV_Variable, Selected_Field=Generate_BB_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Block_Variable_list=BB_Block_Variable_list, Block_Field_list=BB_Block_Field_list, Block_JSON_path_list=BB_Block_JSON_path_list))
 
     # Vendor
     BB_Vendor_Used = Documents["BackBone_Billing"]["Vendors_List"]
@@ -633,7 +633,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     PRO_Block_Variable_list = [Generate_PRO_INV_PDF_Variable]
     PRO_Block_Field_list = [Generate_PRO_INV_PDF_Frame_Var]
     PRO_Block_JSON_path_list =[["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"]]
-    Generate_PRO_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, Selected_Variable=Generate_PRO_INV_Variable, Selected_Field=Generate_PRO_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Block_Variable_list=PRO_Block_Variable_list, Block_Field_list=PRO_Block_Field_list, Block_JSON_path_list=PRO_Block_JSON_path_list))
+    Generate_PRO_INV_Frame_Var.configure(command = lambda: CustomTkinter_Functions.Field_Block_Bool(Settings=Settings, window=window, Selected_Variable=Generate_PRO_INV_Variable, Selected_Field=Generate_PRO_INV_Frame_Var, Selected_JSON_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Block_Variable_list=PRO_Block_Variable_list, Block_Field_list=PRO_Block_Field_list, Block_JSON_path_list=PRO_Block_JSON_path_list))
 
     # Selected Purchase Orders List
     PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected PROs", Field_Type="Input_Normal")  

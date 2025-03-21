@@ -379,7 +379,6 @@ def Process_Purchase_Orders(Settings: dict,
                 # TODO --> postavit tuhle cestu podobně jako s Delviery / Cpnfirmation nechat vybrat na základě čeho postavit
                 pass
 
-
             # Export 
             for PreAdvice_Index, PreAdvice_Number in enumerate(PO_PreAdviceNumber_list):
                 PreAdvice_Content = PO_PreAdvices[PreAdvice_Index]
@@ -435,8 +434,7 @@ def Process_Purchase_Orders(Settings: dict,
 
         # ---------------- Invoice ---------------- #
         if Generate_Invoice == True:
-            # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program zeptat na základě čeho chceme Invoice dělat
-            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
+            # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program pro jaké Delviery
             print("Process_Invoice")
         else:
             pass
