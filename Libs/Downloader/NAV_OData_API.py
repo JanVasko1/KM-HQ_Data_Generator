@@ -457,7 +457,7 @@ def Get_CPDI_Status_df(Configuration: dict, window: CTk, headers: dict, tenant_i
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
 def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: str) -> DataFrame:
     # Fields
-    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Unit_of_Measure", "Currency_Code", "Order_Date", "Line_Flag"]
+    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Ordered_Quantity", "Unit_of_Measure", "Currency_Code", "Unit_Price", "Order_Date", "Line_Flag"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -478,13 +478,16 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
     Document_No_list = []
     Document_Line_No_list = []
     Exported_Line_No_list = []
+    Vendor_Line_No_list = []
     Vendor_Document_Type_list = []
     Vendor_Document_No_list = []
     Line_Type_list = []
     Item_No_list = []
     Quantity_list = []
+    Ordered_Quantity_list = []
     Unit_of_Measure_list = []
     Currency_Code_list = []
+    Unit_Price_list = []
     Order_Date_list = []
     Line_Flag_list = []
 
@@ -494,13 +497,16 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
         Document_No_list.append(response_values_List[index]["Document_No"])
         Document_Line_No_list.append(response_values_List[index]["Document_Line_No"])
         Exported_Line_No_list.append(response_values_List[index]["Exported_Line_No"])
+        Vendor_Line_No_list.append(response_values_List[index]["Vendor_Line_No"])
         Vendor_Document_Type_list.append(response_values_List[index]["Vendor_Document_Type"])
         Vendor_Document_No_list.append(response_values_List[index]["Vendor_Document_No"])
         Line_Type_list.append(response_values_List[index]["Line_Type"])
         Item_No_list.append(response_values_List[index]["Item_No"])
         Quantity_list.append(response_values_List[index]["Quantity"])
+        Ordered_Quantity_list.append(response_values_List[index]["Ordered_Quantity"])
         Unit_of_Measure_list.append(response_values_List[index]["Unit_of_Measure"])
         Currency_Code_list.append(response_values_List[index]["Currency_Code"])
+        Unit_Price_list.append(response_values_List[index]["Unit_Price"])
         Order_Date_list.append(response_values_List[index]["Order_Date"])
         Line_Flag_list.append(response_values_List[index]["Line_Flag"])
 
@@ -510,13 +516,16 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
         "Document_No": Document_No_list,
         "Document_Line_No": Document_Line_No_list,
         "Exported_Line_No": Exported_Line_No_list,
+        "Vendor_Line_No": Vendor_Line_No_list,
         "Vendor_Document_Type": Vendor_Document_Type_list,
         "Vendor_Document_No": Vendor_Document_No_list,
         "Line_Type": Line_Type_list,
         "Item_No": Item_No_list,
         "Quantity": Quantity_list,
+        "Ordered_Quantity": Ordered_Quantity_list,
         "Unit_of_Measure": Unit_of_Measure_list,
         "Currency_Code": Currency_Code_list,
+        "Unit_Price": Unit_Price_list,
         "Order_Date": Order_Date_list,
         "Line_Flag": Line_Flag_list}
     

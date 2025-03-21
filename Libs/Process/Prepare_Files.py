@@ -8,41 +8,158 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
-def Get_Confirmed_HQ_Lines_for_Delivery(Configuration: dict, window: CTk, Purchase_Order: str, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str) -> DataFrame:
-    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery document generation.", message=f"Do you want to download Confirmation from HQ Item Transport Register related to {Purchase_Order} to build data for Delivery?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
-    if response == "Download":                    
-        import Libs.Downloader.NAV_OData_API as NAV_OData_API
+def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame) -> DataFrame:
+    mask_Canceled_Lines = Confirmed_Lines_df["cancelled"] == False
+    mask_Discontinued_Lines = Confirmed_Lines_df["discontinued"] == False
+    mask_Label = Confirmed_Lines_df["bom"] == False
+    # BUG --> if Machine is discontinued or canecelled also Label and FOCH should be removed
+    Confirmed_Lines_df = Confirmed_Lines_df[mask_Canceled_Lines & mask_Discontinued_Lines & mask_Label]  
+    Confirmed_Lines_df.reset_index(drop=True, inplace=True)
 
-        # HQ_Testing_HQ_Item_Transport_Register
-        Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
-        if Confirmed_Lines_df.empty:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-        else:
-            # Set Cancelled
-            Confirmed_Lines_df["cancelled"] = False
-            Cancelled_conditions = [(Confirmed_Lines_df["Line_Flag"] == "Cancelled")]
-            Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Cancelled_conditions, Set_Column="cancelled", Set_Value=True)
-
-            # Set discontinued
-            Confirmed_Lines_df["discontinued"] = False
-            Discontinued_conditions = [(Confirmed_Lines_df["Line_Flag"] == "Finished")]
-            Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Discontinued_conditions, Set_Column="discontinued", Set_Value=True)
-
-            # Prepare Dataframe for Delivery
-            mask_Canceled_Lines = Confirmed_Lines_df["cancelled"] == False
-            mask_Discontinued_Lines = Confirmed_Lines_df["discontinued"] == False
-            Confirmed_Lines_df = Confirmed_Lines_df[mask_Canceled_Lines & mask_Discontinued_Lines]  
-
-            # Drop Duplicate rows amd reset index
-            Confirmed_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
-            Confirmed_Lines_df.reset_index(drop=True, inplace=True)
-            print("\n----------Confirmed_Lines_df----------")
-            print(Confirmed_Lines_df)
-    else:
-        # TODO --> what to do when Empty be return ???? How to make Confirmaiton Number (as it is part f Delviery)
-        Confirmed_Lines_df = DataFrame()
-
+    Confirmed_Lines_df.to_csv(path_or_buf="Confirmed_Lines_df.csv", sep=";")
     return Confirmed_Lines_df
+
+def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CTk, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, Purchase_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame) -> DataFrame:
+    import Libs.Downloader.NAV_OData_API as NAV_OData_API
+    
+    Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
+    Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
+
+    # HQ_Testing_HQ_Item_Transport_Register
+    HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
+    print(HQ_Confirmed_Lines_df)
+    if HQ_Confirmed_Lines_df.empty:
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+    else:
+        PO_Confirmation_Number = HQ_Confirmed_Lines_df.iloc[0]["Vendor_Document_No"]
+
+        # Preparation
+        mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
+        Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
+
+        # Assing Data to Dataframe
+        Exported_Items_list = HQ_Confirmed_Lines_df["Item_No"].to_list()
+        Confirmed_Lines_df["supplier_aid"] = Exported_Items_list
+        Confirmed_Lines_df["buyer_aid"] = Exported_Items_list
+        Confirmed_Lines_df["item_category"] = "YN01"
+        Confirmed_Lines_df["discontinued"] = False
+        Confirmed_Lines_df["set"] = False
+        Confirmed_Lines_df["bom"] = False
+        Confirmed_Lines_df["bom_with_delivery_group"] = False
+        Confirmed_Lines_df["cancelled"] = False
+
+        Confirmed_Lines_df["Exported_Line_No"] = HQ_Confirmed_Lines_df["Exported_Line_No"].to_list()
+        Confirmed_Lines_df["quantity"] = HQ_Confirmed_Lines_df["Quantity"].to_list()
+        Confirmed_Lines_df["ordered_quantity"] = HQ_Confirmed_Lines_df["Ordered_Quantity"].to_list()
+        Confirmed_Lines_df["price_amount"] = HQ_Confirmed_Lines_df["Unit_Price"].to_list()
+        Confirmed_Lines_df["price_line_amount"] = Confirmed_Lines_df["quantity"]*Confirmed_Lines_df["price_amount"]
+        Confirmed_Lines_df["PO_UoM"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="PO_UoM", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["No"], Search_df=Purchase_Lines_df_Filtered, Search_Column="Unit_of_Measure_Code"), axis=1)
+        Confirmed_Lines_df["order_unit"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit", Compare_Column_df1=["PO_UoM"], Compare_Column_df2=["Code"], Search_df=UoM_df, Search_Column="International_Standard_Code"), axis=1)
+        Confirmed_Lines_df.drop(labels=["PO_UoM"], inplace=True, axis=1)
+        Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
+        
+        # Line Flags
+        Confirmed_Lines_df["Line_Flag"] = HQ_Confirmed_Lines_df["Line_Flag"].to_list()
+        # Set Label
+        Cancelled_conditions = [(Confirmed_Lines_df["Line_Flag"] == "Label")]
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Cancelled_conditions, Set_Column="bom", Set_Value=True)
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Cancelled_conditions, Set_Column="item_category", Set_Value="ZST")
+
+        # Set Cancelled
+        Cancelled_conditions = [(Confirmed_Lines_df["Line_Flag"] == "Cancelled")]
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Cancelled_conditions, Set_Column="cancelled", Set_Value=True)
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Cancelled_conditions, Set_Column="item_category", Set_Value="TAPA")
+
+        # Set discontinued
+        Discontinued_conditions = [(Confirmed_Lines_df["Line_Flag"] == "Finished")]
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Discontinued_conditions, Set_Column="discontinued", Set_Value=True)
+        Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Discontinued_conditions, Set_Column="item_category", Set_Value="TAPA")
+
+        Confirmed_Lines_df.drop(labels=["Line_Flag"], inplace=True, axis=1)
+
+        # line_item_id
+        Confirmed_Lines_df["line_item_id"] = Confirmed_Lines_df["Exported_Line_No"] // 100
+        Confirmed_Lines_df["supplier_order_item_id"] = HQ_Confirmed_Lines_df["Vendor_Line_No"].to_list()
+        
+        # Round Values
+        Confirmed_Lines_df["quantity"] = Confirmed_Lines_df["quantity"].round(2)
+        Confirmed_Lines_df["ordered_quantity"] = Confirmed_Lines_df["ordered_quantity"].round(2)
+        Confirmed_Lines_df["price_amount"] = Confirmed_Lines_df["price_amount"].round(2)
+        Confirmed_Lines_df["price_line_amount"] = Confirmed_Lines_df["price_line_amount"].round(2)
+
+        # Drop Duplicate rows amd reset index
+        Confirmed_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
+        Confirmed_Lines_df.reset_index(drop=True, inplace=True)
+        Confirmed_Lines_df.to_csv(path_or_buf="From_Confirmation.csv", sep=";")
+       
+    return Confirmed_Lines_df, PO_Confirmation_Number
+
+def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame) -> DataFrame:
+    PO_Confirmation_Number = "Fictive_Num_01"
+    Exported_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
+    Exported_Lines_df = DataFrame(columns=Exported_Lines_df_Columns)
+    
+    # Preparation
+    mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
+    Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
+
+    # Assing Data to Dataframe
+    Exported_Items_list = HQ_Item_Transport_Register_df["Item_No"].to_list()
+    Exported_Lines_df["supplier_aid"] = Exported_Items_list
+    Exported_Lines_df["buyer_aid"] = Exported_Items_list
+    Exported_Lines_df["item_category"] = "YN01"
+    Exported_Lines_df["discontinued"] = False
+    Exported_Lines_df["set"] = False
+    Exported_Lines_df["bom"] = False
+    Exported_Lines_df["bom_with_delivery_group"] = False
+    Exported_Lines_df["cancelled"] = False
+
+    Exported_Lines_df["Exported_Line_No"] = HQ_Item_Transport_Register_df["Exported_Line_No"].to_list()
+    Exported_Lines_df["quantity"] = HQ_Item_Transport_Register_df["Quantity"].to_list()
+    Exported_Lines_df["ordered_quantity"] = HQ_Item_Transport_Register_df["Ordered_Quantity"].to_list()
+    Exported_Lines_df["price_amount"] = Purchase_Lines_df["Direct_Unit_Cost"].to_list()
+    Exported_Lines_df["price_line_amount"] = Exported_Lines_df["quantity"]*Exported_Lines_df["price_amount"]
+    Exported_Lines_df["PO_UoM"] = Exported_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="PO_UoM", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["No"], Search_df=Purchase_Lines_df_Filtered, Search_Column="Unit_of_Measure_Code"), axis=1)
+    Exported_Lines_df["order_unit"] = Exported_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit", Compare_Column_df1=["PO_UoM"], Compare_Column_df2=["Code"], Search_df=UoM_df, Search_Column="International_Standard_Code"), axis=1)
+    Exported_Lines_df.drop(labels=["PO_UoM"], inplace=True, axis=1)
+    Exported_Lines_df["description_long"] = Exported_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
+    
+    # Line Flags
+    Exported_Lines_df["Line_Flag"] = HQ_Item_Transport_Register_df["Line_Flag"].to_list()
+    # Set Label
+    Cancelled_conditions = [(Exported_Lines_df["Line_Flag"] == "Label")]
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Cancelled_conditions, Set_Column="bom", Set_Value=True)
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Cancelled_conditions, Set_Column="item_category", Set_Value="ZST")
+
+    # Set Cancelled
+    Cancelled_conditions = [(Exported_Lines_df["Line_Flag"] == "Cancelled")]
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Cancelled_conditions, Set_Column="cancelled", Set_Value=True)
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Cancelled_conditions, Set_Column="item_category", Set_Value="TAPA")
+
+    # Set discontinued
+    Discontinued_conditions = [(Exported_Lines_df["Line_Flag"] == "Finished")]
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Discontinued_conditions, Set_Column="discontinued", Set_Value=True)
+    Exported_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Exported_Lines_df, conditions=Discontinued_conditions, Set_Column="item_category", Set_Value="TAPA")
+
+    Exported_Lines_df.drop(labels=["Line_Flag"], inplace=True, axis=1)
+
+    # line_item_id
+    Exported_Lines_df["line_item_id"] = Exported_Lines_df["Exported_Line_No"] // 100
+    Exported_Lines_df["supplier_order_item_id"] = Exported_Lines_df["Exported_Line_No"] // 1000
+    
+    # Round Values
+    Exported_Lines_df["quantity"] = Exported_Lines_df["quantity"].round(2)
+    Exported_Lines_df["ordered_quantity"] = Exported_Lines_df["ordered_quantity"].round(2)
+    Exported_Lines_df["price_amount"] = Exported_Lines_df["price_amount"].round(2)
+    Exported_Lines_df["price_line_amount"] = Exported_Lines_df["price_line_amount"].round(2)
+
+    # Drop Duplicate rows amd reset index
+    Exported_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
+    Exported_Lines_df.reset_index(drop=True, inplace=True)
+    Exported_Lines_df.to_csv(path_or_buf="From_Export.csv", sep=";")
+
+    return Exported_Lines_df, PO_Confirmation_Number
+
 
 # ---------------------------------------------------------- Main Functions ---------------------------------------------------------- #
 def Process_Purchase_Orders(Settings: dict, 
@@ -103,7 +220,7 @@ def Process_Purchase_Orders(Settings: dict,
             import Libs.Process.Purchase_Orders.Generate_Confirmation_ATP as Generate_Confirmation_ATP
 
             # Header
-            PO_Confirmation, PO_Confirmation_Number = Generate_Confirmation_Header.Generate_PO_CON_Header(Settings=Settings, 
+            PO_Confirmation_Header, PO_Confirmation_Number = Generate_Confirmation_Header.Generate_PO_CON_Header(Settings=Settings, 
                                                                                                             Configuration=Configuration, 
                                                                                                             window=window,
                                                                                                             Purchase_Order=Purchase_Order,
@@ -113,7 +230,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                             HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
             
             # Lines
-            Confirmation_Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No = Generate_Confirmation_Lines.Generate_PO_CON_Lines(Settings=Settings, 
+            Confirmed_Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No = Generate_Confirmation_Lines.Generate_PO_CON_Lines(Settings=Settings, 
                                                                                                                                             Configuration=Configuration, 
                                                                                                                                             window=window,
                                                                                                                                             Purchase_Order=Purchase_Order,
@@ -127,28 +244,23 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             UoM_df=UoM_df)
 
             # ATP
-            PO_Confirmation_Lines = Generate_Confirmation_ATP.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Lines_df=Confirmation_Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
+            PO_Confirmation_Lines = Generate_Confirmation_ATP.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Confirmed_Lines_df=Confirmed_Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
 
             # Put Header, Lines with ATP together
-            PO_Confirmation["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
+            PO_Confirmation_Header["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
 
             # Update Footer
-            PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_item_num"] = Lines_No
-            PO_Confirmation["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
+            PO_Confirmation_Header["orderresponse"]["orderresponse_summary"]["total_item_num"] = Lines_No
+            PO_Confirmation_Header["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
 
             # Export 
             if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=PO_Confirmation_Number, File_suffix="json")
+                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=PO_Confirmation_Number, File_suffix="json")
             else:
-                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation, File_Name=PO_Confirmation_Number, File_suffix="json")
+                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation_Header, File_Name=PO_Confirmation_Number, File_suffix="json")
 
             # Prepare Dataframe for Delivery, cannot be done sooner as Confirmation must contain all Items
-            mask_Canceled_Lines = Confirmation_Lines_df["cancelled"] == False
-            mask_Discontinued_Lines = Confirmation_Lines_df["discontinued"] == False
-            mask_Label = Confirmation_Lines_df["bom"] == False
-            # BUG --> if Machine is discontinued or canecelled also Label and FOCH should be removed
-            Confirmed_Lines_df = Confirmation_Lines_df[mask_Canceled_Lines & mask_Discontinued_Lines & mask_Label]  
-            Confirmed_Lines_df.reset_index(drop=True, inplace=True)
+            Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
         else:
             pass
 
@@ -162,20 +274,25 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Confirmation lines existing
             if Generate_Confirmation == True:
                 if Confirmed_Lines_df.empty:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty, program will use Exported data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
-                    # TODO --> transfer HQ Export to Confirmed_Lines_df so it can be used as source for Delivery + to finish all data transfered to Delviery_Generators like "PO_Confirmation_Number"
-                    # TODO --> Data of "Confirmed_Lines_df" msut be exactly same as if it would be generated by program
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are CAncelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                    if response == "Confirmation":    
+                        Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
+                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
+                    elif response == "Export":  
+                        Exported_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
+                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df)
                 else:
+                    # Just pass as all is already prepared
                     pass
             else:
-                response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Do you want to use Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"You select to create Delivery without creation of Confirmation, do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                 if response == "Confirmation":    
-                    Confirmed_Lines_df = Get_Confirmed_HQ_Lines_for_Delivery(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-                    # TODO --> Data of "Confirmed_Lines_df" msut be exactly same as if it would be generated by program
+                    Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
+                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
+                    print(Confirmed_Lines_df)
                 elif response == "Export":  
-                    # TODO --> transfer HQ Export to Confirmed_Lines_df so it can be used as source for Delivery + to finish all data transfered to Delviery_Generators like "PO_Confirmation_Number"
-                    # TODO --> Data of "Confirmed_Lines_df" msut be exactly same as if it would be generated by program
-                    pass
+                    Exported_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
+                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df)
 
             # Header
             PO_Deliveries, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Count = Generate_Delivery_Header.Generate_Delivery_Header(Settings=Settings, 
@@ -345,7 +462,7 @@ def Process_BackBoneBilling(Settings: dict,
                                                                                                                         HQ_Communication_Setup_df=HQ_Communication_Setup_df)
         
         # Lines
-        BB_Invoice_Lines, Lines_No, Total_Line_Amount, Table_Data = Generate_BB_Lines.Generate_BB_Lines(Settings=Settings, 
+        BB_Invoice_Lines, BB_Lines_No, BB_Total_Line_Amount, BB_Table_Data = Generate_BB_Lines.Generate_BB_Lines(Settings=Settings, 
                                                                                                             Configuration=Configuration, 
                                                                                                             window=window, 
                                                                                                             Vendor_Service_Function_df=Vendor_Service_Function_df, 
@@ -361,8 +478,8 @@ def Process_BackBoneBilling(Settings: dict,
         BB_Invoice["invoice"]["invoice_item_list"] = BB_Invoice_Lines
 
         # Update Footer
-        BB_Invoice["invoice"]["invoice_summary"]["total_item_num"] = round(number=Lines_No, ndigits=2)
-        BB_Invoice["invoice"]["invoice_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
+        BB_Invoice["invoice"]["invoice_summary"]["total_item_num"] = round(number=BB_Lines_No, ndigits=2)
+        BB_Invoice["invoice"]["invoice_summary"]["total_amount"] = round(number=BB_Total_Line_Amount, ndigits=2)
         BB_Invoice["invoice"]["invoice_summary"]["total_tax_amount"] = round(number=0, ndigits=2)
 
         # Export 
@@ -376,7 +493,7 @@ def Process_BackBoneBilling(Settings: dict,
     # ---------------- Invoice PDF ---------------- #
     if Generate_BB_Invoice_PDF == True:
         import Libs.Process.PDF_Generator as PDF_Generator
-        BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=BB_Invoice, Table_Data=Table_Data)
+        BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=BB_Invoice, Table_Data=BB_Table_Data)
 
         # Export 
         if Export_NAV_Folder == True:

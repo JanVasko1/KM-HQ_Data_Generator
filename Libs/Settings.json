@@ -55,7 +55,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [

@@ -8,7 +8,7 @@ import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Pandas_Functions as Pandas_Functions
 
-def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, Lines_df: DataFrame, PO_Confirmation_Lines: dict) -> dict:
+def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, Confirmed_Lines_df: DataFrame, PO_Confirmation_Lines: dict) -> dict:
     # --------------------------------------------- Defaults --------------------------------------------- #
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
 
@@ -38,7 +38,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
             pass
 
         Lines_ATP_columns = ["quantity", "date", "stock_origin"]
-        for Item_line in Lines_df.iterrows():
+        for Item_line in Confirmed_Lines_df.iterrows():
             Item_Line_index = Item_line[0]
             row_Series = Series(Item_line[1])
             Item_line_qty = row_Series["quantity"]
@@ -102,23 +102,23 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
             if ATP_Dates_Method == "Fixed":
                 # ONH
                 ONH_conditions = [(Lines_ATP_df["stock_origin"] == "ONH")]
-                Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONH_conditions, Set_Column="date", Set_Value=ATP_ONH_Date)
+                Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONH_conditions, Set_Column="date", Set_Value=ATP_ONH_Date)
 
                 # ONB 
                 ONB_conditions = [(Lines_ATP_df["stock_origin"] == "ONB")]
                 ATP_ONB_week = Defaults_Lists.Date_str_to_Week_str(Date_str=ATP_ONB_Date, Format=Date_format)
-                Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
+                Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
             elif ATP_Dates_Method == "Intervals":
                 # ONH
                 ATP_ONH_Date = Defaults_Lists.Date_Random_from_CurrentDay_plus_Interval(From_int=ATP_Interval_ONH_From, To_int=ATP_Interval_ONH_To, Format=Date_format)
                 ONH_conditions = [(Lines_ATP_df["stock_origin"] == "ONH")]
-                Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONH_conditions, Set_Column="date", Set_Value=ATP_ONH_Date)
+                Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONH_conditions, Set_Column="date", Set_Value=ATP_ONH_Date)
 
                 # ONB
                 ATP_ONB_Date = Defaults_Lists.Date_Random_from_CurrentDay_plus_Interval(From_int=ATP_Interval_ONB_From, To_int=ATP_Interval_ONB_To, Format=Date_format)
                 ONB_conditions = [(Lines_ATP_df["stock_origin"] == "ONB")]
                 ATP_ONB_week = Defaults_Lists.Date_str_to_Week_str(Date_str=ATP_ONB_Date, Format=Date_format)
-                Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
+                Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
 
             # Create ATP Dictionary
             PO_ATP_Lines = []
