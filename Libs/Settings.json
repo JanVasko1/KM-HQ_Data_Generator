@@ -239,7 +239,7 @@
             "PreAdvice": {
                 "Use": true,
                 "Delivery_Date": {
-                    "Method": "Prompt",
+                    "Method": "Delivery Date Shift",
                     "Methods_List": [
                         "Fixed",
                         "Random",

@@ -425,7 +425,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Generate_Conf_Frame_Var.configure(variable=Generate_CON_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Generate_CON_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"], Information=Generate_CON_Variable))
 
     # Field - Use CPDI
-    Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI",  Field_Type="Input_CheckBox", Field_ToolTip=["Works only when Purchase Order is PDI Center = BEU", 3])  
+    Generate_CPDI_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PO, Field_Frame_Type="Half_size" , Label="CPDI",  Field_Type="Input_CheckBox", Field_ToolTip=["Generate only when Purchase Order is marked PDI Center = BEU", 3])  
     Generate_CPDI_Frame_Var = Generate_CPDI_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
     Generate_CPDI_Frame_Var.configure(variable=Generate_CPD_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Generate_CPD_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Use"], Information=Generate_CPD_Variable))
 
