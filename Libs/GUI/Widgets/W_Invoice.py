@@ -5,23 +5,6 @@ import Libs.Data_Functions as Data_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-# -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
-    if type(Value) == str:
-        if Value != "":
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    elif type(Value) == int:
-        if Value > 0:
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    else:
-        pass
-
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
 def PO_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
@@ -49,7 +32,7 @@ def PO_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     NUM_INV_FIX_Frame_Var = NUM_INV_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
     NUM_INV_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
     NUM_INV_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Number", "Fixed_Options", "Number"], Information=NUM_INV_FIX_Frame_Var.get()))
-    Entry_field_Insert(Field=NUM_INV_FIX_Frame_Var, Value=Fixed_Number)
+    Data_Functions.Entry_field_Insert(Field=NUM_INV_FIX_Frame_Var, Value=Fixed_Number)
 
     # Section Quantities
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -59,7 +42,7 @@ def PO_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     AUT_Prefix_Frame_Var = AUT_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
     AUT_Prefix_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
     AUT_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Number", "Automatic_Options", "Prefix"], Information=AUT_Prefix_Frame_Var.get()))
-    Entry_field_Insert(Field=AUT_Prefix_Frame_Var, Value=Automatic_Prefix)
+    Data_Functions.Entry_field_Insert(Field=AUT_Prefix_Frame_Var, Value=Automatic_Prefix)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -100,7 +83,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, window: CTk, Frame: C
     Fixed_Currency_Frame_Var = Fixed_Currency_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Currency_Frame_Var.configure(placeholder_text="Manual Currency", placeholder_text_color="#949A9F")
     Fixed_Currency_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Currency", "Fixed_Options", "Fix_Currency"], Information=Fixed_Currency_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Currency_Frame_Var, Value=Fixed_Currency)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Currency_Frame_Var, Value=Fixed_Currency)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -137,7 +120,7 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     INV_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
     INV_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Fixed_Options", "Fix_Date"], Information=INV_Fixed_Date_Frame_Var.get()))
     Button_INV_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=INV_Fixed_Date_Frame_Var, Clicked_on_Button=Button_INV_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
-    Entry_field_Insert(Field=INV_Fixed_Date_Frame_Var, Value=INV_Fix_Date)
+    Data_Functions.Entry_field_Insert(Field=INV_Fixed_Date_Frame_Var, Value=INV_Fix_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_INV_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Section Quantities
@@ -148,14 +131,14 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     INV_Random_From_Frame_Var = INV_Random_From_Frame.children["!ctkframe3"].children["!ctkentry"]
     INV_Random_From_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
     INV_Random_From_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Random_Options", "From"], Information=int(INV_Random_From_Frame_Var.get())))
-    Entry_field_Insert(Field=INV_Random_From_Frame_Var, Value=INV_Rand_From_Date)
+    Data_Functions.Entry_field_Insert(Field=INV_Random_From_Frame_Var, Value=INV_Rand_From_Date)
 
     # Field - Invoice Date - To CD + Entry Field
     INV_Random_To_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date - To CD +", Field_Type="Input_Normal", Validation="Integer") 
     INV_Random_To_Frame_Var = INV_Random_To_Frame.children["!ctkframe3"].children["!ctkentry"]
     INV_Random_To_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
     INV_Random_To_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Random_Options", "To"], Information=int(INV_Random_To_Frame_Var.get())))
-    Entry_field_Insert(Field=INV_Random_To_Frame_Var, Value=INV_Rand_To_Date)
+    Data_Functions.Entry_field_Insert(Field=INV_Random_To_Frame_Var, Value=INV_Rand_To_Date)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -221,7 +204,7 @@ def PO_CountryOrigin(Settings: dict, Configuration: dict, window: CTk, Frame: CT
     Fixed_Count_Origin_Frame_Var = Fixed_Count_Origin_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Count_Origin_Frame_Var.configure(placeholder_text="Manual Country Code", placeholder_text_color="#949A9F")
     Fixed_Count_Origin_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"], Information=Fixed_Count_Origin_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Count_Origin_Frame_Var, Value=Fixed_Count_Origin)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Count_Origin_Frame_Var, Value=Fixed_Count_Origin)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -253,7 +236,7 @@ def PO_Tariff(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
     Fixed_Tariff_Frame_Var = Fixed_Tariff_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Tariff_Frame_Var.configure(placeholder_text="Manual Tariff Code", placeholder_text_color="#949A9F")
     Fixed_Tariff_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Tariff", "Fixed_Options", "Fix_Tariff"], Information=Fixed_Tariff_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Tariff_Frame_Var, Value=Fixed_Tariff)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Tariff_Frame_Var, Value=Fixed_Tariff)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -286,7 +269,7 @@ def BB_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     BB_NUM_INV_FIX_Frame_Var = BB_NUM_INV_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_NUM_INV_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
     BB_NUM_INV_FIX_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Number", "Fixed_Options", "Number"], Information=BB_NUM_INV_FIX_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_NUM_INV_FIX_Frame_Var, Value=BB_Fixed_Number)
+    Data_Functions.Entry_field_Insert(Field=BB_NUM_INV_FIX_Frame_Var, Value=BB_Fixed_Number)
 
     # Section Quantities
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -296,7 +279,7 @@ def BB_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     BB_AUT_Prefix_Frame_Var = BB_AUT_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_AUT_Prefix_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
     BB_AUT_Prefix_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Number", "Automatic_Options", "Prefix"], Information=BB_AUT_Prefix_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_AUT_Prefix_Frame_Var, Value=BB_Automatic_Prefix)
+    Data_Functions.Entry_field_Insert(Field=BB_AUT_Prefix_Frame_Var, Value=BB_Automatic_Prefix)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -328,7 +311,7 @@ def BB_Items(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
     BB_Fixed_Items_Frame_Var = BB_Fixed_Items_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Items_Frame_Var.configure(placeholder_text="Manual Items", placeholder_text_color="#949A9F")
     BB_Fixed_Items_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Items", "Fixed_Options", "Fix_Item"], Information=BB_Fixed_Items_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_Fixed_Items_Frame_Var, Value=BB_Fixed_Items)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Items_Frame_Var, Value=BB_Fixed_Items)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -385,14 +368,14 @@ def BB_Price_Currency(Settings: dict, Configuration: dict, window: CTk, Frame: C
     BB_Fixed_Price_Frame_Var = BB_Fixed_Price_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Price_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
     BB_Fixed_Price_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Prices", "Fixed_Options", "Fix_Price"], Information=int(BB_Fixed_Price_Frame_Var.get())))
-    Entry_field_Insert(Field=BB_Fixed_Price_Frame_Var, Value=BB_Fixed_Price)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Price_Frame_Var, Value=BB_Fixed_Price)
 
     # Field - Fixed Currency
     BB_Fixed_Currency_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Currency", Field_Type="Input_Normal") 
     BB_Fixed_Currency_Frame_Var = BB_Fixed_Currency_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Currency_Frame_Var.configure(placeholder_text="Manual Currency", placeholder_text_color="#949A9F")
     BB_Fixed_Currency_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Currency", "Fix_Currency"], Information=BB_Fixed_Currency_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_Fixed_Currency_Frame_Var, Value=BB_Fixed_Currency)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Currency_Frame_Var, Value=BB_Fixed_Currency)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -426,7 +409,7 @@ def BB_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     BB_PD_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
     BB_PD_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Invoice_Date", "Fixed_Options", "Fix_Date"], Information=BB_PD_Fixed_Date_Frame_Var.get()))
     BB_Button_INV_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=BB_PD_Fixed_Date_Frame_Var, Clicked_on_Button=BB_Button_INV_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
-    Entry_field_Insert(Field=BB_PD_Fixed_Date_Frame_Var, Value=BB_PD_Fix_Date)
+    Data_Functions.Entry_field_Insert(Field=BB_PD_Fixed_Date_Frame_Var, Value=BB_PD_Fix_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=BB_Button_INV_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
@@ -467,7 +450,7 @@ def BB_Order_reference(Settings: dict, Configuration: dict, window: CTk, Frame: 
     BB_Fixed_Order_id_Frame_Var = BB_Fixed_Order_id_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Order_id_Frame_Var.configure(placeholder_text="Manual Order id", placeholder_text_color="#949A9F")
     BB_Fixed_Order_id_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Order_reference", "Order_id", "Fixed_Options", "Fixed_Order_ID"], Information=BB_Fixed_Order_id_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_Fixed_Order_id_Frame_Var, Value=BB_Fixed_Order_id)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Order_id_Frame_Var, Value=BB_Fixed_Order_id)
 
     # Section Order Date
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Order Date", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -485,7 +468,7 @@ def BB_Order_reference(Settings: dict, Configuration: dict, window: CTk, Frame: 
     BB_OD_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
     BB_OD_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Order_reference", "Order_date", "Fixed_Options", "Fixed_Order_Date"], Information=BB_OD_Fixed_Date_Frame_Var.get()))
     Button_BB_OD_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=BB_OD_Fixed_Date_Frame_Var, Clicked_on_Button=Button_BB_OD_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
-    Entry_field_Insert(Field=BB_OD_Fixed_Date_Frame_Var, Value=BB_OD_Fix_Date)
+    Data_Functions.Entry_field_Insert(Field=BB_OD_Fixed_Date_Frame_Var, Value=BB_OD_Fix_Date)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_BB_OD_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Build look of Widget
@@ -551,7 +534,7 @@ def BB_CountryOrigin(Settings: dict, Configuration: dict, window: CTk, Frame: CT
     BB_Fixed_Count_Origin_Frame_Var = BB_Fixed_Count_Origin_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Count_Origin_Frame_Var.configure(placeholder_text="Manual Country Code", placeholder_text_color="#949A9F")
     BB_Fixed_Count_Origin_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"], Information=BB_Fixed_Count_Origin_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_Fixed_Count_Origin_Frame_Var, Value=BB_Fixed_Count_Origin)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Count_Origin_Frame_Var, Value=BB_Fixed_Count_Origin)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
@@ -583,7 +566,7 @@ def BB_Tariff(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
     BB_Fixed_Tariff_Frame_Var = BB_Fixed_Tariff_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Fixed_Tariff_Frame_Var.configure(placeholder_text="Manual Tariff Code", placeholder_text_color="#949A9F")
     BB_Fixed_Tariff_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Tariff", "Fixed_Options", "Fix_Tariff"], Information=BB_Fixed_Tariff_Frame_Var.get()))
-    Entry_field_Insert(Field=BB_Fixed_Tariff_Frame_Var, Value=BB_Fixed_Tariff)
+    Data_Functions.Entry_field_Insert(Field=BB_Fixed_Tariff_Frame_Var, Value=BB_Fixed_Tariff)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)

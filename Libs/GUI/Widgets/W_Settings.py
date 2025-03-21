@@ -8,23 +8,6 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, CTkEntry, StringVar, BooleanVar, CTkOptionMenu, CTkButton, set_appearance_mode
 
-# -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
-    if type(Value) == str:
-        if Value != "":
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    elif type(Value) == int:
-        if Value > 0:
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    else:
-        pass
-
 def Settings_General_Color(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
@@ -172,21 +155,21 @@ def Settings_User_Access(Settings: dict, Configuration: dict, window: CTk, Frame
     NAV_Display_name_Frame_Var = NAV_Display_name_Frame.children["!ctkframe3"].children["!ctkentry"]
     NAV_Display_name_Frame_Var.configure(placeholder_text="Enter Name of Auth app")
     NAV_Display_name_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_Auth(Key="Display_name", Value=NAV_Display_name_Frame_Var.get()))
-    Entry_field_Insert(Field=NAV_Display_name_Frame_Var, Value=Display_name)
+    Data_Functions.Entry_field_Insert(Field=NAV_Display_name_Frame_Var, Value=Display_name)
 
     # Field - Client ID
     NAV_Client_ID_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Client ID", Field_Type="Input_Normal") 
     NAV_Client_ID_Frame_Var = NAV_Client_ID_Frame.children["!ctkframe3"].children["!ctkentry"]
     NAV_Client_ID_Frame_Var.configure(placeholder_text="Enter Client ID of Auth app")
     NAV_Client_ID_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_Auth(Key="client_id", Value=NAV_Client_ID_Frame_Var.get()))
-    Entry_field_Insert(Field=NAV_Client_ID_Frame_Var, Value=client_id)
+    Data_Functions.Entry_field_Insert(Field=NAV_Client_ID_Frame_Var, Value=client_id)
 
     # Field - Client Secret
     NAV_Client_Secret_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Client Secret", Field_Type="Password_Normal")
     NAV_Client_Secret_Frame_Var = NAV_Client_Secret_Frame.children["!ctkframe3"].children["!ctkentry"]
     NAV_Client_Secret_Frame_Var.configure(placeholder_text="Enter Secret ID of Auth app")
     NAV_Client_Secret_Frame_Var.bind("<FocusOut>", lambda Entry_value: Defaults_Lists.Save_set_key_Auth(Key="client_secret", Value=NAV_Client_Secret_Frame_Var.get()))
-    Entry_field_Insert(Field=NAV_Client_Secret_Frame_Var, Value=client_secret)
+    Data_Functions.Entry_field_Insert(Field=NAV_Client_Secret_Frame_Var, Value=client_secret)
 
     # Field - Tenant ID
     NAV_Tenant_ID_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Tenant ID", Field_Type="Input_Normal")

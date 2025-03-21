@@ -3,7 +3,7 @@ import json
 import os
 from glob import glob
 
-from customtkinter import CTk, StringVar, IntVar, BooleanVar
+from customtkinter import CTk, CTkEntry, StringVar, IntVar, BooleanVar
 
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
@@ -12,6 +12,19 @@ import Libs.Defaults_Lists as Defaults_Lists
 def Company_Name_prepare(Company: str) -> str:
     Company = Company.replace(" ", "%20")
     return Company
+
+def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
+    if type(Value) == str:
+        if Value != "":
+            Field.delete(first_index=0, last_index=1000)
+            Field.insert(index=0, string=Value)
+        else:
+            pass
+    elif type(Value) == int:
+        Field.delete(first_index=0, last_index=1000)
+        Field.insert(index=0, string=Value)
+    else:
+        pass
 
 # --------------------------------------------- List / Dict Operations --------------------------------------------- #
 def List_from_Dict(Dictionary: dict, Key_Argument: str) -> list:

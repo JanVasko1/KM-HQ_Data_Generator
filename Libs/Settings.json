@@ -55,7 +55,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -237,24 +237,25 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
-                    "Method": "Delivery Date Shift",
+                    "Method": "Fixed",
                     "Methods_List": [
                         "Fixed",
                         "Random",
-                        "Prompt",
-                        "Delivery Date Shift"
+                        "Delivery Date Shift",
+                        "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": ""
+                        "Fix_Date": "2025-03-19"
                     },
                     "Random_Options": {
-                        "From": 0,
-                        "To": 0
+                        "From": -4,
+                        "To": -2
                     },
-                    "Delivery_Date_Shift_Options": {
-                        "Shift_by": -1
+                    "Shift_Options": {
+                        "Generation_Date_Shift_by": -5,
+                        "Delivery_Date_Shift_by": -2
                     }
                 }
             },

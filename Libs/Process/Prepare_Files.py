@@ -254,10 +254,11 @@ def Process_Purchase_Orders(Settings: dict,
             PO_Confirmation_Header["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
 
             # Export 
+            Confirmation_File_Name = f"ORDRSP_{PO_Confirmation_Number}_Test"
             if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=PO_Confirmation_Number, File_suffix="json")
+                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json")
             else:
-                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation_Header, File_Name=PO_Confirmation_Number, File_suffix="json")
+                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json")
 
             # Prepare Dataframe for Delivery, cannot be done sooner as Confirmation must contain all Items
             Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
@@ -358,18 +359,35 @@ def Process_Purchase_Orders(Settings: dict,
             # Export 
             for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
                 Delivery_Content = PO_Deliveries[Delivery_Index]
+                Delivery_File_Name = f"DELVRY02_{Delivery_Number}_Test"
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_Number, File_suffix="json")
+                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_File_Name, File_suffix="json")
                 else:
-                    File_Manipulation.Export_Download_Folders(File_Content=Delivery_Content, File_Name=Delivery_Number, File_suffix="json")
+                    File_Manipulation.Export_Download_Folders(File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json")
         else:
             pass
 
         # ---------------- PreAdvice ---------------- #
         if Generate_PreAdvice == True:
-            # TIP --> Pozor na situaci, kdy Preadvice bude generované v jiném běhu než Confirmation / Delivery --> pak by se měl program zeptat na základě čeho chceme PreAdvice dělat
-            # TIP --> Pozor obsahuje informace i z Confirmation (Line No a číslo dokumentu)
-            print("Process_PreAdvice")
+            import Libs.Process.Purchase_Orders.Generate_PreAdvice_File as Generate_PreAdvice_File
+
+            # Define if Confirmation lines existing
+            if Generate_Delivery == True:
+                PO_PreAdviceNumber_list = PO_Delivery_Number_list
+                PO_PreAdvices = Generate_PreAdvice_File.Generate_PreAdvice_from_Delivery_dict(Settings=Settings, Configuration=Configuration, window=window, PO_Deliveries=PO_Deliveries)
+            else:
+                # TODO --> postavit tuhle cestu podobně jako s Delviery / Cpnfirmation nechat vybrat na základě čeho postavit
+                pass
+
+
+            # Export 
+            for PreAdvice_Index, PreAdvice_Number in enumerate(PO_PreAdviceNumber_list):
+                PreAdvice_Content = PO_PreAdvices[PreAdvice_Index]
+                Delivery_File_Name = f"PREADV02_{PreAdvice_Number}_Test"
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PreAdvice_Content, HQ_File_Type_Path="HQ_PreAdvice_File_Path", File_Name=Delivery_File_Name, File_suffix="json")
+                else:
+                    File_Manipulation.Export_Download_Folders(File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json")
         else:
             pass
 
@@ -392,8 +410,6 @@ def Process_Purchase_Orders(Settings: dict,
                             # Drop Duplicate rows amd reset index
                             Deliveries_HQ_Item_Tr_df.drop_duplicates(inplace=True, ignore_index=True)
                             Deliveries_HQ_Item_Tr_df.reset_index(drop=True, inplace=True)
-                            print("\n----------Deliveries_HQ_Item_Tr_df----------")
-                            print(Deliveries_HQ_Item_Tr_df)
                             PO_Delivery_Number_list = Deliveries_HQ_Item_Tr_df["Vendor_Document_No"].to_list()
                     else:
                         pass
@@ -483,10 +499,11 @@ def Process_BackBoneBilling(Settings: dict,
         BB_Invoice["invoice"]["invoice_summary"]["total_tax_amount"] = round(number=0, ndigits=2)
 
         # Export 
+        BB_Invoice_File_Name = f"INVOIC02_{BB_Number}_Test"
         if Export_NAV_Folder == True:
-            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Number, File_suffix="json")
+            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Invoice_File_Name, File_suffix="json")
         else:
-            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice, File_Name=BB_Number, File_suffix="json")
+            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json")
     else:
         pass
 
@@ -496,6 +513,7 @@ def Process_BackBoneBilling(Settings: dict,
         BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=BB_Invoice, Table_Data=BB_Table_Data)
 
         # Export 
+        # File name must be same as Invoice Number
         if Export_NAV_Folder == True:
             File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf")
         else:

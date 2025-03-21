@@ -5,23 +5,6 @@ import Libs.Data_Functions as Data_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-# -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def Entry_field_Insert(Field: CTkEntry, Value: str|int) -> None:
-    if type(Value) == str:
-        if Value != "":
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    elif type(Value) == int:
-        if Value > 0:
-            Field.delete(first_index=0, last_index=1000)
-            Field.insert(index=0, string=Value)
-        else:
-            pass
-    else:
-        pass
-
 def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     CPDI_Delivery_Method = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Delivery_select"]["Method"]
@@ -59,7 +42,7 @@ def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, G
     Fixed_Delivery_Frame_Var = Fixed_Delivery_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Delivery_Frame_Var.configure(placeholder_text="Manual Delivery", placeholder_text_color="#949A9F")
     Fixed_Delivery_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Delivery_select", "Fixed_Options", "Fix_Delivery"], Information=Fixed_Delivery_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Delivery_Frame_Var, Value=Fixed_Delivery)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Delivery_Frame_Var, Value=Fixed_Delivery)
 
     # Section Quantities
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Level Provided", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -75,7 +58,7 @@ def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, G
     Fixed_Level_Frame_Var = Fixed_Level_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Level_Frame_Var.configure(placeholder_text="Manual Level provided", placeholder_text_color="#949A9F")
     Fixed_Level_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Level_Provided", "Fixed_Options", "Fix_Level"], Information=Fixed_Level_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Level_Frame_Var, Value=Fixed_CPDI_Level)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Level_Frame_Var, Value=Fixed_CPDI_Level)
 
     # Section Quantities
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Status", Label_Size="Field_Label" , Font_Size="Section_Separator")
@@ -91,7 +74,7 @@ def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, G
     Fixed_Status_Frame_Var = Fixed_Status_Frame.children["!ctkframe3"].children["!ctkentry"]
     Fixed_Status_Frame_Var.configure(placeholder_text="Manual Delivery", placeholder_text_color="#949A9F")
     Fixed_Status_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Status", "Fixed_Options", "Fix_Status"], Information=Fixed_Status_Frame_Var.get()))
-    Entry_field_Insert(Field=Fixed_Status_Frame_Var, Value=Fixed_CPDI_Status)
+    Data_Functions.Entry_field_Insert(Field=Fixed_Status_Frame_Var, Value=Fixed_CPDI_Status)
 
     # Build look of Widget
     Frame_Main.pack(side="top", padx=15, pady=15)
