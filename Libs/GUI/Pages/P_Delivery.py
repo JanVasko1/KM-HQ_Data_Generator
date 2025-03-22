@@ -78,8 +78,3 @@ def Page_Delivery(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     EXIDV2_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Pack_UOM_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Pack_Plants_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-
-
-    
-    
-    

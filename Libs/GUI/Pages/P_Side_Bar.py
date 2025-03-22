@@ -17,75 +17,58 @@ def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: C
     Side_Bar_Bottom_pady = 75
     
     # ------------------------- Local Functions -------------------------#
-    def Clear_Frame(Pre_Working_Frame:CTkFrame) -> None:
+    def Clear_Frame(Pre_Working_Frame: CTkFrame) -> None:
         # Find
         for widget in Pre_Working_Frame.winfo_children():
             widget.destroy()
-            window.update_idletasks()
 
     def Show_Download_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_Download as P_Download
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=(Side_Bar_Top_pady, Icon_Default_pady), sticky="e")
-        time.sleep(0.1)
         P_Download.Page_Download(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_Confirmation_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_Confirmation as P_Confirmation
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_Confirmation.Page_Confirmation(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_CPDI_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_CPDI as P_CPDI
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_CPDI.Page_CPDI(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_PreAdvice_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_PreAdvice as P_PreAdvice
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_PreAdvice.Page_PreAdvice(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_Delivery_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_Delivery as P_Delivery
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_Delivery.Page_Delivery(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_Invoice_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_Invoice as P_Invoice
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_Invoice.Page_Invoice(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_IAL_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_IAL as P_IAL
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_IAL.Page_IAL(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Show_Settings_Page(Active_Window: CTkFrame, Side_Bar_Row: int) -> None:
         import Libs.GUI.Pages.P_Settings as P_Settings
         Clear_Frame(Pre_Working_Frame=Frame_Work_Area_Main)
         Active_Window.grid(row=Side_Bar_Row, column=0, padx=(10, 2), pady=Icon_Default_pady, sticky="e")
-        time.sleep(0.1)
         P_Settings.Page_Settings(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Work_Area_Main)
-        window.update_idletasks()
 
     def Exit_Program() -> None:
         # Delete Operational data from Settings

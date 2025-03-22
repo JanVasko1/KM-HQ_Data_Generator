@@ -6,6 +6,7 @@
 ### Version List
 ### 0.5.0
 - Purchase Order Invoice files process integrated
+- Slight application speed-up
 
 ### 0.4.0
 - Purchase Order PreAdvice files process integrated

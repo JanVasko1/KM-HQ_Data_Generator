@@ -123,8 +123,8 @@ if __name__ == "__main__":
     Frame_Work_Area_Main.pack_propagate(flag=False)
     Frame_Work_Area_Main.pack(side="left", fill="none", expand=False)
 
-    P_Side_Bar.Get_Side_Bar(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
     P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
+    P_Side_Bar.Get_Side_Bar(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
     
     # run
     window.mainloop()
