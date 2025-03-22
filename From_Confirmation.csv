@@ -1,5 +1,0 @@
-;line_item_id;supplier_aid;buyer_aid;description_long;quantity;order_unit;price_amount;price_line_amount;delivery_start_date;delivery_end_date;ordered_quantity;supplier_order_item_id;item_category;discontinued;set;bom;bom_with_delivery_group;cancelled;Exported_Line_No
-0;100;000V-19-0;000V-19-0;SETTING POWDER;2;C62;11;22;;;2;10;YN01;False;False;False;False;False;10000
-1;200;A3VU150;A3VU150;TN-711K Toner Black f. C654/754;1;C62;22;22;;;1;20;YN01;False;False;False;False;False;20000
-2;300;A3VU250;A3VU250;TN-711Y Toner Yellow f. C654/754;2;C62;33;66;;;2;30;YN01;False;False;False;False;False;30000
-3;400;A3VU350;A3VU350;TN-711M Toner Magenta f. C654/754;3;C62;44;132;;;3;40;YN01;False;False;False;False;False;40000

@@ -208,7 +208,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Number_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Number_Window_geometry[1] //2
-            PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Number/s.", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Number/s.", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name="Set Delivery Number/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Number based on Delivery Count.", GUI_Level_ID=3)
@@ -263,7 +263,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 pass
 
             if Delivery_Dates_Method == "Random":
-                for i in range(1, Delivery_Count + 1 ):
+                for i in range(1, Delivery_Count + 1):
                     Delivery_Date = Defaults_Lists.Date_Random_from_CurrentDay_plus_Interval(From_int=DEL_Rand_From_Date, To_int=DEL_Rand_To_Date, Format=Date_format)
                     PO_Delivery_Date_list.append(Delivery_Date)
             else:
@@ -303,13 +303,13 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Date_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Date_Window_geometry[1] //2
-            PO_DEL_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Date for Delivery/s.", max_width=PO_DEL_Date_Window_geometry[0], max_height=PO_DEL_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            PO_DEL_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Date for Delivery/s.", max_width=PO_DEL_Date_Window_geometry[0], max_height=PO_DEL_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Date_Window, Name="Set Delivery Date for Delivery/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Date based on Delivery Count.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Delivery Date Fields
             for Delivery in PO_Delivery_Number_list:
                 # Fields
                 Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Entry_DropDown")  

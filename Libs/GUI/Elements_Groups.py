@@ -334,7 +334,7 @@ def My_Date_Picker(Settings: dict, Configuration:dict, date_entry: CTkEntry, Cli
 
     Picker_window_geometry = (width, height)
     Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on_Button, New_Window_width=Picker_window_geometry[0])
-    Picker_window = Get_Pop_up_window(Configuration=Configuration, title="Date Picker", max_width=Picker_window_geometry[0], max_height=Picker_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=False)
+    Picker_window = Get_Pop_up_window(Configuration=Configuration, title="Date Picker", max_width=Picker_window_geometry[0], max_height=Picker_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=Fixed, Always_on_Top=True)
 
     # Frame - General
     Frame_Main = Get_Widget_Frame(Configuration=Configuration, Frame=Picker_window, Name="Date Picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Select date from calendar", GUI_Level_ID=GUI_Level_ID + 1)

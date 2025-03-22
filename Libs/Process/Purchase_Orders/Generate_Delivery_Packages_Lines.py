@@ -133,13 +133,13 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict, window
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Pack_Plant_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Pack_Plant_Window_geometry[1] //2
-            PO_Pack_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery Plant for selected Deliveries.", max_width=PO_Pack_Plant_Window_geometry[0], max_height=PO_Pack_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            PO_Pack_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery Plant for selected Deliveries.", max_width=PO_Pack_Plant_Window_geometry[0], max_height=PO_Pack_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Pack_Plant_Window, Name="Select Delivery Plant for selected Deliveries.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Delivery..", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Plant Field
             Lines_No = len(PO_Delivery_Number_list)
             for Delivery_index, Delivery in enumerate(PO_Delivery_Number_list):
                 # Fields

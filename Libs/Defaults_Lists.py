@@ -3,6 +3,7 @@ import pickle
 import json
 import random
 from datetime import datetime, timedelta
+from holidays import country_holidays
 
 import Libs.Data_Functions as Data_Functions
 
@@ -102,15 +103,29 @@ def Date_str_to_Week_str(Date_str: str, Format: str) -> str:
     return Year_Week_str
 
 def Date_Random_from_CurrentDay_plus_Interval(From_int: int, To_int: int, Format: str) -> str:
+    German_Holidays = country_holidays("GE")
     Today = datetime.now()
     Start_Date_dt = Today + timedelta(days=From_int)
     End_Date_dt = Today + timedelta(days=To_int)
 
     date_list = []
-    current_date = Start_Date_dt
-    while current_date <= End_Date_dt:
-        date_list.append(current_date.strftime(Format))
-        current_date += timedelta(days=1)
+    current_date_dt = Start_Date_dt
+    while current_date_dt <= End_Date_dt:
+        current_date = current_date_dt.strftime(Format)
+        
+        # Check if working Day / non-working Day
+        Weekday_num = current_date_dt.isoweekday()
+
+        # Check Holidays
+        Holiday_day = German_Holidays.get(key=current_date)
+        if (Holiday_day == True) or (Weekday_num==6) or (Weekday_num==7):
+            # Enlarge interval because of non-working Day / holiday found
+            End_Date_dt += timedelta(days=1)
+            current_date_dt += timedelta(days=1)
+        else:
+            date_list.append(current_date)
+            current_date_dt += timedelta(days=1)
+            
 
     Date_Selected = random.choice(date_list)
     return Date_Selected

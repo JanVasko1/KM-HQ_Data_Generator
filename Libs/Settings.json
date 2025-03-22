@@ -2,11 +2,8 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "Test_1",
-                "Templates_List": [
-                    "Confirmation_Only",
-                    "Test_1"
-                ]
+                "Last_Used": "",
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -78,7 +75,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-19"
+                            "Fix_Date": "2025-03-10"
                         }
                     },
                     "Unit_of_Measure": {
@@ -237,7 +234,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -338,7 +335,7 @@
                     }
                 },
                 "Shipment_Method": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -454,9 +451,9 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
-                        "Method": "Prompt",
+                        "Method": "Automatic",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -466,23 +463,23 @@
                             "Prefix": "INV"
                         },
                         "Fixed_Options": {
-                            "Number": ""
+                            "Number": "INV_JVA_0005"
                         }
                     },
                     "Prices": {
                         "Method": "Prompt",
                         "Methods_List": [
-                            "Prompt",
                             "Price List",
                             "Purchase Line",
-                            "From Confirmation"
+                            "From Confirmation",
+                            "Prompt"
                         ]
                     },
                     "Currency": {
-                        "Method": "Fixed",
+                        "Method": "From Confirmation",
                         "Methods_List": [
                             "Fixed",
-                            "Purchase Line",
+                            "Purchase Order",
                             "From Confirmation"
                         ],
                         "Fixed_Options": {
@@ -490,31 +487,32 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
+                            "Today",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-20"
+                            "Fix_Date": "2025-03-24"
                         },
                         "Random_Options": {
                             "From": 1,
-                            "To": 2
+                            "To": 5
                         }
                     },
                     "Plants": {
-                        "Method": "From Delivery",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
-                            "Prompt",
                             "From Delivery",
-                            "Empty"
+                            "Empty",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fixed_Plant": "1004",
+                            "Fixed_Plant": "1000",
                             "Plants_List": [
                                 "1000",
                                 "1002",
@@ -527,23 +525,23 @@
                         "Methods_List": [
                             "Fixed",
                             "Random",
-                            "Prompt",
-                            "Empty"
+                            "Empty",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
                             "Fix_Country_Of_Origin": "JP"
                         }
                     },
                     "Tariff": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
-                            "Prompt",
-                            "Empty"
+                            "Empty",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Tariff": ""
+                            "Fix_Tariff": "164316461654"
                         }
                     },
                     "PDF": {

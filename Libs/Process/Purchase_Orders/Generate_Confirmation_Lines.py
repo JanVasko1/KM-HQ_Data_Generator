@@ -2,10 +2,10 @@
 import random
 from pandas import DataFrame, Series
 
-import Libs.GUI.Elements as Elements
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
+import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 
 from customtkinter import CTk, CTkFrame, StringVar
@@ -116,6 +116,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Value_Price = float(Value_CTkEntry.get())
                     except:
                         Value_Price = 0
+                    Value_Price = round(number=Value_Price, ndigits=2)
                     Price_list.append(Value_Price)
 
                 Confirmed_Lines_df["price_amount"] = Price_list
@@ -497,6 +498,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Finished_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox3"]
                         
                         Use_Substitution = Substitution_CTkEntry.get()
+                        # BUG --> whne substitution is unmarked (from automatically "Line_Flag_Always_Substitute") supplier_aid = buyer_aid
                         if Use_Substitution == True:
                             Sub_Item_No = Substitution_ITem_CTkEntry.get()
                             if Sub_Item_No != "":

@@ -14,8 +14,7 @@ def DEL_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame
     Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Fixed_Options"]["Number"]
 
     DEL_Numbers_Method_Variable = StringVar(master=Frame, value=Numbers_Method, name="DEL_Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Delivery Number.", GUI_Level_ID=GUI_Level_ID)
@@ -57,8 +56,7 @@ def DEL_Count(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
     Fixed_Count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Fixed_Options"]["Count"]
 
     DEL_Count_Method_Variable = StringVar(master=Frame, value=DEL_Count_Method, name="DEL_Count_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Delivery Count", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Definition how many Deliveries will be created.", GUI_Level_ID=GUI_Level_ID)
@@ -97,8 +95,7 @@ def Item_Delivery_Assignment(Settings: dict, Configuration: dict, window: CTk, F
 
     DEL_Assignment_Method_Variable = StringVar(master=Frame, value=DEL_Assignment_Method, name="DEL_Assignment_Method_Variable")
     DEL_FOCH_with_Main_Variable = BooleanVar(master=Frame, value=DEL_FOCH_with_Main, name="DEL_FOCH_with_Main_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Item Assignment to Delivery", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="How program will select Items and Qty to the Delivery.", GUI_Level_ID=GUI_Level_ID)
@@ -130,8 +127,7 @@ def Serial_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkF
     SN_Suffix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Suffix"]
 
     SN_Middle_Method_Variable = StringVar(master=Frame, value=SN_Middle_Method, name="Serial_Number_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Serial Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Serial Numbers creation options.", GUI_Level_ID=GUI_Level_ID)
@@ -178,8 +174,7 @@ def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     DEL_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Random_Options"]["To"]
 
     Delivery_Dates_Method_Variable = StringVar(master=Frame, value=Delivery_Dates_Method, name="Delivery_Dates_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Delivery Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
@@ -227,8 +222,7 @@ def Carrier_ID(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame
     Carrier_ID_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Fixed_Options"]["Fix_Carrier"]
 
     Carrier_ID_Method_Variable = StringVar(master=Frame, value=Carrier_ID_Method, name="Carrier_ID_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Carrier", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
@@ -260,8 +254,7 @@ def Shipment_Method(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     Shipment_Method_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Fixed_Options"]["Fixed_Shipment_Method"]
 
     Shipment_Method_Variable = StringVar(master=Frame, value=Shipment_Method, name="Shipment_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Shipment Method", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
@@ -295,8 +288,7 @@ def Packages_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CT
     Pack_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Fixed_Options"]["Fixed_Package_No"]
     
     Pack_Number_Method_Variable = StringVar(master=Frame, value=Pack_Number_Method, name="Pack_Number_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Numbers creation logic.", GUI_Level_ID=GUI_Level_ID)
@@ -346,8 +338,7 @@ def Packages_Plants(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     
     Pack_Plant_Method_Variable = StringVar(master=Frame, value=Pack_Plant_Method, name="Pack_Plant_Method_Variable")
     Pack_Fixed_Plant_Variable = StringVar(master=Frame, value=Pack_Fixed_Plant, name="Pack_Fixed_Plant_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
@@ -382,8 +373,7 @@ def Packages_UOM(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFra
 
     Pack_Weight_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Weight_UoM_Method, name="Pack_Weight_UoM_Method_Variable")
     Pack_Volume_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Volume_UoM_Method, name="Pack_Volume_UoM_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Packages unit of measure for measurements.", GUI_Level_ID=GUI_Level_ID)
@@ -438,8 +428,7 @@ def EXIDV2(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GU
 
     EXIDV2_Assign_Method_Variable = StringVar(master=Frame, value=EXIDV2_Assign_Method, name="EXIDV2_Assign_Method_Variable")
     EXIDV2_Numbers_Method_Variable = StringVar(master=Frame, value=EXIDV2_Numbers_Method, name="EXIDV2_Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="EXIDV2", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="EXIDV2 Number logic assignment.", GUI_Level_ID=GUI_Level_ID)
@@ -490,8 +479,7 @@ def BillOfLanding(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     BOL_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Fixed_Options"]["Fixed_BOL"]
 
     BOL_Numbers_Method_Variable = StringVar(master=Frame, value=BOL_Numbers_Method, name="BOL_Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Bill of Landing", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Bill of Landing number logic assignment.", GUI_Level_ID=GUI_Level_ID)

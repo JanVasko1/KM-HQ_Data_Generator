@@ -157,7 +157,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     else:
         pass
 
-    # --------------------------------------------- Purchase Order--------------------------------------------- #        
+    # --------------------------------------------- Purchase Order --------------------------------------------- #        
     if Can_Continue == True:
         PO_Confirmation_Header["orderresponse"]["orderresponse_header"]["orderresponse_info"]["order_id"] = Purchase_Order
     else:

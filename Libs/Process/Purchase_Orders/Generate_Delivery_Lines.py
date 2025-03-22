@@ -84,6 +84,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
 
         # Split According to Method and Delivery Qty
         if DEL_Assignment_Method == "Full random":
+            Confirmed_Lines_df_copy = Confirmed_Lines_df.copy() # I Should not delete lines in original Confirmed_Lines_df (as used in Invoice then)
             for Distribute_Qty_index, Distribute_Qty in enumerate(Delivery_Qty_Split_List):
                 Delivery_Number = PO_Delivery_Number_list[Distribute_Qty_index]
                 Confirmed_order_date = HQ_Item_Transport_Register_df.iloc[0]["Order_Date"]
@@ -94,17 +95,17 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
                     Compare_Qty = 0
 
                     # Pick Confirmation line
-                    Confirmed_Lines_df_index_list = Confirmed_Lines_df.index.to_list()
+                    Confirmed_Lines_df_index_list = Confirmed_Lines_df_copy.index.to_list()
                     Picked_index = random.choice(seq=Confirmed_Lines_df_index_list)
                     
                     # Read Confirmation line information
-                    order_ref_line_item_id = Confirmed_Lines_df.iloc[Picked_index]["line_item_id"]
+                    order_ref_line_item_id = Confirmed_Lines_df_copy.iloc[Picked_index]["line_item_id"]
                     order_ref_line_item_id = f"{order_ref_line_item_id :06d}"
 
-                    supplier_aid = Confirmed_Lines_df.iloc[Picked_index]["supplier_aid"]
-                    Item_Qty = Confirmed_Lines_df.iloc[Picked_index]["quantity"]
-                    order_unit = Confirmed_Lines_df.iloc[Picked_index]["order_unit"]
-                    supplier_order_item_id = Confirmed_Lines_df.iloc[Picked_index]["supplier_order_item_id"]
+                    supplier_aid = Confirmed_Lines_df_copy.iloc[Picked_index]["supplier_aid"]
+                    Item_Qty = Confirmed_Lines_df_copy.iloc[Picked_index]["quantity"]
+                    order_unit = Confirmed_Lines_df_copy.iloc[Picked_index]["order_unit"]
+                    supplier_order_item_id = Confirmed_Lines_df_copy.iloc[Picked_index]["supplier_order_item_id"]
 
                     Picked_Qty = random.randint(a=1, b=Item_Qty)
 
@@ -121,16 +122,16 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
                     # Analyze Confirmation lines against Compare Qty
                     if Item_Qty < Compare_Qty:
                         Delivery_Line_Values = [Delivery_Number, "", supplier_aid, Item_Qty, order_unit, "", "", Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
-                        Confirmed_Lines_df.at[Picked_index, "quantity"] = 0
+                        Confirmed_Lines_df_copy.at[Picked_index, "quantity"] = 0
                         Distribute_Qty = Distribute_Qty - Item_Qty
                         Delete_Lines_index_list.append(Picked_index)
                     elif Item_Qty > Compare_Qty:
                         Delivery_Line_Values = [Delivery_Number, "", supplier_aid, Compare_Qty, order_unit, "", "", Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
-                        Confirmed_Lines_df.at[Picked_index, "quantity"] = int(Item_Qty - Compare_Qty)
+                        Confirmed_Lines_df_copy.at[Picked_index, "quantity"] = int(Item_Qty - Compare_Qty)
                         Distribute_Qty = Distribute_Qty - Compare_Qty
                     elif Item_Qty == Compare_Qty:
                         Delivery_Line_Values = [Delivery_Number, "", supplier_aid, Item_Qty, order_unit, "", "", Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
-                        Confirmed_Lines_df.at[Picked_index, "quantity"] = 0
+                        Confirmed_Lines_df_copy.at[Picked_index, "quantity"] = 0
                         Distribute_Qty = Distribute_Qty - Compare_Qty
                         Delete_Lines_index_list.append(Picked_index)
                     else:
@@ -141,8 +142,8 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
 
                     # Delete Delivery_Lines_df_Filtered --> fully assigned
                     if len(Delete_Lines_index_list) > 0:
-                        Confirmed_Lines_df.drop(index=Delete_Lines_index_list, inplace=True, axis=0)
-                        Confirmed_Lines_df.reset_index(drop=True, inplace=True)
+                        Confirmed_Lines_df_copy.drop(index=Delete_Lines_index_list, inplace=True, axis=0)
+                        Confirmed_Lines_df_copy.reset_index(drop=True, inplace=True)
                     else:
                         pass
 
@@ -239,7 +240,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Item_Assing_Window, Name="Select Delivery for Item line.", Additional_Text="", Widget_size="Item_Del_Assign", Widget_Label_Tooltip="To make Item assignment to delivery.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Delivery Assignment
             Lines_No = Confirmed_Lines_df.shape[0]
             for row in Confirmed_Lines_df.iterrows():
                 # Dataframe
@@ -318,7 +319,24 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     else:
         pass
 
+    # --------------------------------------------- Calculate Delivery Lines  --------------------------------------------- #
+    for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
+        mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
+        Delivery_Lines_df_Filtered = Delivery_Lines_df[mask_Delivery]
+
+        Line_Counter = 1
+        for row in Delivery_Lines_df_Filtered.iterrows():
+            row_index = row[0]
+
+            # Update Delivery_line_item_id
+            Delivery_line_item_id = str(f"9{(Line_Counter) :05d}")
+            Line_Counter += 1
+
+            Delivery_Lines_df.at[row_index, "line_item_id"] = Delivery_line_item_id
+
+
     Delivery_Lines_df.drop(labels=["Material_Group_NUS"], inplace=True, axis=1)
+
     # --------------------------------------------- Apply Lines functions --------------------------------------------- #
     # Loop of Each Delivery Separate
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
@@ -327,13 +345,8 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
         
         # Prepare Json for each line of DataFrame
         PO_Delivery_Lines = []
-        Line_Counter = 1
         for row in Delivery_Lines_df_Filtered.iterrows():
             row_Series = Series(row[1])
-
-            # Update Delivery_line_item_id
-            Delivery_line_item_id = str(f"9{(Line_Counter) :05d}")
-            Line_Counter += 1
 
             # Serial Number Check
             Serial_Number = str(row_Series["serial_numbers"])
@@ -343,7 +356,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
                 Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Delivery_Line")
 
             # Assign Values
-            Current_line_json["line_item_id"] = Delivery_line_item_id
+            Current_line_json["line_item_id"] = row_Series["line_item_id"]
             Current_line_json["article_id"]["supplier_aid"] = row_Series["supplier_aid"]
 
             Current_line_json["quantity"] = row_Series["quantity"]

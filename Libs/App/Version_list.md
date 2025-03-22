@@ -4,11 +4,18 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+### 0.5.0
+- Purchase Order Invoice files process integrated
+
+### 0.4.0
+- Purchase Order PreAdvice files process integrated
+- Random Date interval --> Holidays(GE) and weekends are skipped
+
 #### 0.3.1
 - Pop-Up message box shows always in the middle of main window
 
 ### 0.3.0
-- Purchase Order Delivery files process
+- Purchase Order Delivery files process integrated
 
 #### 0.2.1
 - threading implemented for all major processes of Download and process 
@@ -20,7 +27,7 @@
 - Better Authorization secure
 
 ### 0.2.0
-- Purchase Order Confirmation files process
+- Purchase Order Confirmation files process integrated
 
 #### 0.1.1
 - Generate Invoice.json issue with lines Overwrite when transferring to json template from DataFrame
@@ -28,7 +35,7 @@
 - delete value in EntryField when validation unsuccessful
 
 ### 0.1.0
-- BackBoneBilling files process
+- BackBoneBilling files process integrated
 
 #### 0.0.7
 - multiple file Drag&Drop

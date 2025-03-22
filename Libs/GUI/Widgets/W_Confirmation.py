@@ -1,5 +1,5 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame, StringVar, CTkEntry, BooleanVar
+from customtkinter import CTk, CTkFrame, StringVar, BooleanVar
 
 import Libs.Data_Functions as Data_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
@@ -14,8 +14,7 @@ def PO_CON_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Number"]["Fixed_Options"]["Number"]
 
     Numbers_Method_Variable = StringVar(master=Frame, value=Numbers_Method, name="Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Confirmation Number.", GUI_Level_ID=GUI_Level_ID)
@@ -27,7 +26,7 @@ def PO_CON_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     CON_Number_Frame_Var.configure(variable=Numbers_Method_Variable)
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CON_Number_Frame_Var, values=Numbers_Method_List, command=lambda CON_Number_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Number", "Method"], Information=CON_Number_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Automatic Prefix
+    # Field - Fixed Number
     NUM_CON_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Number", Field_Type="Input_Normal") 
     NUM_CON_FIX_Frame_Var = NUM_CON_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
     NUM_CON_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
@@ -56,8 +55,7 @@ def PO_Generation_Date(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Gen_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Generation_Date"]["Fixed_Options"]["Fix_Date"]
 
     Generation_Date_Method_Variable = StringVar(master=Frame, value=Generation_Date_Method, name="Generation_Date_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Generation Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Date of generation Confirmation.", GUI_Level_ID=GUI_Level_ID)
@@ -91,8 +89,7 @@ def PO_Unit_of_Measure(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Fixed_UoM = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Unit_of_Measure"]["Fixed_Options"]["Fix_UoM"]
 
     UoM_Method_Variable = StringVar(master=Frame, value=UoM_Method, name="UoM_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Unit of Measure in Confirmation.", GUI_Level_ID=GUI_Level_ID)
@@ -126,8 +123,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, window: CTk, Frame: C
 
     Price_Method_Variable = StringVar(master=Frame, value=Price_Method, name="Price_Method_Variable")
     Currency_Method_Variable = StringVar(master=Frame, value=Currency_Method, name="Currency_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Confirmation.", GUI_Level_ID=GUI_Level_ID)
@@ -171,8 +167,7 @@ def PO_Line_Flags(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Line_Flag_Item_EOL_Finished_Variable = BooleanVar(master=Frame, value=Line_Flag_Item_EOL_Finished, name="Line_Flag_Item_EOL_Finished_Variable")
     Line_Flag_Always_Substitute_Variable = BooleanVar(master=Frame, value=Line_Flag_Always_Substitute, name="Line_Flag_Always_Substitute_Variable")
     Line_Flags_Method_Variable = StringVar(master=Frame, value=Line_Flags_Method, name="Line_Flags_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Line Flags", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will treat Line Flags.", GUI_Level_ID=GUI_Level_ID)
@@ -224,8 +219,7 @@ def PO_ATP_General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkF
     ATP_Enabled_Variable = BooleanVar(master=Frame, value=ATP_Enabled, name="ATP_Enabled_Variable")
     ATP_Quantity_Method_Variable = StringVar(master=Frame, value=ATP_Quantity_Method, name="ATP_Quantity_Method_Variable")
     ATP_Dates_Method_Variable = StringVar(master=Frame, value=ATP_Dates_Method, name="ATP_Dates_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="ATP", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will work on ATP for each line.", GUI_Level_ID=GUI_Level_ID)
@@ -258,8 +252,7 @@ def PO_ATP_Quantity_Distribution(Settings: dict, Configuration: dict, window: CT
     ONH_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["ONH"]
     ONB_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["ONB"]
     BACK_Ratio = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Quantities"]["Ratio"]["BACK"]
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Quantity distribution", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to Ratio between each state.\nGood to distribute values as percentage up to 100", GUI_Level_ID=GUI_Level_ID)
@@ -297,8 +290,6 @@ def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, window: CTk, Frame: 
     ATP_ONH_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Fixed_Dates"]["ONH"]
     ATP_ONB_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Fixed_Dates"]["ONB"]
 
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Fixed Dates", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will delivery Fixed Dates.", GUI_Level_ID=GUI_Level_ID)
@@ -336,8 +327,6 @@ def PO_ATP_Interval_Dates(Settings: dict, Configuration: dict, window: CTk, Fram
     ATP_Interval_ONB_From = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["From"]
     ATP_Interval_ONB_To = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["ATP"]["Dates_Intervals"]["Intervals_Dates"]["ONB"]["To"]
 
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Interval Dates", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will delivery Interval Dates.", GUI_Level_ID=GUI_Level_ID)
@@ -383,8 +372,7 @@ def PO_Items_Free_Method(Settings: dict, Configuration: dict, window: CTk, Frame
     Free_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Methods_List"])
     
     Free_Method_Variable = StringVar(master=Frame, value=Free_Method, name="Free_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Free of Charge", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will treat Free of Charge Items for Confirmation.", GUI_Level_ID=GUI_Level_ID)
@@ -407,8 +395,7 @@ def PO_Items_Free_Cable(Settings: dict, Configuration: dict, window: CTk, Frame:
     Cable_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Description"]
     Cable_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["QTY_per_Machine"]
     Cable_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Cable"]["Price"]
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Cable", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Fixed cable item settings.", GUI_Level_ID=GUI_Level_ID)
@@ -453,8 +440,7 @@ def PO_Items_Free_Documentation(Settings: dict, Configuration: dict, window: CTk
     Documentation_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Description"]
     Documentation_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["QTY_per_Machine"]
     Documentation_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Documentation"]["Price"]
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Documentation", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Fixed documentation item settings.", GUI_Level_ID=GUI_Level_ID)
@@ -500,8 +486,7 @@ def PO_Items_Free_Face_Sheet(Settings: dict, Configuration: dict, window: CTk, F
     Face_Sheet_Description = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["Description"]
     Face_Sheet_QTY_per_Machine = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["QTY_per_Machine"]
     Face_Sheet_Price = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Free_Of_Charge"]["Fixed_Options"]["Face_Sheet"]["Price"]
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Others", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Fixed others (Label, Sticker ...) item settings.", GUI_Level_ID=GUI_Level_ID)

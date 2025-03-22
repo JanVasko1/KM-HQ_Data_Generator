@@ -14,8 +14,7 @@ def PO_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Number"]["Fixed_Options"]["Number"]
 
     Numbers_Method_Variable = StringVar(master=Frame, value=Numbers_Method, name="Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Invoice Number.", GUI_Level_ID=GUI_Level_ID)
@@ -59,8 +58,7 @@ def PO_Price_Currency(Settings: dict, Configuration: dict, window: CTk, Frame: C
 
     Price_Method_Variable = StringVar(master=Frame, value=Price_Method, name="Price_Method_Variable")
     Currency_Method_Variable = StringVar(master=Frame, value=Currency_Method, name="Currency_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -100,8 +98,7 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     INV_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Invoice_Date"]["Random_Options"]["To"]
 
     Posting_Date_Method_Variable = StringVar(master=Frame, value=Posting_Date_Method, name="Posting_Date_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Invoice Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Vendor Invoice Date.", GUI_Level_ID=GUI_Level_ID)
@@ -155,8 +152,7 @@ def PO_Plant(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
     
     Inv_Plant_Method_Variable = StringVar(master=Frame, value=Inv_Plant_Method, name="Inv_Plant_Method_Variable")
     Inv_Fixed_Plant_Variable = StringVar(master=Frame, value=Inv_Fixed_Plant, name="Inv_Fixed_Plant_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
@@ -186,8 +182,7 @@ def PO_CountryOrigin(Settings: dict, Configuration: dict, window: CTk, Frame: CT
     Fixed_Count_Origin = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Country_Of_Origin"]["Fixed_Options"]["Fix_Country_Of_Origin"]
 
     Count_Origin_Method_Variable = StringVar(master=Frame, value=Count_Origin_Method, name="Count_Origin_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -218,8 +213,7 @@ def PO_Tariff(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
     Fixed_Tariff = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Tariff"]["Fixed_Options"]["Fix_Tariff"]
 
     Tariff_Method_Variable = StringVar(master=Frame, value=Tariff_Method, name="Tariff_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -251,8 +245,7 @@ def BB_INV_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     BB_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Fixed_Options"]["Number"]
 
     BB_Numbers_Method_Variable = StringVar(master=Frame, value=BB_Numbers_Method, name="BB_Numbers_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Invoice Number.", GUI_Level_ID=GUI_Level_ID)
@@ -293,8 +286,7 @@ def BB_Items(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
     BB_Fixed_Items = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Items"]["Fixed_Options"]["Fix_Item"]
 
     BB_Items_Method_Variable = StringVar(master=Frame, value=BB_Items_Method, name="BB_Items_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Items", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Items in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -323,8 +315,7 @@ def BB_Quantity(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFram
     BB_Quantity_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Quantity"]["Methods_List"])
 
     BB_Quantity_Method_Variable = StringVar(master=Frame, value=BB_Quantity_Method, name="BB_Quantity_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Quantity", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Quantity in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -350,8 +341,7 @@ def BB_Price_Currency(Settings: dict, Configuration: dict, window: CTk, Frame: C
     BB_Fixed_Currency = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Currency"]["Fix_Currency"]
     
     BB_Price_Method_Variable = StringVar(master=Frame, value=BB_Price_Method, name="BB_Price_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -389,8 +379,7 @@ def BB_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     BB_PD_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Invoice_Date"]["Fixed_Options"]["Fix_Date"]
 
     BB_Posting_Date_Method_Variable = StringVar(master=Frame, value=BB_Posting_Date_Method, name="BB_Posting_Date_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Invoice Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Vendor Invoice Date.", GUI_Level_ID=GUI_Level_ID)
@@ -429,8 +418,7 @@ def BB_Order_reference(Settings: dict, Configuration: dict, window: CTk, Frame: 
 
     BB_Order_id_Method_Variable = StringVar(master=Frame, value=BB_Order_id_Method, name="BB_Order_id_Method_Variable")
     BB_Order_date_Method_Variable = StringVar(master=Frame, value=BB_Order_date_Method, name="BB_Order_date_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Order Reference", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Order Reference like fictive Confirmation Id and Vendor creation date.", GUI_Level_ID=GUI_Level_ID)
@@ -485,8 +473,7 @@ def BB_Plant(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
     
     BB_Inv_Plant_Method_Variable = StringVar(master=Frame, value=BB_Inv_Plant_Method, name="BB_Inv_Plant_Method_Variable")
     BB_Inv_Fixed_Plant_Variable = StringVar(master=Frame, value=BB_Inv_Fixed_Plant, name="BB_Inv_Fixed_Plant_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
@@ -516,8 +503,7 @@ def BB_CountryOrigin(Settings: dict, Configuration: dict, window: CTk, Frame: CT
     BB_Fixed_Count_Origin = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Country_Of_Origin"]["Fixed_Options"]["Fix_Country_Of_Origin"]
 
     BB_Count_Origin_Method_Variable = StringVar(master=Frame, value=BB_Count_Origin_Method, name="BB_Count_Origin_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice.", GUI_Level_ID=GUI_Level_ID)
@@ -548,8 +534,7 @@ def BB_Tariff(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
     BB_Fixed_Tariff = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Tariff"]["Fixed_Options"]["Fix_Tariff"]
 
     BB_Tariff_Method_Variable = StringVar(master=Frame, value=BB_Tariff_Method, name="BB_Tariff_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice.", GUI_Level_ID=GUI_Level_ID)

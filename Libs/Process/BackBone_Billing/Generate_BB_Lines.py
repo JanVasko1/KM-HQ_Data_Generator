@@ -308,7 +308,7 @@ def Generate_BB_Lines(Settings: dict,
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Plant_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Plant_Window_geometry[1] //2
-            BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Plant for selected Items.", max_width=BB_Plant_Window_geometry[0], max_height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Plant for selected Items.", max_width=BB_Plant_Window_geometry[0], max_height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
@@ -380,7 +380,7 @@ def Generate_BB_Lines(Settings: dict,
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Country_Origin_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Country_Origin_Window_geometry[1] //2
-            BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Country of Origin  for selected Items.", max_width=BB_Country_Origin_Window_geometry[0], max_height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Country of Origin  for selected Items.", max_width=BB_Country_Origin_Window_geometry[0], max_height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
@@ -452,7 +452,7 @@ def Generate_BB_Lines(Settings: dict,
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Tariff_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Tariff_Window_geometry[1] //2
-            BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Tariff  for selected Items.", max_width=BB_Tariff_Window_geometry[0], max_height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+            BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Tariff  for selected Items.", max_width=BB_Tariff_Window_geometry[0], max_height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)

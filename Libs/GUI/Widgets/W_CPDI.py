@@ -22,7 +22,7 @@ def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, G
     CPDI_Delivery_Method_Variable = StringVar(master=Frame, value=CPDI_Delivery_Method, name="CPDI_Delivery_Method_Variable")
     CPDI_Level_Method_Variable = StringVar(master=Frame, value=CPDI_Level_Method, name="CPDI_Level_Method_Variable")
     CPDI_Status_Method_Variable = StringVar(master=Frame, value=CPDI_Status_Method, name="CPDI_Status_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Generate", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related what CPDI status should be created.", GUI_Level_ID=GUI_Level_ID)

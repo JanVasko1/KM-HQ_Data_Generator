@@ -19,8 +19,7 @@ def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Pre_Delivery_Shift = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Delivery_Date"]["Shift_Options"]["Delivery_Date_Shift_by"]
 
     PreAdvice_Dates_Method_Variable = StringVar(master=Frame, value=PreAdvice_Dates_Method, name="PreAdvice_Dates_Method_Variable")
-    # ------------------------- Local Functions -------------------------#
-    # TODO --> Blocking Fields
+
     # ------------------------- Main Functions -------------------------#
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Delivery Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)

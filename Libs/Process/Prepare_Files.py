@@ -1,5 +1,5 @@
 # Import Libraries
-from pandas import DataFrame
+from pandas import DataFrame, Series
 
 import Libs.File_Manipulation as File_Manipulation
 import Libs.Pandas_Functions as Pandas_Functions
@@ -8,11 +8,36 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
-def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame) -> DataFrame:
+def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame, Items_df: DataFrame) -> DataFrame:
+    Confirmed_Lines_df["Material_Group_help"] = ""
+    Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
+
+    # Check if Machine is cancelled or Discontinued
+    for row in Confirmed_Lines_df.iterrows():
+        Confirmed_Lines_Index = row[0]
+        Confirmed_Lines_Series = Series(row[1])
+        
+        Material_Group_help = Confirmed_Lines_Series["Material_Group_help"]
+
+        if Material_Group_help == "0100":
+            Canceled_Machine = Confirmed_Lines_Series["cancelled"]
+            Discontinued_Machine = Confirmed_Lines_Series["discontinued"]
+
+            if (Canceled_Machine == True) or (Discontinued_Machine == True):
+                Machine_Exported_Line_No = Confirmed_Lines_Series["Exported_Line_No"]
+                Exported_Line_No_conditions = [(Confirmed_Lines_df["Exported_Line_No"] == Machine_Exported_Line_No)]
+                Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Exported_Line_No_conditions, Set_Column="cancelled", Set_Value=True)
+            else:
+                pass
+        else:
+            pass
+
+    Confirmed_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
+
+    # Filter Dataframe
     mask_Canceled_Lines = Confirmed_Lines_df["cancelled"] == False
     mask_Discontinued_Lines = Confirmed_Lines_df["discontinued"] == False
     mask_Label = Confirmed_Lines_df["bom"] == False
-    # BUG --> if Machine is discontinued or canecelled also Label and FOCH should be removed
     Confirmed_Lines_df = Confirmed_Lines_df[mask_Canceled_Lines & mask_Discontinued_Lines & mask_Label]  
     Confirmed_Lines_df.reset_index(drop=True, inplace=True)
 
@@ -27,7 +52,6 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CT
 
     # HQ_Testing_HQ_Item_Transport_Register
     HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
-    print(HQ_Confirmed_Lines_df)
     if HQ_Confirmed_Lines_df.empty:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
@@ -261,7 +285,7 @@ def Process_Purchase_Orders(Settings: dict,
                 File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json")
 
             # Prepare Dataframe for Delivery, cannot be done sooner as Confirmation must contain all Items
-            Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
+            Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
         else:
             pass
 
@@ -275,13 +299,13 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Confirmation lines existing
             if Generate_Confirmation == True:
                 if Confirmed_Lines_df.empty:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are CAncelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                     if response == "Confirmation":    
                         Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
-                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
+                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                     elif response == "Export":  
                         Exported_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
-                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df)
+                        Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df, Items_df=Items_df)
                 else:
                     # Just pass as all is already prepared
                     pass
@@ -289,11 +313,10 @@ def Process_Purchase_Orders(Settings: dict,
                 response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"You select to create Delivery without creation of Confirmation, do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                 if response == "Confirmation":    
                     Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
-                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df)
-                    print(Confirmed_Lines_df)
+                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                 elif response == "Export":  
                     Exported_Lines_df, PO_Confirmation_Number = Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
-                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df)
+                    Confirmed_Lines_df = Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df, Items_df=Items_df)
 
             # Header
             PO_Deliveries, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Count = Generate_Delivery_Header.Generate_Delivery_Header(Settings=Settings, 
@@ -426,7 +449,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                 Buy_from_Vendor_No=Buy_from_Vendor_No,
                                                                 Purchase_Headers_df=Purchase_Headers_df, 
                                                                 HQ_CPDI_Level_df=HQ_CPDI_Level_df, 
-                                                                HQ_CPDI_Status_df=HQ_CPDI_Status_df)
+                                                                HQ_CPDI_Status_df=HQ_CPDI_Status_df,
+                                                                Tariff_Number_list=Tariff_Number_list)
             else:
                 pass
         else:
@@ -434,14 +458,75 @@ def Process_Purchase_Orders(Settings: dict,
 
         # ---------------- Invoice ---------------- #
         if Generate_Invoice == True:
-            # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Delivery --> pak by se měl program pro jaké Delviery
-            print("Process_Invoice")
+            import Libs.Process.Purchase_Orders.Generate_Invoice_Header as Generate_Invoice_Header
+            import Libs.Process.Purchase_Orders.Generate_Invoice_Lines as Generate_Invoice_Lines
+
+            # Define if Confirmation lines existing
+            if Generate_Delivery == True:
+                if Delivery_Lines_df.empty:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    if response == "Confirm":    
+                        pass
+                        # TODO --> download data of Delivery and apply same logic like to be exactly same as Delivery_Lines_df should work for multiple deliveries + vrátit PO_Delivery_Number_list
+                    elif response == "Reject":  
+                        pass
+                else:
+                    # Just pass as all is already prepared
+                    pass
+            else:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                if response == "Confirm":    
+                    pass
+                    # TODO --> download data of Delivery and apply same logic like to be exactly same as Delivery_Lines_df should work for multiple deliveries + vrátit PO_Delivery_Number_list
+                elif response == "Reject":  
+                    pass
+
+            # Header
+            PO_Invoices, PO_Invoice_Number_list = Generate_Invoice_Header.Generate_Invoice_Header(Settings=Settings, 
+                                                                                                  Configuration=Configuration, 
+                                                                                                  window=window, 
+                                                                                                  Purchase_Order=Purchase_Order, 
+                                                                                                  Purchase_Headers_df=Purchase_Headers_df, 
+                                                                                                  PO_Confirmation_Number=PO_Confirmation_Number, 
+                                                                                                  PO_Delivery_Number_list=PO_Delivery_Number_list, 
+                                                                                                  PO_Delivery_Date_list=PO_Delivery_Date_list,
+                                                                                                  Company_Information_df=Company_Information_df, 
+                                                                                                  HQ_Communication_Setup_df=HQ_Communication_Setup_df)
+
+            # Lines
+            Generate_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+                                                          Configuration=Configuration, 
+                                                          window=window, 
+                                                          Purchase_Order=Purchase_Order, 
+                                                          Purchase_Lines_df=Purchase_Lines_df, 
+                                                          PO_Invoice_Number_list=PO_Invoice_Number_list,
+                                                          PO_Delivery_Number_list=PO_Delivery_Number_list,
+                                                          Delivery_Lines_df=Delivery_Lines_df, 
+                                                          Confirmed_Lines_df=Confirmed_Lines_df,
+                                                          Items_df=Items_df,
+                                                          Items_Price_List_Detail_df=Items_Price_List_Detail_df,
+                                                          Country_ISO_Code_list=Country_ISO_Code_list,
+                                                          Tariff_Number_list=Tariff_Number_list)
+
+            # Update Footer
+
+            # Export 
         else:
             pass
         
         # ---------------- Invoice PDF ---------------- #
         if Generate_Invoice_PDF == True:
-            print("Generate_Invoice_PDF")
+            import Libs.Process.PDF_Generator as PDF_Generator
+            for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
+                PO_Invoice_Table_Data = PO_Invoice_Table_Data_list[Invoice_Index]
+                PO_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=Invoice_Number, Table_Data=PO_Invoice_Table_Data)
+
+                # Export 
+                # File name must be same as Invoice Number
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf")
+                else:
+                    File_Manipulation.Export_Download_Folders(File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf")
         else:
             pass
 

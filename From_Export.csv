@@ -1,5 +1,0 @@
-;line_item_id;supplier_aid;buyer_aid;description_long;quantity;order_unit;price_amount;price_line_amount;delivery_start_date;delivery_end_date;ordered_quantity;supplier_order_item_id;item_category;discontinued;set;bom;bom_with_delivery_group;cancelled;Exported_Line_No
-0;100;A2X0027;A2X0027;bizhub C754e;2;C62;7669.38;15338.76;;;2;10;YN01;False;False;False;False;False;10000
-1;200;A0HUWY1;A0HUWY1;DF-617 Doc.Feed f. C220 280 360;3;CA;57.26;171.79;;;3;20;YN01;False;False;False;False;False;20000
-2;300;AA2M021;AA2M021;bizhub C250i //created by JCV (for OPS purpose);5;C62;120.36;601.79;;;5;30;YN01;False;False;False;False;False;30000
-3;400;80207;80207;Basic Mouse;1;C62;0.61;0.61;;;1;40;YN01;False;False;False;False;False;40000

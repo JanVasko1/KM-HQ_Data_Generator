@@ -173,7 +173,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
                 Main_Window_Centre[0] = Main_Window_Centre[0] - CPDI_Level_Window_geometry[0] //2
                 Main_Window_Centre[1] = Main_Window_Centre[1] - CPDI_Level_Window_geometry[1] //2
-                CPDI_Level_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"CPDI Level provided: {CPDI_Delivery}.", max_width=CPDI_Level_Window_geometry[0], max_height=CPDI_Level_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=False)
+                CPDI_Level_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"CPDI Level provided: {CPDI_Delivery}.", max_width=CPDI_Level_Window_geometry[0], max_height=CPDI_Level_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
                 # Frame - General
                 Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=CPDI_Level_Window, Name=f"CPDI Level provided: {CPDI_Delivery}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select provided CPDI Level for Purchase Order.", GUI_Level_ID=3)

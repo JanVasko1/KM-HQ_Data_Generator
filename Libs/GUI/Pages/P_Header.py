@@ -45,7 +45,7 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
         # TopUp Window
         Version_List_Window_geometry = (1400, 800)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Clicked_on, New_Window_width=Version_List_Window_geometry[0])
-        Version_List_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Version List", max_width=Version_List_Window_geometry[0], max_height=Version_List_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
+        Version_List_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Version List", max_width=Version_List_Window_geometry[0], max_height=Version_List_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=True)
 
          # Get Theme --> because of background color
         Current_Theme = CustomTkinter_Functions.Get_Current_Theme() 
@@ -215,7 +215,7 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
         # TopUp Window
         Delete_Activity_Correct_Window_geometry = (320, 500)
         Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=Delete_Activity_Correct_Window_geometry[0])
-        Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Delete Templates.", max_width=Delete_Activity_Correct_Window_geometry[0], max_height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=False)
+        Delete_Activity_Correct_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Delete Templates.", max_width=Delete_Activity_Correct_Window_geometry[0], max_height=Delete_Activity_Correct_Window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=True)
 
         # Frame - General
         Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=Delete_Activity_Correct_Window, Name=f"Delete Templates:", Additional_Text="", Widget_size="Half_size", Widget_Label_Tooltip=f"To delete unwanted templates.", GUI_Level_ID=1)
