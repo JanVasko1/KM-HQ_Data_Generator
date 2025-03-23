@@ -48,11 +48,11 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": false
+                "Download_Folder": true
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -197,7 +197,7 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Delivery_select": {
                     "Method": "Prompt",
                     "Methods_List": [
@@ -234,7 +234,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -257,7 +257,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Fixed",
                     "Methods_List": [

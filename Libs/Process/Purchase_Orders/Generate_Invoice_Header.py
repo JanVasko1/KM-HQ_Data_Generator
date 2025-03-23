@@ -9,7 +9,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
+def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -255,8 +255,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
         elif Currency_Method == "Purchase Order":
             PO_Currency = Purchase_Headers_df_Filtered.iloc[0]["Currency_Code"]
         elif Currency_Method == "From Confirmation":
-            pass
-            # TODO --> have to find the Confirmation_Header_df 
+            PO_Currency = Confirmed_Lines_df.iloc[0]["Currency_Code"]
         else:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False

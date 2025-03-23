@@ -66,6 +66,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CT
         Confirmed_Lines_df["supplier_aid"] = Exported_Items_list
         Confirmed_Lines_df["buyer_aid"] = Exported_Items_list
         Confirmed_Lines_df["item_category"] = "YN01"
+        Confirmed_Lines_df["price_currency"] = HQ_Confirmed_Lines_df["Currency_Code"].to_list()      # Because of Invoice Generation
         Confirmed_Lines_df["discontinued"] = False
         Confirmed_Lines_df["set"] = False
         Confirmed_Lines_df["bom"] = False
@@ -137,6 +138,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk
     Exported_Lines_df["supplier_aid"] = Exported_Items_list
     Exported_Lines_df["buyer_aid"] = Exported_Items_list
     Exported_Lines_df["item_category"] = "YN01"
+    Exported_Lines_df["price_currency"] = HQ_Item_Transport_Register_df["Currency_Code"].to_list()      # Because of Invoice Generation
     Exported_Lines_df["discontinued"] = False
     Exported_Lines_df["set"] = False
     Exported_Lines_df["bom"] = False
@@ -223,6 +225,7 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         Confirmed_Lines_df["supplier_aid"] = HQ_Confirmation_Lines_df["Item_No"].to_list()
         Confirmed_Lines_df["supplier_order_item_id"] = HQ_Confirmation_Lines_df["Vendor_Line_No"].to_list()
         Confirmed_Lines_df["price_amount"] = HQ_Confirmation_Lines_df["Unit_Price"].to_list()
+        Confirmed_Lines_df["price_currency"] = HQ_Confirmation_Lines_df["Currency_Code"].to_list()      # Because of Invoice Generation
 
         # supplier_order_item_id
         Vendor_Line_No_list = HQ_Confirmation_Lines_df["Vendor_Line_No"].to_list()

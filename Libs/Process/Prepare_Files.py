@@ -66,15 +66,15 @@ def Process_Purchase_Orders(Settings: dict,
             import Libs.Process.Purchase_Orders.Generate_Confirmation_ATP as Generate_Confirmation_ATP
 
             # Header
-            PO_Confirmation_Header, PO_Confirmation_Number = Generate_Confirmation_Header.Generate_PO_CON_Header(Settings=Settings, 
-                                                                                                            Configuration=Configuration, 
-                                                                                                            window=window,
-                                                                                                            Purchase_Order=Purchase_Order,
-                                                                                                            Purchase_Headers_df=Purchase_Headers_df,
-                                                                                                            Company_Information_df=Company_Information_df, 
-                                                                                                            HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
-                                                                                                            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
-            
+            PO_Confirmation_Header, PO_Confirmation_Number, PO_Confirmation_Currency = Generate_Confirmation_Header.Generate_PO_CON_Header(Settings=Settings, 
+                                                                                                                                            Configuration=Configuration, 
+                                                                                                                                            window=window,
+                                                                                                                                            Purchase_Order=Purchase_Order,
+                                                                                                                                            Purchase_Headers_df=Purchase_Headers_df,
+                                                                                                                                            Company_Information_df=Company_Information_df, 
+                                                                                                                                            HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
+                                                                                                                                            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
+                        
             # Lines
             Confirmed_Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No = Generate_Confirmation_Lines.Generate_PO_CON_Lines(Settings=Settings, 
                                                                                                                                             Configuration=Configuration, 
@@ -87,7 +87,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             Items_Connected_Items_df=Items_Connected_Items_df, 
                                                                                                                                             Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
                                                                                                                                             Items_Distr_Status_df=Items_Distr_Status_df,
-                                                                                                                                            UoM_df=UoM_df)
+                                                                                                                                            UoM_df=UoM_df, 
+                                                                                                                                            PO_Confirmation_Currency=PO_Confirmation_Currency)
 
             # ATP
             PO_Confirmation_Lines = Generate_Confirmation_ATP.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Confirmed_Lines_df=Confirmed_Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
@@ -309,6 +310,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                   PO_Confirmation_Number=PO_Confirmation_Number, 
                                                                                                   PO_Delivery_Number_list=PO_Delivery_Number_list, 
                                                                                                   PO_Delivery_Date_list=PO_Delivery_Date_list,
+                                                                                                  Confirmed_Lines_df=Confirmed_Lines_df,
                                                                                                   Delivery_Lines_df=Delivery_Lines_df,
                                                                                                   Company_Information_df=Company_Information_df, 
                                                                                                   HQ_Communication_Setup_df=HQ_Communication_Setup_df)

@@ -21,10 +21,11 @@ def Generate_PO_CON_Lines(Settings: dict,
                             Items_Connected_Items_df: DataFrame, 
                             Items_Price_List_Detail_df: DataFrame, 
                             Items_Distr_Status_df: DataFrame,
-                            UoM_df: DataFrame):
+                            UoM_df: DataFrame,
+                            PO_Confirmation_Currency: str):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
-    Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "Distribution_Status_NUS", "Blocked_for_Purchase"]
+    Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "Distribution_Status_NUS", "Blocked_for_Purchase", "price_currency"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
 
     Price_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Prices"]["Method"]
@@ -85,6 +86,7 @@ def Generate_PO_CON_Lines(Settings: dict,
     Confirmed_Lines_df["quantity"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
     Confirmed_Lines_df["ordered_quantity"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="ordered_quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
     Confirmed_Lines_df["item_category"] = "YN01"
+    Confirmed_Lines_df["price_currency"] = PO_Confirmation_Currency     # Because of Invoice Generation
     Confirmed_Lines_df["discontinued"] = False
     Confirmed_Lines_df["set"] = False
     Confirmed_Lines_df["bom"] = False

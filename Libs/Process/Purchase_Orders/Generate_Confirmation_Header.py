@@ -193,4 +193,4 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
     else:
         pass
 
-    return PO_Confirmation_Header, PO_Confirmation_Number
+    return PO_Confirmation_Header, PO_Confirmation_Number, PO_Currency

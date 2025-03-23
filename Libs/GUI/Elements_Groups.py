@@ -86,7 +86,6 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type
 
     Label_text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Area, Label_Size=Label_Size, Font_Size=Font_Size)
     Label_text.configure(text=f"{Label}")
-    # TODO --> dodělat tak aby měl stejný rozložení jako normální pole a 
     Label_text.pack(side="right", fill="none", expand=False, padx=(50, 0), pady=5)
 
     return Frame_Area
