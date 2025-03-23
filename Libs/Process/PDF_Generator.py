@@ -8,7 +8,7 @@ def Generate_PDF(Settings: dict, Configuration: dict, Invoice: dict, Table_Data:
     class PDF(FPDF):
         def header(self):
             # Rendering logo:
-            self.image(f"Libs\\GUI\\Icons\\Company_Light.png", 10, 8, 33)
+            self.image(f"Libs\\GUI\\Icons\\Company_Logo.png", 10, 8, 33)
             # Setting font: helvetica bold 15
             self.set_font("helvetica", style="B", size=14)
             # Moving cursor to the right:
@@ -53,7 +53,7 @@ def Generate_PDF(Settings: dict, Configuration: dict, Invoice: dict, Table_Data:
     pdf.set_font("helvetica", size=10)
     pdf.set_fill_color(0, 0, 0)
     with pdf.table() as table:
-        pdf.set_font("helvetica", size=11)
+        pdf.set_font("helvetica", size=8)
         for data_row in Table_Data:
             row = table.row()
             for datum in data_row:

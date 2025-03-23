@@ -52,7 +52,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -197,7 +197,7 @@
                 }
             },
             "CPDI": {
-                "Use": false,
+                "Use": true,
                 "Delivery_select": {
                     "Method": "Prompt",
                     "Methods_List": [
@@ -234,7 +234,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -257,7 +257,7 @@
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
                     "Method": "Fixed",
                     "Methods_List": [
@@ -545,7 +545,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {
