@@ -103,8 +103,14 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CT
 
         # line_item_id
         Confirmed_Lines_df["line_item_id"] = Confirmed_Lines_df["Exported_Line_No"] // 100
-        Confirmed_Lines_df["supplier_order_item_id"] = HQ_Confirmed_Lines_df["Vendor_Line_No"].to_list()
         
+        # supplier_order_item_id
+        Vendor_Line_No_list = HQ_Confirmed_Lines_df["Vendor_Line_No"].to_list()
+        line_item_id_list = []
+        for Index, Value in enumerate(Vendor_Line_No_list):
+            line_item_id_list.append(f"{Value :06d}")
+        Confirmed_Lines_df["supplier_order_item_id"] = line_item_id_list
+
         # Round Values
         Confirmed_Lines_df["quantity"] = Confirmed_Lines_df["quantity"].round(2)
         Confirmed_Lines_df["ordered_quantity"] = Confirmed_Lines_df["ordered_quantity"].round(2)
@@ -114,7 +120,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CT
         # Drop Duplicate rows amd reset index
         Confirmed_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
         Confirmed_Lines_df.reset_index(drop=True, inplace=True)
-       
+
     return Confirmed_Lines_df, PO_Confirmation_Number
 
 def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame) -> DataFrame:
@@ -168,7 +174,14 @@ def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk
 
     # line_item_id
     Exported_Lines_df["line_item_id"] = Exported_Lines_df["Exported_Line_No"] // 100
-    Exported_Lines_df["supplier_order_item_id"] = Exported_Lines_df["Exported_Line_No"] // 1000
+
+    # supplier_order_item_id
+    Exported_Line_No_list = Exported_Lines_df["Exported_Line_No"].to_list()
+    supplier_order_item_id_list = []
+    for Index, Value in enumerate(Exported_Line_No_list):
+        Exported_Line_No = Value // 1000
+        supplier_order_item_id_list.append(f"{Exported_Line_No :06d}")
+    Exported_Lines_df["supplier_order_item_id"] = supplier_order_item_id_list
     
     # Round Values
     Exported_Lines_df["quantity"] = Exported_Lines_df["quantity"].round(2)
@@ -206,11 +219,20 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         else:
             PO_Confirmation_Number = HQ_Confirmation_Lines_df.iloc[0]["Vendor_Document_No"]
 
-        # TODO --> prepare Confirmed_Lines_df for Invoice process
+        # Prepare Confirmed_Lines_df for Invoice process
+        Confirmed_Lines_df["supplier_aid"] = HQ_Confirmation_Lines_df["Item_No"].to_list()
+        Confirmed_Lines_df["supplier_order_item_id"] = HQ_Confirmation_Lines_df["Vendor_Line_No"].to_list()
+        Confirmed_Lines_df["price_amount"] = HQ_Confirmation_Lines_df["Unit_Price"].to_list()
+
+        # supplier_order_item_id
+        Vendor_Line_No_list = HQ_Confirmation_Lines_df["Vendor_Line_No"].to_list()
+        Lines_No = len(Confirmed_Lines_df)
+        line_item_id_list= []
+        for Index, Value in enumerate(Vendor_Line_No_list):
+            line_item_id_list.append((f"{Value :06d}"))
+        Confirmed_Lines_df["supplier_order_item_id"] = line_item_id_list
 
         # --------------------------------- Delivery --------------------------------- # 
-        print("----------------------------------------------------------------------------------------------")
-        print(HQ_Delivery_Lines_df)
         # Prepare lists
         Downloaded_Delivery_List = HQ_Delivery_Lines_df["Vendor_Document_No"].to_list()
         Downloaded_Delivery_List = list(set(Downloaded_Delivery_List))
@@ -290,10 +312,24 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         Delivery_Lines_df["order_id"] = Purchase_Order
         Delivery_Lines_df["order_date"] = HQ_Delivery_Lines_df_Filtered["Order_Date"].to_list()
         Delivery_Lines_df["supplier_order_id"] = PO_Confirmation_Number
-        Delivery_Lines_df["supplier_order_item_id"] = HQ_Delivery_Lines_df_Filtered["Vendor_Line_No"].to_list()
-        Delivery_Lines_df["supplier_order_item_id"].apply(int)
         Delivery_Lines_df["serial_numbers"] = ""
 
+        # supplier_order_item_id
+        Vendor_Line_No_list = HQ_Delivery_Lines_df_Filtered["Vendor_Line_No"].to_list()
+        supplier_order_item_id_list = []
+        for Index, Value in enumerate(Vendor_Line_No_list):
+            supplier_order_item_id_list.append(f"{Value :06d}")
+        Delivery_Lines_df["supplier_order_item_id"] = supplier_order_item_id_list
+
+        # order_ref_line_item_id
+        Exported_Line_No_list = HQ_Delivery_Lines_df_Filtered["Exported_Line_No"].to_list()
+        order_ref_line_item_id_list = []
+        for Index, Value in enumerate(Exported_Line_No_list):
+            order_ref_line_item_id = Value // 100
+            order_ref_line_item_id_list.append(f"{order_ref_line_item_id :06d}")
+        Delivery_Lines_df["order_ref_line_item_id"] = order_ref_line_item_id_list
+
+        # Delivery Date and line_item_id
         PO_Delivery_Date_list = []
         for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
             mask_Delivery = HQ_Delivery_Lines_df_Filtered["Vendor_Document_No"] == Delivery_Number
@@ -314,13 +350,4 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
                 Line_Counter += 1
                 Delivery_Lines_df.at[row_index, "line_item_id"] = Delivery_line_item_id
 
-                # Update order_ref_line_item_id
-                Exported_Line_No = int(row_Series["Exported_Line_No"]) // 100
-                Delivery_Lines_df.at[row_index, "order_ref_line_item_id"] = Exported_Line_No
-
-    print("----------------------------------------------------------------------------------------------")
-    print(Delivery_Lines_df)
-    print(PO_Delivery_Number_list)
-    print(PO_Delivery_Date_list)
-    print(PO_Confirmation_Number)
     return PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df

@@ -20,7 +20,7 @@ def Generate_PDF(Settings: dict, Configuration: dict, Invoice: dict, Table_Data:
 
         def chapter_title(self, num, label):
             # Setting font: helvetica 12
-            self.set_font("helvetica", size=14)
+            self.set_font("helvetica", size=10)
             # Setting background color
             self.set_fill_color(200, 220, 255)
             # Printing chapter name:
