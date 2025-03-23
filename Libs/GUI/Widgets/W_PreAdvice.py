@@ -35,7 +35,7 @@ def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - Fixed Date
-    Pre_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    Pre_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     Pre_Fixed_Date_Frame_Var = Pre_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Pre_Fixed_Date_Frame_Var = Pre_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Pre_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

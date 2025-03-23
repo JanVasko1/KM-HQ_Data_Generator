@@ -52,7 +52,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -451,7 +451,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -467,7 +467,7 @@
                         }
                     },
                     "Prices": {
-                        "Method": "Prompt",
+                        "Method": "From Confirmation",
                         "Methods_List": [
                             "Price List",
                             "Purchase Line",
@@ -521,7 +521,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -545,7 +545,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {

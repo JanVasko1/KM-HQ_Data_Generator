@@ -9,7 +9,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
+def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -33,7 +33,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
 
     # Filter Dataframes by Purchase Order
     mask_Purchase_Header = Purchase_Headers_df["No"] == Purchase_Order
-    Purchase_Headers_df_Filtered = Purchase_Headers_df[mask_Purchase_Header]
+    Purchase_Headers_df_Filtered = DataFrame(Purchase_Headers_df[mask_Purchase_Header])
 
     # --------------------------------------------- Preparation based on Delivery --------------------------------------------- #
     Invoice_Count = len(PO_Delivery_Number_list)
@@ -215,7 +215,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
             # Invoice Date Fields
             for Invoice in PO_Invoice_Number_list:
                 # Fields
-                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Invoice}",  Field_Type="Entry_DropDown")  
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Invoice}",  Field_Type="Date_Picker", Validation="Date")  
                 Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                 Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
                 Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -273,7 +273,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
         for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_id"] = Purchase_Order
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["supplier_order_id"] = PO_Confirmation_Number
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_date"] = "" # TODO --> from Confirmation_Header_df
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_date"] = Delivery_Lines_df.iloc[0]["order_date"]
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["delivery_note_id"] = PO_Delivery_Number_list[Invoice_Index]
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["delivery_note_date"] = PO_Delivery_Date_list[Invoice_Index]
     else:

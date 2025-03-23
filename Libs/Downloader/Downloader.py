@@ -166,9 +166,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         HQ_Communication_Setup_df.drop_duplicates(inplace=True, ignore_index=True)
         HQ_Communication_Setup_df.reset_index(drop=True, inplace=True)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-        print("\n----------HQ_Communication_Setup_df----------")
-        print(HQ_Communication_Setup_df)
-    
 
     # HQ_Testing_NVR_FS_Connect
     if Can_Process == True:
@@ -181,8 +178,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             NVR_FS_Connect_df.drop_duplicates(inplace=True, ignore_index=True)
             NVR_FS_Connect_df.reset_index(drop=True, inplace=True)
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-            print("\n----------NVR_FS_Connect_df----------")
-            print(NVR_FS_Connect_df)
     else:
         pass
 
@@ -197,8 +192,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             Purchase_Headers_df.drop_duplicates(inplace=True, ignore_index=True)
             Purchase_Headers_df.reset_index(drop=True, inplace=True)
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-            print("\n----------Purchase_Headers_df----------")
-            print(Purchase_Headers_df)
     else:
         pass
 
@@ -213,8 +206,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             Purchase_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
             Purchase_Lines_df.reset_index(drop=True, inplace=True)
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-            print("\n----------Purchase_Lines_df----------")
-            print(Purchase_Lines_df)
     else:
         pass
 
@@ -229,8 +220,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             HQ_Item_Transport_Register_df.drop_duplicates(inplace=True, ignore_index=True)
             HQ_Item_Transport_Register_df.reset_index(drop=True, inplace=True)
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-            print("\n----------HQ_Item_Transport_Register_df----------")
-            print(HQ_Item_Transport_Register_df)
     else:
         pass
 
@@ -245,8 +234,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
             Items_df.drop_duplicates(inplace=True, ignore_index=True)
             Items_df.reset_index(drop=True, inplace=True)
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-            print("\n----------Items_df----------")
-            print(Items_df)
     else:
         pass
 
@@ -255,12 +242,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_BOMs_df, Items_For_BOM_df = NAV_OData_API.Get_Items_BOM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=BOM_Item_list)
         Items_BOMs_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_BOMs_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_BOMs_df----------")
-        print(Items_BOMs_df)
+
         Items_For_BOM_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_For_BOM_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_For_BOM_df----------")
-        print(Items_For_BOM_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -270,12 +254,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_Substitutions_df, Items_For_Substitution_df = NAV_OData_API.Get_Items_Substitutions_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitution_Item_list)
         Items_Substitutions_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Substitutions_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_Substitutions_df----------")
-        print(Items_Substitutions_df)
+
         Items_For_Substitution_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_For_Substitution_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_For_Substitution_df----------")
-        print(Items_For_Substitution_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -285,12 +266,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"])
         Items_Connected_Items_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Connected_Items_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_Connected_Items_df----------")
-        print(Items_Connected_Items_df)
+
         Items_For_Connected_Items_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_For_Connected_Items_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_For_Connected_Items_df----------")
-        print(Items_For_Connected_Items_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -305,11 +283,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         # Delete duplicate rows from Items_df
         Items_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_df.reset_index(drop=True, inplace=True)
-
-        print("\n----------Items_list -> Concatenate----------")
-        print(Items_list)
-        print("\n----------Items_df -> All----------")
-        print(Items_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -317,14 +290,10 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_Items_Price_Detail_List
     if Can_Process == True:
         Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Active_Price_Lists_df----------")
-        print(Active_Price_Lists_df)
         Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"])
         # Drop Duplicate rows
         Items_Price_List_Detail_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Price_List_Detail_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_Price_List_Detail_df----------")
-        print(Items_Price_List_Detail_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -334,8 +303,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_Tracking_df = NAV_OData_API.Get_Items_Tracking_Codes_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Item_Tracking_Code_list=Item_Tracking_Code_list)
         Items_Tracking_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Tracking_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_Tracking_df----------")
-        print(Items_Tracking_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -345,8 +312,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_UoM_df = NAV_OData_API.Get_Items_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list)
         Items_UoM_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_UoM_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_UoM_df----------")
-        print(Items_UoM_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -356,8 +321,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Items_Distr_Status_df = NAV_OData_API.Get_Items_Distr_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Items_Distr_Status_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Distr_Status_df.reset_index(drop=True, inplace=True)
-        print("\n----------Items_Distr_Status_df----------")
-        print(Items_Distr_Status_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -367,8 +330,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
         Plants_df.reset_index(drop=True, inplace=True)
-        print("\n----------Plants_df----------")
-        print(Plants_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -376,8 +337,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_Shipment_Method
     if Can_Process == True:
         Shipment_Method_list = NAV_OData_API.Get_Shipment_Method_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Shipment_Method_list----------")
-        print(Shipment_Method_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -385,8 +344,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_Shipping_Agent
     if Can_Process == True:
         Shipping_Agent_list = NAV_OData_API.Get_Shipping_Agent_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Shipping_Agent_list----------")
-        print(Shipping_Agent_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -394,8 +351,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_Tariff_Numbers
     if Can_Process == True:
         Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Tariff_Number_list----------")
-        print(Tariff_Number_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -405,8 +360,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
         Company_Information_df.reset_index(drop=True, inplace=True)
-        print("\n----------Company_Information_df----------")
-        print(Company_Information_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -414,8 +367,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_Country_Regions
     if Can_Process == True:
         Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Country_ISO_Code_list----------")
-        print(Country_ISO_Code_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -423,8 +374,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_HQ_CPDI_Level_df
     if Can_Process == True:
         HQ_CPDI_Level_df = NAV_OData_API.Get_CPDI_Level_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------HQ_CPDI_Level_df----------")
-        print(HQ_CPDI_Level_df)
         HQ_CPDI_Level_df.drop_duplicates(inplace=True, ignore_index=True)
         HQ_CPDI_Level_df.reset_index(drop=True, inplace=True)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -434,8 +383,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
     # HQ_Testing_HQ_CPDI_Status_df
     if Can_Process == True:
         HQ_CPDI_Status_df = NAV_OData_API.Get_CPDI_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------HQ_CPDI_Status_df----------")
-        print(HQ_CPDI_Status_df)
         HQ_CPDI_Status_df.drop_duplicates(inplace=True, ignore_index=True)
         HQ_CPDI_Status_df.reset_index(drop=True, inplace=True)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
@@ -447,8 +394,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict, window: C
         UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         UoM_df.drop_duplicates(inplace=True, ignore_index=True)
         UoM_df.reset_index(drop=True, inplace=True)
-        print("\n----------UoM_df----------")
-        print(UoM_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -523,8 +468,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
 
     # HQ_Testing_HQ_Communication
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-    print("\n----------HQ_Communication_Setup_df----------")
-    print(HQ_Communication_Setup_df)
     if HQ_Communication_Setup_df.empty:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         Can_Process = False
@@ -537,8 +480,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
     # HQ_Testing_NVR_FS_Connect
     if Can_Process == True:
         NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list)
-        print("\n----------NVR_FS_Connect_df----------")
-        print(NVR_FS_Connect_df)
         if NVR_FS_Connect_df.empty:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
@@ -553,8 +494,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
     # Vendor_Service_Function_df
     if Can_Process == True:
         Vendor_Service_Function_df = NAV_OData_API.Get_Vendor_Service_Functions_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Buy_from_Vendor_No=Buy_from_Vendor_No)
-        print("\n----------Vendor_Service_Function_df----------")
-        print(Vendor_Service_Function_df)
         if Vendor_Service_Function_df.empty:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Process = False
@@ -571,8 +510,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
         Company_Information_df.reset_index(drop=True, inplace=True)
-        print("\n----------Company_Information_df----------")
-        print(Company_Information_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -582,8 +519,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
         Plants_df.reset_index(drop=True, inplace=True)
-        print("\n----------Plants_df----------")
-        print(Plants_df)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -591,8 +526,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
     # HQ_Testing_Country_Regions
     if Can_Process == True:
         Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Country_ISO_Code_list----------")
-        print(Country_ISO_Code_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass
@@ -600,8 +533,6 @@ def Download_Data_BackBoneBilling(Settings: dict,
     # HQ_Testing_Tariff_Numbers
     if Can_Process == True:
         Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-        print("\n----------Tariff_Number_list----------")
-        print(Tariff_Number_list)
         Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
     else:
         pass

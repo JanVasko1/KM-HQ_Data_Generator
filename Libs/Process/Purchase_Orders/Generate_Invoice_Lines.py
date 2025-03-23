@@ -10,7 +10,7 @@ import Libs.GUI.Elements_Groups as Elements_Groups
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Lines_df: DataFrame, PO_Invoice_Number_list: list, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, Confirmed_Lines_df: DataFrame, Items_df: DataFrame, Items_Price_List_Detail_df: DataFrame, Country_ISO_Code_list: list, Tariff_Number_list: list):
+def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Lines_df: DataFrame, PO_Invoice_Number_list: list, PO_Invoices: list, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, Confirmed_Lines_df: DataFrame, Items_df: DataFrame, Items_Price_List_Detail_df: DataFrame, Country_ISO_Code_list: list, Tariff_Number_list: list):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Invoice_Lines_df_columns = ["Invoice_No", "line_item_id", "supplier_aid", "description_short", "quantity", "order_unit", "price_amount", "price_line_amount", "order_id", "order_line_item_id", "order_date", "supplier_order_id", "supplier_order_item_id", "delivery_note_id", "delivery_line_item_id", "tariff_number", "origin", "plant"]
@@ -31,15 +31,8 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
 
     # Filter Dataframes by Purchase Order
     mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
-    Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
+    Purchase_Lines_df_Filtered = DataFrame(Purchase_Lines_df[mask_Purch_Line])
 
-    print("------------------------------------------------------------------")
-    print("Confirmation:")
-    print(Confirmed_Lines_df)
-    print("------------------------------------------------------------------")
-    print("Delivery:")
-    print(Delivery_Lines_df)  
-    print("------------------------------------------------------------------")  
     # --------------------------------------------- Data from Delivery_Lines_df --------------------------------------------- #
     # General
     supplier_aid_list = Delivery_Lines_df["supplier_aid"].to_list()
@@ -87,7 +80,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
     # --------------------------------------------- Calculate Invoice Lines  --------------------------------------------- #
     for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
         mask_Invoice = Invoice_Lines_df["Invoice_No"] == Invoice_Number
-        Invoice_Lines_df_Filtered = Invoice_Lines_df[mask_Invoice]
+        Invoice_Lines_df_Filtered = DataFrame(Invoice_Lines_df[mask_Invoice])
 
         Line_Counter = 10
         for row in Invoice_Lines_df_Filtered.iterrows():
@@ -111,7 +104,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
         elif Price_Method == "Prompt":
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 mask_Invoice = Invoice_Lines_df["Invoice_No"] == Invoice_Number
-                Invoice_Lines_df_Filtered = Invoice_Lines_df[mask_Invoice]
+                Invoice_Lines_df_Filtered = DataFrame(Invoice_Lines_df[mask_Invoice])
                 def Select_PO_INV_Price(Frame_Body: CTkFrame, Lines_No: int):
                     PO_Invoice_Price_list = []
                     for i in range(0, Lines_No + 1):
@@ -175,11 +168,8 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
 
                 # Apply Prices
                 Invoice_Lines_df_Filtered["price_amount"] = Prices_List
-                print(Invoice_Lines_df_Filtered)
                 Invoice_Lines_df["price_amount"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="price_amount", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="price_amount"), axis=1)
-                print("Invoice:")
-                print(Invoice_Lines_df)  
-                print("------------------------------------------------------------------")  
+                del Invoice_Lines_df_Filtered
 
         else:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
@@ -283,7 +273,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
         elif Count_Origin_Method == "Prompt":
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 mask_Invoice = Invoice_Lines_df["Invoice_No"] == Invoice_Number
-                Invoice_Lines_df_Filtered = Invoice_Lines_df[mask_Invoice]
+                Invoice_Lines_df_Filtered = DataFrame(Invoice_Lines_df[mask_Invoice])
 
                 def Select_PO_INV_Country_Origin(Frame_Body: CTkFrame, Lines_No: int):
                     PO_Invoice_Country_Origin_list = []
@@ -342,10 +332,11 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Country Origin selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PO_INV_Country_Origin_Variable)
                 Country_Origins_List = PO_INV_Country_Origin_Variable.get().split(";")
-                print(Country_Origins_List)
 
-                # Apply Country_Origins
-                # TODO --> figure it out to write Country_Origin from pop-up to Invoice_Lines_df
+                # Apply Country of Origin
+                Invoice_Lines_df_Filtered["origin"] = Country_Origins_List
+                Invoice_Lines_df["origin"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="origin", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="origin"), axis=1)
+                del Invoice_Lines_df_Filtered
 
         else:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
@@ -364,7 +355,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
         elif Tariff_Method == "Prompt":
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 mask_Invoice = Invoice_Lines_df["Invoice_No"] == Invoice_Number
-                Invoice_Lines_df_Filtered = Invoice_Lines_df[mask_Invoice]
+                Invoice_Lines_df_Filtered = DataFrame(Invoice_Lines_df[mask_Invoice])
                 
                 def Select_PO_INV_Tariff(Frame_Body: CTkFrame, Lines_No: int):
                     PO_Invoice_Tariff_list = []
@@ -423,10 +414,11 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Tariff selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PO_INV_Tariff_Variable)
                 Tariffs_List = PO_INV_Tariff_Variable.get().split(";")
-                print(Tariffs_List)
 
-                # Apply Tariffs
-                # TODO --> figure it out to write Tariff from pop-up to Invoice_Lines_df
+                # Apply Tariff
+                Invoice_Lines_df_Filtered["tariff_number"] = Tariffs_List
+                Invoice_Lines_df["tariff_number"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="tariff_number", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="tariff_number"), axis=1)
+                del Invoice_Lines_df_Filtered
         else:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False
@@ -439,46 +431,67 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
     Invoice_Lines_df["price_amount"] = Invoice_Lines_df["price_amount"].round(2)
     Invoice_Lines_df["price_line_amount"] = Invoice_Lines_df["price_line_amount"].round(2)
 
+    PO_Invoice_Table_Data_list = []
     for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
         mask_Invoice = Invoice_Lines_df["Invoice_No"] == Invoice_Number
-        Invoice_Lines_df_Filtered = Invoice_Lines_df[mask_Invoice]
+        Invoice_Lines_df_Filtered = DataFrame(Invoice_Lines_df[mask_Invoice])
 
-        # Prepare Json for each line of DataFrame
+        # Invoice Total data preparation
+        Total_Invoice_Lines_Count = len(Invoice_Lines_df_Filtered)
+        Total_invoice_Amount = round(number=float(Invoice_Lines_df_Filtered["price_line_amount"].sum(axis=0)), ndigits=2)
+
+        # Prepare Json for each line of DataFrame + PDF data
         PO_Invoice_Lines = []
+        Table_Data = []
+        Table_Data.append(["Item No", "Description", "Quantity", "Price", "Line Amount"])
         for row in Invoice_Lines_df_Filtered.iterrows():
             row_Series = Series(row[1])
             Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Invoice_Line")
 
-            # Assign Values
-            Current_line_json["line_item_id"] = row_Series[""]
-            Current_line_json["article_id"]["supplier_aid"] = row_Series[""]
-            Current_line_json["article_id"]["description_short"] = row_Series[""]
+            # Assign Values to JSON
+            Current_line_json["line_item_id"] = row_Series["line_item_id"]
+            Current_line_json["article_id"]["supplier_aid"] = row_Series["supplier_aid"]
+            Current_line_json["article_id"]["description_short"] = row_Series["description_short"]
 
-            Current_line_json["quantity"] = row_Series[""]
-            Current_line_json["order_unit"] = row_Series[""]
+            Current_line_json["quantity"] = row_Series["quantity"]
+            Current_line_json["order_unit"] = row_Series["order_unit"]
 
-            Current_line_json["article_price"]["price_amount"] = row_Series[""]
-            Current_line_json["article_price"]["price_line_amount"] = row_Series[""]
+            Current_line_json["article_price"]["price_amount"] = row_Series["price_amount"]
+            Current_line_json["article_price"]["price_line_amount"] = row_Series["price_line_amount"]
 
-            Current_line_json["order_reference"]["order_id"] = row_Series[""]
-            Current_line_json["order_reference"]["line_item_id"] = row_Series[""]
-            Current_line_json["order_reference"]["order_date"] = row_Series[""]
+            Current_line_json["order_reference"]["order_id"] = row_Series["order_id"]
+            Current_line_json["order_reference"]["line_item_id"] = row_Series["order_line_item_id"]
+            Current_line_json["order_reference"]["order_date"] = row_Series["order_date"]
             
-            Current_line_json["supplier_order_reference"]["supplier_order_id"] = row_Series[""]
-            Current_line_json["supplier_order_reference"]["supplier_order_item_id"] = row_Series[""]
+            Current_line_json["supplier_order_reference"]["supplier_order_id"] = row_Series["supplier_order_id"]
+            Current_line_json["supplier_order_reference"]["supplier_order_item_id"] = row_Series["supplier_order_item_id"]
 
-            Current_line_json["delivery_reference"]["delivery_note_id"] = row_Series[""]
-            Current_line_json["delivery_reference"]["line_item_id"] = row_Series[""]
+            Current_line_json["delivery_reference"]["delivery_note_id"] = row_Series["delivery_note_id"]
+            Current_line_json["delivery_reference"]["line_item_id"] = row_Series["delivery_line_item_id"]
 
-            Current_line_json["tariff_number"] = row_Series[""]
-            Current_line_json["remarks"]["origin"] = row_Series[""]
-            Current_line_json["remarks"]["plant"] = row_Series[""]
+            Current_line_json["tariff_number"] = row_Series["tariff_number"]
+            Current_line_json["remarks"]["origin"] = row_Series["origin"]
+            Current_line_json["remarks"]["plant"] = row_Series["plant"]
 
             PO_Invoice_Lines.append(Current_line_json)
             del Current_line_json
 
-    print(Invoice_Lines_df)
-    print("")
+            # Assign Values to PDF PO_Invoice_Table_Data_list
+            Line_Data_List = []
+            Line_Data_List.append(str(row_Series["supplier_aid"]))
+            Line_Data_List.append(str(row_Series["description_short"]))
+            Line_Data_List.append(str(row_Series["quantity"]))
+            Line_Data_List.append(str(row_Series["price_amount"]))
+            Line_Data_List.append(str(row_Series["price_line_amount"]))
+            Table_Data.append(Line_Data_List)
 
-    return 
+        # Add Lines to proper Delivery Header
+        PO_Invoices[Invoice_Index]["invoice"]["invoice_item_list"] = PO_Invoice_Lines
+        PO_Invoices[Invoice_Index]["invoice"]["invoice_summary"]["total_item_num"] = Total_Invoice_Lines_Count
+        PO_Invoices[Invoice_Index]["invoice"]["invoice_summary"]["total_amount"] = Total_invoice_Amount
+           
+        # Add data to List of PDF Table Data for multiple PDFs
+        PO_Invoice_Table_Data_list.append(Table_Data)
+
+    return PO_Invoices, PO_Invoice_Table_Data_list
 

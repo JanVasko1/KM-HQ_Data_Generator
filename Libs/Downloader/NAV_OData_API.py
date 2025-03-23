@@ -457,7 +457,7 @@ def Get_CPDI_Status_df(Configuration: dict, window: CTk, headers: dict, tenant_i
 # ------------------- HQ_Testing_HQ_Item_Transport_Register ------------------- #
 def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order_list: list, Document_Type: str, Vendor_Document_Type: str) -> DataFrame:
     # Fields
-    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Ordered_Quantity", "Unit_of_Measure", "Currency_Code", "Unit_Price", "Order_Date", "Line_Flag"]
+    fields_list = ["Register_No", "Document_Type", "Document_No", "Document_Line_No", "Exported_Line_No", "Vendor_Line_No", "Vendor_Document_Type", "Vendor_Document_No", "Line_Type", "Item_No", "Quantity", "Ordered_Quantity", "Unit_of_Measure", "Currency_Code", "Unit_Price", "Order_Date", "Line_Flag", "Delivery_Date"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -490,6 +490,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
     Unit_Price_list = []
     Order_Date_list = []
     Line_Flag_list = []
+    Delivery_Date_list = []
 
     for index in range(0, list_len):
         Register_No_list.append(response_values_List[index]["Register_No"])
@@ -509,6 +510,7 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
         Unit_Price_list.append(response_values_List[index]["Unit_Price"])
         Order_Date_list.append(response_values_List[index]["Order_Date"])
         Line_Flag_list.append(response_values_List[index]["Line_Flag"])
+        Delivery_Date_list.append(response_values_List[index]["Delivery_Date"])
 
     response_values_dict = {
         "Register_No": Register_No_list,
@@ -527,7 +529,8 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict, window: CTk, headers:
         "Currency_Code": Currency_Code_list,
         "Unit_Price": Unit_Price_list,
         "Order_Date": Order_Date_list,
-        "Line_Flag": Line_Flag_list}
+        "Line_Flag": Line_Flag_list,
+        "Delivery_Date": Delivery_Date_list}
     
     if list_len == 1:
         HQ_Item_Transport_Register_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
@@ -615,19 +618,19 @@ def Get_Items_df(Configuration: dict, window: CTk, headers: dict, tenant_id: str
 
     # Substitutions list
     mask_substitution = Items_df["Substitutes_Exist_NUS"] == True
-    Substitution_df = Items_df[mask_substitution]
+    Substitution_df = DataFrame(Items_df[mask_substitution])
     Substitution_Item_list = Substitution_df["No"].to_list()
     Substitution_Item_list = list(set(Substitution_Item_list))
 
     # BOL Items list
     mask_BOM = Items_df["AssemblyBOM"] == True
-    BOM_df = Items_df[mask_BOM]
+    BOM_df = DataFrame(Items_df[mask_BOM])
     BOM_Item_list = BOM_df["No"].to_list()
     BOM_Item_list = list(set(BOM_Item_list))
 
     # BEU Set Item List
     mask_BEU_Set = Items_df["BEU_Set_NUS"] == True
-    BEU_Set_df = Items_df[mask_BEU_Set]
+    BEU_Set_df = DataFrame(Items_df[mask_BEU_Set])
     BEU_Set_Item_list = BEU_Set_df["No"].to_list()
     BEU_Set_Item_list = list(set(BEU_Set_Item_list))
 

@@ -138,9 +138,14 @@ def Get_Widget_Input_row(Settings: dict, Configuration:dict, window: CTk, Frame:
     elif Field_Type == "Input_CheckBox":
         Input_Check_Box = Elements.Get_CheckBox(Configuration=Configuration, Frame=Frame_Value)
         Input_Check_Box.pack(side="left", fill="x", expand=True)
-    elif Field_Type == "Entry_DropDown":
+    elif (Field_Type == "Date_Picker") or (Field_Type == "Color_Picker"):
         Field_Normal = Elements.Get_Entry_Field(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Value, Field_Size="Normal", Validation=Validation)
-        Button_Drop_Down = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Value, Icon_Name="chevron-down", Icon_Size="Entry_DropDown", Button_Size="Tiny")
+        if Field_Type == "Date_Picker":
+            Button_Drop_Down = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Value, Icon_Name="calendar-days", Icon_Size="Entry_DropDown", Button_Size="Tiny")
+        elif Field_Type == "Color_Picker":
+            Button_Drop_Down = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame_Value, Icon_Name="paintbrush", Icon_Size="Entry_DropDown", Button_Size="Tiny")
+        else:
+            pass
         Field_Normal.configure(width = Field_Normal._current_width - Button_Drop_Down._current_width)
         Field_Normal.pack(side="left", fill="x", expand=True)
         Button_Drop_Down.pack(side="left", fill="none", expand=True)

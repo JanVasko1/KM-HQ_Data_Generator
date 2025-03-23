@@ -312,7 +312,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             # Delivery Date Fields
             for Delivery in PO_Delivery_Number_list:
                 # Fields
-                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Entry_DropDown")  
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Date_Picker", Validation="Date")  
                 Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                 Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
                 Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

@@ -74,16 +74,15 @@ def Generate_BB_Lines(Settings: dict,
                 BB_Items_Variable.set(value="Selected")
                 BB_Item_Window.destroy()
 
-
             # TopUp Window
             BB_Items_Window_geometry = (520, 500)
             Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
             Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Items_Window_geometry[0] //2
             Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Items_Window_geometry[1] //2
-            BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Items.", max_width=BB_Items_Window_geometry[0], max_height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+            BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Service ID.", max_width=BB_Items_Window_geometry[0], max_height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
             # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Items of BackBone Billing Invoice.", GUI_Level_ID=3)
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Service ID.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Service ID of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Vendor_Service_ID
@@ -110,7 +109,7 @@ def Generate_BB_Lines(Settings: dict,
             Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
             Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
             Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Items(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Items selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Service ID selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
             Button_Confirm_Var.wait_variable(BB_Items_Variable)
 
             # Items Description

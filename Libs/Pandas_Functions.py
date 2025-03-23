@@ -34,14 +34,13 @@ def Dataframe_Set_Value_on_Condition(Set_df: DataFrame, conditions: list, Set_Co
 
 def Dataframe_Apply_Value_from_df2(row: Series, Fill_Column: str, Compare_Column_df1: list, Compare_Column_df2: list, Search_df: DataFrame, Search_Column: str):
     conditions = [Search_df[Compare_Column_df2[index]] == row[Compare_Column_df1[index]] for index, value in enumerate(Compare_Column_df1)]
-    combined_condition = Series([True] * len(Search_df))
+    combined_condition = Series([True] * len(Search_df), index=Search_df.index)
     for condition in conditions:
         combined_condition &= condition
-    new_val = Search_df.loc[combined_condition, f"{Search_Column}"].values
+    new_val = Search_df.loc[combined_condition, f"{Search_Column}"].to_numpy()
     if len(new_val) > 0:
         return new_val[0]
-    else:
-        return row[f"{Fill_Column}"]
+    return row[f"{Fill_Column}"]
     
 def Dataframe_Insert_Row_at_position(Insert_DataFrame: DataFrame, Insert_At_index: int, New_Row: dict) -> DataFrame:
     # Insert the new row

@@ -31,10 +31,10 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
 
     # Filter Dataframes by Purchase Order
     mask_HQ_Item_Tr_Reg = HQ_Item_Transport_Register_df["Document_No"] == Purchase_Order
-    HQ_Item_Tr_Reg_Filtered = HQ_Item_Transport_Register_df[mask_HQ_Item_Tr_Reg]
+    HQ_Item_Tr_Reg_Filtered = DataFrame(HQ_Item_Transport_Register_df[mask_HQ_Item_Tr_Reg])
 
     mask_Purchase_Header = Purchase_Headers_df["No"] == Purchase_Order
-    Purchase_Headers_df_Filtered = Purchase_Headers_df[mask_Purchase_Header]
+    Purchase_Headers_df_Filtered = DataFrame(Purchase_Headers_df[mask_Purchase_Header])
 
     # --------------------------------------------- Confirmation Number --------------------------------------------- #
     if Can_Continue == True:
@@ -110,7 +110,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict, window: CTk, Pur
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generation Date",  Field_Type="Entry_DropDown")  
+            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generation Date",  Field_Type="Date_Picker", Validation="Date")  
             Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
             Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
             Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

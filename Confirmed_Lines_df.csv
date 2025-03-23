@@ -1,6 +1,0 @@
-;line_item_id;supplier_aid;buyer_aid;description_long;quantity;order_unit;price_amount;price_line_amount;delivery_start_date;delivery_end_date;ordered_quantity;supplier_order_item_id;item_category;discontinued;set;bom;bom_with_delivery_group;cancelled;Exported_Line_No
-0;100;A2X0027;A2X0027;bizhub C754e;2;C62;7669.38;15338.76;;;2;000020;YN01;False;False;False;False;False;10000
-1;100;80217;;Power Supply Cable;2;C62;0.0;0.0;;;2;000030;YNF1;False;False;False;False;False;10000
-2;100;996922-0000000000045;;Documentation;6;C62;0.0;0.0;;;2;000040;YNF1;False;False;False;False;False;10000
-3;200;A0TH050;A0HUWY1;DF-617 Doc.Feed f. C220 280 360;3;C62;57.26;171.79;;;3;000050;TAPA;False;False;False;False;False;20000
-4;300;AA2M021;AA2M021;bizhub C250i //created by JCV (for OPS purpose);5;C62;120.36;601.79;;;5;000070;YN01;False;False;False;False;False;30000

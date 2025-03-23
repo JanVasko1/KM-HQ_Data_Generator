@@ -29,11 +29,11 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict, window
 
             # Filter Dataframes for single Delivery
             mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
-            Delivery_Lines_df_Filtered = Delivery_Lines_df[mask_Delivery]
+            Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
             Total_Items_Qty = int(Delivery_Lines_df_Filtered["quantity"].sum())
 
             mask_Delivery = Package_Header_df["Delivery_No"] == Delivery_Number
-            Package_Header_df_Filtered = Package_Header_df[mask_Delivery]
+            Package_Header_df_Filtered = DataFrame(Package_Header_df[mask_Delivery])
             Package_list = Package_Header_df_Filtered["package_id"].to_list()
             Delivery_Package_Count = len(Package_list)
 
@@ -189,14 +189,14 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict, window
     # Loop of Each Delivery Separate
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Package_Lines_df["Delivery_No"] == Delivery_Number
-        Delivery_Filtered_df = Package_Lines_df[mask_Delivery]
+        Delivery_Filtered_df = DataFrame(Package_Lines_df[mask_Delivery])
 
         Package_list = Delivery_Filtered_df["package_id"].to_list()
         Package_list = list(set(Package_list))
         Package_list.sort()
         for Package_Index, Package_Number in enumerate(Package_list):
             mask_Package = Delivery_Filtered_df["package_id"] == Package_Number
-            Delivery_Package_Filtered_df = Delivery_Filtered_df[mask_Package]
+            Delivery_Package_Filtered_df = DataFrame(Delivery_Filtered_df[mask_Package])
 
             # Update Measurements for whole Package
             package_total_weight = Delivery_Package_Filtered_df["Package_Line_Total_Weight"].sum()

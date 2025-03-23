@@ -38,7 +38,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
     Packages_Count_List = []
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
-        Delivery_Lines_df_Filtered = Delivery_Lines_df[mask_Delivery]
+        Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
         Qty_sum = Delivery_Lines_df_Filtered["quantity"].sum()
 
         # Package Count 
@@ -174,7 +174,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
     # Loop of Each Delivery Separate
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Package_Header_df["Delivery_No"] == Delivery_Number
-        Package_Header_df_Filtered = Package_Header_df[mask_Delivery]
+        Package_Header_df_Filtered = DataFrame(Package_Header_df[mask_Delivery])
         
         # Prepare Json for each line of DataFrame
         PO_Package_Lines = []

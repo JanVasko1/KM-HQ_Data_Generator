@@ -111,7 +111,7 @@ def PO_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Invoice_Date_Method_Frame_Var, values=Posting_Date_Method_List, command=lambda Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Invoice_Date", "Method"], Information=Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
-    INV_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    INV_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     INV_Fixed_Date_Frame_Var = INV_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_INV_Fixed_Date_Frame_Var = INV_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     INV_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -289,7 +289,7 @@ def BB_Items(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
 
     # ------------------------- Main Functions -------------------------#
     # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Items", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Items in Invoice.", GUI_Level_ID=GUI_Level_ID)
+    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Vendor Service Functions", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Service Functions in Invoice.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - Items Method
@@ -299,9 +299,9 @@ def BB_Items(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, 
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Items_Method_Frame_Var, values=BB_Items_Method_List, command=lambda BB_Items_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=BB_Items_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Items", "Method"], Information=BB_Items_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Items
-    BB_Fixed_Items_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Items", Field_Type="Input_Normal") 
+    BB_Fixed_Items_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Service ID", Field_Type="Input_Normal") 
     BB_Fixed_Items_Frame_Var = BB_Fixed_Items_Frame.children["!ctkframe3"].children["!ctkentry"]
-    BB_Fixed_Items_Frame_Var.configure(placeholder_text="Manual Items", placeholder_text_color="#949A9F")
+    BB_Fixed_Items_Frame_Var.configure(placeholder_text="Manual Service ID", placeholder_text_color="#949A9F")
     BB_Fixed_Items_Frame_Var.bind("<FocusOut>", lambda BB_Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Items", "Fixed_Options", "Fix_Item"], Information=BB_Fixed_Items_Frame_Var.get()))
     Data_Functions.Entry_field_Insert(Field=BB_Fixed_Items_Frame_Var, Value=BB_Fixed_Items)
 
@@ -392,7 +392,7 @@ def BB_Posting_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Invoice_Date_Method_Frame_Var, values=BB_Posting_Date_Method_List, command=lambda BB_Invoice_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=BB_Posting_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Invoice_Date", "Method"], Information=BB_Invoice_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
-    BB_PD_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    BB_PD_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     BB_PD_Fixed_Date_Frame_Var = BB_PD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     BB_Button_INV_Fixed_Date_Frame_Var = BB_PD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     BB_PD_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -450,7 +450,7 @@ def BB_Order_reference(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Order_date_Method_Frame_Var, values=BB_Order_date_Method_List, command=lambda BB_Order_date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=BB_Order_date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Order_reference", "Order_date", "Method"], Information=BB_Order_date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Order_date
-    BB_OD_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    BB_OD_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     BB_OD_Fixed_Date_Frame_Var = BB_OD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_BB_OD_Fixed_Date_Frame_Var = BB_OD_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     BB_OD_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

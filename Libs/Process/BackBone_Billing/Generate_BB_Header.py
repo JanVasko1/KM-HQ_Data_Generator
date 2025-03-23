@@ -113,7 +113,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Entry_DropDown")  
+            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Date_Picker", Validation="Date")  
             Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
             Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
             Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

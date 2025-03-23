@@ -69,13 +69,13 @@ def Generate_PO_CON_Lines(Settings: dict,
     
     # Filter Dataframes by Purchase Order
     mask_HQ_Item_Tr_Reg = HQ_Item_Transport_Register_df["Document_No"] == Purchase_Order
-    HQ_Item_Tr_Reg_Filtered = HQ_Item_Transport_Register_df[mask_HQ_Item_Tr_Reg]    
+    HQ_Item_Tr_Reg_Filtered = DataFrame(HQ_Item_Transport_Register_df[mask_HQ_Item_Tr_Reg])
 
     mask_Machines = Items_df["Material_Group_NUS"] == "0100"
-    Machines_df = Items_df[mask_Machines]  
+    Machines_df = DataFrame(Items_df[mask_Machines])
 
     mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
-    Purchase_Lines_df_Filtered = Purchase_Lines_df[mask_Purch_Line] 
+    Purchase_Lines_df_Filtered = DataFrame(Purchase_Lines_df[mask_Purch_Line])
 
     # --------------------------------------------- Items Definition --------------------------------------------- #
     Exported_Items_list = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
@@ -314,7 +314,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                 elif Free_Method == "Connected Items":
                     Connected_Items_mask1 = Items_Connected_Items_df["Main_Item_No"] == Machine
                     Connected_Items_mask2 = Items_Connected_Items_df["Connection_Type"] == "Free of Charge"
-                    Connected_Items_Filtered = Items_Connected_Items_df[Connected_Items_mask1 & Connected_Items_mask2]
+                    Connected_Items_Filtered = DataFrame(Items_Connected_Items_df[Connected_Items_mask1 & Connected_Items_mask2])
 
                     for Connected_Free_row in Connected_Items_Filtered.iterrows():
                         Free_Item_row_Series = Series(Connected_Free_row[1])
@@ -419,7 +419,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             # Find Machines
             Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
             mask_Machines = Confirmed_Lines_df["Material_Group_help"] == "0100"
-            Machines_df = Confirmed_Lines_df[mask_Machines]  
+            Machines_df = DataFrame(Confirmed_Lines_df[mask_Machines])
             Machines_df = Machines_df.sort_index(ascending=False)
             Confirmed_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
 

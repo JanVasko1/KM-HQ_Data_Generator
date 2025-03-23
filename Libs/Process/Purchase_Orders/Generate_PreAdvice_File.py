@@ -57,7 +57,7 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
             Frame_Main.configure(bg_color = "#000001")
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="PreAdvice Delivery Date",  Field_Type="Entry_DropDown")  
+            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="PreAdvice Delivery Date",  Field_Type="Date_Picker", Validation="Date")  
             Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
             Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
             Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -89,12 +89,21 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
 
     # --------------------------------------------- Delete unnecessary Keys --------------------------------------------- #
     for PreAdvice_index, PreAdvice in enumerate(PO_PreAdvices):
+        # Header
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["control_info"]["picking_date"]
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["control_info"]["trans_planning_date"]
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["control_info"]["loading_date"]
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["control_info"]["planned_gi_date"]
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["carrier_id"]
         del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["packages_info"]
+
+        # Lines
+        Lines_Count = len(PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"])
+        for line in range(0, Lines_Count):
+            try:
+                del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"][line]["serial_numbers"]
+            except:
+                pass
 
         bolnr = PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["remarks"]["bolnr"]
         PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["remarks"]["exidv2"] = ""

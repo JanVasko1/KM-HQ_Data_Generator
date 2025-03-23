@@ -187,7 +187,7 @@ def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Delivery_Date_Method_Frame_Var, values=Delivery_Dates_Method_List, command=lambda Delivery_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Delivery_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Method"], Information=Delivery_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
-    DEL_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    DEL_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     DEL_Fixed_Date_Frame_Var = DEL_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_DEL_Fixed_Date_Frame_Var = DEL_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     DEL_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

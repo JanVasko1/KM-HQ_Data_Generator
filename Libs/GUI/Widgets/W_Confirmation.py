@@ -68,7 +68,7 @@ def PO_Generation_Date(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Generation_Date_Method_Frame_Var, values=Generation_Date_Method_List, command=lambda Generation_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Generation_Date_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Generation_Date", "Method"], Information=Generation_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
 
     # Field - Fixed Date
-    Gen_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Entry_DropDown", Validation="Date") 
+    Gen_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
     Gen_Fixed_Date_Frame_Var = Gen_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Gen_Fixed_Date_Frame_Var = Gen_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Gen_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -296,7 +296,7 @@ def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Frame_Body = Frame_Main.children["!ctkframe2"]
 
     # Field - On-Hand Date
-    Man_ONH_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH Date", Field_Type="Entry_DropDown", Validation="Date") 
+    Man_ONH_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONH Date", Field_Type="Date_Picker", Validation="Date") 
     Man_ONH_Date_Frame_Var = Man_ONH_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Man_ONH_DateFrame_Var_Var = Man_ONH_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONH_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -306,7 +306,7 @@ def PO_ATP_Fixed_Dates(Settings: dict, Configuration: dict, window: CTk, Frame: 
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Man_ONH_DateFrame_Var_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
 
     # Field - Date To
-    Man_ONB_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB Date", Field_Type="Entry_DropDown", Validation="Date")
+    Man_ONB_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="ONB Date", Field_Type="Date_Picker", Validation="Date")
     Man_ONB_Date_Frame_Var = Man_ONB_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
     Button_Man_ONB_Date_Frame_Var_Var = Man_ONB_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
     Man_ONB_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")

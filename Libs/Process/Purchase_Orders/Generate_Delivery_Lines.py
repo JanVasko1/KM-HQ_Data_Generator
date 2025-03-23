@@ -286,7 +286,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     if Can_Continue == True:
         # Add Material Group to every line
         mask_Machines = Delivery_Lines_df["Material_Group_NUS"] == "0100"
-        Delivery_Machine_df = Delivery_Lines_df[mask_Machines]  
+        Delivery_Machine_df = DataFrame(Delivery_Lines_df[mask_Machines]) 
         if Delivery_Machine_df.empty:
             pass
         else:
@@ -322,7 +322,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     # --------------------------------------------- Calculate Delivery Lines  --------------------------------------------- #
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
-        Delivery_Lines_df_Filtered = Delivery_Lines_df[mask_Delivery]
+        Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
 
         Line_Counter = 1
         for row in Delivery_Lines_df_Filtered.iterrows():
@@ -341,7 +341,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     # Loop of Each Delivery Separate
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
-        Delivery_Lines_df_Filtered = Delivery_Lines_df[mask_Delivery]
+        Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
         
         # Prepare Json for each line of DataFrame
         PO_Delivery_Lines = []
@@ -383,6 +383,5 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
         
         # Add Lines to proper Delivery Header
         PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_item_list"] = PO_Delivery_Lines
-
 
     return PO_Deliveries, Delivery_Lines_df

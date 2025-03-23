@@ -75,7 +75,7 @@ def Export_NAV_Folders(NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: 
 
     # HQ Communication Filter
     HQ_mask = HQ_Communication_Setup_df["HQ_Vendor_No"] == Buy_from_Vendor_No
-    HQ_Communication_Setup_df = HQ_Communication_Setup_df[HQ_mask]
+    HQ_Communication_Setup_df = DataFrame(HQ_Communication_Setup_df[HQ_mask])
     HQ_Path = str(HQ_Communication_Setup_df.iloc[0][HQ_File_Type_Path])
     # BUG --> Not working Export to Server
     # Export
