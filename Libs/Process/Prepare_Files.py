@@ -192,8 +192,8 @@ def Process_Purchase_Orders(Settings: dict,
                 Package_Lines_df_Filtered = DataFrame(Package_Lines_df[mask_Delivery])
 
                 Delivery_total_item_num = Package_Lines_df_Filtered.shape[0]
-                Delivery_total_weight = round(number=Package_Lines_df_Filtered["Package_Line_Total_Weight"].sum(), ndigits=2)
-                Delivery_total_volume = round(number=Package_Lines_df_Filtered["Package_Line_Total_Volume"].sum(), ndigits=2)
+                Delivery_total_weight = round(number=float(Package_Lines_df_Filtered["Package_Line_Total_Weight"].sum()), ndigits=2)
+                Delivery_total_volume = round(number=float(Package_Lines_df_Filtered["Package_Line_Total_Volume"].sum()), ndigits=2)
 
                 PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["total_item_num"] = Delivery_total_item_num
                 PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_summary"]["total_weight"] = Delivery_total_weight

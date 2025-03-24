@@ -1,0 +1,16 @@
+{
+    "Logistic_Process": {
+        "Used": "",
+        "Process_List": []
+    },
+    "Purchase_Order": {
+        "Purchase_Order_List": []
+    },
+    "BackBone_Billing": {
+        "Used": "",
+        "Vendors_List": []
+    },
+    "Purchase_Return_Order": {
+        "Purchase_Return_Order_List": []
+    }
+}

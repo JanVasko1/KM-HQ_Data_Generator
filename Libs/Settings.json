@@ -3,7 +3,11 @@
         "General": {
             "Template": {
                 "Last_Used": "",
-                "Templates_List": []
+                "Templates_List": [
+                    "All_PO_Process",
+                    "BHN_DDL Consumable",
+                    "Only_Invoice"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -48,11 +52,11 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": false
+                "Download_Folder": true
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -132,6 +136,7 @@
                             "Methods_List": [
                                 "All On-Hand",
                                 "All On-Board",
+                                "All BackOrder",
                                 "Line Random",
                                 "Ratio"
                             ],
@@ -199,7 +204,7 @@
             "CPDI": {
                 "Use": false,
                 "Delivery_select": {
-                    "Method": "Prompt",
+                    "Method": "All Deliveries",
                     "Methods_List": [
                         "Fixed",
                         "All Deliveries",
@@ -210,7 +215,7 @@
                     }
                 },
                 "Level_Provided": {
-                    "Method": "Fixed",
+                    "Method": "Purchase Order",
                     "Methods_List": [
                         "Fixed",
                         "Purchase Order",
@@ -222,7 +227,7 @@
                     }
                 },
                 "Status": {
-                    "Method": "Prompt",
+                    "Method": "All Statuses",
                     "Methods_List": [
                         "Fixed",
                         "All Statuses",
@@ -234,7 +239,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -251,22 +256,22 @@
                         "To": 0
                     },
                     "Shift_Options": {
-                        "Generation_Date_Shift_by": -5,
+                        "Generation_Date_Shift_by": -3,
                         "Delivery_Date_Shift_by": -2
                     }
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
                         "Prompt"
                     ],
                     "Random_Options": {
-                        "Random_Max_count": 3
+                        "Random_Max_count": 6
                     },
                     "Fixed_Options": {
                         "Count": 3
@@ -319,8 +324,8 @@
                         "Fix_Date": "2025-03-20"
                     },
                     "Random_Options": {
-                        "From": 1,
-                        "To": 5
+                        "From": 3,
+                        "To": 10
                     }
                 },
                 "Carrier_ID": {
@@ -487,7 +492,7 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Random",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -549,7 +554,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -673,7 +678,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Credit_Memo": {

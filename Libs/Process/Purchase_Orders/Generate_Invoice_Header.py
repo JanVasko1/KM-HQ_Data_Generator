@@ -213,9 +213,9 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
             # Invoice Date Fields
-            for Invoice in PO_Invoice_Number_list:
+            for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 # Fields
-                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Invoice}",  Field_Type="Date_Picker", Validation="Date")  
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Invoice_Number}",  Field_Type="Date_Picker", Validation="Date")  
                 Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                 Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
                 Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
@@ -255,7 +255,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
         elif Currency_Method == "Purchase Order":
             PO_Currency = Purchase_Headers_df_Filtered.iloc[0]["Currency_Code"]
         elif Currency_Method == "From Confirmation":
-            PO_Currency = Confirmed_Lines_df.iloc[0]["Currency_Code"]
+            PO_Currency = Confirmed_Lines_df.iloc[0]["price_currency"]
         else:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             Can_Continue = False

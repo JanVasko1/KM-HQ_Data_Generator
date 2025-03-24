@@ -32,7 +32,7 @@ def Load_Configuration() -> dict:
     return Configuration
 
 def Load_Documents() -> dict:
-    File = open(file=Data_Functions.Absolute_path(relative_path=f"Operational\\Documents.json"), mode="r", encoding="UTF-8", errors="ignore")
+    File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Documents.json"), mode="r", encoding="UTF-8", errors="ignore")
     Configuration = json.load(fp=File)
     File.close()
     return Configuration

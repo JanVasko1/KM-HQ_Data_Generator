@@ -1,10 +1,11 @@
 {
     "Global_Appearance": {
         "Window": {
-            "Theme": "Dark",
+            "Theme": "system",
             "Theme_List": [
                 "Dark",
-                "Light"
+                "Light",
+                "system"
             ],
             "Colors": {
                 "Accent": {

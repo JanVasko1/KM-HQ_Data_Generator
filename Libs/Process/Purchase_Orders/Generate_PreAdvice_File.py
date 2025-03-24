@@ -86,7 +86,6 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
         # Add to Preadvice List
         PO_PreAdvices.append(PO_PreAdvice)
 
-
     # --------------------------------------------- Delete unnecessary Keys --------------------------------------------- #
     for PreAdvice_index, PreAdvice in enumerate(PO_PreAdvices):
         # Header
@@ -100,6 +99,11 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
         # Lines
         Lines_Count = len(PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"])
         for line in range(0, Lines_Count):
+            # Delivery_Start_Data and Delivery_End_Date
+            PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"][line]["delivery_date"]["delivery_start_date"]  = PreAdvice_Date
+            PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"][line]["delivery_date"]["delivery_end_date"] = PreAdvice_Date
+
+            # Serial Number
             try:
                 del PO_PreAdvices[PreAdvice_index]["dispatchnotification"]["dispatchnotification_item_list"][line]["serial_numbers"]
             except:

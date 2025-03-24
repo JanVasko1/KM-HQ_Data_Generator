@@ -4,7 +4,7 @@ import json
 from glob import glob
 
 import pywinstyles
-from customtkinter import CTk, CTkFrame, CTkButton, CTkRadioButton, StringVar, BooleanVar, IntVar, set_appearance_mode
+from customtkinter import CTk, CTkFrame, CTkButton, CTkOptionMenu, StringVar, BooleanVar, IntVar, set_appearance_mode
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 from tkhtmlview import HTMLLabel
 from markdown import markdown
@@ -86,16 +86,20 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
         Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)
         # Define Name for new Template
         File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation", GUI_Level_ID=1)
+        File_Name = File_Name.replace(" ", "_")
 
         if File_Name == None:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
+            # Update Variable
+            global Actual_Template_Variable
+            # Actual_Template_Variable.set(value=File_Name)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name, User_Change=False)
             Template_List.append(File_Name)
             Template_List = list(set(Template_List))
-            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
+            Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List, User_Change=False)
 
-            # Save My_Team Dict into Downloads Folder
+            # Save Template to Operational folder
             Actual_Template_Settings = Settings["0"]["HQ_Data_Handler"]
             Save_Template_dict = {
                 "Type": "Template",
@@ -112,11 +116,14 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
 
     def Apply_Template(Selected_Value: str, Settings: dict) -> None:
         global Actual_Template_Variable
+
+        # Save actual Template
+        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value, User_Change=False)
+
+        # Load File
         Load_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=Documents, window=window, Variable=Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
-        Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, window=window, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")       
-        # TODO --> Load actual page --> to update all GUI 
+        Data_Functions.Import_Data(Settings=Settings, Configuration=Configuration, window=window, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite", User_Change=False)
 
     def Export_Templates() -> None:
         Source_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template")
@@ -191,7 +198,7 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
                     # Update Template Variable if needed
                     if Delete_Label == Actual_Template_Variable.get():
                         Actual_Template_Variable.set(value="")
-                        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="")
+                        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="", User_Change=False)
                     else:
                         pass
 
@@ -246,7 +253,6 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
         Button_Reject_Var.configure(text="Reject", command = lambda:Delete_Activity_Correct_Close())
         Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Reject_Var, message="Dont process, closing Window.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
-
     # ------------------------- Main Functions -------------------------#
     Status_Frame = Elements.Get_Frame(Configuration=Configuration, Frame=Frame, Frame_Size="Work_Area_Columns", GUI_Level_ID=0)
     Status_Frame.configure(width=15)
@@ -270,7 +276,7 @@ def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict
     # Actual Template
     Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame)
     Actual_Template_Frame.configure(variable=Actual_Template_Variable)
-    Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Actual_Template_Frame_Var: Apply_Template(Selected_Value=Actual_Template_Frame_Var, Settings=Settings), GUI_Level_ID=0)
+    Actual_Template_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Actual_Template_Frame, values=Template_List, command=lambda Selected_Value: Apply_Template(Selected_Value=Selected_Value, Settings=Settings), GUI_Level_ID=0)
 
     # Theme Change - Button
     Icon_Theme = Elements.Get_Button_Icon(Configuration=Configuration, Frame=Frame, Icon_Name="sun-moon", Icon_Size="Header", Button_Size="Picture_Transparent")

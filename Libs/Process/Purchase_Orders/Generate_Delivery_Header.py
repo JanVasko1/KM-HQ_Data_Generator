@@ -66,7 +66,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Delivery_Count = Fixed_Count
         elif DEL_Count_Method == "Random":
             if DEL_Assignment_Method == "Full random":
-                Sum_Qty = Confirmed_Lines_df["quantity"].sum()
+                Sum_Qty = int(Confirmed_Lines_df["quantity"].sum())
                 if DEL_FOCH_with_Main == True:
                     # TODO --> Minus FOCH Qty from whole Sum_Qty --> not to separate them on Delivery later 
                     pass 
@@ -135,7 +135,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
     else:
         pass
 
-    Sum_Confirmed_Lines = Confirmed_Lines_df["quantity"].sum()
+    Sum_Confirmed_Lines = int(Confirmed_Lines_df["quantity"].sum())
     if Delivery_Count > Sum_Confirmed_Lines:
         Delivery_Count = Sum_Confirmed_Lines
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)

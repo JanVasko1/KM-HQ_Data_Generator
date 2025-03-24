@@ -479,7 +479,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     # Selected Purchase Orders List
     PO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_One_PO, Field_Frame_Type="Half_size" , Label="Purchase Order", Field_Type="Input_Normal")  
     PO_Selected_Frame_Var = PO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
-    PO_Selected_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[PO_Selected_Frame_Var.get()]))
+    PO_Selected_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[str(PO_Selected_Frame_Var.get()).replace(" ", "")]))
     PO_Selected_Frame_Var.configure(placeholder_text="Purchase Order Number", placeholder_text_color="#949A9F")
 
     # Buttons - Generate
@@ -516,7 +516,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
 
     # ---------------- BackBone Billing Tab -------- #
     Generate_BB_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Use"]
-    Generate_BB_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["PDF"]["Generate"]
+    Generate_BB_Invoice_PDF =  Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["PDF"]["Generate"]
     Generate_BB_IAL = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["IAL"]["Use"]
 
     Generate_BB_INV_Variable = BooleanVar(master=Frame, value=Generate_BB_Invoice, name="Generate_BB_INV_Variable")
@@ -638,7 +638,7 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     # Selected Purchase Orders List
     PRO_Selected_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_PRO, Field_Frame_Type="Half_size" , Label="Selected PROs", Field_Type="Input_Normal")  
     PRO_Selected_Frame_Var = PRO_Selected_Frame.children["!ctkframe3"].children["!ctkentry"]
-    PRO_Selected_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[PRO_Selected_Frame_Var.get()]))
+    PRO_Selected_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[str(PRO_Selected_Frame_Var.get()).replace(" ", "")]))
     PRO_Selected_Frame_Var.configure(placeholder_text="Purchase Ret. Orders", placeholder_text_color="#949A9F")
 
     # Buttons

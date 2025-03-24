@@ -120,33 +120,40 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, 
                 ATP_ONB_week = Defaults_Lists.Date_str_to_Week_str(Date_str=ATP_ONB_Date, Format=Date_format)
                 Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
 
-            # Create ATP Dictionary
-            PO_ATP_Lines = []
-            Lines_ATP_df["quantity"] = Lines_ATP_df["quantity"].round(2)
-            for row in Lines_ATP_df.iterrows():
-                row_Series = Series(row[1])
-                Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Confirmation_ATP")
+            elif ATP_Quantity_Method != "All BackOrder":
+                # Create ATP Dictionary
+                PO_ATP_Lines = []
+                Lines_ATP_df["quantity"] = Lines_ATP_df["quantity"].round(2)
+                for row in Lines_ATP_df.iterrows():
+                    row_Series = Series(row[1])
+                    Current_line_json = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Confirmation_ATP")
 
-                Current_line_json["quantity"] = row_Series["quantity"]
-                Current_line_json["date"] = row_Series["date"]
-                Current_line_json["stock_origin"] = row_Series["stock_origin"]
+                    Current_line_json["quantity"] = row_Series["quantity"]
+                    Current_line_json["date"] = row_Series["date"]
+                    Current_line_json["stock_origin"] = row_Series["stock_origin"]
 
-                PO_ATP_Lines.append(Current_line_json)
-                del Current_line_json
+                    PO_ATP_Lines.append(Current_line_json)
+                    del Current_line_json
 
-            # Assign Values into Lines_dict
-            PO_Confirmation_Lines[Item_Line_index]["schedules"] = PO_ATP_Lines
+                # Assign Values into Lines_dict
+                PO_Confirmation_Lines[Item_Line_index]["schedules"] = PO_ATP_Lines
 
-            if ATP_ONH_Date != "":
-                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONH_Date
-                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONH_Date
+                # Add information to line element
+                if ATP_ONH_Date != "":
+                    PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONH_Date
+                    PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONH_Date
+                else:
+                    PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONB_Date
+                    PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONB_Date
+                
+                del Lines_ATP_df
             else:
-                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_start_date"] = ATP_ONB_Date
-                PO_Confirmation_Lines[Item_Line_index]["delivery_date"]["delivery_end_date"] = ATP_ONB_Date
-            
-            del Lines_ATP_df
+                # If all Backordered delete whole Schedules information
+                try:
+                    del PO_Confirmation_Lines[Item_Line_index]["schedules"] 
+                except:
+                    pass
     else:
-        # TODO --> search how it looks without ATP in real document
         pass
 
     return PO_Confirmation_Lines

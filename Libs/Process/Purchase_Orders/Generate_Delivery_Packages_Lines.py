@@ -199,8 +199,8 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict, window
             Delivery_Package_Filtered_df = DataFrame(Delivery_Filtered_df[mask_Package])
 
             # Update Measurements for whole Package
-            package_total_weight = Delivery_Package_Filtered_df["Package_Line_Total_Weight"].sum()
-            package_total_volume = Delivery_Package_Filtered_df["Package_Line_Total_Volume"].sum()
+            package_total_weight = float(Delivery_Package_Filtered_df["Package_Line_Total_Weight"].sum())
+            package_total_volume = float(Delivery_Package_Filtered_df["Package_Line_Total_Volume"].sum())
 
             PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["packages_info"][Package_Index]["package_total_weight"] = package_total_weight
             PO_Deliveries[Delivery_Index]["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["packages_info"][Package_Index]["package_total_volume"] = package_total_volume

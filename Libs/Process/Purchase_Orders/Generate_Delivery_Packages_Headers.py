@@ -39,7 +39,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
         Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
-        Qty_sum = Delivery_Lines_df_Filtered["quantity"].sum()
+        Qty_sum = int(Delivery_Lines_df_Filtered["quantity"].sum())
 
         # Package Count 
         Packages_Count = random.randint(a=1, b=Qty_sum)
