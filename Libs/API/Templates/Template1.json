@@ -48,7 +48,7 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": false
+                "Download_Folder": true
             },
             "Confirmation": {
                 "Purchase_Order": {

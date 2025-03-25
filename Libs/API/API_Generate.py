@@ -1,5 +1,6 @@
-import fastapi as FastAPI
+from fastapi import FastAPI
 from pydantic import BaseModel
+import json
 
 import Libs.Data_Functions as Data_Functions
 import Libs.Defaults_Lists as Defaults_Lists
@@ -41,7 +42,6 @@ class PurchaseReturnOrder(BaseModel):
     Template: str
     Purchase_Return_Orders_List: list
 
-# TODO --> API --> oprogramovat vvše v Downloaderu "když window = None" --> pak jde o API a nesmí používat frontEnd
 # TODO --> API --> ErrorHandler
 # TODO --> API --> Response structure
 
@@ -54,7 +54,8 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
         pass
     else:
         # Load selected Template to Settings
-        Settings = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        Settings = json.load(fp=File)
 
         # Process Data
         Downloader.Download_Data_Purchase_Orders(Settings=Settings, 
@@ -71,7 +72,7 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
                                                 tenant_id=Request_PO.tenant_id,
                                                 GUI=False)
 
-        return 
+        return True
 
 # BB Invoice
 @app.post("/v1/data/global/bb-invoice/")
@@ -81,7 +82,8 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
         pass
     else:
         # Load selected Template to Settings
-        Settings = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_BB_INV.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_BB_INV.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        Settings = json.load(fp=File)
 
         # Process Data
         Downloader.Download_Data_BackBoneBilling(Settings=Settings, 
@@ -98,7 +100,7 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
                                                 tenant_id=Request_BB_INV.tenant_id,
                                                 GUI=False)
 
-        return 
+        return True
 
 # Purchase Return Order
 @app.post("/v1/data/global/purchase-return-order/")
@@ -108,7 +110,8 @@ async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
         pass
     else:
     # Load selected Template to Settings
-        Settings = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PRO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PRO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        Settings = json.load(fp=File)
 
         # Process Data
         Downloader.Download_Data_Purchase_Orders(Settings=Settings, 
@@ -125,4 +128,4 @@ async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
                                                 tenant_id=Request_PRO.tenant_id,
                                                 GUI=False)
 
-        return 
+        return True

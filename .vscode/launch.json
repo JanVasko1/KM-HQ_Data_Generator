@@ -11,6 +11,17 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "FastAPI - Orders",
+            "justMyCode": false,
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "Libs.API.API_Generate:app",
+                "--reload"
+            ]
         }
     ]
 }

@@ -33,7 +33,8 @@ def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: 
         'Content-Type': 'application/json'}
 
     Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
-    
+    print(Companies_list)
+
     if len(Companies_list) > 0:
         # Update Option List
         Companies_Frame_Var.configure(values=Companies_list)
@@ -124,7 +125,10 @@ def Get_Orders_List(Configuration: dict|None, window: CTk|None, NUS_version: str
 def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list, client_id: str|None, client_secret: str|None, tenant_id: str|None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
-    Progress_Bar.configure(determinate_speed = round(number=50 / 23, ndigits=3), progress_color="#517A31")
+    if GUI == True:
+        Progress_Bar.configure(determinate_speed = round(number=50 / 23, ndigits=3), progress_color="#517A31")
+    else:
+        pass
     Can_Process = True
 
     Purchase_Headers_df = DataFrame()
@@ -545,7 +549,10 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
 def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, client_id: str|None, client_secret: str|None, tenant_id: str|None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
-    Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
+    if GUI == True:
+        Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
+    else:
+        pass
     Can_Process = True
 
     HQ_Communication_Setup_df = DataFrame()
