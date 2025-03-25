@@ -670,8 +670,8 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Companies_Frame.pack(side="left", fill="none", expand=False, padx=(0, 5), pady=5)
 
     Progress_Bar.pack(side="top", fill="x", expand=True, padx=5, pady=(5,0))
-    Frame_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    Frame_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Frame_Column_A.pack(side="left", fill="both", expand=True, padx=(5, 0), pady=5)
+    Frame_Column_B.pack(side="left", fill="both", expand=True, padx=(5, 5), pady=5)
 
     TabView_PO.pack(side="top", fill="both", expand=False, padx=10, pady=5)
     Generate_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
@@ -679,13 +679,13 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     Generate_PREA_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_DEL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Generate_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_One_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+    TabView_One_PO.pack(side="left", fill="both", expand=False, padx=10, pady=10)
     PO_Selected_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_PO_One_Generate_Var.pack(side="top", fill="none", expand=False, padx=5, pady=5)
 
-    TabView_Multi_PO.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+    TabView_Multi_PO.pack(side="left", fill="both", expand=False, padx=10, pady=10)
     PO_MUL_LOG_PROC_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_PO_Show_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
     Button_PO_Multi_Generate_Var.pack(side="left", fill="none", expand=True, padx=5, pady=5)
@@ -693,9 +693,10 @@ def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: d
     TabView_BB.pack(side="top", fill="y", expand=True, padx=10, pady=5)
     Generate_BB_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_BB_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    Generate_IAL_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Button_Generate_BB.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     
-    TabView_PRO.pack(side="top", fill="y", expand=True, padx=10, pady=10)
+    TabView_PRO.pack(side="top", fill="y", expand=True, padx=10, pady=5)
     Generate_PRO_Conf_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)
     Generate_PRO_INV_PDF_Frame.pack(side="top", fill="none", expand=False, padx=5, pady=5)

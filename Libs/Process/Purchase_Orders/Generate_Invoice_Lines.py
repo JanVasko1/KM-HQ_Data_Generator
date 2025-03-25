@@ -228,7 +228,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict, window: CTk, Pur
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_INV_Plant_Window, Name="Select Plant for selected Invoices.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Invoice..", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Plants
             Lines_No = len(PO_Invoice_Number_list)
             for Invoice_index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 # Fields

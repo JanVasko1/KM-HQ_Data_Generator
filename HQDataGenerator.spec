@@ -1,5 +1,10 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+
+# Define fixed output folders
+DISTPATH='D:\_Helper\Application\Pyinstaller\HQDataGenerator'
+WORKPATH='D:\_Helper\Application\Pyinstaller\HQDataGenerator'
 
 a = Analysis(
     ['main.py'],

@@ -165,7 +165,7 @@ def Generate_BB_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Quantity_Window, Name="Select BackBone Billing Qty for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Quantities
             for row in Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -234,7 +234,7 @@ def Generate_BB_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Price_Window, Name="Select BackBone Billing Price for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Prices
             for row in Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -313,7 +313,7 @@ def Generate_BB_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Plants
             for row in Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -385,7 +385,7 @@ def Generate_BB_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Country of Origin
             for row in Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -457,7 +457,7 @@ def Generate_BB_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Tariff
             for row in Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])

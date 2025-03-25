@@ -11,7 +11,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame):
+def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, Items_Tracking_df: DataFrame):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -23,6 +23,8 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     DEL_Assignment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Method"]
     DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["FreeOfCharge_with_Main"]
 
+    SN_Machines = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Machines"]
+    SN_Tracked_Items = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Tracked"]
     SN_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Prefix"]
     SN_Middle_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Method"]
     SN_Middle_Manual = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Fixed"]
@@ -194,7 +196,8 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
 
                     # Add to Lines_df
                     Delivery_Line_Values = [Current_Delivery_No, "", supplier_aid, quantity, order_unit, Current_Delivery_Date, Current_Delivery_Date, Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
-                    Delivery_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_End(Insert_DataFrame=Delivery_Lines_df, New_Row=Delivery_Line_Values)
+                    Delivery_Lines_df.loc[len(Delivery_Lines_df)] = Delivery_Line_Values
+
         elif DEL_Assignment_Method == "Prompt":
             Confirmed_order_date = HQ_Item_Transport_Register_df.iloc[0]["Order_Date"]
             def Assing_Item_Line_to_Delivery(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
@@ -279,43 +282,70 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
     else:
         pass
 
+    # --------------------------------------------- Serial Numbers  --------------------------------------------- #
+    # Data preparation
     Delivery_Lines_df["Material_Group_NUS"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
+    Delivery_Lines_df["Item_Tracking_Code"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Tracking_Code", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Item_Tracking_Code"), axis=1)
+    Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="SN_Purchase_Inbound_Tracking", Compare_Column_df1=["Item_Tracking_Code"], Compare_Column_df2=["Code"], Search_df=Items_Tracking_df, Search_Column="SN_Purchase_Inbound_Tracking"), axis=1)
     Delivery_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Delivery_Lines_df, Columns_list=["Delivery_No", "order_ref_line_item_id", "Material_Group_NUS"], Accenting_list=[True, True, True]) 
 
-    # --------------------------------------------- Serial Numbers  --------------------------------------------- #
-    if Can_Continue == True:
-        # Add Material Group to every line
-        mask_Machines = Delivery_Lines_df["Material_Group_NUS"] == "0100"
-        Delivery_Machine_df = DataFrame(Delivery_Lines_df[mask_Machines]) 
-        if Delivery_Machine_df.empty:
-            pass
+    def Assing_SN(Filtered_row: tuple) -> None:
+        Can_Continue = True
+        SN_Line_List = []
+        Filtered_row_index = Filtered_row[0]
+        row_Series = Series(Filtered_row[1])
+        quantity = row_Series["quantity"]
+        Item_No = row_Series["supplier_aid"]
+
+        # Prepare data
+        if SN_Middle_Method == "Fixed":
+            SN_Middle_Part = SN_Middle_Manual
+        elif SN_Middle_Method == "Item No":
+            SN_Middle_Part = Item_No
+        elif SN_Middle_Method == "DateTime stamp":
+            Today_dt = datetime.now()
+            SN_Middle_Part = Today_dt.strftime(Numbers_DateTime_format)
         else:
-            for Delivery_Machine_row in Delivery_Machine_df.iterrows():
-                SN_Line_List = []
-                Delivery_Machine_index = Delivery_Machine_row[0]
-                row_Series = Series(Delivery_Machine_row[1])
-                quantity = row_Series["quantity"]
-                Item_No = row_Series["supplier_aid"]
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"SN Middle Method selected: {SN_Middle_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Can_Continue = False
 
-                # Prepare data
-                if SN_Middle_Method == "Fixed":
-                    SN_Middle_Part = SN_Middle_Manual
-                elif SN_Middle_Method == "Item No":
-                    SN_Middle_Part = Item_No
-                elif SN_Middle_Method == "DateTime stamp":
-                    Today_dt = datetime.now()
-                    SN_Middle_Part = Today_dt.strftime(Numbers_DateTime_format)
-                else:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"SN Middle Method selected: {SN_Middle_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    Can_Continue = False
+        # Create SNs
+        for i in range(0, quantity):
+            SN_Line_List.append(f"{SN_Prefix}{SN_Middle_Part}{Filtered_row_index}{i}")
+        SN_joined = ";".join(SN_Line_List)
 
-                # Create SNs
-                for i in range(0, quantity):
-                    SN_Line_List.append(f"{SN_Prefix}{SN_Middle_Part}{i}")
-                SN_joined = ";".join(SN_Line_List)
+        # Add to Delivery_Lines_df
+        Delivery_Lines_df.at[Filtered_row_index, "serial_numbers"] = SN_joined
+        return Can_Continue
 
-                # Add to Delivery_Lines_df
-                Delivery_Lines_df.at[Delivery_Machine_index, "serial_numbers"] = SN_joined
+    # Loop
+    if Can_Continue == True:
+        # Machines
+        if SN_Machines == True:
+            # Add Material Group to every line
+            mask_Machines = Delivery_Lines_df["Material_Group_NUS"] == "0100"
+            Delivery_Machine_df = DataFrame(Delivery_Lines_df[mask_Machines]) 
+            if Delivery_Machine_df.empty:
+                pass
+            else:
+                for Delivery_Machine_row in Delivery_Machine_df.iterrows():
+                    Can_Continue = Assing_SN(Filtered_row=Delivery_Machine_row)
+        else:
+            pass
+
+        # Tracked Items
+        if SN_Tracked_Items == True:
+            # Purchase Tracking
+            mask_Trackings = Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] == True
+            Delivery_Tracking_df = DataFrame(Delivery_Lines_df[mask_Trackings]) 
+
+            if Delivery_Tracking_df.empty:
+                pass
+            else:
+                for Delivery_Tracking_row in Delivery_Tracking_df.iterrows():
+                    Can_Continue = Assing_SN(Filtered_row=Delivery_Tracking_row)
+        else:
+            pass
     else:
         pass
 
@@ -333,7 +363,6 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
             Line_Counter += 1
 
             Delivery_Lines_df.at[row_index, "line_item_id"] = Delivery_line_item_id
-
 
     Delivery_Lines_df.drop(labels=["Material_Group_NUS"], inplace=True, axis=1)
 

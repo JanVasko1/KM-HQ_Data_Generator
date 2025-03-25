@@ -214,7 +214,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name="Set Delivery Number/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Number based on Delivery Count.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Numbers
             for i in range(1, Delivery_Count + 1):
                 # Fields
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Delivery {i}", Field_Type="Input_Normal") 

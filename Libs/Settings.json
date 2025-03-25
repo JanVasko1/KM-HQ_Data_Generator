@@ -2,12 +2,8 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "All_PO_Process",
-                "Templates_List": [
-                    "All_PO_Process",
-                    "BHN_DDL Consumable",
-                    "Only_Invoice"
-                ]
+                "Last_Used": "",
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -168,7 +164,7 @@
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Connected Items",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -201,7 +197,7 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Delivery_select": {
                     "Method": "Prompt",
                     "Methods_List": [
@@ -238,7 +234,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -261,7 +257,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Fixed",
                     "Methods_List": [
@@ -300,6 +296,10 @@
                     "FreeOfCharge_with_Main": true
                 },
                 "Serial_Numbers": {
+                    "Generate": {
+                        "Machines": true,
+                        "Tracked": true
+                    },
                     "Prefix": "SN",
                     "Middle": {
                         "Method": "DateTime stamp",
@@ -455,7 +455,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -549,7 +549,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {

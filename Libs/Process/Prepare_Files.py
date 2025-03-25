@@ -165,7 +165,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                 Confirmed_Lines_df=Confirmed_Lines_df, 
                                                                                                 PO_Confirmation_Number=PO_Confirmation_Number, 
                                                                                                 HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, 
-                                                                                                Items_df=Items_df)
+                                                                                                Items_df=Items_df,
+                                                                                                Items_Tracking_df=Items_Tracking_df)
             # Package Headers
             PO_Deliveries, Package_Header_df, Weight_UoM, Volume_UoM = Generate_Delivery_Packages_Headers.Generate_Delivery_Packages_Headers(Settings=Settings, 
                                                                                                                                             Configuration=Configuration, 

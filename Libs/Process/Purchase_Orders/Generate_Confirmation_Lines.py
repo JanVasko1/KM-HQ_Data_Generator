@@ -136,7 +136,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Price_Window, Name="Select Price for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of Confirmation.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Prices
             for row in Confirmed_Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -212,7 +212,7 @@ def Generate_PO_CON_Lines(Settings: dict,
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_UoM_Window, Name="Select Unit of Measure for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Unit of Measure for each Item of Confirmation.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Unit of Measure
             for row in Confirmed_Lines_df.iterrows():
                 # Dataframe
                 row_Series = Series(row[1])
@@ -330,7 +330,8 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
 
                 elif Free_Method == "Prompt":
-                    def Select_Free(Frame_Body: CTkFrame, Lines_No: int, Insert_Index: int, Confirmed_Lines_df: DataFrame):
+                    def Select_Free(Frame_Body: CTkFrame, Insert_Index: int):
+                        global Confirmed_Lines_df
                         for i in range(2, 5):                           
                             No_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
                             Description_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry2"]
@@ -356,7 +357,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                                 except:
                                     Value_Free_Qty = 0
 
-                                # Qty
+                                # Prices
                                 try:
                                     Value_Free_Price = float(Price_CTkEntry.get())
                                 except:
@@ -368,6 +369,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                                 Insert_Index += 1
                                 # BUG --> do not write to Global Confirmed_Lines_df somehow !!! -> zkusit nastavit prázdný dataframe hned po načtení knihoven (funguje u CPDI Delivery --> asi že hned pod Global je zapsano přiřazení do promněné)
                                 Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
+                                print(Confirmed_Lines_df)
                             else:
                                 pass
 
@@ -377,7 +379,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                     # TopUp Window
                     PO_Free_Window_geometry = (520, 230)
                     Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-                    Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Free_Window_geometry[0] //2
+                    Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Free_Window_geometry[0] // 2
                     Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Free_Window_geometry[1] //2
                     PO_Free_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Free of Charge Items for: {Machine}.", max_width=PO_Free_Window_geometry[0], max_height=PO_Free_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
@@ -395,7 +397,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                     PO_Free_Variable = StringVar(master=PO_Free_Window, value="", name="PO_Free_Variable")
                     Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
                     Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-                    Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Free(Frame_Body=Frame_Body, Lines_No=Lines_No, Insert_Index=Insert_Index, Confirmed_Lines_df=Confirmed_Lines_df))
+                    Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Free(Frame_Body=Frame_Body, Insert_Index=Insert_Index))
                     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Free of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                     Button_Confirm_Var.wait_variable(PO_Free_Variable)
                 else:
@@ -403,7 +405,9 @@ def Generate_PO_CON_Lines(Settings: dict,
                     Can_Continue = False
             else:
                 pass
-   
+    
+    print(Confirmed_Lines_df)
+
     # Update after assigning Free of Charge
     Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
 
@@ -490,32 +494,40 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Confirmed_Lines_df.at[random_index, "discontinued"] = True
                 Confirmed_Lines_df.at[random_index, "cancelled"] = "No longer available"
             elif Line_Flags_Method == "Prompt":
-                Lines_No = len(Confirmed_Lines_df)
+                Lines_No = len(Confirmed_Lines_df) 
                 def Select_Flags(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
                     Confirmed_Lines_df_index = 0
-                    for i in range(2, Lines_No):    
+                    for i in range(2, Lines_No + 2):    
                         Substitution_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox"]
-                        Substitution_ITem_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
+                        Substitution_Item_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
                         Cancel_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox2"]
                         Finished_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox3"]
                         
+                        # Substitution
                         Use_Substitution = Substitution_CTkEntry.get()
-                        # BUG --> whne substitution is unmarked (from automatically "Line_Flag_Always_Substitute") supplier_aid = buyer_aid
                         if Use_Substitution == True:
-                            Sub_Item_No = Substitution_ITem_CTkEntry.get()
+                            Sub_Item_No = Substitution_Item_CTkEntry.get()
                             if Sub_Item_No != "":
                                 Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Sub_Item_No
                             else:
-                                pass
+                                # Changed form Substituted into Non-Substituted
+                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
+                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
+                        elif Use_Substitution == False:
+                            # Changed form Substituted into Non-Substituted
+                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
+                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
                         else:
                             pass
 
+                        # Cancel
                         Use_Cancel = Cancel_CTkEntry.get()
                         if Use_Cancel == True:
                             Confirmed_Lines_df.at[Confirmed_Lines_df_index, "cancelled"] = True
                         else:
                             pass
 
+                        # Finished
                         Use_Finished = Finished_CTkEntry.get()
                         if Use_Finished == True:
                             Confirmed_Lines_df.at[Confirmed_Lines_df_index, "discontinued"] = True
@@ -541,7 +553,7 @@ def Generate_PO_CON_Lines(Settings: dict,
 
                 Description = Elements_Groups.Get_Prompt_Line_Flags_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
 
-                # Vendor_Service_ID
+                # Lines Flags
                 for row in Confirmed_Lines_df.iterrows():
                     # Dataframe
                     row_Series = Series(row[1])
@@ -587,6 +599,9 @@ def Generate_PO_CON_Lines(Settings: dict,
             pass
     else:
         pass
+
+    # Update after assigning Possible Substitution changes
+    Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
 
     # Check if Machine is Canceled / Finished --> to do it with FOCHs too
     # TODO --> when Machine marked --> free of charge Items must be deleted according to Exported_Line_No

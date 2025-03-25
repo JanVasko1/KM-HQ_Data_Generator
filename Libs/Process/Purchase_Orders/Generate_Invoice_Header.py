@@ -110,7 +110,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict, window: CTk, Pu
             Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_INV_Number_Window, Name="Set Invoice Number/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Invoice Number based on Invoice Count.", GUI_Level_ID=3)
             Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
+            # Invoice Numbers
             for i in range(1, Invoice_Count + 1):
                 # Fields
                 Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Invoice {i}", Field_Type="Input_Normal") 

@@ -120,11 +120,17 @@ def Item_Delivery_Assignment(Settings: dict, Configuration: dict, window: CTk, F
 
 def Serial_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
+    SN_Machines = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Machines"]
+    SN_Tracked_Items = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Tracked"]
+    
     SN_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Prefix"]
     SN_Middle_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Method"]
     SN_Middle_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Methods_List"])
     SN_Middle_Manual = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Fixed"]
     SN_Suffix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Suffix"]
+
+    SN_Machines_Variable = BooleanVar(master=Frame, value=SN_Machines, name="SN_Machines_Variable")
+    SN_Tracked_Items_Variable = BooleanVar(master=Frame, value=SN_Tracked_Items, name="SN_Tracked_Items_Variable")
 
     SN_Middle_Method_Variable = StringVar(master=Frame, value=SN_Middle_Method, name="Serial_Number_Method_Variable")
 
@@ -132,6 +138,19 @@ def Serial_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkF
     # Frame - General
     Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Serial Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Serial Numbers creation options.", GUI_Level_ID=GUI_Level_ID)
     Frame_Body = Frame_Main.children["!ctkframe2"]
+
+    # Field - SN for Machines
+    SN_Machines_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generate for all Machines", Field_Type="Input_CheckBox") 
+    SN_Machines_Frame_Var = SN_Machines_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    SN_Machines_Frame_Var.configure(variable=SN_Machines_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=SN_Machines_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Machines"], Information=SN_Machines_Variable))
+
+    # Field - SN for Machines
+    SN_Tracked_Items_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generate for tracked Items", Field_Type="Input_CheckBox") 
+    SN_Tracked_Items_Frame_Var = SN_Tracked_Items_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+    SN_Tracked_Items_Frame_Var.configure(variable=SN_Tracked_Items_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=SN_Tracked_Items_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Tracked"], Information=SN_Tracked_Items_Variable))
+
+    # Section Quantities
+    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="SN Number Creation", Label_Size="Field_Label" , Font_Size="Section_Separator")
 
     # Field - SN Prefix
     SN_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
