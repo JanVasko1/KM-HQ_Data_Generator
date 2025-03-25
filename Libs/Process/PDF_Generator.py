@@ -1,6 +1,6 @@
 from fpdf import FPDF
 
-def Generate_PDF(Settings: dict, Configuration: dict, Invoice: dict, Table_Data: list) -> FPDF:
+def Generate_PDF(Settings: dict, Configuration: dict|None, Invoice: dict, Table_Data: list) -> FPDF:
     # ---------------------------- Defaults ----------------------------#
     Invoice_Number = Invoice["invoice"]["invoice_header"]["invoice_info"]["invoice_id"]
     Invoice_Date = Invoice["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] 

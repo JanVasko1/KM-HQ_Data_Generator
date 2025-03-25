@@ -6,7 +6,7 @@ import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
-def DEL_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def DEL_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Method"]
     Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Methods_List"])
@@ -48,7 +48,7 @@ def DEL_Number(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame
 
     return Frame_Main
 
-def DEL_Count(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def DEL_Count(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     DEL_Count_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Method"]
     DEL_Count_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Methods_List"])
@@ -87,7 +87,7 @@ def DEL_Count(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame,
 
     return Frame_Main
 
-def Item_Delivery_Assignment(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Item_Delivery_Assignment(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     DEL_Assignment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Method"]
     DEL_Assignment_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Methods_List"])
@@ -118,7 +118,7 @@ def Item_Delivery_Assignment(Settings: dict, Configuration: dict, window: CTk, F
     return Frame_Main
 
 
-def Serial_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Serial_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     SN_Machines = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Machines"]
     SN_Tracked_Items = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Tracked"]
@@ -183,7 +183,7 @@ def Serial_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkF
 
     return Frame_Main
 
-def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Delivery_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Method"]
     Delivery_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Methods_List"])
@@ -234,7 +234,7 @@ def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFr
 
     return Frame_Main
 
-def Carrier_ID(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Carrier_ID(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Carrier_ID_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Method"]
     Carrier_ID_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Methods_List"])
@@ -266,7 +266,7 @@ def Carrier_ID(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame
 
     return Frame_Main
 
-def Shipment_Method(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Shipment_Method(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Shipment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Method"]
     Shipment_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Methods_List"])
@@ -297,7 +297,7 @@ def Shipment_Method(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
 
     return Frame_Main
 
-def Packages_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Packages_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Pack_Number_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Method"]
     Pack_Number_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Methods_List"])
@@ -348,7 +348,7 @@ def Packages_Numbers(Settings: dict, Configuration: dict, window: CTk, Frame: CT
 
     return Frame_Main
 
-def Packages_Plants(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Packages_Plants(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Pack_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Method"]
     Pack_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Methods_List"])
@@ -380,7 +380,7 @@ def Packages_Plants(Settings: dict, Configuration: dict, window: CTk, Frame: CTk
 
     return Frame_Main
 
-def Packages_UOM(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Packages_UOM(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Pack_Weight_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Method"]
     Pack_Weight_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Methods_List"])
@@ -435,7 +435,7 @@ def Packages_UOM(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFra
 
     return Frame_Main
 
-def EXIDV2(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def EXIDV2(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     EXIDV2_Assign_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Method"]
     EXIDV2_Assign_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Methods_List"])
@@ -490,7 +490,7 @@ def EXIDV2(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GU
 
     return Frame_Main
 
-def BillOfLanding(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BillOfLanding(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     BOL_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Method"]
     BOL_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Methods_List"])

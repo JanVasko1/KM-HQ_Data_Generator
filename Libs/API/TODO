@@ -9,3 +9,5 @@
 3) Upravit kod, tak kudy bude procházet REquet tak funckce musí obsahovat "API: True/False" 
     - z GUI předat "API=False"
     - API 
+
+4) Bude to spouštěné i z Purchase Header !!!!

@@ -7,7 +7,7 @@ import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Data_Functions as Data_Functions
 
 # --------------------------------------------- CustomTkinter --------------------------------------------- #
-def Dialog_Window_Request(Configuration: dict, title: str, text: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> str|None:
+def Dialog_Window_Request(Configuration: dict|None, title: str, text: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> str|None:
     # Password required
     dialog = Elements.Get_DialogWindow(Configuration=Configuration, title=title, text=text, Dialog_Type=Dialog_Type, GUI_Level_ID=GUI_Level_ID)
     Dialog_Input = dialog.get_input()
@@ -35,14 +35,14 @@ def Count_coordinate_for_new_window(Clicked_on: CTkButton, New_Window_width: int
     # Top middle coordinate for new window
     return [Window_X + Clicked_On_X_difference, Window_Y + Clicked_on_Y_difference + 5]
 
-def Get_coordinate_Main_Window(Main_Window: CTk) -> list:
+def Get_coordinate_Main_Window(Main_window: CTk|None) -> list:
     Main_Window.update_idletasks()  # Ensure the geometry information is updated
     x = (Main_Window.winfo_width() // 2) + Main_Window.winfo_rootx()
     y = (Main_Window.winfo_height() // 2) + Main_Window.winfo_rooty()
     Coordinate = [x, y]
     return Coordinate
 
-def Insert_Data_to_Table(Settings: dict, Configuration: dict, window: CTk, Table: CTkTable, JSON_path: list) -> None:
+def Insert_Data_to_Table(Settings: dict, Configuration: dict|None, window: CTk|None, Table: CTkTable, JSON_path: list) -> None:
     # Delete data in table just keep header
     Table_rows = Table.cget("row")
 
@@ -72,7 +72,7 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict, window: CTk, Table
 
 # ------------------ Blocking Fields Functions ------------------ #
 
-def Field_Block_Bool(Settings: dict, window: CTk, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
+def Field_Block_Bool(Settings: dict, window: CTk|None, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
     Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
     for i, Block_Variable in enumerate(Block_Variable_list):
         if Selected_Variable.get() == True:

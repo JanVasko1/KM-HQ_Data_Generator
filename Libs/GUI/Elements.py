@@ -14,7 +14,7 @@ from iconipy import IconFactory
 import winaccent
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def Time_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
+def Time_Validate(Settings: dict, Configuration: dict|None, window: CTk|None, Field: CTkEntry) -> None:
     Time_Format = Settings["0"]["General"]["Formats"]["Time"]
     Value = Field.get()
 
@@ -27,7 +27,7 @@ def Time_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEn
     else:
         pass
 
-def Date_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
+def Date_Validate(Settings: dict, Configuration: dict|None, window: CTk|None, Field: CTkEntry) -> None:
     Date_Format = Settings["0"]["General"]["Formats"]["Date"]
     Value = Field.get()
 
@@ -40,7 +40,7 @@ def Date_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEn
     else:
         pass
 
-def Int_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
+def Int_Validate(Settings: dict, Configuration: dict|None, window: CTk|None, Field: CTkEntry) -> None:
     Value = Field.get()
 
     if Value != "":
@@ -52,7 +52,7 @@ def Int_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEnt
     else:
         pass
 
-def Float_Validate(Settings: dict, Configuration: dict, window: CTk, Field: CTkEntry) -> None:
+def Float_Validate(Settings: dict, Configuration: dict|None, window: CTk|None, Field: CTkEntry) -> None:
     Value = Field.get()
 
     if Value != "":
@@ -156,7 +156,7 @@ def Get_Label(Configuration:dict, Frame: CTkFrame, Label_Size: str, Font_Size: s
         wraplength = Configuration_Text_Main["wraplength"])
     return Text_Main
 
-def Get_Label_Icon(Configuration: dict, Frame: CTkFrame, Label_Size: str, Font_Size: str, Icon_Name: str, Icon_Size: str) -> CTkLabel:
+def Get_Label_Icon(Configuration: dict|None, Frame: CTkFrame, Label_Size: str, Font_Size: str, Icon_Name: str, Icon_Size: str) -> CTkLabel:
     Frame_Label = Get_Label(Configuration=Configuration, Frame=Frame, Label_Size=Label_Size, Font_Size=Font_Size)
     CTK_Image = Get_CTk_Icon(Configuration=Configuration, Icon_Name=Icon_Name, Icon_Size=Icon_Size)
     Frame_Label.configure(image=CTK_Image, text="", anchor="e")
@@ -218,7 +218,7 @@ def Get_Button_Icon(Configuration:dict, Frame: CTkFrame, Icon_Name: str, Icon_Si
     return Frame_Button
 
 # ---------------------------------------------- Fields ----------------------------------------------# 
-def Get_Entry_Field(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Size: str, Validation: str|None = None) -> CTkEntry:
+def Get_Entry_Field(Settings: dict, Configuration:dict, window: CTk|None, Frame: CTkFrame, Field_Size: str, Validation: str|None = None) -> CTkEntry:
     Configuration_Field = Configuration["Fields"]["Entry"][f"{Field_Size}"]
 
     Field = CTkEntry(
@@ -815,7 +815,7 @@ def Get_ToolTip(Configuration:dict, widget: any, message: str, ToolTip_Size: str
         padding = tuple(Configuration_ToolTip["padding"]))
     return ToolTip
 
-def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None, window: CTk|None = None) -> None:
+def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None, window: CTk|None|None = None) -> CTkMessagebox:
     Button_Normal = Configuration["Buttons"]["Small"]
     Label_Title_Label = Configuration["Labels"]["Field_Label"]
     if title == "Error":

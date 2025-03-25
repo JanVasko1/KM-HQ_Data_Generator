@@ -9,8 +9,8 @@ from customtkinter import CTk
 
 # ---------------------------------------------------------- Main Functions ---------------------------------------------------------- #
 def Process_Purchase_Orders(Settings: dict, 
-                            Configuration: dict,
-                            window: CTk,
+                            Configuration: dict|None,
+                            window: CTk|None,
                             headers: dict, 
                             tenant_id: str, 
                             NUS_version: str, 
@@ -39,7 +39,9 @@ def Process_Purchase_Orders(Settings: dict,
                             Shipment_Method_list: list, 
                             Shipping_Agent_list: list, 
                             Tariff_Number_list: list, 
-                            UoM_df: DataFrame) -> None:
+                            UoM_df: DataFrame,
+                            GUI: bool=True) -> None:
+    
     # Get what should be prepared from Settings
     Generate_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Purchase_Order"]["Use"]
     Generate_CPDI = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Use"]
@@ -73,7 +75,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             Purchase_Headers_df=Purchase_Headers_df,
                                                                                                                                             Company_Information_df=Company_Information_df, 
                                                                                                                                             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
-                                                                                                                                            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df)
+                                                                                                                                            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
+                                                                                                                                            GUI=GUI)
                         
             # Lines
             Confirmed_Lines_df, PO_Confirmation_Lines, Total_Line_Amount, Lines_No = Generate_Confirmation_Lines.Generate_PO_CON_Lines(Settings=Settings, 
@@ -88,10 +91,11 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
                                                                                                                                             Items_Distr_Status_df=Items_Distr_Status_df,
                                                                                                                                             UoM_df=UoM_df, 
-                                                                                                                                            PO_Confirmation_Currency=PO_Confirmation_Currency)
+                                                                                                                                            PO_Confirmation_Currency=PO_Confirmation_Currency,
+                                                                                                                                            GUI=GUI)
 
             # ATP
-            PO_Confirmation_Lines = Generate_Confirmation_ATP.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Confirmed_Lines_df=Confirmed_Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines)
+            PO_Confirmation_Lines = Generate_Confirmation_ATP.Generate_PO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, Confirmed_Lines_df=Confirmed_Lines_df, PO_Confirmation_Lines=PO_Confirmation_Lines, GUI=GUI)
 
             # Put Header, Lines with ATP together
             PO_Confirmation_Header["orderresponse"]["orderresponse_item_list"] = PO_Confirmation_Lines
@@ -122,23 +126,31 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Confirmation lines existing
             if Generate_Confirmation == True:
                 if Confirmed_Lines_df.empty:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                    if GUI == True:
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                    else:
+                        # TODO --> API must select one of the options
+                        pass
                     if response == "Confirmation":    
-                        Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
+                        Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                         Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                     elif response == "Export":  
-                        Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
+                        Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                         Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df, Items_df=Items_df)
                 else:
                     # Just pass as all is already prepared
                     pass
             else:
-                response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"You select to create Delivery without creation of Confirmation, do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"You select to create Delivery without creation of Confirmation, do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    # TODO --> API must select one of the options
+                    pass
                 if response == "Confirmation":    
-                    Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df)
+                    Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                     Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                 elif response == "Export":  
-                    Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df)
+                    Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                     Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Exported_Lines_df, Items_df=Items_df)
 
             # Header
@@ -151,7 +163,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                                 HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
                                                                                                                                                 Confirmed_Lines_df=Confirmed_Lines_df,
                                                                                                                                                 Shipping_Agent_list=Shipping_Agent_list, 
-                                                                                                                                                Shipment_Method_list=Shipment_Method_list)
+                                                                                                                                                Shipment_Method_list=Shipment_Method_list,
+                                                                                                                                                GUI=GUI)
 
             # Lines
             PO_Deliveries, Delivery_Lines_df = Generate_Delivery_Lines.Generate_Delivery_Lines(Settings=Settings, 
@@ -166,7 +179,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                 PO_Confirmation_Number=PO_Confirmation_Number, 
                                                                                                 HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, 
                                                                                                 Items_df=Items_df,
-                                                                                                Items_Tracking_df=Items_Tracking_df)
+                                                                                                Items_Tracking_df=Items_Tracking_df,
+                                                                                                GUI=GUI)
             # Package Headers
             PO_Deliveries, Package_Header_df, Weight_UoM, Volume_UoM = Generate_Delivery_Packages_Headers.Generate_Delivery_Packages_Headers(Settings=Settings, 
                                                                                                                                             Configuration=Configuration, 
@@ -174,7 +188,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             PO_Deliveries=PO_Deliveries, 
                                                                                                                                             PO_Delivery_Number_list=PO_Delivery_Number_list, 
                                                                                                                                             Delivery_Lines_df=Delivery_Lines_df, 
-                                                                                                                                            UoM_df=UoM_df)
+                                                                                                                                            UoM_df=UoM_df,
+                                                                                                                                            GUI=GUI)
 
             # Package Lines
             PO_Deliveries, Delivery_Lines_df, Package_Lines_df = Generate_Delivery_Packages_Lines.Generate_Delivery_Packages_Lines(Settings=Settings, 
@@ -185,7 +200,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                     Delivery_Lines_df=Delivery_Lines_df, 
                                                                                                                                     Package_Header_df=Package_Header_df, 
                                                                                                                                     Items_UoM_df=Items_UoM_df, 
-                                                                                                                                    UoM_df=UoM_df)
+                                                                                                                                    UoM_df=UoM_df,
+                                                                                                                                    GUI=GUI)
 
             # Update Footer
             for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
@@ -220,7 +236,7 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Confirmation lines existing
             if Generate_Delivery == True:
                 PO_PreAdviceNumber_list = PO_Delivery_Number_list
-                PO_PreAdvices = Generate_PreAdvice_File.Generate_PreAdvice_from_Delivery_dict(Settings=Settings, Configuration=Configuration, window=window, PO_Deliveries=PO_Deliveries)
+                PO_PreAdvices = Generate_PreAdvice_File.Generate_PreAdvice_from_Delivery_dict(Settings=Settings, Configuration=Configuration, window=window, PO_Deliveries=PO_Deliveries, GUI=GUI)
             else:
                 # TODO --> postavit tuhle cestu podobně jako s Delviery / Cpnfirmation nechat vybrat na základě čeho postavit
                 pass
@@ -243,14 +259,21 @@ def Process_Purchase_Orders(Settings: dict,
 
                 if Generate_Delivery == False:      # Check if process is called from Delivery or standalone
                     PO_Delivery_Number_list = []
-                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order} to make an choice?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    if GUI == True:
+                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order} to make an choice?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    else:
+                        # TODO --> API must select one of the options
+                        pass
                     if response == "Download":                    
                         import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
                         # HQ_Testing_HQ_Item_Transport_Register
-                        Deliveries_HQ_Item_Tr_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery")
+                        Deliveries_HQ_Item_Tr_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery", GUI=GUI)
                         if Deliveries_HQ_Item_Tr_df.empty:
-                            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery for {Purchase_Order} during preparation of CPDI, when Delivery is not generated by full path script.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                            if GUI == True:
+                                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery for {Purchase_Order} during preparation of CPDI, when Delivery is not generated by full path script.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                            else:
+                                pass
                         else:
                             # Drop Duplicate rows amd reset index
                             Deliveries_HQ_Item_Tr_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -273,7 +296,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                 Purchase_Headers_df=Purchase_Headers_df, 
                                                                 HQ_CPDI_Level_df=HQ_CPDI_Level_df, 
                                                                 HQ_CPDI_Status_df=HQ_CPDI_Status_df,
-                                                                Tariff_Number_list=Tariff_Number_list)
+                                                                Tariff_Number_list=Tariff_Number_list,
+                                                                GUI=GUI)
             else:
                 pass
         else:
@@ -287,18 +311,26 @@ def Process_Purchase_Orders(Settings: dict,
             # Define if Delivery lines existing
             if Generate_Delivery == True:
                 if Delivery_Lines_df.empty:
-                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    if GUI == True:
+                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    else:
+                        # TODO --> API must select one of the options
+                        pass
                     if response == "Confirm":    
-                        PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order)
+                        PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
                     elif response == "Reject":  
                         pass
                 else:
                     # Just pass as all is already prepared
                     pass
             else:
-                response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"You select to create Invoice without creation of Delivery, do you want to use already imported Delivery data as source data for Invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"You select to create Invoice without creation of Delivery, do you want to use already imported Delivery data as source data for Invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    # TODO --> API must select one of the options
+                    pass
                 if response == "Confirm":    
-                    PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order)
+                    PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
                 elif response == "Reject":  
                     pass
 
@@ -314,7 +346,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                   Confirmed_Lines_df=Confirmed_Lines_df,
                                                                                                   Delivery_Lines_df=Delivery_Lines_df,
                                                                                                   Company_Information_df=Company_Information_df, 
-                                                                                                  HQ_Communication_Setup_df=HQ_Communication_Setup_df)
+                                                                                                  HQ_Communication_Setup_df=HQ_Communication_Setup_df,
+                                                                                                  GUI=GUI)
 
             # Lines
             PO_Invoices, PO_Invoice_Table_Data_list = Generate_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
@@ -330,7 +363,8 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                     Items_df=Items_df,
                                                                                                     Items_Price_List_Detail_df=Items_Price_List_Detail_df,
                                                                                                     Country_ISO_Code_list=Country_ISO_Code_list,
-                                                                                                    Tariff_Number_list=Tariff_Number_list)
+                                                                                                    Tariff_Number_list=Tariff_Number_list,
+                                                                                                    GUI=GUI)
 
             # Export 
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
@@ -361,8 +395,8 @@ def Process_Purchase_Orders(Settings: dict,
             pass
 
 def Process_BackBoneBilling(Settings: dict, 
-                            Configuration: dict,
-                            window: CTk,
+                            Configuration: dict|None,
+                            window: CTk|None,
                             Can_Process: bool, 
                             Buy_from_Vendor_No: str,
                             HQ_Communication_Setup_df: DataFrame, 
@@ -371,7 +405,9 @@ def Process_BackBoneBilling(Settings: dict,
                             Company_Information_df: DataFrame,
                             Plants_df: DataFrame, 
                             Country_ISO_Code_list: list, 
-                            Tariff_Number_list: list) -> None:
+                            Tariff_Number_list: list,
+                            GUI: bool=True) -> None:
+    
     # Get what should be prepared from Settings
     Generate_BB_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Use"]
     Generate_BB_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["PDF"]["Generate"]
@@ -388,20 +424,22 @@ def Process_BackBoneBilling(Settings: dict,
                                                                                                                         Configuration=Configuration, 
                                                                                                                         window=window, 
                                                                                                                         Company_Information_df=Company_Information_df, 
-                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df)
+                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df,
+                                                                                                                        GUI=GUI)
         
         # Lines
         BB_Invoice_Lines, BB_Lines_No, BB_Total_Line_Amount, BB_Table_Data = Generate_BB_Lines.Generate_BB_Lines(Settings=Settings, 
-                                                                                                            Configuration=Configuration, 
-                                                                                                            window=window, 
-                                                                                                            Vendor_Service_Function_df=Vendor_Service_Function_df, 
-                                                                                                            Plants_df=Plants_df,
-                                                                                                            Country_ISO_Code_list=Country_ISO_Code_list,
-                                                                                                            Tariff_Number_list=Tariff_Number_list,
-                                                                                                            BB_Number=BB_Number, 
-                                                                                                            BB_Order_ID=BB_Order_ID, 
-                                                                                                            BB_supplier_order_id=BB_supplier_order_id,
-                                                                                                            BB_Order_Date=BB_Order_Date)
+                                                                                                                Configuration=Configuration, 
+                                                                                                                window=window, 
+                                                                                                                Vendor_Service_Function_df=Vendor_Service_Function_df, 
+                                                                                                                Plants_df=Plants_df,
+                                                                                                                Country_ISO_Code_list=Country_ISO_Code_list,
+                                                                                                                Tariff_Number_list=Tariff_Number_list,
+                                                                                                                BB_Number=BB_Number, 
+                                                                                                                BB_Order_ID=BB_Order_ID, 
+                                                                                                                BB_supplier_order_id=BB_supplier_order_id,
+                                                                                                                BB_Order_Date=BB_Order_Date,
+                                                                                                                GUI=GUI)
                                                     
         # Update Lines
         BB_Invoice["invoice"]["invoice_item_list"] = BB_Invoice_Lines
@@ -442,7 +480,7 @@ def Process_BackBoneBilling(Settings: dict,
 
 
 def Process_Purchase_Return_Orders(Settings: dict,
-                                   Configuration: dict) -> None:
+                                   Configuration: dict|None) -> None:
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
     Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
     Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]

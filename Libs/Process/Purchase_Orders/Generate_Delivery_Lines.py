@@ -11,7 +11,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, Items_Tracking_df: DataFrame):
+def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, Items_Tracking_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -47,15 +47,21 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
         else:
             pass
     elif DEL_Assignment_Method == "Prompt":
-        # Define Total Qty for Delivery
-        To_Split_Qty = len(Confirmed_Lines_df)
-        if DEL_FOCH_with_Main == True:
-            # TODO --> Minus FOCH lines count from whole Sum_Lines --> as should be on the same Delivery as machine
-            pass 
+        if GUI == True:
+            # Define Total Qty for Delivery
+            To_Split_Qty = len(Confirmed_Lines_df)
+            if DEL_FOCH_with_Main == True:
+                # TODO --> Minus FOCH lines count from whole Sum_Lines --> as should be on the same Delivery as machine
+                pass 
+            else:
+                pass
         else:
             pass
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
         Can_Continue = False
 
     # Define Qty per Delivery
@@ -199,85 +205,91 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict, window: CTk, Pu
                     Delivery_Lines_df.loc[len(Delivery_Lines_df)] = Delivery_Line_Values
 
         elif DEL_Assignment_Method == "Prompt":
-            Confirmed_order_date = HQ_Item_Transport_Register_df.iloc[0]["Order_Date"]
-            def Assing_Item_Line_to_Delivery(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                        df_i = 0
-                    elif i == 1:
-                        continue
-                    else:
-                        df_i = i - 1
-                        pass
+            if GUI == True:
+                Confirmed_order_date = HQ_Item_Transport_Register_df.iloc[0]["Order_Date"]
+                def Assing_Item_Line_to_Delivery(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                            df_i = 0
+                        elif i == 1:
+                            continue
+                        else:
+                            df_i = i - 1
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe4"].children["!ctkoptionmenu"]
+                        try:
+                            Value_Delivery = Value_CTkEntry.get()
+                        except:
+                            Value_Delivery = ""
+
+                        order_ref_line_item_id = Confirmed_Lines_df.iloc[df_i]["line_item_id"]
+                        order_ref_line_item_id = f"{order_ref_line_item_id :06d}"
+
+                        supplier_aid = Confirmed_Lines_df.iloc[df_i]["supplier_aid"]
+                        quantity = Confirmed_Lines_df.iloc[df_i]["quantity"]
+                        order_unit = Confirmed_Lines_df.iloc[df_i]["order_unit"]
+                        supplier_order_item_id = Confirmed_Lines_df.iloc[df_i]["supplier_order_item_id"]
+
+                        # Add to Lines_df
+                        Delivery_Line_Values = [Value_Delivery, "", supplier_aid, quantity, order_unit, "", "", Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
+                        Delivery_Lines_df.loc[len(Delivery_Lines_df)] = Delivery_Line_Values
+
+                    PO_Item_Assing_Variable.set(value="Selected")
+                    PO_Item_Assing_Window.destroy()
+
+                # TopUp Window
+                PO_Item_Assing_Window_geometry = (1020, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Item_Assing_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Item_Assing_Window_geometry[1] //2
+                PO_Item_Assing_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery for Item line.", max_width=PO_Item_Assing_Window_geometry[0], max_height=PO_Item_Assing_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Item_Assing_Window, Name="Select Delivery for Item line.", Additional_Text="", Widget_size="Item_Del_Assign", Widget_Label_Tooltip="To make Item assignment to delivery.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Delivery Assignment
+                Lines_No = Confirmed_Lines_df.shape[0]
+                for row in Confirmed_Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Line_Item_No = row_Series["supplier_aid"]
+                    Line_Item_Desc = row_Series["description_long"]
+                    Line_Qty = row_Series["quantity"]
+
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Prompt_Delivery_Assignment(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Line_Item_No=Line_Item_No, Line_Item_Desc=Line_Item_Desc, Line_Qty=Line_Qty, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI_Level_ID=3) 
                     
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe4"].children["!ctkoptionmenu"]
-                    try:
-                        Value_Delivery = Value_CTkEntry.get()
-                    except:
-                        Value_Delivery = ""
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > PO_Item_Assing_Window_geometry[1]:
+                    content_height = PO_Item_Assing_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                    order_ref_line_item_id = Confirmed_Lines_df.iloc[df_i]["line_item_id"]
-                    order_ref_line_item_id = f"{order_ref_line_item_id :06d}"
+                # Buttons
+                PO_Item_Assing_Variable = StringVar(master=PO_Item_Assing_Window, value="", name="PO_Item_Assing_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Assing_Item_Line_to_Delivery(Frame_Body=Frame_Body, Lines_No=Lines_No, Confirmed_Lines_df=Confirmed_Lines_df))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_Item_Assing_Variable)
 
-                    supplier_aid = Confirmed_Lines_df.iloc[df_i]["supplier_aid"]
-                    quantity = Confirmed_Lines_df.iloc[df_i]["quantity"]
-                    order_unit = Confirmed_Lines_df.iloc[df_i]["order_unit"]
-                    supplier_order_item_id = Confirmed_Lines_df.iloc[df_i]["supplier_order_item_id"]
-
-                    # Add to Lines_df
-                    Delivery_Line_Values = [Value_Delivery, "", supplier_aid, quantity, order_unit, "", "", Purchase_Order, order_ref_line_item_id, Confirmed_order_date, PO_Confirmation_Number, supplier_order_item_id, ""]
-                    Delivery_Lines_df.loc[len(Delivery_Lines_df)] = Delivery_Line_Values
-
-                PO_Item_Assing_Variable.set(value="Selected")
-                PO_Item_Assing_Window.destroy()
-
-            # TopUp Window
-            PO_Item_Assing_Window_geometry = (1020, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Item_Assing_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Item_Assing_Window_geometry[1] //2
-            PO_Item_Assing_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery for Item line.", max_width=PO_Item_Assing_Window_geometry[0], max_height=PO_Item_Assing_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Item_Assing_Window, Name="Select Delivery for Item line.", Additional_Text="", Widget_size="Item_Del_Assign", Widget_Label_Tooltip="To make Item assignment to delivery.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Delivery Assignment
-            Lines_No = Confirmed_Lines_df.shape[0]
-            for row in Confirmed_Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Line_Item_No = row_Series["supplier_aid"]
-                Line_Item_Desc = row_Series["description_long"]
-                Line_Qty = row_Series["quantity"]
-
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Prompt_Delivery_Assignment(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Line_Item_No=Line_Item_No, Line_Item_Desc=Line_Item_Desc, Line_Qty=Line_Qty, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI_Level_ID=3) 
-                
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > PO_Item_Assing_Window_geometry[1]:
-                content_height = PO_Item_Assing_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            PO_Item_Assing_Variable = StringVar(master=PO_Item_Assing_Window, value="", name="PO_Item_Assing_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Assing_Item_Line_to_Delivery(Frame_Body=Frame_Body, Lines_No=Lines_No, Confirmed_Lines_df=Confirmed_Lines_df))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_Item_Assing_Variable)
-
-            # Update Delivery Dates --> cannot be updated in main loop
-            for Delivery_index, Delivery_Number in enumerate(PO_Delivery_Number_list):
-                Delivery_Date = PO_Delivery_Date_list[Delivery_index]
-                Delivery_No_condition = [(Delivery_Lines_df["Delivery_No"] == Delivery_Number)]
-                Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_start_date", Set_Value=Delivery_Date)
-                Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_end_date", Set_Value=Delivery_Date)
+                # Update Delivery Dates --> cannot be updated in main loop
+                for Delivery_index, Delivery_Number in enumerate(PO_Delivery_Number_list):
+                    Delivery_Date = PO_Delivery_Date_list[Delivery_index]
+                    Delivery_No_condition = [(Delivery_Lines_df["Delivery_No"] == Delivery_Number)]
+                    Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_start_date", Set_Value=Delivery_Date)
+                    Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_end_date", Set_Value=Delivery_Date)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass

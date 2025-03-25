@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+### 0.6.0
+- API Endpoint integrated
+
 ### 0.5.0
 - Purchase Order Invoice files process integrated
 - Slight application speed-up

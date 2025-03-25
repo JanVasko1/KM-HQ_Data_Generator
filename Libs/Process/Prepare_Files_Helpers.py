@@ -44,16 +44,19 @@ def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame, Items_df: Data
 
     return Confirmed_Lines_df
 
-def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CTk, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, Purchase_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame) -> DataFrame:
+def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, Purchase_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
     import Libs.Downloader.NAV_OData_API as NAV_OData_API
     
     Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
 
     # HQ_Testing_HQ_Item_Transport_Register
-    HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
+    HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation", GUI=GUI)
     if HQ_Confirmed_Lines_df.empty:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     else:
         PO_Confirmation_Number = HQ_Confirmed_Lines_df.iloc[0]["Vendor_Document_No"]
 
@@ -124,7 +127,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict, window: CT
 
     return Confirmed_Lines_df, PO_Confirmation_Number
 
-def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame) -> DataFrame:
+def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
     PO_Confirmation_Number = "Fictive_Num_01"
     Exported_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
     Exported_Lines_df = DataFrame(columns=Exported_Lines_df_Columns)
@@ -198,7 +201,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict, window: CTk
     return Exported_Lines_df, PO_Confirmation_Number
 
 # ---------------------------------------------------------- For Invoice ---------------------------------------------------------- #
-def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: dict, window: CTk, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str):
+def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, GUI: bool=True):
     import Libs.Downloader.NAV_OData_API as NAV_OData_API
     
     Delivery_Lines_df_Columns = ["Delivery_No", "line_item_id", "supplier_aid", "quantity", "order_unit", "delivery_start_date", "delivery_end_date", "order_id", "order_ref_line_item_id", "order_date", "supplier_order_id", "supplier_order_item_id", "serial_numbers"]
@@ -209,13 +212,16 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_columns)
 
     # HQ_Testing_HQ_Item_Transport_Register
-    HQ_Delivery_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery")
+    HQ_Delivery_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery", GUI=GUI)
     if HQ_Delivery_Lines_df.empty:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     else:
         # --------------------------------- Confirmation --------------------------------- # 
         # Confirmation Number
-        HQ_Confirmation_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation")
+        HQ_Confirmation_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation", GUI=GUI)
         if HQ_Confirmation_Lines_df.empty:
             PO_Confirmation_Number = ""
         else:
@@ -241,64 +247,67 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         Downloaded_Delivery_List = list(set(Downloaded_Delivery_List))
         Downloaded_Delivery_List.sort()
         
-        # Select Delivery PopUp
-        def Select_PO_DEL_Number(Frame_Body: CTkFrame, Lines_No: int):
-            PO_DEL_Number_list = []
-            for i in range(0, Lines_No + 1):
-                if i == 0:
-                    i = ""
-                elif i == 1:
-                    continue
-                else:
-                    pass
-                
-                Value_CTkCheck = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkcheckbox"]
-                Value_CTkCheck_Value = Value_CTkCheck.get()
-                if Value_CTkCheck_Value == True:
-                    Selected_Delivery_No_label = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe"].children["!ctklabel"]
-                    Selected_Delivery_No = str(Selected_Delivery_No_label.cget("text"))
-                    Selected_Delivery_No = Selected_Delivery_No.replace(":", "")
-                    PO_DEL_Number_list.append(Selected_Delivery_No)
-                else:
-                    pass
+        if GUI == True:
+            # Select Delivery PopUp
+            def Select_PO_DEL_Number(Frame_Body: CTkFrame, Lines_No: int):
+                PO_DEL_Number_list = []
+                for i in range(0, Lines_No + 1):
+                    if i == 0:
+                        i = ""
+                    elif i == 1:
+                        continue
+                    else:
+                        pass
+                    
+                    Value_CTkCheck = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkcheckbox"]
+                    Value_CTkCheck_Value = Value_CTkCheck.get()
+                    if Value_CTkCheck_Value == True:
+                        Selected_Delivery_No_label = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe"].children["!ctklabel"]
+                        Selected_Delivery_No = str(Selected_Delivery_No_label.cget("text"))
+                        Selected_Delivery_No = Selected_Delivery_No.replace(":", "")
+                        PO_DEL_Number_list.append(Selected_Delivery_No)
+                    else:
+                        pass
 
-            PO_DEL_Number_list_joined = ";".join(PO_DEL_Number_list)
-            PO_DEL_Number_Variable.set(value=PO_DEL_Number_list_joined)
-            PO_DEL_Number_Window.destroy()
+                PO_DEL_Number_list_joined = ";".join(PO_DEL_Number_list)
+                PO_DEL_Number_Variable.set(value=PO_DEL_Number_list_joined)
+                PO_DEL_Number_Window.destroy()
 
-        # TopUp Window
-        PO_DEL_Number_Window_geometry = (520, 500)
-        Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-        Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Number_Window_geometry[0] //2
-        Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Number_Window_geometry[1] //2
-        PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Delivery/s", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+            # TopUp Window
+            PO_DEL_Number_Window_geometry = (520, 500)
+            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Number_Window_geometry[0] //2
+            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Number_Window_geometry[1] //2
+            PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Delivery/s", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-        # Frame - General
-        Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name=f"Select Delivery/s", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Delivery Numbers for each Invoice creation..", GUI_Level_ID=3)
-        Frame_Body = Frame_Main.children["!ctkframe2"]
+            # Frame - General
+            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name=f"Select Delivery/s", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Delivery Numbers for each Invoice creation..", GUI_Level_ID=3)
+            Frame_Body = Frame_Main.children["!ctkframe2"]
 
-        Lines_No = len(Downloaded_Delivery_List)
-        for Delivery_Index, Delivery_Number in enumerate(Downloaded_Delivery_List):
-            # Fields
-            Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery_Number}", Field_Type="Input_CheckBox") 
-            Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-            Fields_Frame_Var.configure(text="")
+            Lines_No = len(Downloaded_Delivery_List)
+            for Delivery_Index, Delivery_Number in enumerate(Downloaded_Delivery_List):
+                # Fields
+                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery_Number}", Field_Type="Input_CheckBox") 
+                Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+                Fields_Frame_Var.configure(text="")
 
-        # Dynamic Content height
-        content_row_count = len(Frame_Body.winfo_children())
-        content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-        if content_height > PO_DEL_Number_Window_geometry[1]:
-            content_height = PO_DEL_Number_Window_geometry[1]
-        Frame_Main.configure(bg_color = "#000001", height=content_height)
+            # Dynamic Content height
+            content_row_count = len(Frame_Body.winfo_children())
+            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+            if content_height > PO_DEL_Number_Window_geometry[1]:
+                content_height = PO_DEL_Number_Window_geometry[1]
+            Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-        # Buttons
-        PO_DEL_Number_Variable = StringVar(master=PO_DEL_Number_Window, value="", name="PO_DEL_Number_Variable")
-        Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-        Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-        Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_DEL_Number(Frame_Body=Frame_Body, Lines_No=Lines_No))
-        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Number selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-        Button_Confirm_Var.wait_variable(PO_DEL_Number_Variable)
-        PO_Delivery_Number_list = PO_DEL_Number_Variable.get().split(";")
+            # Buttons
+            PO_DEL_Number_Variable = StringVar(master=PO_DEL_Number_Window, value="", name="PO_DEL_Number_Variable")
+            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_DEL_Number(Frame_Body=Frame_Body, Lines_No=Lines_No))
+            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Number selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+            Button_Confirm_Var.wait_variable(PO_DEL_Number_Variable)
+            PO_Delivery_Number_list = PO_DEL_Number_Variable.get().split(";")
+        else:
+            PO_Delivery_Number_list = Downloaded_Delivery_List
 
         # Filter HQ_Delivery_Lines_df by selected Delivery Numbers
         mask_Delivery_No = HQ_Delivery_Lines_df["Vendor_Document_No"].isin(PO_Delivery_Number_list) 

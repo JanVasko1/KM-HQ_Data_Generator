@@ -11,7 +11,7 @@ import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
 
-def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame):
+def Generate_BB_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     BB_Invoice_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="BB_Invoice_Header")
@@ -48,38 +48,44 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Today_str = Today_dt.strftime(Numbers_DateTime_format)
             BB_Number = BB_Automatic_Prefix + Today_str
         elif BB_Numbers_Method == "Prompt":
-            def Select_BB_Number(Prompt_Number_Frame: CTkFrame):
-                Invoice_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
-                BB_Number = Invoice_Number_Var.get()
-                BB_Number_Variable.set(value=BB_Number)
-                BB_Number_Window.destroy()
-                
-            # TopUp Window
-            BB_Number_Window_geometry = (500, 250)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Number_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Number_Window_geometry[1] //2
-            BB_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Number.", max_width=BB_Number_Window_geometry[0], max_height=BB_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            if GUI == True:
+                def Select_BB_Number(Prompt_Number_Frame: CTkFrame):
+                    Invoice_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    BB_Number = Invoice_Number_Var.get()
+                    BB_Number_Variable.set(value=BB_Number)
+                    BB_Number_Window.destroy()
+                    
+                # TopUp Window
+                BB_Number_Window_geometry = (500, 250)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Number_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Number_Window_geometry[1] //2
+                BB_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Number.", max_width=BB_Number_Window_geometry[0], max_height=BB_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Number_Window, Name="Select BackBone Billing Invoice Number.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Number_Window, Name="Select BackBone Billing Invoice Number.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Main.configure(bg_color = "#000001")
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Number",  Field_Type="Input_Normal")  
-            Prompt_Number_Frame_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
-            Prompt_Number_Frame_Var.configure(placeholder_text="Insert your Invoice Number", placeholder_text_color="#949A9F")
+                Prompt_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Number",  Field_Type="Input_Normal")  
+                Prompt_Number_Frame_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
+                Prompt_Number_Frame_Var.configure(placeholder_text="Insert your Invoice Number", placeholder_text_color="#949A9F")
 
-            # Buttons
-            BB_Number_Variable = StringVar(master=BB_Number_Window, value="", name="BB_Number_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Number(Prompt_Number_Frame=Prompt_Number_Frame))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Invoice Number.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Number_Variable)
-            BB_Number = BB_Number_Variable.get()
+                # Buttons
+                BB_Number_Variable = StringVar(master=BB_Number_Window, value="", name="BB_Number_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Number(Prompt_Number_Frame=Prompt_Number_Frame))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Invoice Number.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Number_Variable)
+                BB_Number = BB_Number_Variable.get()
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
         
         # Fill value in template
@@ -95,42 +101,47 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             Today_dt = datetime.now()
             BB_Invoice_Date = Today_dt.strftime(Date_format)
         elif BB_Invoice_Date_Method == "Prompt":
-            def Select_BB_Invoice_Date(Prompt_Date_Frame: CTkFrame):
-                Invoice_Date_Var =  Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-                BB_Invoice_Date = Invoice_Date_Var.get()
-                BB_Invoice_Date_Variable.set(value=BB_Invoice_Date)
-                BB_Inv_Date_Window.destroy()
-                
-            # TopUp Window
-            BB_Inv_Date_Window_geometry = (500, 250)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Inv_Date_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Inv_Date_Window_geometry[1] //2
-            BB_Inv_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Date.", max_width=BB_Inv_Date_Window_geometry[0], max_height=BB_Inv_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            if GUI == True:
+                def Select_BB_Invoice_Date(Prompt_Date_Frame: CTkFrame):
+                    Invoice_Date_Var =  Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    BB_Invoice_Date = Invoice_Date_Var.get()
+                    BB_Invoice_Date_Variable.set(value=BB_Invoice_Date)
+                    BB_Inv_Date_Window.destroy()
+                    
+                # TopUp Window
+                BB_Inv_Date_Window_geometry = (500, 250)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Inv_Date_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Inv_Date_Window_geometry[1] //2
+                BB_Inv_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Invoice Date.", max_width=BB_Inv_Date_Window_geometry[0], max_height=BB_Inv_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Inv_Date_Window, Name="Select BackBone Billing Invoice Date.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select date of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=BB_Inv_Date_Window, Name="Select BackBone Billing Invoice Date.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select date of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Main.configure(bg_color = "#000001")
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Date_Picker", Validation="Date")  
-            Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-            Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
-            Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-            Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Invoice Date",  Field_Type="Date_Picker", Validation="Date")  
+                Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+                Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
+                Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
+                Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-            # Buttons
-            BB_Invoice_Date_Variable = StringVar(master=BB_Inv_Date_Window, value="", name="BB_Invoice_Date_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Invoice_Date(Prompt_Date_Frame=Prompt_Date_Frame))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Invoice Date.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Invoice_Date_Variable)
-            BB_Invoice_Date = BB_Invoice_Date_Variable.get()
-            
+                # Buttons
+                BB_Invoice_Date_Variable = StringVar(master=BB_Inv_Date_Window, value="", name="BB_Invoice_Date_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Invoice_Date(Prompt_Date_Frame=Prompt_Date_Frame))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Invoice Date.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Invoice_Date_Variable)
+                BB_Invoice_Date = BB_Invoice_Date_Variable.get()
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
 
         # Fill value in template
@@ -148,7 +159,10 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
             previous_month_date = Today_dt - relativedelta(months=1)
             BB_Order_ID = previous_month_date.strftime("%B_%Y")
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
 
         # Fill value in template
@@ -167,7 +181,10 @@ def Generate_BB_Header(Settings: dict, Configuration: dict, window: CTk, Company
         elif BB_Order_date_Method == "Invoice date":
             BB_Order_Date = BB_Invoice_Date
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
 
         # Fill value in template

@@ -10,8 +10,8 @@ import Libs.GUI.Elements_Groups as Elements_Groups
 from customtkinter import CTk, CTkFrame, StringVar
 
 def Generate_BB_Lines(Settings: dict, 
-                      Configuration: dict, 
-                      window: CTk, 
+                      Configuration: dict|None, 
+                      window: CTk|None, 
                       Vendor_Service_Function_df: DataFrame,
                       Plants_df: DataFrame,
                       Country_ISO_Code_list: list,
@@ -19,7 +19,8 @@ def Generate_BB_Lines(Settings: dict,
                       BB_Number: str, 
                       BB_Order_ID: str, 
                       BB_supplier_order_id: str,
-                      BB_Order_Date: str) -> list:
+                      BB_Order_Date: str,
+                      GUI: bool=True) -> list:
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Lines_df = DataFrame(columns=["line_item_id", "supplier_aid", "description_short", "quantity", "order_unit", "price_amount", "price_line_amount", "order_id", "order_date", "supplier_order_id", "supplier_order_item_id", "delivery_note_id", "tariff_number", "origin", "plant"])
@@ -51,76 +52,82 @@ def Generate_BB_Lines(Settings: dict,
             Lines_df["supplier_aid"] = Items_List
             Lines_df["description_short"] = Items_Description_List
         elif BB_Items_Method == "Prompt":
-            def Select_BB_Items(Frame_Body: CTkFrame, Lines_No: int):
-                Items_List = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
-                    
-                    Value_CTkCheck = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkcheckbox"]
-                    Value_CTkCheck_Value = Value_CTkCheck.get()
-                    if Value_CTkCheck_Value == True:
-                        Selected_Item_No_label = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe"].children["!ctklabel"]
-                        Selected_Item_No = str(Selected_Item_No_label.cget("text"))
-                        Selected_Item_No = Selected_Item_No.replace(":", "")
-                        Items_List.append(Selected_Item_No)
-                    else:
-                        pass
-                Lines_df["supplier_aid"] = Items_List
-                BB_Items_Variable.set(value="Selected")
-                BB_Item_Window.destroy()
+            if GUI == True:
+                def Select_BB_Items(Frame_Body: CTkFrame, Lines_No: int):
+                    Items_List = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkCheck = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkcheckbox"]
+                        Value_CTkCheck_Value = Value_CTkCheck.get()
+                        if Value_CTkCheck_Value == True:
+                            Selected_Item_No_label = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe"].children["!ctklabel"]
+                            Selected_Item_No = str(Selected_Item_No_label.cget("text"))
+                            Selected_Item_No = Selected_Item_No.replace(":", "")
+                            Items_List.append(Selected_Item_No)
+                        else:
+                            pass
+                    Lines_df["supplier_aid"] = Items_List
+                    BB_Items_Variable.set(value="Selected")
+                    BB_Item_Window.destroy()
 
-            # TopUp Window
-            BB_Items_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Items_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Items_Window_geometry[1] //2
-            BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Service ID.", max_width=BB_Items_Window_geometry[0], max_height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                # TopUp Window
+                BB_Items_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Items_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Items_Window_geometry[1] //2
+                BB_Item_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Service ID.", max_width=BB_Items_Window_geometry[0], max_height=BB_Items_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Service ID.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Service ID of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Item_Window, Name="Select BackBone Billing Service ID.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Service ID of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Vendor_Service_ID
-            Lines_No = len(Vendor_Service_Function_df)
-            for row in Vendor_Service_Function_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["Vendor_Service_ID"]
+                # Vendor_Service_ID
+                Lines_No = len(Vendor_Service_Function_df)
+                for row in Vendor_Service_Function_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["Vendor_Service_ID"]
 
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_CheckBox") 
-                Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-                Fields_Frame_Var.configure(text="")
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_CheckBox") 
+                    Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
+                    Fields_Frame_Var.configure(text="")
 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Items_Window_geometry [1]:
-                content_height = BB_Items_Window_geometry [1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Items_Window_geometry [1]:
+                    content_height = BB_Items_Window_geometry [1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-            # Buttons
-            BB_Items_Variable = StringVar(master=BB_Item_Window, value="", name="BB_Items_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Items(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Service ID selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Items_Variable)
+                # Buttons
+                BB_Items_Variable = StringVar(master=BB_Item_Window, value="", name="BB_Items_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Items(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Service ID selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Items_Variable)
 
-            # Items Description
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
-                result = Vendor_Service_Function_df.loc[Vendor_Service_Function_df["Vendor_Service_ID"] == Item_No, "Vendor_Service_Name"].values[0]
-                Lines_df.at[row[0], "description_short"] = result
+                # Items Description
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
+                    result = Vendor_Service_Function_df.loc[Vendor_Service_Function_df["Vendor_Service_ID"] == Item_No, "Vendor_Service_Name"].values[0]
+                    Lines_df.at[row[0], "description_short"] = result
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -133,65 +140,71 @@ def Generate_BB_Lines(Settings: dict,
         if BB_Quantity_Method == "One":
             Lines_df["quantity"] = 1
         elif BB_Quantity_Method == "Prompt":
-            def Select_BB_Quantity(Frame_Body: CTkFrame, Lines_No: int):
-                Quantity_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
+            if GUI == True:
+                def Select_BB_Quantity(Frame_Body: CTkFrame, Lines_No: int):
+                    Quantity_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_Quantity = int(Value_CTkEntry.get())
+                        except:
+                            Value_Quantity = 0
+                        Quantity_list.append(Value_Quantity)
+
+                    Lines_df["quantity"] = Quantity_list
+                    BB_Quantity_Variable.set(value="Selected")
+                    BB_Quantity_Window.destroy()
+
+                # TopUp Window
+                BB_Quantity_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Quantity_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Quantity_Window_geometry[1] //2
+                BB_Quantity_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Qty for selected Items.", max_width=BB_Quantity_Window_geometry[0], max_height=BB_Quantity_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Quantity_Window, Name="Select BackBone Billing Qty for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Quantities
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
+
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Integer") 
+                    BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    BB_Fields_Frame_Var.configure(placeholder_text="Manual Quantity", placeholder_text_color="#949A9F")
                     
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_Quantity = int(Value_CTkEntry.get())
-                    except:
-                        Value_Quantity = 0
-                    Quantity_list.append(Value_Quantity)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Quantity_Window_geometry[1]:
+                    content_height = BB_Quantity_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                Lines_df["quantity"] = Quantity_list
-                BB_Quantity_Variable.set(value="Selected")
-                BB_Quantity_Window.destroy()
-
-            # TopUp Window
-            BB_Quantity_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Quantity_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Quantity_Window_geometry[1] //2
-            BB_Quantity_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Qty for selected Items.", max_width=BB_Quantity_Window_geometry[0], max_height=BB_Quantity_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Quantity_Window, Name="Select BackBone Billing Qty for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Quantities
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
-
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Integer") 
-                BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
-                BB_Fields_Frame_Var.configure(placeholder_text="Manual Quantity", placeholder_text_color="#949A9F")
-                
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Quantity_Window_geometry[1]:
-                content_height = BB_Quantity_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            BB_Quantity_Variable = StringVar(master=BB_Quantity_Window, value="", name="BB_Quantity_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Quantity(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Quantity selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Quantity_Variable)
+                # Buttons
+                BB_Quantity_Variable = StringVar(master=BB_Quantity_Window, value="", name="BB_Quantity_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Quantity(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Quantity selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Quantity_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -201,66 +214,72 @@ def Generate_BB_Lines(Settings: dict,
         if BB_Price_Method == "Fixed":
             Lines_df["price_amount"] = BB_Fixed_Price
         elif BB_Price_Method == "Prompt":
-            def Select_BB_Price(Frame_Body: CTkFrame, Lines_No: int):
-                Price_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
-                    
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_Price = float(Value_CTkEntry.get())
-                    except:
-                        Value_Price = 0
-                    Value_Price = round(number=Value_Price, ndigits=2)
-                    Price_list.append(Value_Price)
+            if GUI == True:
+                def Select_BB_Price(Frame_Body: CTkFrame, Lines_No: int):
+                    Price_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_Price = float(Value_CTkEntry.get())
+                        except:
+                            Value_Price = 0
+                        Value_Price = round(number=Value_Price, ndigits=2)
+                        Price_list.append(Value_Price)
 
-                Lines_df["price_amount"] = Price_list
-                BB_Price_Variable.set(value="Selected")
-                BB_Price_Window.destroy()
-            
-            # TopUp Window
-            BB_Price_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Price_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Price_Window_geometry[1] //2
-            BB_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Price for selected Items.", max_width=BB_Price_Window_geometry[0], max_height=BB_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Price_Window, Name="Select BackBone Billing Price for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Prices
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
-
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
-                BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
-                BB_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
+                    Lines_df["price_amount"] = Price_list
+                    BB_Price_Variable.set(value="Selected")
+                    BB_Price_Window.destroy()
                 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Price_Window_geometry[1]:
-                content_height = BB_Price_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
+                # TopUp Window
+                BB_Price_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Price_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Price_Window_geometry[1] //2
+                BB_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Price for selected Items.", max_width=BB_Price_Window_geometry[0], max_height=BB_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # Buttons
-            BB_Price_Variable = StringVar(master=BB_Price_Window, value="", name="BB_Price_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Price(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Price_Variable)
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Price_Window, Name="Select BackBone Billing Price for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Prices
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
+
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
+                    BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    BB_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
+                    
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Price_Window_geometry[1]:
+                    content_height = BB_Price_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
+
+                # Buttons
+                BB_Price_Variable = StringVar(master=BB_Price_Window, value="", name="BB_Price_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Price(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Price_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -280,66 +299,72 @@ def Generate_BB_Lines(Settings: dict,
         elif BB_Inv_Plant_Method == "Empty":
             Lines_df["plant"] = ""
         elif BB_Inv_Plant_Method == "Prompt":
-            BB_Inv_Fixed_Plants_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Plants"]["Fixed_Options"]["Plants_List"])
-            def Select_BB_Plant(Frame_Body: CTkFrame, Lines_No: int):
-                Plant_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
-                    
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
-                    try:
-                        Value_Plant = Value_CTkEntry.get()
-                    except:
-                        Value_Plant = "1000"
-                    Plant_list.append(Value_Plant)
+            if GUI == True:
+                BB_Inv_Fixed_Plants_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Plants"]["Fixed_Options"]["Plants_List"])
+                def Select_BB_Plant(Frame_Body: CTkFrame, Lines_No: int):
+                    Plant_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
+                        try:
+                            Value_Plant = Value_CTkEntry.get()
+                        except:
+                            Value_Plant = "1000"
+                        Plant_list.append(Value_Plant)
 
-                Lines_df["plant"] = Plant_list
-                BB_Plant_Variable.set(value="Selected")
-                BB_Plant_Window.destroy()
-            
-            # TopUp Window
-            BB_Plant_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Plant_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Plant_Window_geometry[1] //2
-            BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Plant for selected Items.", max_width=BB_Plant_Window_geometry[0], max_height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                    Lines_df["plant"] = Plant_list
+                    BB_Plant_Variable.set(value="Selected")
+                    BB_Plant_Window.destroy()
+                
+                # TopUp Window
+                BB_Plant_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Plant_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Plant_Window_geometry[1] //2
+                BB_Plant_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Plant for selected Items.", max_width=BB_Plant_Window_geometry[0], max_height=BB_Plant_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Plant_Window, Name="Select BackBone Billing Plant for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Plant for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Plants
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
+                # Plants
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
 
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
-                BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-                Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=BB_Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                    BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=BB_Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Plant_Window_geometry[1]:
-                content_height = BB_Plant_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Plant_Window_geometry[1]:
+                    content_height = BB_Plant_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-            # Buttons
-            BB_Plant_Variable = StringVar(master=BB_Plant_Window, value="", name="BB_Plant_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Plant(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Plant selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Plant_Variable)
+                # Buttons
+                BB_Plant_Variable = StringVar(master=BB_Plant_Window, value="", name="BB_Plant_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Plant(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Plant selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Plant_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -353,65 +378,71 @@ def Generate_BB_Lines(Settings: dict,
         elif BB_Count_Origin_Method == "Empty":
             Lines_df["origin"] = ""
         elif BB_Count_Origin_Method == "Prompt":
-            def Select_BB_Country_Origin(Frame_Body: CTkFrame, Lines_No: int):
-                Country_Origin_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
-                    
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
-                    try:
-                        Value_Country_Origin = Value_CTkEntry.get()
-                    except:
-                        Value_Country_Origin = "JP"
-                    Country_Origin_list.append(Value_Country_Origin)
+            if GUI == True:
+                def Select_BB_Country_Origin(Frame_Body: CTkFrame, Lines_No: int):
+                    Country_Origin_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
+                        try:
+                            Value_Country_Origin = Value_CTkEntry.get()
+                        except:
+                            Value_Country_Origin = "JP"
+                        Country_Origin_list.append(Value_Country_Origin)
 
-                Lines_df["origin"] = Country_Origin_list
-                BB_Country_Origin_Variable.set(value="Selected")
-                BB_Country_Origin_Window.destroy()
+                    Lines_df["origin"] = Country_Origin_list
+                    BB_Country_Origin_Variable.set(value="Selected")
+                    BB_Country_Origin_Window.destroy()
 
-            # TopUp Window
-            BB_Country_Origin_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Country_Origin_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Country_Origin_Window_geometry[1] //2
-            BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Country of Origin  for selected Items.", max_width=BB_Country_Origin_Window_geometry[0], max_height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                # TopUp Window
+                BB_Country_Origin_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Country_Origin_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Country_Origin_Window_geometry[1] //2
+                BB_Country_Origin_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Country of Origin  for selected Items.", max_width=BB_Country_Origin_Window_geometry[0], max_height=BB_Country_Origin_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Country_Origin_Window, Name="Select BackBone Billing Country of Origin  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Country for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Country of Origin
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
+                # Country of Origin
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
 
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
-                BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-                Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                    BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Country_Origin_Window_geometry[1]:
-                content_height = BB_Country_Origin_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Country_Origin_Window_geometry[1]:
+                    content_height = BB_Country_Origin_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-            # Buttons
-            BB_Country_Origin_Variable = StringVar(master=BB_Country_Origin_Window, value="", name="BB_Country_Origin_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Country_Origin(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Country of Origin selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Country_Origin_Variable)
+                # Buttons
+                BB_Country_Origin_Variable = StringVar(master=BB_Country_Origin_Window, value="", name="BB_Country_Origin_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Country_Origin(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Country of Origin selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Country_Origin_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -425,65 +456,71 @@ def Generate_BB_Lines(Settings: dict,
         elif BB_Tariff_Method == "Empty":
             Lines_df["tariff_number"] = ""
         elif BB_Tariff_Method == "Prompt":
-            def Select_BB_Tariff(Frame_Body: CTkFrame, Lines_No: int):
-                Tariff_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
-                    
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
-                    try:
-                        Value_Tariff = Value_CTkEntry.get()
-                    except:
-                        Value_Tariff = ""
-                    Tariff_list.append(Value_Tariff)
+            if GUI == True:
+                def Select_BB_Tariff(Frame_Body: CTkFrame, Lines_No: int):
+                    Tariff_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkoptionmenu"]
+                        try:
+                            Value_Tariff = Value_CTkEntry.get()
+                        except:
+                            Value_Tariff = ""
+                        Tariff_list.append(Value_Tariff)
 
-                Lines_df["tariff_number"] = Tariff_list
-                BB_Tariff_Variable.set(value="Selected")
-                BB_Tariff_Window.destroy()
+                    Lines_df["tariff_number"] = Tariff_list
+                    BB_Tariff_Variable.set(value="Selected")
+                    BB_Tariff_Window.destroy()
 
-            # TopUp Window
-            BB_Tariff_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Tariff_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Tariff_Window_geometry[1] //2
-            BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Tariff  for selected Items.", max_width=BB_Tariff_Window_geometry[0], max_height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                # TopUp Window
+                BB_Tariff_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - BB_Tariff_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - BB_Tariff_Window_geometry[1] //2
+                BB_Tariff_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select BackBone Billing Tariff  for selected Items.", max_width=BB_Tariff_Window_geometry[0], max_height=BB_Tariff_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=BB_Tariff_Window, Name="Select BackBone Billing Tariff  for selected Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Qty for each Item of BackBone Billing Invoice.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Tariff
-            for row in Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["supplier_aid"]
+                # Tariff
+                for row in Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["supplier_aid"]
 
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
-                BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-                Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
+                    BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > BB_Tariff_Window_geometry[1]:
-                content_height = BB_Tariff_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > BB_Tariff_Window_geometry[1]:
+                    content_height = BB_Tariff_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-            # Buttons
-            BB_Tariff_Variable = StringVar(master=BB_Tariff_Window, value="", name="BB_Tariff_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Tariff(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Tariff selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(BB_Tariff_Variable)
+                # Buttons
+                BB_Tariff_Variable = StringVar(master=BB_Tariff_Window, value="", name="BB_Tariff_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_BB_Tariff(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Tariff selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(BB_Tariff_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass

@@ -48,7 +48,7 @@ def Dict_Main_Key_Change(Dictionary: dict, counter: int) -> dict:
         counter += 1
     return new_dict
 
-def Get_All_Templates_List(Settings: dict, window: CTk) -> list:
+def Get_All_Templates_List(Settings: dict, window: CTk|None) -> list:
     file_path = Absolute_path(relative_path=f"Operational\\Template")
     Files = glob(pathname=os.path.join(file_path, "*"))
     Files_Templates = [x.replace(file_path, "") for x in Files]
@@ -61,7 +61,7 @@ def Get_All_Templates_List(Settings: dict, window: CTk) -> list:
     return Files_Templates
 
 # --------------------------------------------- Global Settings update --------------------------------------------- #
-def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|None, window: CTk, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict, User_Change: bool|None = True) -> None:
+def Save_Value(Settings: dict|None, Configuration: dict|None|None, Documents: dict|None, window: CTk|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict, User_Change: bool|None = True) -> None:
     def Value_change(my_dict: dict, JSON_path: list, Information: bool|int|str|list|dict) -> None:
         for key in JSON_path[:-1]:
             my_dict = my_dict.setdefault(key, {})
@@ -116,7 +116,7 @@ def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|No
     except Exception as Error:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to update {Information} into Field: {JSON_path} of {File_Name}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Import_Data(Settings: dict, Configuration: dict, window: CTk, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str, User_Change: bool) -> None:
+def Import_Data(Settings: dict, Configuration: dict|None, window: CTk|None, import_file_path: str, Import_Type: str,  JSON_path: list, Method: str, User_Change: bool) -> None:
     Can_Import = True
     # Check if file is json
     File_Name = import_file_path[0]

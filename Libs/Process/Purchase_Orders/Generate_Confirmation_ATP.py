@@ -8,7 +8,7 @@ import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Pandas_Functions as Pandas_Functions
 
-def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict, window: CTk, Confirmed_Lines_df: DataFrame, PO_Confirmation_Lines: dict) -> dict:
+def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, Confirmed_Lines_df: DataFrame, PO_Confirmation_Lines: dict, GUI: bool=True) -> dict:
     # --------------------------------------------- Defaults --------------------------------------------- #
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
 

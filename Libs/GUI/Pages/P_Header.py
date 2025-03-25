@@ -19,7 +19,7 @@ import Libs.Data_Functions as Data_Functions
 import Libs.Azure.Authorization as Authorization
 
 # ------------------------------------------------------------------------------------------------------------------------------------ Header ------------------------------------------------------------------------------------------------------------------------------------ #
-def Get_Header(Settings: dict, Configuration: dict, window: CTk, Documents: dict, Frame: CTkFrame) -> CTkFrame:
+def Get_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Documents: dict, Frame: CTkFrame) -> CTkFrame:
     global Actual_Template_Variable
     # Global Variables
     Template_List = Data_Functions.Get_All_Templates_List(Settings=Settings, window=window)

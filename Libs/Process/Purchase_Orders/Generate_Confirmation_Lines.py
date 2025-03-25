@@ -11,8 +11,8 @@ import Libs.Defaults_Lists as Defaults_Lists
 from customtkinter import CTk, CTkFrame, StringVar
 
 def Generate_PO_CON_Lines(Settings: dict, 
-                            Configuration: dict, 
-                            window: CTk,
+                            Configuration: dict|None, 
+                            window: CTk|None,
                             Purchase_Order: str,
                             Purchase_Lines_df: DataFrame, 
                             HQ_Item_Transport_Register_df: DataFrame,
@@ -22,7 +22,8 @@ def Generate_PO_CON_Lines(Settings: dict,
                             Items_Price_List_Detail_df: DataFrame, 
                             Items_Distr_Status_df: DataFrame,
                             UoM_df: DataFrame,
-                            PO_Confirmation_Currency: str):
+                            PO_Confirmation_Currency: str,
+                            GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "Distribution_Status_NUS", "Blocked_for_Purchase", "price_currency"]
@@ -103,66 +104,72 @@ def Generate_PO_CON_Lines(Settings: dict,
         elif Price_Method == "Purchase Line":
             Confirmed_Lines_df["price_amount"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="price_amount", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["No"], Search_df=Purchase_Lines_df_Filtered, Search_Column="Direct_Unit_Cost"), axis=1)
         elif Price_Method == "Prompt":
-            def Select_PO_Prices(Frame_Body: CTkFrame, Lines_No: int):
-                Price_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
+            if GUI == True:
+                def Select_PO_Prices(Frame_Body: CTkFrame, Lines_No: int):
+                    Price_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_Price = float(Value_CTkEntry.get())
+                        except:
+                            Value_Price = 0
+                        Value_Price = round(number=Value_Price, ndigits=2)
+                        Price_list.append(Value_Price)
+
+                    Confirmed_Lines_df["price_amount"] = Price_list
+                    PO_Price_Variable.set(value="Selected")
+                    PO_Price_Window.destroy()
+
+                # TopUp Window
+                PO_Price_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Price_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Price_Window_geometry[1] //2
+                PO_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Price for Items Items.", max_width=PO_Price_Window_geometry[0], max_height=PO_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Price_Window, Name="Select Price for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of Confirmation.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Prices
+                for row in Confirmed_Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["buyer_aid"]
+
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
+                    PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    PO_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
                     
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_Price = float(Value_CTkEntry.get())
-                    except:
-                        Value_Price = 0
-                    Value_Price = round(number=Value_Price, ndigits=2)
-                    Price_list.append(Value_Price)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > PO_Price_Window_geometry[1]:
+                    content_height = PO_Price_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                Confirmed_Lines_df["price_amount"] = Price_list
-                PO_Price_Variable.set(value="Selected")
-                PO_Price_Window.destroy()
-
-            # TopUp Window
-            PO_Price_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Price_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Price_Window_geometry[1] //2
-            PO_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Price for Items Items.", max_width=PO_Price_Window_geometry[0], max_height=PO_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Price_Window, Name="Select Price for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of Confirmation.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Prices
-            for row in Confirmed_Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["buyer_aid"]
-
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
-                PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
-                PO_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
-                
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > PO_Price_Window_geometry[1]:
-                content_height = PO_Price_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            PO_Price_Variable = StringVar(master=PO_Price_Window, value="", name="PO_Price_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_Prices(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_Price_Variable)
+                # Buttons
+                PO_Price_Variable = StringVar(master=PO_Price_Window, value="", name="PO_Price_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_Prices(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_Price_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -180,66 +187,71 @@ def Generate_PO_CON_Lines(Settings: dict,
             Confirmed_Lines_df["order_unit"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit", Compare_Column_df1=["PO_UoM"], Compare_Column_df2=["Code"], Search_df=UoM_df, Search_Column="International_Standard_Code"), axis=1)
             Confirmed_Lines_df.drop(labels=["PO_UoM"], inplace=True, axis=1)
         elif UoM_Method == "Prompt":
-            def Select_UoM(Frame_Body: CTkFrame, Lines_No: int):
-                UoM_list = []
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
-                    else:
-                        pass
+            if GUI == True:
+                def Select_UoM(Frame_Body: CTkFrame, Lines_No: int):
+                    UoM_list = []
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_UoM = Value_CTkEntry.get()
+                        except:
+                            Value_UoM = ""
+                        UoM_list.append(Value_UoM)
+
+                    Confirmed_Lines_df["order_unit"] = UoM_list
+                    PO_UoM_Variable.set(value="Selected")
+                    PO_UoM_Window.destroy()
+
+                # TopUp Window
+                PO_UoM_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_UoM_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_UoM_Window_geometry[1] //2
+                PO_UoM_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Unit of Measure for Items Items.", max_width=PO_UoM_Window_geometry[0], max_height=PO_UoM_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_UoM_Window, Name="Select Unit of Measure for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Unit of Measure for each Item of Confirmation.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Unit of Measure
+                for row in Confirmed_Lines_df.iterrows():
+                    # Dataframe
+                    row_Series = Series(row[1])
+                    Item_No = row_Series["buyer_aid"]
+
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal") 
+                    PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    PO_Fields_Frame_Var.configure(placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F")
                     
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_UoM = Value_CTkEntry.get()
-                    except:
-                        Value_UoM = ""
-                    UoM_list.append(Value_UoM)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > PO_UoM_Window_geometry[1]:
+                    content_height = PO_UoM_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                Confirmed_Lines_df["order_unit"] = UoM_list
-                PO_UoM_Variable.set(value="Selected")
-                PO_UoM_Window.destroy()
-
-            # TopUp Window
-            PO_UoM_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_UoM_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_UoM_Window_geometry[1] //2
-            PO_UoM_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Unit of Measure for Items Items.", max_width=PO_UoM_Window_geometry[0], max_height=PO_UoM_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_UoM_Window, Name="Select Unit of Measure for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Unit of Measure for each Item of Confirmation.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Unit of Measure
-            for row in Confirmed_Lines_df.iterrows():
-                # Dataframe
-                row_Series = Series(row[1])
-                Item_No = row_Series["buyer_aid"]
-
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal") 
-                PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
-                PO_Fields_Frame_Var.configure(placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F")
-                
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > PO_UoM_Window_geometry[1]:
-                content_height = PO_UoM_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            PO_UoM_Variable = StringVar(master=PO_UoM_Window, value="", name="PO_UoM_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_UoM(Frame_Body=Frame_Body, Lines_No=Lines_No))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_UoM_Variable)
-
+                # Buttons
+                PO_UoM_Variable = StringVar(master=PO_UoM_Window, value="", name="PO_UoM_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_UoM(Frame_Body=Frame_Body, Lines_No=Lines_No))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_UoM_Variable)
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -330,83 +342,86 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
 
                 elif Free_Method == "Prompt":
-                    def Select_Free(Frame_Body: CTkFrame, Insert_Index: int):
-                        global Confirmed_Lines_df
-                        for i in range(2, 5):                           
-                            No_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
-                            Description_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry2"]
-                            Qty_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry3"]
-                            Price_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry4"]
+                    if GUI == True:
+                        def Select_Free(Frame_Body: CTkFrame, Insert_Index: int):
+                            global Confirmed_Lines_df
+                            for i in range(2, 5):                           
+                                No_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
+                                Description_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry2"]
+                                Qty_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry3"]
+                                Price_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry4"]
 
-                            # Number
-                            try:
-                                Value_Free_No = No_CTkEntry.get()
-                            except:
-                                Value_Free_No = ""
-
-                            if Value_Free_No != "":
-                                # Description
+                                # Number
                                 try:
-                                    Value_Free_Desc = Description_CTkEntry.get()
+                                    Value_Free_No = No_CTkEntry.get()
                                 except:
-                                    Value_Free_Desc = ""
+                                    Value_Free_No = ""
 
-                                # Qty
-                                try:
-                                    Value_Free_Qty = int(Qty_CTkEntry.get())
-                                except:
-                                    Value_Free_Qty = 0
+                                if Value_Free_No != "":
+                                    # Description
+                                    try:
+                                        Value_Free_Desc = Description_CTkEntry.get()
+                                    except:
+                                        Value_Free_Desc = ""
 
-                                # Prices
-                                try:
-                                    Value_Free_Price = float(Price_CTkEntry.get())
-                                except:
-                                    Value_Free_Price = 0
-                                Free_Item_Line_list = [0, Value_Free_No, "", Value_Free_Desc, Value_Free_Qty, "C62", Value_Free_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
-                                
-                                # Add to Confirmed_Lines_df
-                                Free_Item_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Item_Line_list))
-                                Insert_Index += 1
-                                # BUG --> do not write to Global Confirmed_Lines_df somehow !!! -> zkusit nastavit prázdný dataframe hned po načtení knihoven (funguje u CPDI Delivery --> asi že hned pod Global je zapsano přiřazení do promněné)
-                                Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
-                                print(Confirmed_Lines_df)
-                            else:
-                                pass
+                                    # Qty
+                                    try:
+                                        Value_Free_Qty = int(Qty_CTkEntry.get())
+                                    except:
+                                        Value_Free_Qty = 0
 
-                        PO_Free_Variable.set(value="Selected")
-                        PO_Free_Window.destroy()
+                                    # Prices
+                                    try:
+                                        Value_Free_Price = float(Price_CTkEntry.get())
+                                    except:
+                                        Value_Free_Price = 0
+                                    Free_Item_Line_list = [0, Value_Free_No, "", Value_Free_Desc, Value_Free_Qty, "C62", Value_Free_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                                    
+                                    # Add to Confirmed_Lines_df
+                                    Free_Item_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Item_Line_list))
+                                    Insert_Index += 1
+                                    # BUG --> do not write to Global Confirmed_Lines_df somehow !!! -> zkusit nastavit prázdný dataframe hned po načtení knihoven (funguje u CPDI Delivery --> asi že hned pod Global je zapsano přiřazení do promněné)
+                                    Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Insert_Index, New_Row=Free_Item_dict)
+                                else:
+                                    pass
 
-                    # TopUp Window
-                    PO_Free_Window_geometry = (520, 230)
-                    Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-                    Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Free_Window_geometry[0] // 2
-                    Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Free_Window_geometry[1] //2
-                    PO_Free_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Free of Charge Items for: {Machine}.", max_width=PO_Free_Window_geometry[0], max_height=PO_Free_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                            PO_Free_Variable.set(value="Selected")
+                            PO_Free_Window.destroy()
 
-                    # Frame - General
-                    Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Free_Window, Name=f"Select Free of Charge Items for: {Machine}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=f"To select proper Free of Charge Item for {Machine} of Confirmation.", GUI_Level_ID=3)
-                    Frame_Main.configure(bg_color = "#000001", height=230)
-                    Frame_Body = Frame_Main.children["!ctkframe2"]
+                        # TopUp Window
+                        PO_Free_Window_geometry = (520, 230)
+                        Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                        Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Free_Window_geometry[0] // 2
+                        Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Free_Window_geometry[1] //2
+                        PO_Free_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Free of Charge Items for: {Machine}.", max_width=PO_Free_Window_geometry[0], max_height=PO_Free_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-                    Description = Elements_Groups.Get_Prompt_Free_Of_Charge_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
-                    Cable_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Cable")
-                    Documentation_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Documentation")
-                    FaceSheet_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Face Sheet")
+                        # Frame - General
+                        Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Free_Window, Name=f"Select Free of Charge Items for: {Machine}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=f"To select proper Free of Charge Item for {Machine} of Confirmation.", GUI_Level_ID=3)
+                        Frame_Main.configure(bg_color = "#000001", height=230)
+                        Frame_Body = Frame_Main.children["!ctkframe2"]
 
-                    # Buttons
-                    PO_Free_Variable = StringVar(master=PO_Free_Window, value="", name="PO_Free_Variable")
-                    Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-                    Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-                    Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Free(Frame_Body=Frame_Body, Insert_Index=Insert_Index))
-                    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Free of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-                    Button_Confirm_Var.wait_variable(PO_Free_Variable)
+                        Description = Elements_Groups.Get_Prompt_Free_Of_Charge_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
+                        Cable_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Cable")
+                        Documentation_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Documentation")
+                        FaceSheet_Row = Elements_Groups.Get_Prompt_Free_Of_Charge_row(Settings=Settings, Configuration=Configuration, window=window,  Frame=Frame_Body, Field_Frame_Type="Double_Column", Label="Face Sheet")
+
+                        # Buttons
+                        PO_Free_Variable = StringVar(master=PO_Free_Window, value="", name="PO_Free_Variable")
+                        Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                        Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                        Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Free(Frame_Body=Frame_Body, Insert_Index=Insert_Index))
+                        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Free of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                        Button_Confirm_Var.wait_variable(PO_Free_Variable)
+                    else:
+                        pass
                 else:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    if GUI == True:
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    else:
+                        pass
                     Can_Continue = False
             else:
                 pass
-    
-    print(Confirmed_Lines_df)
 
     # Update after assigning Free of Charge
     Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
@@ -494,106 +509,112 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Confirmed_Lines_df.at[random_index, "discontinued"] = True
                 Confirmed_Lines_df.at[random_index, "cancelled"] = "No longer available"
             elif Line_Flags_Method == "Prompt":
-                Lines_No = len(Confirmed_Lines_df) 
-                def Select_Flags(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
-                    Confirmed_Lines_df_index = 0
-                    for i in range(2, Lines_No + 2):    
-                        Substitution_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox"]
-                        Substitution_Item_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
-                        Cancel_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox2"]
-                        Finished_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox3"]
-                        
-                        # Substitution
-                        Use_Substitution = Substitution_CTkEntry.get()
-                        if Use_Substitution == True:
-                            Sub_Item_No = Substitution_Item_CTkEntry.get()
-                            if Sub_Item_No != "":
-                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Sub_Item_No
-                            else:
+                if GUI == True:
+                    Lines_No = len(Confirmed_Lines_df) 
+                    def Select_Flags(Frame_Body: CTkFrame, Lines_No: int, Confirmed_Lines_df: DataFrame):
+                        Confirmed_Lines_df_index = 0
+                        for i in range(2, Lines_No + 2):    
+                            Substitution_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox"]
+                            Substitution_Item_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkentry"]
+                            Cancel_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox2"]
+                            Finished_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe2"].children["!ctkcheckbox3"]
+                            
+                            # Substitution
+                            Use_Substitution = Substitution_CTkEntry.get()
+                            if Use_Substitution == True:
+                                Sub_Item_No = Substitution_Item_CTkEntry.get()
+                                if Sub_Item_No != "":
+                                    Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Sub_Item_No
+                                else:
+                                    # Changed form Substituted into Non-Substituted
+                                    Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
+                                    Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
+                            elif Use_Substitution == False:
                                 # Changed form Substituted into Non-Substituted
                                 Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
                                 Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
-                        elif Use_Substitution == False:
-                            # Changed form Substituted into Non-Substituted
-                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
-                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
+                            else:
+                                pass
+
+                            # Cancel
+                            Use_Cancel = Cancel_CTkEntry.get()
+                            if Use_Cancel == True:
+                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "cancelled"] = True
+                            else:
+                                pass
+
+                            # Finished
+                            Use_Finished = Finished_CTkEntry.get()
+                            if Use_Finished == True:
+                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "discontinued"] = True
+                            else:
+                                pass
+
+                            Confirmed_Lines_df_index += 1
+
+                        PO_Flags_Variable.set(value="Selected")
+                        PO_Flags_Window.destroy()
+
+
+                    # TopUp Window
+                    PO_Flags_Window_geometry = (520, 500)
+                    Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                    Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Flags_Window_geometry[0] //2
+                    Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Flags_Window_geometry[1] //2
+                    PO_Flags_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Line Flags of Items.", max_width=PO_Flags_Window_geometry[0], max_height=PO_Flags_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                    # Frame - General
+                    Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Flags_Window, Name=f"Select Line Flags of Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=f"To select proper Line Flags Items in Confirmation.", GUI_Level_ID=3)
+                    Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                    Description = Elements_Groups.Get_Prompt_Line_Flags_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
+
+                    # Lines Flags
+                    for row in Confirmed_Lines_df.iterrows():
+                        # Dataframe
+                        row_Series = Series(row[1])
+                        Item_No = row_Series["supplier_aid"]
+                        Item_Line = row_Series["Exported_Line_No"]
+
+                        # Analyze Substitution
+                        Item_Bought = row_Series["buyer_aid"]
+                        Item_Label = row_Series["bom"]
+                        if (Item_Bought != Item_No) and (Item_Label == False) and (Item_Bought != ""):
+                            Item_Substituted = True
+
+                            # Items switched because of correct show on popup page
+                            Item_No_Substituted = Item_No
+                            Item_No = Item_Bought
                         else:
-                            pass
+                            Item_Substituted = False
+                            Item_No_Substituted = ""
 
-                        # Cancel
-                        Use_Cancel = Cancel_CTkEntry.get()
-                        if Use_Cancel == True:
-                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "cancelled"] = True
-                        else:
-                            pass
-
-                        # Finished
-                        Use_Finished = Finished_CTkEntry.get()
-                        if Use_Finished == True:
-                            Confirmed_Lines_df.at[Confirmed_Lines_df_index, "discontinued"] = True
-                        else:
-                            pass
-
-                        Confirmed_Lines_df_index += 1
-
-                    PO_Flags_Variable.set(value="Selected")
-                    PO_Flags_Window.destroy()
-
-
-                # TopUp Window
-                PO_Flags_Window_geometry = (520, 500)
-                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Flags_Window_geometry[0] //2
-                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Flags_Window_geometry[1] //2
-                PO_Flags_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Line Flags of Items.", max_width=PO_Flags_Window_geometry[0], max_height=PO_Flags_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-                # Frame - General
-                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Flags_Window, Name=f"Select Line Flags of Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip=f"To select proper Line Flags Items in Confirmation.", GUI_Level_ID=3)
-                Frame_Body = Frame_Main.children["!ctkframe2"]
-
-                Description = Elements_Groups.Get_Prompt_Line_Flags_Description_row(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Double_Column")
-
-                # Lines Flags
-                for row in Confirmed_Lines_df.iterrows():
-                    # Dataframe
-                    row_Series = Series(row[1])
-                    Item_No = row_Series["supplier_aid"]
-                    Item_Line = row_Series["Exported_Line_No"]
-
-                    # Analyze Substitution
-                    Item_Bought = row_Series["buyer_aid"]
-                    Item_Label = row_Series["bom"]
-                    if (Item_Bought != Item_No) and (Item_Label == False) and (Item_Bought != ""):
-                        Item_Substituted = True
-
-                        # Items switched because of correct show on popup page
-                        Item_No_Substituted = Item_No
-                        Item_No = Item_Bought
-                    else:
-                        Item_Substituted = False
-                        Item_No_Substituted = ""
-
-                    # Analyze Finished
-                    Item_Finished = row_Series["discontinued"]
+                        # Analyze Finished
+                        Item_Finished = row_Series["discontinued"]
+                        
+                        Item_Row = Elements_Groups.Get_Prompt_Line_Flags_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label=f"{Item_Line} - {Item_No}", Item_Substituted=Item_Substituted, Item_No_Substituted=Item_No_Substituted, Item_Finished=Item_Finished)
                     
-                    Item_Row = Elements_Groups.Get_Prompt_Line_Flags_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Double_Column", Label=f"{Item_Line} - {Item_No}", Item_Substituted=Item_Substituted, Item_No_Substituted=Item_No_Substituted, Item_Finished=Item_Finished)
-                
-                # Dynamic Content height
-                content_row_count = len(Frame_Body.winfo_children())
-                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-                if content_height > PO_Flags_Window_geometry[1]:
-                    content_height = PO_Flags_Window_geometry[1]
-                Frame_Main.configure(bg_color = "#000001", height=content_height)
+                    # Dynamic Content height
+                    content_row_count = len(Frame_Body.winfo_children())
+                    content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                    if content_height > PO_Flags_Window_geometry[1]:
+                        content_height = PO_Flags_Window_geometry[1]
+                    Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                # Buttons
-                PO_Flags_Variable = StringVar(master=PO_Flags_Window, value="", name="PO_Flags_Variable")
-                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Flags(Frame_Body=Frame_Body, Lines_No=Lines_No, Confirmed_Lines_df=Confirmed_Lines_df))
-                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Flags of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-                Button_Confirm_Var.wait_variable(PO_Flags_Variable)
+                    # Buttons
+                    PO_Flags_Variable = StringVar(master=PO_Flags_Window, value="", name="PO_Flags_Variable")
+                    Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                    Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                    Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Flags(Frame_Body=Frame_Body, Lines_No=Lines_No, Confirmed_Lines_df=Confirmed_Lines_df))
+                    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Flags of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                    Button_Confirm_Var.wait_variable(PO_Flags_Variable)
+                else:
+                    pass
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
         else:
             pass

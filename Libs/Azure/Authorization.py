@@ -6,13 +6,22 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
-def Azure_OAuth(Configuration: dict, window: CTk, client_id: str, client_secret: str, tenant_id: str) -> str:
+def Azure_OAuth(Configuration: dict|None, window: CTk|None, client_id: str, client_secret: str, tenant_id: str, GUI: bool=True) -> str:
     if not client_id:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     if not client_secret:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_secret found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_secret found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     if not tenant_id:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No tenant_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No tenant_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
 
     # OAuth2 authentication at KM Azure
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"

@@ -5,7 +5,7 @@ import Libs.Data_Functions as Data_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-def General(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def General(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     CPDI_Delivery_Method = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Delivery_select"]["Method"]
     CPDI_Delivery_Method_List = list(Settings["0"]["HQ_Data_Handler"]["CPDI"]["Delivery_select"]["Methods_List"])

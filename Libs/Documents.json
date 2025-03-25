@@ -1,40 +1,14 @@
 {
     "Logistic_Process": {
         "Used": "",
-        "Process_List": [
-            "LOG01",
-            "LOG01A",
-            "LOG01B",
-            "LOG02",
-            "LOG03",
-            "LOG04",
-            "LOG05",
-            "LOG06",
-            "LOG07",
-            "LOG08",
-            "LOG09",
-            "LOG10",
-            "LOG11",
-            "LOG12",
-            "LOG13",
-            "LOG14",
-            "LOG15",
-            "LOG99",
-            "TEST",
-            " "
-        ]
+        "Process_List": []
     },
     "Purchase_Order": {
-        "Purchase_Order_List": [
-            "106501"
-        ]
+        "Purchase_Order_List": []
     },
     "BackBone_Billing": {
         "Used": "",
-        "Vendors_List": [
-            "VBEU001",
-            "V00020"
-        ]
+        "Vendors_List": []
     },
     "Purchase_Return_Order": {
         "Purchase_Return_Order_List": []

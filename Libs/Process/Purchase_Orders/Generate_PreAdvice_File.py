@@ -9,7 +9,7 @@ import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
 
-def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, window: CTk, PO_Deliveries: list):
+def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Deliveries: list, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -38,42 +38,48 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict, w
             PreAdvice_Date_dt = Delivery_Date_dt + timedelta(days=Pre_Delivery_Shift)
             PreAdvice_Date = PreAdvice_Date_dt.strftime(Date_format)
         elif PreAdvice_Dates_Method == "Prompt":
-            Delivery_Number = PO_PreAdvice["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["dispatchnotification_id"]
-            def Select_PO_Pre_Date_Date(Prompt_Date_Frame: CTkFrame):
-                Generation_Date_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-                PO_Pre_Date_Date = Generation_Date_Var.get()
-                PO_Pre_Date_Date_Variable.set(value=PO_Pre_Date_Date)
-                PO_Pre_Date_Window.destroy()
-                
-            # TopUp Window
-            PO_Pre_Date_Window_geometry = (500, 250)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Pre_Date_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Pre_Date_Window_geometry[1] //2
-            PO_Pre_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", max_width=PO_Pre_Date_Window_geometry[0], max_height=PO_Pre_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            if GUI == True:
+                Delivery_Number = PO_PreAdvice["dispatchnotification"]["dispatchnotification_header"]["dispatchnotification_info"]["dispatchnotification_id"]
+                def Select_PO_Pre_Date_Date(Prompt_Date_Frame: CTkFrame):
+                    Generation_Date_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    PO_Pre_Date_Date = Generation_Date_Var.get()
+                    PO_Pre_Date_Date_Variable.set(value=PO_Pre_Date_Date)
+                    PO_Pre_Date_Window.destroy()
+                    
+                # TopUp Window
+                PO_Pre_Date_Window_geometry = (500, 250)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Pre_Date_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Pre_Date_Window_geometry[1] //2
+                PO_Pre_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", max_width=PO_Pre_Date_Window_geometry[0], max_height=PO_Pre_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Pre_Date_Window, Name=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Pre_Date_Window, Name=f"Select Delivery Date for PreAdvice: {Delivery_Number}.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
+                Frame_Main.configure(bg_color = "#000001")
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="PreAdvice Delivery Date",  Field_Type="Date_Picker", Validation="Date")  
-            Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-            Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
-            Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-            Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
+                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="PreAdvice Delivery Date",  Field_Type="Date_Picker", Validation="Date")  
+                Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+                Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
+                Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
+                Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-            # Buttons
-            PO_Pre_Date_Date_Variable = StringVar(master=PO_Pre_Date_Window, value="", name="PO_Pre_Date_Date_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_Pre_Date_Date(Prompt_Date_Frame=Prompt_Date_Frame))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Date for PreAdvice.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_Pre_Date_Date_Variable)
-            PreAdvice_Date = PO_Pre_Date_Date_Variable.get()
+                # Buttons
+                PO_Pre_Date_Date_Variable = StringVar(master=PO_Pre_Date_Window, value="", name="PO_Pre_Date_Date_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_Pre_Date_Date(Prompt_Date_Frame=Prompt_Date_Frame))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Date for PreAdvice.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_Pre_Date_Date_Variable)
+                PreAdvice_Date = PO_Pre_Date_Date_Variable.get()
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
 
         # Assign new value

@@ -8,7 +8,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, CTkEntry, StringVar, BooleanVar, CTkOptionMenu, CTkButton, set_appearance_mode
 
-def Settings_General_Color(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Settings_General_Color(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     Theme_List = list(Configuration["Global_Appearance"]["Window"]["Theme_List"])
@@ -138,7 +138,7 @@ def Settings_General_Color(Settings: dict, Configuration: dict, window: CTk, Fra
     return Frame_Main
 
 
-def Settings_User_Access(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Settings_User_Access(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
     Export_folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]

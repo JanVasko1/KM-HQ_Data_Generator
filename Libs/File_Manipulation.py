@@ -11,20 +11,20 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # --------------------------------------------- Folders / Files --------------------------------------------- #
-def Create_Folder(Configuration: dict, window: CTk, file_path: str) -> None:
+def Create_Folder(Configuration: dict|None, window: CTk|None, file_path: str) -> None:
     # Create Folder
     try: 
         os.makedirs(f"{file_path}")
     except Exception as Error:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Copy_File(Configuration: dict, window: CTk, Source_Path: str, Destination_Path: str) -> None:
+def Copy_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str) -> None:
     try:
         copy(src=Source_Path, dst=Destination_Path)
     except Exception as Error:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Copy_All_File(Configuration: dict, window: CTk, Source_Path: str, Destination_Path: str, include_hidden: bool) -> None:
+def Copy_All_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str, include_hidden: bool) -> None:
     files = glob(pathname=os.path.join(Source_Path, "*"), include_hidden=include_hidden)
     for source_file in files:
         dest_file = source_file.replace(Source_Path, Destination_Path)

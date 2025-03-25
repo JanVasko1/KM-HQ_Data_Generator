@@ -8,7 +8,7 @@ import Libs.Defaults_Lists as Defaults_Lists
 
 import Libs.GUI.Elements as Elements
 
-def Get_Side_Bar(Settings: dict, Configuration: dict, Documents: dict, window: CTk, Frame_Work_Area_Main: CTkFrame, Side_Bar_Frame: CTkFrame) -> None:
+def Get_Side_Bar(Settings: dict, Configuration: dict|None, Documents: dict, window: CTk|None, Frame_Work_Area_Main: CTkFrame, Side_Bar_Frame: CTkFrame) -> None:
     Application = Defaults_Lists.Load_Application()
     Program_Version = Application["Application"]["Version"]
 

@@ -11,7 +11,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar, IntVar
 
-def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, Purchase_Order: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Confirmed_Lines_df: DataFrame, Shipping_Agent_list: list, Shipment_Method_list: list):
+def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Confirmed_Lines_df: DataFrame, Shipping_Agent_list: list, Shipment_Method_list: list, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -94,51 +94,63 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 Can_Continue = False
         elif DEL_Count_Method == "Prompt":
-            def Select_PO_DEL_Number(Prompt_Count_Frame: CTkFrame):
-                PO_DEL_Count_Var = Prompt_Count_Frame.children["!ctkframe3"].children["!ctkentry"]
-                PO_DEL_Number = int(PO_DEL_Count_Var.get())
-                PO_DEL_Count_Variable.set(value=PO_DEL_Number)
-                PO_DEL_Count_Window.destroy()
-                
-            # TopUp Window
-            PO_DEL_Count_Window_geometry = (500, 250)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Count_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Count_Window_geometry[1] //2
-            PO_DEL_Count_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery Count.", max_width=PO_DEL_Count_Window_geometry[0], max_height=PO_DEL_Count_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
+            if GUI == True:
+                def Select_PO_DEL_Number(Prompt_Count_Frame: CTkFrame):
+                    PO_DEL_Count_Var = Prompt_Count_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    PO_DEL_Number = int(PO_DEL_Count_Var.get())
+                    PO_DEL_Count_Variable.set(value=PO_DEL_Number)
+                    PO_DEL_Count_Window.destroy()
+                    
+                # TopUp Window
+                PO_DEL_Count_Window_geometry = (500, 250)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Count_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Count_Window_geometry[1] //2
+                PO_DEL_Count_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Delivery Count.", max_width=PO_DEL_Count_Window_geometry[0], max_height=PO_DEL_Count_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_DEL_Count_Window, Name="Select Delivery Count.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BEU Deliveries.", GUI_Level_ID=3)
-            Frame_Main.configure(bg_color = "#000001")
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_DEL_Count_Window, Name="Select Delivery Count.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select number of BEU Deliveries.", GUI_Level_ID=3)
+                Frame_Main.configure(bg_color = "#000001")
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            Prompt_Count_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal", Validation="Integer")  
-            Prompt_Count_Frame_Var = Prompt_Count_Frame.children["!ctkframe3"].children["!ctkentry"]
-            Prompt_Count_Frame_Var.configure(placeholder_text="Insert Delivery Count", placeholder_text_color="#949A9F")
+                Prompt_Count_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery Number",  Field_Type="Input_Normal", Validation="Integer")  
+                Prompt_Count_Frame_Var = Prompt_Count_Frame.children["!ctkframe3"].children["!ctkentry"]
+                Prompt_Count_Frame_Var.configure(placeholder_text="Insert Delivery Count", placeholder_text_color="#949A9F")
 
-            # Buttons
-            PO_DEL_Count_Variable = IntVar(master=PO_DEL_Count_Window, value=0, name="PO_DEL_Count_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_DEL_Number(Prompt_Count_Frame=Prompt_Count_Frame))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm POs Delivery Counts.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_DEL_Count_Variable)
-            Delivery_Count = PO_DEL_Count_Variable.get()
+                # Buttons
+                PO_DEL_Count_Variable = IntVar(master=PO_DEL_Count_Window, value=0, name="PO_DEL_Count_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_DEL_Number(Prompt_Count_Frame=Prompt_Count_Frame))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm POs Delivery Counts.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_DEL_Count_Variable)
+                Delivery_Count = PO_DEL_Count_Variable.get()
+            else:
+                pass
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
 
     # Max Delivery Count
     if Delivery_Count > Random_Max_count:
         Delivery_Count = Random_Max_count
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     else:
         pass
 
     Sum_Confirmed_Lines = int(Confirmed_Lines_df["quantity"].sum())
     if Delivery_Count > Sum_Confirmed_Lines:
         Delivery_Count = Sum_Confirmed_Lines
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            pass
     else:
         pass
 
@@ -161,8 +173,11 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 pass
         elif Delivery_Count > 1:
             if PO_Numbers_Method == "Fixed":
-                PO_Numbers_Method = "Prompt"
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Combination of Delivery Count = {Delivery_Count} and Number Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    PO_Numbers_Method = "Prompt"
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Combination of Delivery Count = {Delivery_Count} and Number Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    PO_Numbers_Method = "Automatic"
             else:
                 pass
 
@@ -175,67 +190,70 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 pass
         
         if PO_Numbers_Method == "Prompt":
-            def Select_Delivery_Number(Frame_Body: CTkFrame, Lines_No: int):
-                PO_Delivery_Number_list = []
-                Full_List = True
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
+            if GUI == True:
+                def Select_Delivery_Number(Frame_Body: CTkFrame, Lines_No: int):
+                    PO_Delivery_Number_list = []
+                    Full_List = True
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_Delivery = Value_CTkEntry.get()
+                        except:
+                            Value_Delivery = ""
+                        if Value_Delivery == "":
+                            Full_List = False
+                        else:
+                            PO_Delivery_Number_list.append(Value_Delivery)
+
+                    if Full_List == True:
+                        PO_Delivery_Number_list_joined = ";".join(PO_Delivery_Number_list)
+                        PO_DEL_Number_Variable.set(value=PO_Delivery_Number_list_joined)
+                        PO_DEL_Number_Window.destroy()
                     else:
-                        pass
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"All Deliveries must have an number, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+
+                # TopUp Window
+                PO_DEL_Number_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Number_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Number_Window_geometry[1] //2
+                PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Number/s.", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name="Set Delivery Number/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Number based on Delivery Count.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
+
+                # Numbers
+                for i in range(1, Delivery_Count + 1):
+                    # Fields
+                    Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Delivery {i}", Field_Type="Input_Normal") 
+                    PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    PO_Fields_Frame_Var.configure(placeholder_text="Manual Delivery Number", placeholder_text_color="#949A9F")
                     
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_Delivery = Value_CTkEntry.get()
-                    except:
-                        Value_Delivery = ""
-                    if Value_Delivery == "":
-                        Full_List = False
-                    else:
-                        PO_Delivery_Number_list.append(Value_Delivery)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > PO_DEL_Number_Window_geometry[1]:
+                    content_height = PO_DEL_Number_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-                if Full_List == True:
-                    PO_Delivery_Number_list_joined = ";".join(PO_Delivery_Number_list)
-                    PO_DEL_Number_Variable.set(value=PO_Delivery_Number_list_joined)
-                    PO_DEL_Number_Window.destroy()
-                else:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"All Deliveries must have an number, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
-
-            # TopUp Window
-            PO_DEL_Number_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Number_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Number_Window_geometry[1] //2
-            PO_DEL_Number_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Number/s.", max_width=PO_DEL_Number_Window_geometry[0], max_height=PO_DEL_Number_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
-
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Number_Window, Name="Set Delivery Number/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Number based on Delivery Count.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
-
-            # Numbers
-            for i in range(1, Delivery_Count + 1):
-                # Fields
-                Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Delivery {i}", Field_Type="Input_Normal") 
-                PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
-                PO_Fields_Frame_Var.configure(placeholder_text="Manual Delivery Number", placeholder_text_color="#949A9F")
-                
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > PO_DEL_Number_Window_geometry[1]:
-                content_height = PO_DEL_Number_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            PO_DEL_Number_Variable = StringVar(master=PO_DEL_Number_Window, value="", name="PO_DEL_Number_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Delivery_Number(Frame_Body=Frame_Body, Lines_No=Delivery_Count))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Number/s selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_DEL_Number_Variable)
-            PO_Delivery_Number_list = PO_DEL_Number_Variable.get().split(";")
+                # Buttons
+                PO_DEL_Number_Variable = StringVar(master=PO_DEL_Number_Window, value="", name="PO_DEL_Number_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Delivery_Number(Frame_Body=Frame_Body, Lines_No=Delivery_Count))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Number/s selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_DEL_Number_Variable)
+                PO_Delivery_Number_list = PO_DEL_Number_Variable.get().split(";")
+            else:
+                pass
         else:
             pass
     else:
@@ -257,8 +275,11 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 pass
         elif Delivery_Count > 1:
             if Delivery_Dates_Method == "Fixed":
-                Delivery_Dates_Method = "Prompt"
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"Combination of Delivery Count = {Delivery_Count} and Date Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Delivery_Dates_Method = "Prompt"
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"Combination of Delivery Count = {Delivery_Count} and Date Method Setup: Fixed, do not allow this combination and method is automatically switched to Prompt.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    Delivery_Dates_Method = "Random"
             else:
                 pass
 
@@ -270,71 +291,74 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
                 pass
         
         if Delivery_Dates_Method == "Prompt":
-            def Select_Delivery_Number(Frame_Body: CTkFrame, Lines_No: int):
-                PO_Delivery_Date_list = []
-                Full_List = True
-                for i in range(0, Lines_No + 1):
-                    if i == 0:
-                        i = ""
-                    elif i == 1:
-                        continue
+            if GUI == True:
+                def Select_Delivery_Number(Frame_Body: CTkFrame, Lines_No: int):
+                    PO_Delivery_Date_list = []
+                    Full_List = True
+                    for i in range(0, Lines_No + 1):
+                        if i == 0:
+                            i = ""
+                        elif i == 1:
+                            continue
+                        else:
+                            pass
+                        
+                        Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
+                        try:
+                            Value_Date = Value_CTkEntry.get()
+                        except:
+                            Value_Date = ""
+                        if Value_Date == "":
+                            Full_List = False
+                        else:
+                            PO_Delivery_Date_list.append(Value_Date)
+
+                    if Full_List == True:
+                        PO_Delivery_Date_list_joined = ";".join(PO_Delivery_Date_list)
+                        PO_DEL_Date_Variable.set(value=PO_Delivery_Date_list_joined)
+                        PO_DEL_Date_Window.destroy()
                     else:
-                        pass
-                    
-                    Value_CTkEntry = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkentry"]
-                    try:
-                        Value_Date = Value_CTkEntry.get()
-                    except:
-                        Value_Date = ""
-                    if Value_Date == "":
-                        Full_List = False
-                    else:
-                        PO_Delivery_Date_list.append(Value_Date)
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"All Deliveries must have an date, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
 
-                if Full_List == True:
-                    PO_Delivery_Date_list_joined = ";".join(PO_Delivery_Date_list)
-                    PO_DEL_Date_Variable.set(value=PO_Delivery_Date_list_joined)
-                    PO_DEL_Date_Window.destroy()
-                else:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Date", message=f"All Deliveries must have an date, please fill all of them.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+                # TopUp Window
+                PO_DEL_Date_Window_geometry = (520, 500)
+                Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+                Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Date_Window_geometry[0] //2
+                Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Date_Window_geometry[1] //2
+                PO_DEL_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Date for Delivery/s.", max_width=PO_DEL_Date_Window_geometry[0], max_height=PO_DEL_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
-            # TopUp Window
-            PO_DEL_Date_Window_geometry = (520, 500)
-            Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
-            Main_Window_Centre[0] = Main_Window_Centre[0] - PO_DEL_Date_Window_geometry[0] //2
-            Main_Window_Centre[1] = Main_Window_Centre[1] - PO_DEL_Date_Window_geometry[1] //2
-            PO_DEL_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Set Delivery Date for Delivery/s.", max_width=PO_DEL_Date_Window_geometry[0], max_height=PO_DEL_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                # Frame - General
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Date_Window, Name="Set Delivery Date for Delivery/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Date based on Delivery Count.", GUI_Level_ID=3)
+                Frame_Body = Frame_Main.children["!ctkframe2"]
 
-            # Frame - General
-            Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_DEL_Date_Window, Name="Set Delivery Date for Delivery/s.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To set Delivery Date based on Delivery Count.", GUI_Level_ID=3)
-            Frame_Body = Frame_Main.children["!ctkframe2"]
+                # Delivery Date Fields
+                for Delivery in PO_Delivery_Number_list:
+                    # Fields
+                    Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Date_Picker", Validation="Date")  
+                    Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
+                    Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
+                    Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
+                    # BUG --> Date Picker pointing only to last delivery
+                    Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
+                    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
 
-            # Delivery Date Fields
-            for Delivery in PO_Delivery_Number_list:
-                # Fields
-                Prompt_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}",  Field_Type="Date_Picker", Validation="Date")  
-                Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-                Button_Prompt_Date_Frame_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
-                Prompt_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-                # BUG --> Date Picker pointing only to last delivery
-                Button_Prompt_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=Prompt_Date_Frame_Var, Clicked_on_Button=Button_Prompt_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=3))
-                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
+                # Dynamic Content height
+                content_row_count = len(Frame_Body.winfo_children())
+                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                if content_height > PO_DEL_Date_Window_geometry[1]:
+                    content_height = PO_DEL_Date_Window_geometry[1]
+                Frame_Main.configure(bg_color = "#000001", height=content_height)
 
-            # Dynamic Content height
-            content_row_count = len(Frame_Body.winfo_children())
-            content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
-            if content_height > PO_DEL_Date_Window_geometry[1]:
-                content_height = PO_DEL_Date_Window_geometry[1]
-            Frame_Main.configure(bg_color = "#000001", height=content_height)
-
-            # Buttons
-            PO_DEL_Date_Variable = StringVar(master=PO_DEL_Date_Window, value="", name="PO_DEL_Date_Variable")
-            Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
-            Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
-            Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Delivery_Number(Frame_Body=Frame_Body, Lines_No=Delivery_Count))
-            Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Date/s selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-            Button_Confirm_Var.wait_variable(PO_DEL_Date_Variable)
-            PO_Delivery_Date_list = PO_DEL_Date_Variable.get().split(";")
+                # Buttons
+                PO_DEL_Date_Variable = StringVar(master=PO_DEL_Date_Window, value="", name="PO_DEL_Date_Variable")
+                Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+                Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+                Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_Delivery_Number(Frame_Body=Frame_Body, Lines_No=Delivery_Count))
+                Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery Date/s selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+                Button_Confirm_Var.wait_variable(PO_DEL_Date_Variable)
+                PO_Delivery_Date_list = PO_DEL_Date_Variable.get().split(";")
+            else:
+                pass
         else:
             pass
     else:
@@ -367,7 +391,10 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif Carrier_ID_Method == "Empty":
                 Carrier_ID_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -385,7 +412,10 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif BOL_Numbers_Method == "Empty":
                 BOL_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -403,7 +433,10 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict, window: CTk, P
             elif Shipment_Method == "Empty":
                 Shipment_Method_Select_List.append("")
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):

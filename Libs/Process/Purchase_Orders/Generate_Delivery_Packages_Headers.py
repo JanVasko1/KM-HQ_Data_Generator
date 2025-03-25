@@ -9,7 +9,7 @@ import Libs.Defaults_Lists as Defaults_Lists
 
 from customtkinter import CTk
 
-def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, window: CTk, PO_Deliveries: dict, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, UoM_df: DataFrame):
+def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Deliveries: dict, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, UoM_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
@@ -69,7 +69,10 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
                 Package_Number = f"{Pack_Prefix}{Today_str}{str(i)}"
                 Packages_Number_List.append(Package_Number)
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Package Number Method selected: {Pack_Number_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Package Number Method selected: {Pack_Number_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -105,7 +108,10 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
             elif EXIDV2_Numbers_Method == "Empty":
                 Package_Header_df["exidv2"] = ""
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
                 
         elif EXIDV2_Assign_Method == "Per Delivery":
@@ -129,10 +135,16 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
             elif EXIDV2_Numbers_Method == "Empty":
                 Package_Header_df["exidv2"] = ""
             else:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
                 Can_Continue = False
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Assign Method selected: {EXIDV2_Assign_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Assign Method selected: {EXIDV2_Assign_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass
@@ -148,7 +160,10 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
         elif Pack_Weight_UoM_Method == "Empty":
             Weight_UoM = ""
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass 
@@ -164,7 +179,10 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict, wind
         elif Pack_Volume_UoM_Method == "Empty":
             Volume_UoM = ""
         else:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
             Can_Continue = False
     else:
         pass   

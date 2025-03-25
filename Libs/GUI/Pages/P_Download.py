@@ -10,7 +10,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 
-def Page_Download(Settings: dict, Configuration: dict, window: CTk, Documents: dict, Frame: CTkFrame):
+def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Documents: dict, Frame: CTkFrame):
     NUS_Version_List = list(Settings["0"]["Connection"]["NUS_Version_List"])
     Environment_List = list(Settings["0"]["Connection"]["Environment_List"])
     try:

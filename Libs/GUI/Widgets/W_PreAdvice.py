@@ -7,7 +7,7 @@ import Libs.GUI.Elements as Elements
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Local Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #
 
-def Delivery_Date(Settings: dict, Configuration: dict, window: CTk, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
     # ---------------------------- Defaults ----------------------------#
     PreAdvice_Dates_Method = Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Delivery_Date"]["Method"]
     PreAdvice_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["PreAdvice"]["Delivery_Date"]["Methods_List"])

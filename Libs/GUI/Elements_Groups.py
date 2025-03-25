@@ -90,7 +90,7 @@ def Get_Widget_Section_row(Configuration:dict, Frame: CTkFrame, Field_Frame_Type
 
     return Frame_Area
 
-def Get_Widget_Input_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Widget_Input_row(Settings: dict, Configuration:dict, window: CTk|None, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Field_Type: str, Var_Value: int|str|None = None,  Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -208,7 +208,7 @@ def Get_Pop_up_window(Configuration:dict, title: str, max_width: int, max_height
 
     return Pop_Up_Window
 
-def My_Dialog_Window(Settings: dict, Configuration:dict, window: CTk, Clicked_on_Button: CTkButton, title: str, text: str, Password: bool, width: int, height: int, Fixed: bool, tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
+def My_Dialog_Window(Settings: dict, Configuration:dict, window: CTk|None, Clicked_on_Button: CTkButton, title: str, text: str, Password: bool, width: int, height: int, Fixed: bool, tooltip: str, GUI_Level_ID: int|None = None) -> CTkFrame:
     def Confirm_Choice(Field_Normal: CTkEntry) -> str:
         Dialog_Window.destroy()
         return Field_Normal.get()
@@ -392,7 +392,7 @@ def Get_Prompt_Free_Of_Charge_Description_row(Settings: dict, Configuration:dict
 
     return Frame_Area
 
-def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Prompt_Free_Of_Charge_row(Settings: dict, Configuration:dict, window: CTk|None, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
@@ -477,7 +477,7 @@ def Get_Prompt_Line_Flags_Description_row(Settings: dict, Configuration:dict, Fr
     return Frame_Area
 
 
-def Get_Prompt_Line_Flags_row(Settings: dict, Configuration:dict, window: CTk, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Item_Substituted: bool, Item_No_Substituted: str, Item_Finished: bool, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
+def Get_Prompt_Line_Flags_row(Settings: dict, Configuration:dict, window: CTk|None, Frame: CTkFrame, Field_Frame_Type: str, Label: str, Item_Substituted: bool, Item_No_Substituted: str, Item_Finished: bool, Validation: str|None = None, Field_ToolTip: list|None = None) -> CTkFrame:
     # Build one line for one input field
     Frame_Area = Elements.Get_Widget_Field_Frame_Area(Configuration=Configuration, Frame=Frame, Field_Frame_Type=Field_Frame_Type)
     Frame_Area.pack_propagate(flag=False)
