@@ -1,6 +1,7 @@
 # Import Libraries
 from pandas import DataFrame
 from datetime import datetime
+from fastapi import HTTPException
 
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -137,7 +138,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PO_INV_Number_Variable)
                 PO_Invoice_Number_list = PO_INV_Number_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Number.")
     else:
         pass
 
@@ -249,13 +250,13 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PO_INV_Date_Variable)
                 PO_Invoice_Date_list = PO_INV_Date_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Date.")
         else:
             pass
         # Fill value in template
         for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
             # Fill value in template
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["control_info"]["generation_date"] = PO_Invoice_Date_list[Invoice_Index]
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["control_info"]["generation_date"] = [Invoice_Index]
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] = PO_Invoice_Date_list[Invoice_Index]
     else:
         pass
@@ -272,7 +273,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template

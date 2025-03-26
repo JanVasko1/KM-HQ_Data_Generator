@@ -1,5 +1,6 @@
 # Import Libraries
 from pandas import DataFrame, Series
+from fastapi import HTTPException
 
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -56,7 +57,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.")
     else:
         PO_Confirmation_Number = HQ_Confirmed_Lines_df.iloc[0]["Vendor_Document_No"]
 
@@ -217,7 +218,7 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.")
     else:
         # --------------------------------- Confirmation --------------------------------- # 
         # Confirmation Number

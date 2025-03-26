@@ -12,39 +12,9 @@
             }
         },
         "Connection": {
-            "NUS_Version_List": [
-                "Cloud",
-                "NUS3"
-            ],
-            "Environment_List": [
-                "QA",
-                "FIX",
-                "Sandbox"
-            ],
-            "NOC_List": [
-                "BBG",
-                "BBL",
-                "BCZ",
-                "BDK",
-                "BFI",
-                "BGE",
-                "BGR",
-                "BHN",
-                "BHR",
-                "BIH",
-                "BNO",
-                "BPL",
-                "BPT",
-                "BR",
-                "BRO",
-                "BRS",
-                "BSK",
-                "BSL",
-                "BSW",
-                "BTR",
-                "BUR",
-                "Core"
-            ]
+            "NUS_Version_List": [],
+            "Environment_List": [],
+            "NOC_List": []
         },
         "HQ_Data_Handler": {
             "Export": {
@@ -234,7 +204,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -257,9 +227,9 @@
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -455,7 +425,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -480,7 +450,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "From Confirmation",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Order",
@@ -491,7 +461,7 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -549,7 +519,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {
@@ -569,7 +539,7 @@
                         }
                     },
                     "Items": {
-                        "Method": "Prompt",
+                        "Method": "All",
                         "Methods_List": [
                             "All",
                             "Fixed",
@@ -587,7 +557,7 @@
                         ]
                     },
                     "Prices": {
-                        "Method": "Prompt",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Prompt",
                             "Fixed"
@@ -633,7 +603,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -650,7 +620,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",

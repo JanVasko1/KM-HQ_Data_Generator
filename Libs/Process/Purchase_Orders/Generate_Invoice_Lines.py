@@ -1,6 +1,7 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
+from fastapi import HTTPException
 
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.Defaults_Lists as Defaults_Lists
@@ -172,12 +173,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["price_amount"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="price_amount", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="price_amount"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Price.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -258,12 +259,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                 Button_Confirm_Var.wait_variable(PO_INV_Plant_Variable)
                 Plants_List = PO_INV_Plant_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Plant.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Plants Method selected: {Inv_Plant_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -350,12 +351,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["origin"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="origin", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="origin"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Country_of_Origin.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -437,12 +438,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["tariff_number"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="tariff_number", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="tariff_number"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Tariff.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass

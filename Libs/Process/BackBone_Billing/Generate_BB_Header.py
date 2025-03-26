@@ -2,6 +2,7 @@
 from pandas import DataFrame
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from fastapi import HTTPException
 
 from customtkinter import CTk, CTkFrame, StringVar
 
@@ -80,12 +81,12 @@ def Generate_BB_Header(Settings: dict, Configuration: dict|None, window: CTk|Non
                 Button_Confirm_Var.wait_variable(BB_Number_Variable)
                 BB_Number = BB_Number_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Header:Invoice_Number")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Invoice Number Method selected: {BB_Numbers_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
         
         # Fill value in template
@@ -136,12 +137,12 @@ def Generate_BB_Header(Settings: dict, Configuration: dict|None, window: CTk|Non
                 Button_Confirm_Var.wait_variable(BB_Invoice_Date_Variable)
                 BB_Invoice_Date = BB_Invoice_Date_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Header:Invoice_date")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Invoice Date Method selected: {BB_Invoice_Date_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template
@@ -162,7 +163,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict|None, window: CTk|Non
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Invoice Order ID Method selected: {BB_Order_id_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template
@@ -184,7 +185,7 @@ def Generate_BB_Header(Settings: dict, Configuration: dict|None, window: CTk|Non
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Invoice Order Date Method selected: {BB_Order_date_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template

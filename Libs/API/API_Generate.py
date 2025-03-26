@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import json
 
@@ -50,8 +50,7 @@ class PurchaseReturnOrder(BaseModel):
 @app.post("/v1/data/global/purchase-order/")
 async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
     if Request_PO.Environment == "PRD":
-        # TODO --> API vrátit chybu
-        pass
+        raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
         # Load selected Template to Settings
         File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
@@ -78,8 +77,7 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
 @app.post("/v1/data/global/bb-invoice/")
 async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
     if Request_BB_INV.Environment == "PRD":
-        # TODO --> API vrátit chybu
-        pass
+        raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
         # Load selected Template to Settings
         File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_BB_INV.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
@@ -106,8 +104,7 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
 @app.post("/v1/data/global/purchase-return-order/")
 async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
     if Request_PRO.Environment == "PRD":
-        # TODO --> API vrátit chybu
-        pass
+        raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
     # Load selected Template to Settings
         File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PRO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")

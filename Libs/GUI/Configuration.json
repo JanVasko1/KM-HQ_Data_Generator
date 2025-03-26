@@ -1356,8 +1356,7 @@
             "entry_text_color": [
                 "#2C2C2C",
                 "#efefef"
-            ],
-            "password": true
+            ]
         },
         "Confirmation": {
             "fg_color": [

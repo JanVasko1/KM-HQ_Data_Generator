@@ -1,6 +1,7 @@
 # Import Libraries
 from pandas import DataFrame
 from datetime import datetime
+from fastapi import HTTPException
 
 from customtkinter import CTk, CTkFrame, StringVar
 
@@ -77,12 +78,12 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
                 Button_Confirm_Var.wait_variable(PO_CON_Number_Variable)
                 PO_Confirmation_Number = PO_CON_Number_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Header:Confirmation_Number")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Confirmation Number Method selected: {PO_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Confirmation Number Method selected: {PO_Numbers_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
         
         # Fill value in template
@@ -133,12 +134,12 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
                 Button_Confirm_Var.wait_variable(PO_Gen_Date_Date_Variable)
                 PO_Generation_Date = PO_Gen_Date_Date_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Header:Generation_Date")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Generation Date Method selected: {PO_Generation_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Generation Date Method selected: {PO_Generation_Date_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template
@@ -157,7 +158,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {PO_Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Currency Method selected: {PO_Currency_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Fill value in template

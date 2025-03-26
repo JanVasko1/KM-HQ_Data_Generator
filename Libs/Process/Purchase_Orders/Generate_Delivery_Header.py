@@ -2,6 +2,7 @@
 from pandas import DataFrame
 from datetime import datetime
 import random
+from fastapi import HTTPException
 
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -126,12 +127,12 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 Button_Confirm_Var.wait_variable(PO_DEL_Count_Variable)
                 Delivery_Count = PO_DEL_Count_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Header:Delivery_Count")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
     # Max Delivery Count
@@ -140,7 +141,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.")
     else:
         pass
 
@@ -150,7 +151,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"Program set Delivery Count = {Sum_Confirmed_Lines} as your choice was higher that PO lines quantity.")
     else:
         pass
 
@@ -253,7 +254,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 Button_Confirm_Var.wait_variable(PO_DEL_Number_Variable)
                 PO_Delivery_Number_list = PO_DEL_Number_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Header:Delivery_Number")
         else:
             pass
     else:
@@ -358,7 +359,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 Button_Confirm_Var.wait_variable(PO_DEL_Date_Variable)
                 PO_Delivery_Date_list = PO_DEL_Date_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Header:Delivery_Date")
         else:
             pass
     else:
@@ -394,7 +395,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Delivery Carrier ID Method selected: {Carrier_ID_Method} which is not supporter. Cancel File creation.")
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -415,7 +416,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Delivery BOL Method selected: {BOL_Numbers_Method} which is not supporter. Cancel File creation.")
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):
@@ -436,7 +437,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Delivery Shipment Method selected: {Shipment_Method} which is not supporter. Cancel File creation.")
                 Can_Continue = False
     
     for i in range(0, Delivery_Count):

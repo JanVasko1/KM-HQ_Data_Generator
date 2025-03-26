@@ -107,9 +107,9 @@ def Process_Purchase_Orders(Settings: dict,
             # Export 
             Confirmation_File_Name = f"ORDRSP_{PO_Confirmation_Number}_Test"
             if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json")
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json")
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
 
             # Prepare Dataframe for Delivery, cannot be done sooner as Confirmation must contain all Items
             Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
@@ -223,9 +223,9 @@ def Process_Purchase_Orders(Settings: dict,
                 Delivery_Content = PO_Deliveries[Delivery_Index]
                 Delivery_File_Name = f"DELVRY02_{Delivery_Number}_Test"
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_File_Name, File_suffix="json")
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json")
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
 
@@ -246,9 +246,9 @@ def Process_Purchase_Orders(Settings: dict,
                 PreAdvice_Content = PO_PreAdvices[PreAdvice_Index]
                 Delivery_File_Name = f"PREADV02_{PreAdvice_Number}_Test"
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PreAdvice_Content, HQ_File_Type_Path="HQ_PreAdvice_File_Path", File_Name=Delivery_File_Name, File_suffix="json")
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PreAdvice_Content, HQ_File_Type_Path="HQ_PreAdvice_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json")
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
 
@@ -371,9 +371,9 @@ def Process_Purchase_Orders(Settings: dict,
                 Invoice_Content = PO_Invoices[Invoice_Index]
                 Invoice_File_Name = f"INVOIC02_{Invoice_Number}_Test"
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=Invoice_File_Name, File_suffix="json")
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json")
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
         
@@ -388,9 +388,9 @@ def Process_Purchase_Orders(Settings: dict,
                 # Export 
                 # File name must be same as Invoice Number
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf")
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf")
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
         else:
             pass
 
@@ -452,9 +452,9 @@ def Process_BackBoneBilling(Settings: dict,
         # Export 
         BB_Invoice_File_Name = f"INVOIC02_{BB_Number}_Test"
         if Export_NAV_Folder == True:
-            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Invoice_File_Name, File_suffix="json")
+            File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
         else:
-            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json")
+            File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
     else:
         pass
 
@@ -466,9 +466,9 @@ def Process_BackBoneBilling(Settings: dict,
         # Export 
         # File name must be same as Invoice Number
         if Export_NAV_Folder == True:
-            File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf")
+            File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
         else:
-            File_Manipulation.Export_Download_Folders(File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf")
+            File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
     else:
         pass
 

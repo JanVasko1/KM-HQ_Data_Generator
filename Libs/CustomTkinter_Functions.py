@@ -35,7 +35,7 @@ def Count_coordinate_for_new_window(Clicked_on: CTkButton, New_Window_width: int
     # Top middle coordinate for new window
     return [Window_X + Clicked_On_X_difference, Window_Y + Clicked_on_Y_difference + 5]
 
-def Get_coordinate_Main_Window(Main_window: CTk|None) -> list:
+def Get_coordinate_Main_Window(Main_Window: CTk) -> list:
     Main_Window.update_idletasks()  # Ensure the geometry information is updated
     x = (Main_Window.winfo_width() // 2) + Main_Window.winfo_rootx()
     y = (Main_Window.winfo_height() // 2) + Main_Window.winfo_rooty()

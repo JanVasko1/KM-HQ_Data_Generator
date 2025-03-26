@@ -1,6 +1,7 @@
 # Import Libraries
 import pandas
 from pandas import DataFrame
+from fastapi import HTTPException
 
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
@@ -33,7 +34,6 @@ def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: 
         'Content-Type': 'application/json'}
 
     Companies_list = NAV_OData_API.Get_Companies(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment)
-    print(Companies_list)
 
     if len(Companies_list) > 0:
         # Update Option List
@@ -122,7 +122,7 @@ def Get_Orders_List(Configuration: dict|None, window: CTk|None, NUS_version: str
     return Purchase_Header_list
 
 
-def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list, client_id: str|None, client_secret: str|None, tenant_id: str|None, GUI: bool=True) -> None:
+def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
@@ -170,9 +170,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
     if HQ_Communication_Setup_df.empty:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail="HQ Communication Setup is empty, canceling download and process. Please check.")
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -190,7 +190,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -208,9 +208,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
         Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_info_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
         if Purchase_Headers_df.empty:
             if GUI == True:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="There is no purchase header downloaded that is why program cannot continue. Please check.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -228,9 +228,9 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
         Purchase_Lines_df, Items_list = NAV_OData_API.Get_Purchase_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, GUI=GUI)
         if Purchase_Lines_df.empty:
             if GUI == True:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="There is no purchase lines downloaded, that is why program cannot continue. Please check.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -250,7 +250,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="All Order/s you select were not exported by HQ, canceling download. Please Export them first.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -270,7 +270,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="It was not possible to download any Item detail information from Item Cards.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -541,12 +541,12 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             pass
     
     if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
-        pass
+        raise HTTPException(status_code=200, detail="Selected files for selected Purchase Order/s successfully created.")
 
 
-def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, client_id: str|None, client_secret: str|None, tenant_id: str|None, GUI: bool=True) -> None:
+def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
@@ -576,9 +576,9 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
     if HQ_Communication_Setup_df.empty:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail="HQ Communication Setup is empty, canceling download and process. Please check.")
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -596,7 +596,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -616,7 +616,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail="It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -699,12 +699,12 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             pass
 
     if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoices successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoice/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
-        pass
+        raise HTTPException(status_code=200, detail="Selected files for selected BackBone Billing Invoice/s successfully created.")
         
 
-def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list, client_id: str|None, client_secret: str|None, tenant_id: str|None, GUI: bool=True) -> None:
+def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     Progress_Bar.configure(determinate_speed = round(number=50 / 6, ndigits=3), progress_color="#517A31")
@@ -723,6 +723,6 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     # TODO - Completaly finish
 
     if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Orders successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
-        pass
+        raise HTTPException(status_code=200, detail="Selected files for selected Return Purchase Order/s successfully created.")

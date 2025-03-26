@@ -726,8 +726,7 @@ def Get_DialogWindow(Configuration:dict, text: str, title: str, Dialog_Type: str
         button_text_color = tuple(Configuration_Dialog["button_text_color"]),
         entry_fg_color = tuple(Configuration_Dialog["entry_fg_color"]),
         entry_border_color = None,
-        entry_text_color = tuple(Configuration_Dialog["entry_text_color"]),
-        password = Configuration_Dialog["password"])
+        entry_text_color = tuple(Configuration_Dialog["entry_text_color"]))
     Dialog.overrideredirect(True)
     Dialog.attributes("-transparentcolor", "#000001")
     Dialog.bind(sequence="<Button-1>", func=lambda event:click_win())

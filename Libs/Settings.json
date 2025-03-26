@@ -3,7 +3,9 @@
         "General": {
             "Template": {
                 "Last_Used": "",
-                "Templates_List": []
+                "Templates_List": [
+                    "Template1"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -234,7 +236,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -257,9 +259,9 @@
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -455,7 +457,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -480,7 +482,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "From Confirmation",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Order",
@@ -491,7 +493,7 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Prompt",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -549,7 +551,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {
@@ -569,7 +571,7 @@
                         }
                     },
                     "Items": {
-                        "Method": "Prompt",
+                        "Method": "All",
                         "Methods_List": [
                             "All",
                             "Fixed",
@@ -587,7 +589,7 @@
                         ]
                     },
                     "Prices": {
-                        "Method": "Prompt",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Prompt",
                             "Fixed"
@@ -633,7 +635,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -650,7 +652,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",

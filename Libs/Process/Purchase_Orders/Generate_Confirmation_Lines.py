@@ -1,6 +1,7 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
+from fastapi import HTTPException
 
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -164,12 +165,12 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PO_Price_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Lines:Price")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -246,12 +247,12 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PO_UoM_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Lines:Unit_of_Measure")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items Unit of Measure Method selected: {UoM_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -413,12 +414,12 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Free of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                         Button_Confirm_Var.wait_variable(PO_Free_Variable)
                     else:
-                        pass
+                        raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Lines:Free_of_Charge.")
                 else:
                     if GUI == True:
                         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        pass
+                        raise HTTPException(status_code=500, detail=f"Free of Charge Method selected: {Free_Method} which is not supporter. Cancel File creation.")
                     Can_Continue = False
             else:
                 pass
@@ -609,12 +610,12 @@ def Generate_PO_CON_Lines(Settings: dict,
                     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Flags of charge Selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                     Button_Confirm_Var.wait_variable(PO_Flags_Variable)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Lines:Line_Flags.")
             else:
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Line Flags Charge Method selected: {Line_Flags_Method} which is not supporter. Cancel File creation.")
                 Can_Continue = False
         else:
             pass

@@ -1,6 +1,7 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
+from fastapi import HTTPException
 
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -164,12 +165,12 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, w
                 Button_Confirm_Var.wait_variable(PO_Pack_Plant_Variable)
                 Pack_Plant_list = PO_Pack_Plant_Variable.get().split(";")
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Packages_Lines:Plants.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {Pack_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Plants Method selected: {Pack_Plant_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
     # Apply to Package_Lines_df

@@ -2,6 +2,7 @@
 from pandas import DataFrame
 import requests
 import json
+from fastapi import HTTPException
 
 import Libs.GUI.Elements as Elements
 import Libs.Pandas_Functions as Pandas_Functions
@@ -53,9 +54,9 @@ def Request_Endpoint(Configuration: dict|None, window: CTk|None, headers: dict, 
         Error_Code = Error_dict["error"]["code"]
         Error_Detail = Error_dict["error"]["message"]
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"{Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Download Data from Business Central received Error Code: {Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"Download Data from Business Central received Error Code: {Error_Code}: {Error_Detail}")
 
     return response_values_List, list_len
 

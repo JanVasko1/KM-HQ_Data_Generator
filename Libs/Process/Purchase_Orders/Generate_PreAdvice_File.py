@@ -1,5 +1,6 @@
 # Import Libraries
 from datetime import datetime, timedelta
+from fastapi import HTTPException
 
 from customtkinter import CTk, CTkFrame, StringVar
 
@@ -74,12 +75,12 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict|No
                 Button_Confirm_Var.wait_variable(PO_Pre_Date_Date_Variable)
                 PreAdvice_Date = PO_Pre_Date_Date_Variable.get()
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PreAdvice_from_Delivery_dict:PreAdvice_Date.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
         # Assign new value

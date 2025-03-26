@@ -5,6 +5,7 @@ from glob import glob
 from shutil import rmtree, copy
 from pandas import DataFrame
 from fpdf import FPDF
+from fastapi import HTTPException
 
 import Libs.GUI.Elements as Elements
 
@@ -68,7 +69,7 @@ def Get_Downloads_File_Path(File_Name: str, File_postfix: str):
     return Destination_File
 
 # --------------------------------------------- Exporting to --------------------------------------------- #
-def Export_NAV_Folders(NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Buy_from_Vendor_No: str, File_Content: dict|FPDF, HQ_File_Type_Path: str, File_Name: str, File_suffix: str) -> None:
+def Export_NAV_Folders(Configuration: dict, window: CTk, NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Buy_from_Vendor_No: str, File_Content: dict|FPDF, HQ_File_Type_Path: str, File_Name: str, File_suffix: str, GUI: bool=True) -> None:
     # NVR Connector
     Root_Path_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_NUS"])
     Root_Path_NUS = Root_Path_NUS.replace("\\\\", "")
@@ -85,16 +86,28 @@ def Export_NAV_Folders(NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: 
         HQ_Path = f"{HQ_Path}\\"
 
     # Export
-    if File_suffix == "json":
-        with open(rf"\\{Root_Path_NUS}{Root_Path_Suffix_NUS}\{HQ_Path}{File_Name}.{File_suffix}", "w") as outfile: 
-            json.dump(File_Content, outfile)
-    elif File_suffix == "pdf":
-        File_Content.output(rf"\\{Root_Path_NUS}{Root_Path_Suffix_NUS}\{HQ_Path}{File_Name}.{File_suffix}")
+    try:
+        if File_suffix == "json":
+            with open(rf"\\{Root_Path_NUS}{Root_Path_Suffix_NUS}\{HQ_Path}{File_Name}.{File_suffix}", "w") as outfile: 
+                json.dump(File_Content, outfile)
+        elif File_suffix == "pdf":
+            File_Content.output(rf"\\{Root_Path_NUS}{Root_Path_Suffix_NUS}\{HQ_Path}{File_Name}.{File_suffix}")
+    except:
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            raise HTTPException(status_code=500, detail="Impossible to store data in FileServer.")
 
-def Export_Download_Folders(File_Content: dict|FPDF, File_Name: str, File_suffix: str) -> None:
+def Export_Download_Folders(Configuration: dict, window: CTk, File_Content: dict|FPDF, File_Name: str, File_suffix: str, GUI: bool=True) -> None:
     Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
-    if File_suffix == "json":
-        with open(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}", "w") as outfile: 
-            json.dump(File_Content, outfile)
-    elif File_suffix == "pdf":
-        File_Content.output(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}")
+    try:
+        if File_suffix == "json":
+            with open(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}", "w") as outfile: 
+                json.dump(File_Content, outfile)
+        elif File_suffix == "pdf":
+            File_Content.output(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}")
+    except:
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            raise HTTPException(status_code=500, detail="Impossible to store data in Downloads folder.")

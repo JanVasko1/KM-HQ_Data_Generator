@@ -1,6 +1,7 @@
 # Import Libraries
 import random
 from pandas import DataFrame
+from fastapi import HTTPException
 
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
@@ -86,12 +87,12 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 Button_Confirm_Var.wait_variable(CPDI_Delivery_Variable)
                 CPDI_Delivery_list.append(CPDI_Delivery_Variable.get())
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CPDI_Messages:Delivery Number_list = 1.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     elif len(PO_Delivery_Number_list) > 0:
         if CPDI_Delivery_Method == "Fixed":
@@ -155,18 +156,18 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Delivery selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(CPDI_Delivery_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CPDI_Messages:Delivery Number_list > 1.")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Delivery Method selected: {CPDI_Delivery_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery length is not supported, canceling  CPDI Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            pass
+            raise HTTPException(status_code=500, detail=f"Delivery length is not supported, canceling  CPDI Process.")
         Can_Continue = False 
         
     # --------------------------------------------- Level --------------------------------------------- #
@@ -214,12 +215,12 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                     Button_Confirm_Var.wait_variable(CPDI_Level_Variable)
                     CPDI_Level = CPDI_Level_Variable.get()
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CPDI_Messages:Level")
             else:
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"CPDI Level Method selected: {CPDI_Level_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    pass
+                    raise HTTPException(status_code=500, detail=f"CPDI Level Method selected: {CPDI_Level_Method} which is not supporter. Cancel File creation.")
                 Can_Continue = False
 
             # --------------------------------------------- Status --------------------------------------------- #
@@ -287,7 +288,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                         Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm CPDI Status/s selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                         Button_Confirm_Var.wait_variable(CPDI_Status_Variable)
                     else:
-                        pass
+                        raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CPDI_Messages:Status")
 
                 # --------------------------------------------- Export --------------------------------------------- #
                 for CPDI_Status in CPDI_Status_List:
@@ -302,9 +303,9 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                     # Export 
                     PO_CPDI_File_Name = f"CPDI_{CPDI_Delivery}_{CPDI_Level}_{CPDI_Status}"
                     if Export_NAV_Folder == True:
-                        File_Manipulation.Export_NAV_Folders(NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Current_line_json, HQ_File_Type_Path="HQ_CPDI_Import_Path", File_Name=PO_CPDI_File_Name, File_suffix="json")
+                        File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Current_line_json, HQ_File_Type_Path="HQ_CPDI_Import_Path", File_Name=PO_CPDI_File_Name, File_suffix="json", GUI=GUI)
                     else:
-                        File_Manipulation.Export_Download_Folders(File_Content=Current_line_json, File_Name=PO_CPDI_File_Name, File_suffix="json")
+                        File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Current_line_json, File_Name=PO_CPDI_File_Name, File_suffix="json", GUI=GUI)
 
                     del Current_line_json
             else:

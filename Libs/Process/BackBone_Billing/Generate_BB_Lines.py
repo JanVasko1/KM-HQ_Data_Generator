@@ -1,6 +1,7 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
+from fastapi import HTTPException
 
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
@@ -122,12 +123,12 @@ def Generate_BB_Lines(Settings: dict,
                     result = Vendor_Service_Function_df.loc[Vendor_Service_Function_df["Vendor_Service_ID"] == Item_No, "Vendor_Service_Name"].values[0]
                     Lines_df.at[row[0], "description_short"] = result
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Items_Selection")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items Method selected: {BB_Items_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -199,12 +200,12 @@ def Generate_BB_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Quantity selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(BB_Quantity_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Quantity")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items quantity Method selected: {BB_Quantity_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -274,12 +275,12 @@ def Generate_BB_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(BB_Price_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Prices")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Items price Method selected: {BB_Price_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -359,12 +360,12 @@ def Generate_BB_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Plant selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(BB_Plant_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Plants")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Plants Method selected: {BB_Inv_Plant_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -437,12 +438,12 @@ def Generate_BB_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Country of Origin selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(BB_Country_Origin_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Country_of_Origin")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Country of Origin Method selected: {BB_Count_Origin_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
@@ -515,12 +516,12 @@ def Generate_BB_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm BB Tariff selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(BB_Tariff_Variable)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Lines:Tariff")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                pass
+                raise HTTPException(status_code=500, detail=f"Tariff Method selected: {BB_Tariff_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
     else:
         pass
