@@ -570,21 +570,6 @@
                     "#446b80"
                 ]
             },
-            "SideBar_active": {
-                "width": 5,
-                "height": 40,
-                "corner_radius": 10,
-                "border_width": 0,
-                "border_color": [
-                    "#2C2C2C",
-                    "#efefef"
-                ],
-                "bg_color": "transparent",
-                "fg_color": [
-                    "#efefef",
-                    "#efefef"
-                ]
-            },
             "Work_Area": {
                 "width": 1110,
                 "height": 700,
@@ -1429,6 +1414,42 @@
             "icon_size": 30,
             "font_size": 30,
             "font_color": [
+                "#A7A7A7",
+                "#A7A7A7"
+            ],
+            "outline_width": 0,
+            "outline_color": [
+                null,
+                null
+            ],
+            "background_color": [
+                null,
+                null
+            ],
+            "background_radius": 0
+        },
+        "Side_Bar_close": {
+            "icon_size": 30,
+            "font_size": 30,
+            "font_color": [
+                "#FF9797",
+                "#FF9797"
+            ],
+            "outline_width": 0,
+            "outline_color": [
+                null,
+                null
+            ],
+            "background_color": [
+                null,
+                null
+            ],
+            "background_radius": 0
+        },
+        "Side_Bar_Active": {
+            "icon_size": 30,
+            "font_size": 30,
+            "font_color": [
                 "#efefef",
                 "#efefef"
             ],
@@ -1449,24 +1470,6 @@
             "font_color": [
                 "#efefef",
                 "#efefef"
-            ],
-            "outline_width": 0,
-            "outline_color": [
-                null,
-                null
-            ],
-            "background_color": [
-                null,
-                null
-            ],
-            "background_radius": 0
-        },
-        "Side_Bar_close": {
-            "icon_size": 30,
-            "font_size": 30,
-            "font_color": [
-                "#FF9797",
-                "#FF9797"
             ],
             "outline_width": 0,
             "outline_color": [

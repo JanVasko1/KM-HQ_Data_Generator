@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.6.1
+-SideBar as Class
+
 ### 0.6.0
 - API Endpoint integrated
 
