@@ -557,6 +557,44 @@ def Get_HQ_Item_Transport_Register_df(Configuration: dict|None, window: CTk|None
         
     return HQ_Item_Transport_Register_df
 
+# ------------------- HQ_Testing_HQ_Pack_Reg ------------------- #
+def Get_HQ_Testing_HQ_Pack_Reg_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Order: str, PO_Delivery_Number_list: list, GUI: bool=True) -> DataFrame:
+    # Fields
+    fields_list = ["Purchase_Order_No", "Delivery_No", "Plant_No"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Delivery_Number = Get_Field_List_string(fields_list=PO_Delivery_Number_list, Join_sign="','")
+    filters_list_string = f"""Purchase_Order_No eq '{Purchase_Order}' and Delivery_No in ('{filters_Delivery_Number}')"""
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, window=window, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_HQ_Pack_Reg", GUI=GUI)
+
+    # Prepare DataFrame
+    Purchase_Order_No_list = []
+    Delivery_No_list = []
+    Plant_No_list = []
+
+    for index in range(0, list_len):
+        Purchase_Order_No_list.append(response_values_List[index]["Purchase_Order_No"])
+        Delivery_No_list.append(response_values_List[index]["Delivery_No"])
+        Plant_No_list.append(response_values_List[index]["Plant_No"])
+
+    response_values_dict = {
+        "Purchase_Order_No": Purchase_Order_No_list,
+        "Delivery_No": Delivery_No_list,
+        "Plant_No": Plant_No_list}
+    
+    if list_len == 1:
+        HQ_HQ_Testing_HQ_Pack_Reg_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        HQ_HQ_Testing_HQ_Pack_Reg_df = DataFrame(data=response_values_dict, columns=fields_list)
+    HQ_HQ_Testing_HQ_Pack_Reg_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=HQ_HQ_Testing_HQ_Pack_Reg_df, Columns_list=["Purchase_Order_No", "Delivery_No"], Accenting_list=[True, True]) 
+        
+    return HQ_HQ_Testing_HQ_Pack_Reg_df
+
 # ------------------- HQ_Testing_Items ------------------- #
 def Get_Items_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Items_list: list, GUI: bool=True):
     # Fields

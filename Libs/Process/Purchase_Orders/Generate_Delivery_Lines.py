@@ -15,11 +15,9 @@ from customtkinter import CTk, CTkFrame, StringVar
 def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, Items_Tracking_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
-    Date_format = Settings["0"]["General"]["Formats"]["Date"]
     Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
     Delivery_Lines_df_Columns = ["Delivery_No", "line_item_id", "supplier_aid", "quantity", "order_unit", "delivery_start_date", "delivery_end_date", "order_id", "order_ref_line_item_id", "order_date", "supplier_order_id", "supplier_order_item_id", "serial_numbers"]
     Delivery_Lines_df = DataFrame(columns=Delivery_Lines_df_Columns)
-    Delivery_Lines_Template_List = []
 
     DEL_Assignment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Method"]
     DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["FreeOfCharge_with_Main"]
@@ -297,6 +295,9 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
 
     # --------------------------------------------- Serial Numbers  --------------------------------------------- #
     # Data preparation
+    Delivery_Lines_df["Material_Group_NUS"] = ""
+    Delivery_Lines_df["Item_Tracking_Code"] = ""
+    Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] = ""
     Delivery_Lines_df["Material_Group_NUS"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
     Delivery_Lines_df["Item_Tracking_Code"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Tracking_Code", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Item_Tracking_Code"), axis=1)
     Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="SN_Purchase_Inbound_Tracking", Compare_Column_df1=["Item_Tracking_Code"], Compare_Column_df2=["Code"], Search_df=Items_Tracking_df, Search_Column="SN_Purchase_Inbound_Tracking"), axis=1)

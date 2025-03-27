@@ -6,7 +6,6 @@
 # Import Libraries
 import os
 
-import pywinstyles
 from customtkinter import CTk, set_appearance_mode, deactivate_automatic_dpi_awareness
 
 import Libs.GUI.Pages.P_Header as P_Header
@@ -99,7 +98,6 @@ if __name__ == "__main__":
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
     set_appearance_mode(mode_string=Theme_Actual)
-    pywinstyles.apply_style(window=window, style="normal")
 
     # ---------------------------------- Content ----------------------------------#
     # Background

@@ -4,7 +4,7 @@ import calendar
 
 import pyautogui
 
-from customtkinter import CTk, CTkFrame, CTkToplevel, CTkEntry, CTkButton, BooleanVar
+from customtkinter import CTk, CTkFrame, CTkToplevel, CTkEntry, CTkButton
 
 import Libs.GUI.Elements as Elements
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions

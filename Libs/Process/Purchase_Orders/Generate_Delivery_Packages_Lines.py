@@ -174,16 +174,23 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, w
             Can_Continue = False
 
     # Apply to Package_Lines_df
+    Delivery_Lines_df["Plant_Help"] = ""
     for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
         Current_plant = Pack_Plant_list[Delivery_Index]
         Plant_conditions = [(Package_Lines_df["Delivery_No"] == Delivery_Number)]
         Package_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Package_Lines_df, conditions=Plant_conditions, Set_Column="package_plant", Set_Value=Current_plant)
 
+        # Update Delivery_Lines_df --> because usage on Invoice 
+        Delivery_conditions = [(Delivery_Lines_df["Delivery_No"] == Delivery_Number)]
+        Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_conditions, Set_Column="Plant_Help", Set_Value=Current_plant)
     else:
         pass
 
     # --------------------------------------------- Totals for Package Header --------------------------------------------- #
     # Prepare data
+    Package_Lines_df["order_unit_Help"] = ""
+    Package_Lines_df["Item_Weight_Help"] = ""
+    Package_Lines_df["Item_Volume_Help"] = ""
     Package_Lines_df["order_unit_Help"] = Package_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit_Help", Compare_Column_df1=["package_unit"], Compare_Column_df2=["International_Standard_Code"], Search_df=UoM_df, Search_Column="Code"), axis=1)
     Package_Lines_df["Item_Weight_Help"] = Package_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Weight_Help", Compare_Column_df1=["package_itemnumber", "order_unit_Help"], Compare_Column_df2=["Item_No", "Code"], Search_df=Items_UoM_df, Search_Column="Weight"), axis=1)
     Package_Lines_df["Item_Volume_Help"] = Package_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Volume_Help", Compare_Column_df1=["package_itemnumber", "order_unit_Help"], Compare_Column_df2=["Item_No", "Code"], Search_df=Items_UoM_df, Search_Column="Cubage"), axis=1)

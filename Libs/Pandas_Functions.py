@@ -33,6 +33,9 @@ def Dataframe_Set_Value_on_Condition(Set_df: DataFrame, conditions: list, Set_Co
     return Set_df
 
 def Dataframe_Apply_Value_from_df2(row: Series, Fill_Column: str, Compare_Column_df1: list, Compare_Column_df2: list, Search_df: DataFrame, Search_Column: str):
+    """
+    Fill_Column must exists in Dataframe before call of function
+    """
     conditions = [Search_df[Compare_Column_df2[index]] == row[Compare_Column_df1[index]] for index, value in enumerate(Compare_Column_df1)]
     combined_condition = Series([True] * len(Search_df), index=Search_df.index)
     for condition in conditions:

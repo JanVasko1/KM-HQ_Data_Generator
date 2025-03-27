@@ -48,7 +48,7 @@ def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame, Items_df: Data
 def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, Purchase_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
     import Libs.Downloader.NAV_OData_API as NAV_OData_API
     
-    Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
+    Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "PO_UoM"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
 
     # HQ_Testing_HQ_Item_Transport_Register
@@ -130,7 +130,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
 
 def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
     PO_Confirmation_Number = "Fictive_Num_01"
-    Exported_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No"]
+    Exported_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "PO_UoM"]
     Exported_Lines_df = DataFrame(columns=Exported_Lines_df_Columns)
     
     # Preparation
@@ -363,4 +363,15 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
                 Line_Counter += 1
                 Delivery_Lines_df.at[row_index, "line_item_id"] = Delivery_line_item_id
 
+        # --------------------------------- Package Tracking Register --------------------------------- # ¨
+        # Plant --> because use on Invoice Lines
+        Delivery_Lines_df["Plant_Help"] = ""
+        HQ_HQ_Testing_HQ_Pack_Reg_df = NAV_OData_API.Get_HQ_Testing_HQ_Pack_Reg_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI=GUI)
+        HQ_HQ_Testing_HQ_Pack_Reg_df.drop_duplicates(inplace=True, ignore_index=True)
+
+        if HQ_HQ_Testing_HQ_Pack_Reg_df.empty:
+            pass
+        else:
+            Delivery_Lines_df["Plant_Help"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Plant_Help", Compare_Column_df1=["Delivery_No"], Compare_Column_df2=["Delivery_No"], Search_df=HQ_HQ_Testing_HQ_Pack_Reg_df, Search_Column="Plant_No"), axis=1)
+        
     return PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df

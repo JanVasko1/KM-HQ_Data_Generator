@@ -196,8 +196,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                 Current_Plant = random.choice(Inv_Fixed_Plants_List)
                 Plants_List.append(Current_Plant)
         elif Inv_Plant_Method == "From Delivery":
-            pass
-            # TODO --> finish 
+            Invoice_Lines_df["plant"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="plant", Compare_Column_df1=["delivery_note_id"], Compare_Column_df2=["Delivery_No"], Search_df=Delivery_Lines_df, Search_Column="Plant_Help"), axis=1)
         elif Inv_Plant_Method == "Empty":
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 Plants_List.append("")
@@ -270,9 +269,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
         pass
 
     # Assign Plant according Invoice_No
-    for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
-        Invoice_conditions = [(Invoice_Lines_df["Invoice_No"] == Invoice_Number)]
-        Invoice_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Invoice_Lines_df, conditions=Invoice_conditions, Set_Column="plant", Set_Value=Plants_List[Invoice_Index])
+    if Inv_Plant_Method != "From Delivery":
+        for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
+            Invoice_conditions = [(Invoice_Lines_df["Invoice_No"] == Invoice_Number)]
+            Invoice_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Invoice_Lines_df, conditions=Invoice_conditions, Set_Column="plant", Set_Value=Plants_List[Invoice_Index])
+    else:
+        pass
 
     # --------------------------------------------- Country of Origin --------------------------------------------- #
     if Can_Continue == True:

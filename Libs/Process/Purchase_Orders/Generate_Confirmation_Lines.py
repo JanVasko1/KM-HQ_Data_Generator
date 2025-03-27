@@ -180,10 +180,12 @@ def Generate_PO_CON_Lines(Settings: dict,
         if UoM_Method == "Fixed":
             Confirmed_Lines_df["order_unit"] = Fixed_UoM
         elif UoM_Method == "Purchase Line":
+            Confirmed_Lines_df["PO_UoM"] = ""
             Confirmed_Lines_df["PO_UoM"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="PO_UoM", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["No"], Search_df=Purchase_Lines_df_Filtered, Search_Column="Unit_of_Measure_Code"), axis=1)
             Confirmed_Lines_df["order_unit"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit", Compare_Column_df1=["PO_UoM"], Compare_Column_df2=["Code"], Search_df=UoM_df, Search_Column="International_Standard_Code"), axis=1)
             Confirmed_Lines_df.drop(labels=["PO_UoM"], inplace=True, axis=1)
         elif UoM_Method == "HQ Item Transport Export":
+            Confirmed_Lines_df["PO_UoM"] = ""
             Confirmed_Lines_df["PO_UoM"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="PO_UoM", Compare_Column_df1=["buyer_aid", "Exported_Line_No"], Compare_Column_df2=["Item_No", "Exported_Line_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Unit_of_Measure"), axis=1)
             Confirmed_Lines_df["order_unit"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="order_unit", Compare_Column_df1=["PO_UoM"], Compare_Column_df2=["Code"], Search_df=UoM_df, Search_Column="International_Standard_Code"), axis=1)
             Confirmed_Lines_df.drop(labels=["PO_UoM"], inplace=True, axis=1)
@@ -439,6 +441,7 @@ def Generate_PO_CON_Lines(Settings: dict,
     if Can_Continue == True:
         if Line_Flag_Label_Enabled == True:
             # Find Machines
+            Confirmed_Lines_df["Material_Group_help"] = ""
             Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
             mask_Machines = Confirmed_Lines_df["Material_Group_help"] == "0100"
             Machines_df = DataFrame(Confirmed_Lines_df[mask_Machines])
@@ -471,6 +474,8 @@ def Generate_PO_CON_Lines(Settings: dict,
     # Finished for EOL Items (Distribution status set as blocked for Purchase)
     if Can_Continue == True:
         if Line_Flag_Item_EOL_Finished == True:
+            Confirmed_Lines_df["Distribution_Status_NUS"] = ""
+            Confirmed_Lines_df["Blocked_for_Purchase"] = ""
             Confirmed_Lines_df["Distribution_Status_NUS"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Distribution_Status_NUS", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Distribution_Status_NUS"), axis=1)
             Confirmed_Lines_df["Blocked_for_Purchase"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Blocked_for_Purchase", Compare_Column_df1=["Distribution_Status_NUS"], Compare_Column_df2=["Distribution_Status"], Search_df=Items_Distr_Status_df, Search_Column="Blocked_for_Purchase"), axis=1)
             conditions = [(Confirmed_Lines_df["Blocked_for_Purchase"] == True)]

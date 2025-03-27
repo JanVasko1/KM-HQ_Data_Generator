@@ -50,7 +50,7 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": false
+                "Download_Folder": true
             },
             "Confirmation": {
                 "Purchase_Order": {
@@ -166,7 +166,7 @@
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Prompt",
+                        "Method": "Connected Items",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -509,7 +509,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Random",
+                        "Method": "From Delivery",
                         "Methods_List": [
                             "Fixed",
                             "Random",
