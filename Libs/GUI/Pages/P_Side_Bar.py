@@ -113,7 +113,6 @@ class SidebarApp:
         Program_Version_text.configure(text=f"{self.Program_Version}")
         Program_Version_text.pack(side="top", fill="none", expand=False, padx=5, pady=(0, 10))
 
-
     def create_command(self, button_index, button_name):
         """Return a command function for the given page."""
         def command():
