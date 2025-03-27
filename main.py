@@ -10,7 +10,6 @@ from customtkinter import CTk, set_appearance_mode, deactivate_automatic_dpi_awa
 
 import Libs.GUI.Pages.P_Header as P_Header
 import Libs.GUI.Pages.P_Side_Bar as P_Side_Bar
-import Libs.GUI.Pages.P_Side_Bar_new as P_Side_Bar_new
 import Libs.GUI.Elements as Elements
 
 import Libs.Defaults_Lists as Defaults_Lists
@@ -122,9 +121,7 @@ if __name__ == "__main__":
     Frame_Work_Area_Main.pack(side="left", fill="none", expand=False)
 
     P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
-    #P_Side_Bar.Get_Side_Bar(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
-
-    app = P_Side_Bar_new.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
+    SideBar = P_Side_Bar.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
     
     # run
     window.mainloop()
