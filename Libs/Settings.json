@@ -3,9 +3,7 @@
         "General": {
             "Template": {
                 "Last_Used": "",
-                "Templates_List": [
-                    "Template1"
-                ]
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -50,13 +48,13 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": true
+                "Download_Folder": false
             },
             "Confirmation": {
                 "Purchase_Order": {
                     "Use": true,
                     "Number": {
-                        "Method": "Automatic",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -70,14 +68,14 @@
                         }
                     },
                     "Generation_Date": {
-                        "Method": "Today",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Today",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-10"
+                            "Fix_Date": "2025-03-26"
                         }
                     },
                     "Unit_of_Measure": {
@@ -160,13 +158,13 @@
                                 }
                             },
                             "Fixed_Dates": {
-                                "ONH": "2025-03-14",
-                                "ONB": "2025-03-16"
+                                "ONH": "2025-04-01",
+                                "ONB": "2025-04-02"
                             }
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Connected Items",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -238,7 +236,7 @@
             "PreAdvice": {
                 "Use": true,
                 "Delivery_Date": {
-                    "Method": "Delivery Date Shift",
+                    "Method": "Fixed",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -246,7 +244,7 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": "2025-03-19"
+                        "Fix_Date": "2025-04-17"
                     },
                     "Random_Options": {
                         "From": -4,
@@ -259,7 +257,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Random",
                     "Methods_List": [
@@ -275,7 +273,7 @@
                     }
                 },
                 "Number": {
-                    "Method": "Automatic",
+                    "Method": "Fixed",
                     "Methods_List": [
                         "Fixed",
                         "Automatic",
@@ -289,7 +287,7 @@
                     }
                 },
                 "Item_Delivery_Assignment": {
-                    "Method": "Full random",
+                    "Method": "Lines random",
                     "Methods_List": [
                         "Full random",
                         "Lines random",
@@ -322,7 +320,7 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": "2025-03-20"
+                        "Fix_Date": "2025-04-17"
                     },
                     "Random_Options": {
                         "From": 1,
@@ -423,7 +421,7 @@
                             "Per Delivery"
                         ],
                         "Number": {
-                            "Method": "Automatic",
+                            "Method": "Fixed",
                             "Methods_List": [
                                 "Fixed",
                                 "Automatic",
@@ -493,7 +491,7 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Random",
+                        "Method": "Today",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -501,7 +499,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-24"
+                            "Fix_Date": "2025-04-16"
                         },
                         "Random_Options": {
                             "From": 1,
@@ -509,7 +507,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "From Delivery",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -555,7 +553,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -573,8 +571,8 @@
                     "Items": {
                         "Method": "All",
                         "Methods_List": [
-                            "All",
                             "Fixed",
+                            "All",
                             "Prompt"
                         ],
                         "Fixed_Options": {
@@ -591,11 +589,11 @@
                     "Prices": {
                         "Method": "Fixed",
                         "Methods_List": [
-                            "Prompt",
-                            "Fixed"
+                            "Fixed",
+                            "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Price": 2000
+                            "Fix_Price": 15.0
                         }
                     },
                     "Currency": {
@@ -604,20 +602,20 @@
                     "Invoice_Date": {
                         "Method": "Today",
                         "Methods_List": [
-                            "Today",
                             "Fixed",
+                            "Today",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-04"
+                            "Fix_Date": "2025-04-16"
                         }
                     },
                     "Order_reference": {
                         "Order_id": {
                             "Method": "Previous Month",
                             "Methods_List": [
-                                "Previous Month",
-                                "Fixed"
+                                "Fixed",
+                                "Previous Month"
                             ],
                             "Fixed_Options": {
                                 "Fixed_Order_ID": ""
@@ -626,8 +624,8 @@
                         "Order_date": {
                             "Method": "Invoice date",
                             "Methods_List": [
-                                "Invoice date",
-                                "Fixed"
+                                "Fixed",
+                                "Invoice date"
                             ],
                             "Fixed_Options": {
                                 "Fixed_Order_Date": ""
@@ -660,7 +658,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Country_Of_Origin": "DE"
+                            "Fix_Country_Of_Origin": "CZ"
                         }
                     },
                     "Tariff": {
@@ -679,7 +677,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Credit_Memo": {

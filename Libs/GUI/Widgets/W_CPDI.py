@@ -1,11 +1,10 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame, StringVar, CTkEntry
+from customtkinter import CTk, CTkFrame, StringVar
 
-import Libs.Data_Functions as Data_Functions
-import Libs.GUI.Elements_Groups as Elements_Groups
-import Libs.GUI.Elements as Elements
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_Input_Entry, WidgetRow_OptionMenu, Widget_Section_Row
 
-def General(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def General(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     CPDI_Delivery_Method = Settings["0"]["HQ_Data_Handler"]["CPDI"]["Delivery_select"]["Method"]
     CPDI_Delivery_Method_List = list(Settings["0"]["HQ_Data_Handler"]["CPDI"]["Delivery_select"]["Methods_List"])
@@ -24,59 +23,27 @@ def General(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: C
     CPDI_Status_Method_Variable = StringVar(master=Frame, value=CPDI_Status_Method, name="CPDI_Status_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Generate", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related what CPDI status should be created.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    CPDI_Method_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Generate", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related what CPDI status should be created.", GUI_Level_ID=GUI_Level_ID)
 
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Delivery", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    # Fields
+    Delivery_Section_Row = Widget_Section_Row(Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Delivery", Label_Size="Field_Label", Font_Size="Section_Separator")
+    Fixed_Delivery_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Delivery", Value=Fixed_Delivery, placeholder_text="Manual Delivery number", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Delivery_select", "Fixed_Options", "Fix_Delivery"])
+    CPDI_Delivery_Method_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "All Deliveries", "Prompt"], Freeze_fields=[[],[Fixed_Delivery_Row],[Fixed_Delivery_Row]])
+    CPDI_Delivery_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=CPDI_Delivery_Method_Variable, Values=CPDI_Delivery_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Delivery_select", "Method"], Field_list=[Fixed_Delivery_Row], Field_Blocking_dict=CPDI_Delivery_Method_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Field - Delivery MEthod
-    CPDI_Delivery_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    CPDI_Delivery_Frame_Var = CPDI_Delivery_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    CPDI_Delivery_Frame_Var.configure(variable=CPDI_Delivery_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Delivery_Frame_Var, values=CPDI_Delivery_Method_List, command=lambda CPDI_Delivery_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=CPDI_Delivery_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Delivery_select", "Method"], Information=CPDI_Delivery_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    Level_Section_Row = Widget_Section_Row(Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Level Provided", Label_Size="Field_Label", Font_Size="Section_Separator")
+    Fixed_Level_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Level", Value=Fixed_CPDI_Level, placeholder_text="Manual Level provided", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Level_Provided", "Fixed_Options", "Fix_Level"])
+    CPDI_Level_Method_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Purchase Order", "Random", "Prompt"], Freeze_fields=[[],[Fixed_Level_Row],[Fixed_Level_Row],[Fixed_Level_Row]])
+    CPDI_Level_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=CPDI_Level_Method_Variable, Values=CPDI_Level_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Level_Provided", "Method"], Field_list=[Fixed_Level_Row], Field_Blocking_dict=CPDI_Level_Method_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Field - Fixed Delivery
-    Fixed_Delivery_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Delivery", Field_Type="Input_Normal") 
-    Fixed_Delivery_Frame_Var = Fixed_Delivery_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Fixed_Delivery_Frame_Var.configure(placeholder_text="Manual Delivery", placeholder_text_color="#949A9F")
-    Fixed_Delivery_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Delivery_select", "Fixed_Options", "Fix_Delivery"], Information=Fixed_Delivery_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Fixed_Delivery_Frame_Var, Value=Fixed_Delivery)
+    Status_Section_Row = Widget_Section_Row(Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Status", Label_Size="Field_Label", Font_Size="Section_Separator")
+    Fixed_Status_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Status", Value=Fixed_CPDI_Status, placeholder_text="Manual Status", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Status", "Fixed_Options", "Fix_Status"])
+    CPDI_Status_Method_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "All Statuses", "Prompt"], Freeze_fields=[[],[Fixed_Status_Row],[Fixed_Status_Row]])
+    CPDI_Statius_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=CPDI_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=CPDI_Status_Method_Variable, Values=CPDI_Status_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Status", "Method"], Field_list=[Fixed_Status_Row], Field_Blocking_dict=CPDI_Status_Method_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Level Provided", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    # Add Fields to Widget Body
+    CPDI_Method_Widget.Add_row(Rows=[Delivery_Section_Row, CPDI_Delivery_Method_Row, Fixed_Delivery_Row, Level_Section_Row, CPDI_Level_Method_Row, Fixed_Level_Row, Status_Section_Row, CPDI_Statius_Method_Row, Fixed_Status_Row])
 
-    # Field -Level Method
-    CPDI_Level_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    CPDI_Level_Frame_Var = CPDI_Level_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    CPDI_Level_Frame_Var.configure(variable=CPDI_Level_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Level_Frame_Var, values=CPDI_Level_Method_List, command=lambda CPDI_Level_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=CPDI_Level_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Level_Provided", "Method"], Information=CPDI_Level_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    return CPDI_Method_Widget
 
-    # Field - Fixed Level
-    Fixed_Level_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Level", Field_Type="Input_Normal") 
-    Fixed_Level_Frame_Var = Fixed_Level_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Fixed_Level_Frame_Var.configure(placeholder_text="Manual Level provided", placeholder_text_color="#949A9F")
-    Fixed_Level_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Level_Provided", "Fixed_Options", "Fix_Level"], Information=Fixed_Level_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Fixed_Level_Frame_Var, Value=Fixed_CPDI_Level)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Status", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Number Method
-    CPDI_Status_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    CPDI_Status_Frame_Var = CPDI_Status_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    CPDI_Status_Frame_Var.configure(variable=CPDI_Status_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Status_Frame_Var, values=CPDI_Status_Method_List, command=lambda CPDI_Status_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=CPDI_Status_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Status", "Method"], Information=CPDI_Status_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Delivery
-    Fixed_Status_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Status", Field_Type="Input_Normal") 
-    Fixed_Status_Frame_Var = Fixed_Status_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Fixed_Status_Frame_Var.configure(placeholder_text="Manual Delivery", placeholder_text_color="#949A9F")
-    Fixed_Status_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "CPDI", "Status", "Fixed_Options", "Fix_Status"], Information=Fixed_Status_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Fixed_Status_Frame_Var, Value=Fixed_CPDI_Status)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main

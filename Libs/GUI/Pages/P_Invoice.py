@@ -31,35 +31,43 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
 
     # ---------- Purchase Order ---------- #
     Frame_PO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PO_Column_A.pack_propagate(flag=False)
     Frame_PO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PO_Column_B.pack_propagate(flag=False)
 
     PO_INV_Number_Widget = W_Invoice.PO_INV_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Price_Currency_Widget = W_Invoice.PO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Plant_Widget = W_Invoice.PO_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
-    PO_Posting_Date_Widget = W_Invoice.PO_Posting_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
-    PO_CountryOrigin_Widget = W_Invoice.PO_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
-    PO_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_INV_Price_Widget = W_Invoice.PO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_INV_Plant_Widget = W_Invoice.PO_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PO_INV_Date_Widget = W_Invoice.PO_Invoice_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_INV_Origin_Widget = W_Invoice.PO_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PO_INV_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
 
     # ---------- BackBone Billing ---------- #
     Frame_BB_A_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_BB_A_Column_A.pack_propagate(flag=False)
     Frame_BB_A_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_BB_A_Column_B.pack_propagate(flag=False)
 
     BB_INV_Number_Widget = W_Invoice.BB_INV_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Items_Widget = W_Invoice.BB_Items(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Quantity_Widget = W_Invoice.BB_Quantity(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
-    BB_Posting_Date_Widget = W_Invoice.BB_Posting_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
-    BB_Order_reference_Widget = W_Invoice.BB_Order_reference(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
-    BB_Price_Currency_Widget = W_Invoice.BB_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_INV_Items_Widget = W_Invoice.BB_Items(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_INV_Price_Widget = W_Invoice.BB_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_A, GUI_Level_ID=2)
+    BB_INV_Qty_Widget = W_Invoice.BB_Quantity(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_INV_Date_Widget = W_Invoice.BB_Posting_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    BB_INV_Reference_Widget = W_Invoice.BB_Order_reference(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_A_Column_B, GUI_Level_ID=2)
+    
 
     Frame_BB_B_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_B, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_BB_B_Column_A.pack_propagate(flag=False)
 
-    BB_Plant_Widget = W_Invoice.BB_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
-    BB_CountryOrigin_Widget = W_Invoice.BB_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
-    BB_Tariff_Widget = W_Invoice.BB_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_INV_Plant_Widget = W_Invoice.BB_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_INV_Origin_Widget = W_Invoice.BB_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
+    BB_INV_Tariff_Widget = W_Invoice.BB_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_BB_B_Column_A, GUI_Level_ID=2)
 
     # ---------- Purchase Return Order ---------- #
-    Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
-    Frame_PRO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PRO_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PCM, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PRO_Column_A.pack_propagate(flag=False)
+    Frame_PRO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PCM, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PRO_Column_B.pack_propagate(flag=False)
 
     # ------------------------- Build look of Widget-------------------------#
     Frame_Invoice_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)
@@ -67,27 +75,26 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
 
     Frame_PO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    PO_INV_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Price_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Plant_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Posting_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_CountryOrigin_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    PO_Tariff_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    PO_INV_Number_Widget.Show()
+    PO_INV_Price_Widget.Show()
+    PO_INV_Plant_Widget.Show()
+    PO_INV_Date_Widget.Show()
+    PO_INV_Origin_Widget.Show()
+    PO_INV_Tariff_Widget.Show()
 
     Frame_BB_A_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_BB_A_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    BB_INV_Number_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Items_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Quantity_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Posting_Date_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Order_reference_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Price_Currency_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    
+    BB_INV_Number_Widget.Show()
+    BB_INV_Items_Widget.Show()
+    BB_INV_Price_Widget.Show()
+    BB_INV_Qty_Widget.Show()
+    BB_INV_Date_Widget.Show()
+    BB_INV_Reference_Widget.Show()
 
     Frame_BB_B_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
-    BB_Plant_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_CountryOrigin_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
-    BB_Tariff_Widget.pack(side="top", fill="none", expand=False, padx=5, pady=5)
+    BB_INV_Plant_Widget.Show()
+    BB_INV_Origin_Widget.Show()
+    BB_INV_Tariff_Widget.Show()
     
 
     Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)

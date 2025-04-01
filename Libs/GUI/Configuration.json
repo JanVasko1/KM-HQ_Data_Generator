@@ -10,20 +10,20 @@
             "Colors": {
                 "Accent": {
                     "Accent_Color_Mode": "App Default",
-                    "Accent_Color_Manual": "#446b80",
+                    "Accent_Color_Manual": "",
                     "Accent_Color_List": [
+                        "App Default",
                         "Windows",
-                        "Manual",
-                        "App Default"
+                        "Manual"
                     ]
                 },
                 "Hover": {
                     "Hover_Color_Mode": "Accent Lighter",
-                    "Hover_Color_Manual": "#446b80",
+                    "Hover_Color_Manual": "",
                     "Hover_Color_List": [
+                        "App Default",
                         "Accent Lighter",
-                        "Manual",
-                        "App Default"
+                        "Manual"
                     ]
                 }
             }
@@ -341,7 +341,7 @@
                 ]
             },
             "Small": {
-                "width": 125,
+                "width": 150,
                 "height": 28,
                 "corner_radius": 10,
                 "border_width": 0,
@@ -365,6 +365,52 @@
             },
             "Tiny": {
                 "width": 50,
+                "height": 28,
+                "corner_radius": 10,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "bg_color": "transparent",
+                "fg_color": [
+                    "#efefef",
+                    "#111219"
+                ],
+                "text_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "placeholder_text_color": [
+                    "#FF9797",
+                    "#FF9797"
+                ]
+            },
+            "Double_Input": {
+                "width": 114,
+                "height": 28,
+                "corner_radius": 10,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "bg_color": "transparent",
+                "fg_color": [
+                    "#efefef",
+                    "#111219"
+                ],
+                "text_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "placeholder_text_color": [
+                    "#FF9797",
+                    "#FF9797"
+                ]
+            },
+            "Pickers": {
+                "width": 207,
                 "height": 28,
                 "corner_radius": 10,
                 "border_width": 0,

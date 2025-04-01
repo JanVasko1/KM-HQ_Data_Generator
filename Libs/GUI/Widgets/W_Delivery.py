@@ -1,533 +1,326 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame, StringVar, CTkEntry, BooleanVar
+from customtkinter import CTk, CTkFrame, StringVar, BooleanVar
 
-import Libs.Data_Functions as Data_Functions
-import Libs.GUI.Elements_Groups as Elements_Groups
-import Libs.GUI.Elements as Elements
+import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_CheckBox, WidgetRow_Input_Entry, WidgetRow_OptionMenu, Widget_Section_Row, WidgetRow_Date_Picker
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
-def DEL_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Method"]
-    Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Methods_List"])
-    Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Automatic_Options"]["Prefix"]
-    Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Fixed_Options"]["Number"]
-
-    DEL_Numbers_Method_Variable = StringVar(master=Frame, value=Numbers_Method, name="DEL_Numbers_Method_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Delivery Number.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Number Method
-    DEL_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    DEL_Number_Frame_Var = DEL_Number_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    DEL_Number_Frame_Var.configure(variable=DEL_Numbers_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Number_Frame_Var, values=Numbers_Method_List, command=lambda DEL_Number_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=DEL_Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Method"], Information=DEL_Number_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Date
-    NUM_DEL_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Number", Field_Type="Input_Normal") 
-    NUM_DEL_FIX_Frame_Var = NUM_DEL_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    NUM_DEL_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
-    NUM_DEL_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Fixed_Options", "Number"], Information=NUM_DEL_FIX_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=NUM_DEL_FIX_Frame_Var, Value=Fixed_Number)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Automatic Prefix
-    AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
-    AUT_Prefix_Frame_Var = AUT_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    AUT_Prefix_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
-    AUT_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Automatic_Options", "Prefix"], Information=AUT_Prefix_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=AUT_Prefix_Frame_Var, Value=Automatic_Prefix)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def DEL_Count(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def DEL_Count(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     DEL_Count_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Method"]
     DEL_Count_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Methods_List"])
     Random_Max_count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Random_Options"]["Random_Max_count"]
     Fixed_Count = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Counts"]["Fixed_Options"]["Count"]
-
     DEL_Count_Method_Variable = StringVar(master=Frame, value=DEL_Count_Method, name="DEL_Count_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Delivery Count", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Definition how many Deliveries will be created.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_Count_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Delivery Count", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Definition how many Deliveries will be created.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Count Method
-    DEL_Count_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    DEL_Count_Frame_Var = DEL_Count_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    DEL_Count_Frame_Var.configure(variable=DEL_Count_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Count_Frame_Var, values=DEL_Count_Method_List, command=lambda DEL_Count_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=DEL_Count_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Method"], Information=DEL_Count_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Fields
+    DEL_Random_Max_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Maximal count", Value=Random_Max_count, placeholder_text="Maximal delivery Count.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Validation="Integer")
+    
+    Del_Count_Fix_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Count_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    DEL_Count_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed count", Value=Fixed_Count, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Fixed_Options", "Count"], Validation="Integer")
 
-    # Field - Random Maximal count
-    DEL_Random_Max_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maximal count", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Random_Max_Frame_Var = DEL_Random_Max_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Random_Max_Frame_Var.configure(placeholder_text="Maximal delivery Count", placeholder_text_color="#949A9F")
-    DEL_Random_Max_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Information=int(DEL_Random_Max_Frame_Var.get())))
-    Data_Functions.Entry_field_Insert(Field=DEL_Random_Max_Frame_Var, Value=Random_Max_count)
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Prompt"], Freeze_fields=[[],[DEL_Count_FIX_Row],[DEL_Count_FIX_Row]])
+    DEL_Count_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Count_Method_Variable, Values=DEL_Count_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Method"], Field_list=[DEL_Random_Max_Row, DEL_Count_FIX_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Field - Count Fix
-    DEL_Count_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed count", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Count_FIX_Frame_Var = DEL_Count_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Count_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
-    DEL_Count_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Fixed_Options", "Count"], Information=int(DEL_Count_FIX_Frame_Var.get())))
-    Data_Functions.Entry_field_Insert(Field=DEL_Count_FIX_Frame_Var, Value=Fixed_Count)
+    # Add Fields to Widget Body
+    Del_Count_Widget.Add_row(Rows=[DEL_Count_Row, DEL_Random_Max_Row, Del_Count_Fix_Section_Row, DEL_Count_FIX_Row])
 
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
+    return Del_Count_Widget
 
-    return Frame_Main
+def DEL_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Method"]
+    Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Methods_List"])
+    Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Automatic_Options"]["Prefix"]
+    Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Number"]["Fixed_Options"]["Number"]
+    DEL_Numbers_Method_Variable = StringVar(master=Frame, value=Numbers_Method, name="DEL_Numbers_Method_Variable")
 
-def Item_Delivery_Assignment(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_Number_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Delivery Number.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    Del_Fix_Num_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Number", Label_Size="Field_Label", Font_Size="Section_Separator")
+    NUM_CON_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=Fixed_Number, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Fixed_Options", "Number"])
+
+    Del_Auto_Num_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    AUT_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=Automatic_Prefix, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Automatic_Options", "Prefix"])
+
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Automatic", "Prompt"], Freeze_fields=[[AUT_Prefix_Row],[NUM_CON_FIX_Row],[AUT_Prefix_Row, NUM_CON_FIX_Row]])
+    DEL_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Numbers_Method_Variable, Values=Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Method"], Field_list=[AUT_Prefix_Row, NUM_CON_FIX_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_Number_Widget.Add_row(Rows=[DEL_Number_Row, Del_Fix_Num_Section_Row, NUM_CON_FIX_Row, Del_Auto_Num_Section_Row, AUT_Prefix_Row])
+
+    return Del_Number_Widget
+
+def Item_Delivery_Assignment(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     DEL_Assignment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Method"]
     DEL_Assignment_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["Methods_List"])
     DEL_FOCH_with_Main = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Item_Delivery_Assignment"]["FreeOfCharge_with_Main"]
-
     DEL_Assignment_Method_Variable = StringVar(master=Frame, value=DEL_Assignment_Method, name="DEL_Assignment_Method_Variable")
     DEL_FOCH_with_Main_Variable = BooleanVar(master=Frame, value=DEL_FOCH_with_Main, name="DEL_FOCH_with_Main_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Item Assignment to Delivery", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="How program will select Items and Qty to the Delivery.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_Items_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Item Assignment to Delivery", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="How program will select Items and Qty to the Delivery.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Delivery Assignment Method
-    DEL_Assignment_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    DEL_Assignment_Frame_Var = DEL_Assignment_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    DEL_Assignment_Frame_Var.configure(variable=DEL_Assignment_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=DEL_Assignment_Frame_Var, values=DEL_Assignment_Method_List, command=lambda DEL_Assignment_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=DEL_Assignment_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Item_Delivery_Assignment", "Method"], Information=DEL_Assignment_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Fields
+    DEL_Assignment_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Items_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Assignment_Method_Variable, Values=DEL_Assignment_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Item_Delivery_Assignment", "Method"], GUI_Level_ID=GUI_Level_ID) 
+    DEL_FOCH_with_Main_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Del_Items_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="FOCHs with Machine", Variable=DEL_FOCH_with_Main_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Item_Delivery_Assignment", "FreeOfCharge_with_Main"])
 
-    # Field - Free of Charge with Machine
-    DEL_FOCH_with_Main_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="FOCHs with Machine", Field_Type="Input_CheckBox") 
-    DEL_FOCH_with_Main_Frame_Var = DEL_FOCH_with_Main_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    DEL_FOCH_with_Main_Frame_Var.configure(variable=DEL_FOCH_with_Main_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=DEL_FOCH_with_Main_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Item_Delivery_Assignment", "FreeOfCharge_with_Main"], Information=DEL_FOCH_with_Main_Variable))
+    # Add Fields to Widget Body
+    Del_Items_Widget.Add_row(Rows=[DEL_Assignment_Row, DEL_FOCH_with_Main_Row])
 
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
+    return Del_Items_Widget
 
-    return Frame_Main
+def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Date_Format = Settings["0"]["General"]["Formats"]["Date"]
+    Delivery_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Method"]
+    Delivery_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Methods_List"])
+    DEL_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Fixed_Options"]["Fix_Date"]
+    DEL_Rand_From_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Random_Options"]["From"]
+    DEL_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Random_Options"]["To"]
+    Delivery_Dates_Method_Variable = StringVar(master=Frame, value=Delivery_Dates_Method, name="Delivery_Dates_Method_Variable")
 
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_Dates_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Delivery Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
 
-def Serial_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+    # Fields
+    Fixed_Date_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Date", Label_Size="Field_Label", Font_Size="Section_Separator")
+    DEL_Fixed_Date_Row = WidgetRow_Date_Picker(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Date", Date_format=Date_Format, Value=DEL_Fix_Date, placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Fixed_Options", "Fix_Date"], Button_ToolTip="Date Picker.", Picker_Always_on_Top=True, Validation="Date", GUI_Level_ID=GUI_Level_ID + 1)
+
+    Interval_Date_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Interval Date", Label_Size="Field_Label", Font_Size="Section_Separator")
+    DEL_Random_From_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Date - From CD +", Value=DEL_Rand_From_Date, placeholder_text="Number of Days", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Random_Options", "From"], Validation="Integer")
+    DEL_Random_To_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Date - To CD +", Value=DEL_Rand_To_Date, placeholder_text="Number of Days", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Random_Options", "To"], Validation="Integer")
+
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Prompt"], Freeze_fields=[[DEL_Random_From_Row, DEL_Random_To_Row],[DEL_Fixed_Date_Row],[DEL_Fixed_Date_Row, DEL_Random_From_Row, DEL_Random_To_Row]])
+    Delivery_Date_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Delivery_Dates_Method_Variable, Values=Delivery_Dates_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Method"], Field_list=[DEL_Fixed_Date_Row, DEL_Random_From_Row, DEL_Random_To_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_Dates_Widget.Add_row(Rows=[Delivery_Date_Method_Row, Fixed_Date_Section_Row, DEL_Fixed_Date_Row, Interval_Date_Section_Row, DEL_Random_From_Row, DEL_Random_To_Row])
+
+    return Del_Dates_Widget
+
+def Serial_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     SN_Machines = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Machines"]
     SN_Tracked_Items = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Generate"]["Tracked"]
-    
     SN_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Prefix"]
     SN_Middle_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Method"]
     SN_Middle_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Methods_List"])
     SN_Middle_Manual = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Middle"]["Fixed"]
     SN_Suffix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Serial_Numbers"]["Suffix"]
-
     SN_Machines_Variable = BooleanVar(master=Frame, value=SN_Machines, name="SN_Machines_Variable")
     SN_Tracked_Items_Variable = BooleanVar(master=Frame, value=SN_Tracked_Items, name="SN_Tracked_Items_Variable")
-
     SN_Middle_Method_Variable = StringVar(master=Frame, value=SN_Middle_Method, name="Serial_Number_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Serial Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Serial Numbers creation options.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_SN_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Serial Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Serial Numbers creation options.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - SN for Machines
-    SN_Machines_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generate for all Machines", Field_Type="Input_CheckBox") 
-    SN_Machines_Frame_Var = SN_Machines_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    SN_Machines_Frame_Var.configure(variable=SN_Machines_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=SN_Machines_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Machines"], Information=SN_Machines_Variable))
+    # Fields
+    SN_Machines_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Generate for all Machines", Variable=SN_Machines_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Machines"])
+    SN_Tracked_Items_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Generate for tracked Items", Variable=SN_Tracked_Items_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Tracked"])
 
-    # Field - SN for Machines
-    SN_Tracked_Items_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Generate for tracked Items", Field_Type="Input_CheckBox") 
-    SN_Tracked_Items_Frame_Var = SN_Tracked_Items_Frame.children["!ctkframe3"].children["!ctkcheckbox"]
-    SN_Tracked_Items_Frame_Var.configure(variable=SN_Tracked_Items_Variable, text="", command=lambda : Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=SN_Tracked_Items_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Generate", "Tracked"], Information=SN_Tracked_Items_Variable))
+    Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_SN_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="SN Number Creation", Label_Size="Field_Label", Font_Size="Section_Separator")
+    SN_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=SN_Prefix, placeholder_text="Prefix.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Prefix"])
+    SN_Middle_Man_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Manual middle", Value=SN_Middle_Manual, placeholder_text="Manual Middle part.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Middle", "Manual"])
+    SN_Suffix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Suffix", Value=SN_Suffix, placeholder_text_color="#949A9F")
+    
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Item No", "DateTime stamp"], Freeze_fields=[[SN_Suffix_Row],[SN_Middle_Man_Row, SN_Suffix_Row],[SN_Middle_Man_Row, SN_Suffix_Row]])
+    SN_Middle_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_SN_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Middle Method", Variable=SN_Middle_Method_Variable, Values=SN_Middle_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Middle", "Method"], Field_list=[SN_Middle_Man_Row, SN_Suffix_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="SN Number Creation", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    # Add Fields to Widget Body
+    Del_SN_Widget.Add_row(Rows=[SN_Machines_Row, SN_Tracked_Items_Row, Section_Row, SN_Prefix_Row, SN_Middle_Method_Row, SN_Middle_Man_Row, SN_Suffix_Row])
 
-    # Field - SN Prefix
-    SN_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
-    SN_Prefix_Frame_Var = SN_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    SN_Prefix_Frame_Var.configure(placeholder_text="Prefix", placeholder_text_color="#949A9F")
-    SN_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Prefix"], Information=SN_Prefix_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=SN_Prefix_Frame_Var, Value=SN_Prefix)
+    return Del_SN_Widget
 
-    # Field - SN Middle Method
-    SN_Middle_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Middle Method", Field_Type="Input_OptionMenu") 
-    SN_Middle_Method_Frame_Var = SN_Middle_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    SN_Middle_Method_Frame_Var.configure(variable=SN_Middle_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=SN_Middle_Method_Frame_Var, values=SN_Middle_Method_List, command=lambda SN_Middle_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=SN_Middle_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Middle", "Method"], Information=SN_Middle_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - SN Middle manual
-    SN_Middle_Man_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Manual middle", Field_Type="Input_Normal") 
-    SN_Middle_Man_Frame_Var = SN_Middle_Man_Frame.children["!ctkframe3"].children["!ctkentry"]
-    SN_Middle_Man_Frame_Var.configure(placeholder_text="Manual Middle part", placeholder_text_color="#949A9F")
-    SN_Middle_Man_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Serial_Numbers", "Middle", "Manual"], Information=SN_Middle_Man_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=SN_Middle_Man_Frame_Var, Value=SN_Middle_Manual)
-
-    # Field - SN Suffix
-    SN_Suffix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Suffix", Field_Type="Input_Normal") 
-    SN_Suffix_Frame_Var = SN_Suffix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Data_Functions.Entry_field_Insert(Field=SN_Suffix_Frame_Var, Value=SN_Suffix)
-    SN_Suffix_Frame_Var.configure(state="disabled")
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    Delivery_Dates_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Method"]
-    Delivery_Dates_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Methods_List"])
-    DEL_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Fixed_Options"]["Fix_Date"]
-
-    DEL_Rand_From_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Random_Options"]["From"]
-    DEL_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Date"]["Random_Options"]["To"]
-
-    Delivery_Dates_Method_Variable = StringVar(master=Frame, value=Delivery_Dates_Method, name="Delivery_Dates_Method_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Delivery Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Delivery Date
-    Delivery_Date_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Delivery_Date_Method_Frame_Var = Delivery_Date_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Delivery_Date_Method_Frame_Var.configure(variable=Delivery_Dates_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Delivery_Date_Method_Frame_Var, values=Delivery_Dates_Method_List, command=lambda Delivery_Date_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Delivery_Dates_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Method"], Information=Delivery_Date_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Date
-    DEL_Fixed_Date_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Date", Field_Type="Date_Picker", Validation="Date") 
-    DEL_Fixed_Date_Frame_Var = DEL_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Button_DEL_Fixed_Date_Frame_Var = DEL_Fixed_Date_Frame.children["!ctkframe3"].children["!ctkbutton"]
-    DEL_Fixed_Date_Frame_Var.configure(placeholder_text="YYYY-MM-DD", placeholder_text_color="#949A9F")
-    DEL_Fixed_Date_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Fixed_Options", "Fix_Date"], Information=DEL_Fixed_Date_Frame_Var.get()))
-    Button_DEL_Fixed_Date_Frame_Var.configure(command = lambda: Elements_Groups.My_Date_Picker(Settings=Settings, Configuration=Configuration, date_entry=DEL_Fixed_Date_Frame_Var, Clicked_on_Button=Button_DEL_Fixed_Date_Frame_Var, width=200, height=230, Fixed=True, GUI_Level_ID=GUI_Level_ID))
-    Data_Functions.Entry_field_Insert(Field=DEL_Fixed_Date_Frame_Var, Value=DEL_Fix_Date)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Button_DEL_Fixed_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Delivery Date - From CD + Entry Field
-    DEL_Random_From_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date - From CD +", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Random_From_Frame_Var = DEL_Random_From_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Random_From_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
-    DEL_Random_From_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Random_Options", "From"], Information=int(DEL_Random_From_Frame_Var.get())))
-    Data_Functions.Entry_field_Insert(Field=DEL_Random_From_Frame_Var, Value=DEL_Rand_From_Date)
-
-    # Field - Delivery Date - To CD + Entry Field
-    DEL_Random_To_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Date - To CD +", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Random_To_Frame_Var = DEL_Random_To_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Random_To_Frame_Var.configure(placeholder_text="Number of Days", placeholder_text_color="#949A9F")
-    DEL_Random_To_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Random_Options", "To"], Information=int(DEL_Random_To_Frame_Var.get())))
-    Data_Functions.Entry_field_Insert(Field=DEL_Random_To_Frame_Var, Value=DEL_Rand_To_Date)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Carrier_ID(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Carrier_ID(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     Carrier_ID_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Method"]
     Carrier_ID_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Methods_List"])
     Carrier_ID_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Carrier_ID"]["Fixed_Options"]["Fix_Carrier"]
-
     Carrier_ID_Method_Variable = StringVar(master=Frame, value=Carrier_ID_Method, name="Carrier_ID_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Carrier", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_Carrier_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Carrier", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Carrier ID
-    Carrier_ID_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Carrier_ID_Method_Frame_Var = Carrier_ID_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Carrier_ID_Method_Frame_Var.configure(variable=Carrier_ID_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Carrier_ID_Method_Frame_Var, values=Carrier_ID_Method_List, command=lambda Carrier_ID_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Carrier_ID_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Carrier_ID", "Method"], Information=Carrier_ID_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Fields
+    Carrier_ID_Fixed_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Carrier_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Carrier", Value=Carrier_ID_Fixed, placeholder_text="Carrier from Shipping Agent.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Carrier_ID", "Fixed_Options", "Fix_Carrier"])
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Empty"], Freeze_fields=[[],[Carrier_ID_Fixed_Row],[Carrier_ID_Fixed_Row]])
+    Carrier_ID_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Carrier_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Middle Method", Variable=Carrier_ID_Method_Variable, Values=Carrier_ID_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Carrier_ID", "Method"], Field_list=[Carrier_ID_Fixed_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Field - SN Prefix
-    Carrier_ID_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Carrier", Field_Type="Input_Normal") 
-    Carrier_ID_Fixed_Frame_Var = Carrier_ID_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Carrier_ID_Fixed_Frame_Var.configure(placeholder_text="Prefix", placeholder_text_color="#949A9F")
-    Carrier_ID_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Carrier_ID", "Fixed_Options", "Fix_Carrier"], Information=Carrier_ID_Fixed_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Carrier_ID_Fixed_Frame_Var, Value=Carrier_ID_Fixed)
+    # Add Fields to Widget Body
+    Del_Carrier_Widget.Add_row(Rows=[Carrier_ID_Method_Row, Carrier_ID_Fixed_Row])
 
+    return Del_Carrier_Widget
 
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Shipment_Method(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def Shipment_Method(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     Shipment_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Method"]
     Shipment_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Methods_List"])
     Shipment_Method_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Shipment_Method"]["Fixed_Options"]["Fixed_Shipment_Method"]
-
     Shipment_Method_Variable = StringVar(master=Frame, value=Shipment_Method, name="Shipment_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Shipment Method", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_Ship_Method_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Shipment Method", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Carrier ID
-    Shipment_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Shipment_Method_Frame_Var = Shipment_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Shipment_Method_Frame_Var.configure(variable=Shipment_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Shipment_Method_Frame_Var, values=Shipment_Method_List, command=lambda Shipment_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Shipment_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Shipment_Method", "Method"], Information=Shipment_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Fields
+    Ship_Method_Fixed_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Ship_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Shp. Method", Value=Shipment_Method_Fixed, placeholder_text="Fixed Shipment Method.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Shipment_Method", "Fixed_Options", "Fixed_Shipment_Method"])
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Empty"], Freeze_fields=[[],[Ship_Method_Fixed_Row],[Ship_Method_Fixed_Row]])
+    Shipment_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Ship_Method_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Shipment_Method_Variable, Values=Shipment_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Shipment_Method", "Method"], Field_list=[Ship_Method_Fixed_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Field - SN Prefix
-    Ship_Method_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Shp. Method", Field_Type="Input_Normal") 
-    Ship_Method_Fixed_Frame_Var = Ship_Method_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Ship_Method_Fixed_Frame_Var.configure(placeholder_text="Fixed Shipment Method", placeholder_text_color="#949A9F")
-    Ship_Method_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Shipment_Method", "Fixed_Options", "Fixed_Shipment_Method"], Information=Ship_Method_Fixed_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Ship_Method_Fixed_Frame_Var, Value=Shipment_Method_Fixed)
+    # Add Fields to Widget Body
+    Del_Ship_Method_Widget.Add_row(Rows=[Shipment_Method_Row, Ship_Method_Fixed_Row])
+ 
+    return Del_Ship_Method_Widget
 
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Packages_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    Pack_Number_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Method"]
-    Pack_Number_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Methods_List"])
-    Pack_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Automatic_Options"]["Prefix"]
-    Pack_Max_Records = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Automatic_Options"]["Max_Packages_Records"]
-
-    Pack_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Fixed_Options"]["Fixed_Package_No"]
-    
-    Pack_Number_Method_Variable = StringVar(master=Frame, value=Pack_Number_Method, name="Pack_Number_Method_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Numbers creation logic.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Number Method
-    Pack_Number_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Pack_Number_Method_Frame_Var = Pack_Number_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Pack_Number_Method_Frame_Var.configure(variable=Pack_Number_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Number_Method_Frame_Var, values=Pack_Number_Method_List, command=lambda Pack_Number_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Pack_Number_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Method"], Information=Pack_Number_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Package Number
-    DEL_Pack_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Number", Field_Type="Input_Normal") 
-    DEL_Pack_FIX_Frame_Var = DEL_Pack_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Pack_FIX_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
-    DEL_Pack_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Fixed_Options", "Fixed_Package_No"], Information=DEL_Pack_FIX_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=DEL_Pack_FIX_Frame_Var, Value=Pack_Fixed_Number)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Package Prefix
-    DEL_Pack_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
-    DEL_Pack_Prefix_Frame_Var = DEL_Pack_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Pack_Prefix_Frame_Var.configure(placeholder_text="Prefix", placeholder_text_color="#949A9F")
-    DEL_Pack_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Automatic_Options", "Prefix"], Information=DEL_Pack_Prefix_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=DEL_Pack_Prefix_Frame_Var, Value=Pack_Prefix)
-
-    # Field - Maximal Records per delivery
-    DEL_Pack_MAX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Maximal Package Count", Field_Type="Input_Normal", Validation="Integer") 
-    DEL_Pack_MAX_Frame_Var = DEL_Pack_MAX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    DEL_Pack_MAX_Frame_Var.configure(placeholder_text="Fill maximal Package count per Delivery", placeholder_text_color="#949A9F")
-    DEL_Pack_MAX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Automatic_Options", "Max_Packages_Records"], Information=int(DEL_Pack_MAX_Frame_Var.get())))
-    Data_Functions.Entry_field_Insert(Field=DEL_Pack_MAX_Frame_Var, Value=Pack_Max_Records)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Packages_Plants(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    Pack_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Method"]
-    Pack_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Methods_List"])
-    Pack_Fixed_Plant = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Fixed_Options"]["Fixed_Plant"]
-    Pack_Fixed_Plant_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Fixed_Options"]["Plant_List"])
-    
-    Pack_Plant_Method_Variable = StringVar(master=Frame, value=Pack_Plant_Method, name="Pack_Plant_Method_Variable")
-    Pack_Fixed_Plant_Variable = StringVar(master=Frame, value=Pack_Fixed_Plant, name="Pack_Fixed_Plant_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Plant Method
-    Pack_Plant_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Pack_Plant_Method_Frame_Var = Pack_Plant_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Pack_Plant_Method_Frame_Var.configure(variable=Pack_Plant_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Plant_Method_Frame_Var, values=Pack_Plant_Method_List, command=lambda Pack_Plant_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Pack_Plant_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Plants", "Method"], Information=Pack_Plant_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Plant
-    Pack_Plant_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Pack_Plant_Fixed_Frame_Var = Pack_Plant_Fixed_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Pack_Plant_Fixed_Frame_Var.configure(variable=Pack_Fixed_Plant_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Plant_Fixed_Frame_Var, values=Pack_Fixed_Plant_List, command=lambda Pack_Plant_Fixed_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Pack_Fixed_Plant_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Plants", "Fixed_Options", "Fixed_Plant"], Information=Pack_Plant_Fixed_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def Packages_UOM(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    Pack_Weight_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Method"]
-    Pack_Weight_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Methods_List"])
-    Pack_Weight_UoM_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Fixed_Options"]["Fixed_Weight_UoM"]
-
-    Pack_Volume_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Method"]
-    Pack_Volume_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Methods_List"])
-    Pack_Volume_UoM_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Fixed_Options"]["Fixed_Volume_UoM"]
-
-    Pack_Weight_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Weight_UoM_Method, name="Pack_Weight_UoM_Method_Variable")
-    Pack_Volume_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Volume_UoM_Method, name="Pack_Volume_UoM_Method_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Packages unit of measure for measurements.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Weight", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Weight UoM Method
-    Pack_Weight_UoM_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Pack_Weight_UoM_Method_Frame_Var = Pack_Weight_UoM_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Pack_Weight_UoM_Method_Frame_Var.configure(variable=Pack_Weight_UoM_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Weight_UoM_Method_Frame_Var, values=Pack_Weight_UoM_Method_List, command=lambda Pack_Weight_UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Pack_Weight_UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Method"], Information=Pack_Weight_UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Package Number
-    Pack_Weight_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Weight UoM", Field_Type="Input_Normal") 
-    Pack_Weight_UoM_Fixed_Frame_Var = Pack_Weight_UoM_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Pack_Weight_UoM_Fixed_Frame_Var.configure(placeholder_text="Fixed weight UoM", placeholder_text_color="#949A9F")
-    Pack_Weight_UoM_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Fixed_Options", "Fixed_Weight_UoM"], Information=Pack_Weight_UoM_Fixed_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Pack_Weight_UoM_Fixed_Frame_Var, Value=Pack_Weight_UoM_Fixed)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Volume", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Volume UoM Method
-    Pack_Volume_UoM_Method_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    Pack_Volume_UoM_Method_Frame_Var = Pack_Volume_UoM_Method_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    Pack_Volume_UoM_Method_Frame_Var.configure(variable=Pack_Volume_UoM_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Pack_Volume_UoM_Method_Frame_Var, values=Pack_Volume_UoM_Method_List, command=lambda Pack_Volume_UoM_Method_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Pack_Volume_UoM_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Method"], Information=Pack_Volume_UoM_Method_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Package Number
-    Pack_Volume_UoM_Fixed_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Volume UoM", Field_Type="Input_Normal") 
-    Pack_Volume_UoM_Fixed_Frame_Var = Pack_Volume_UoM_Fixed_Frame.children["!ctkframe3"].children["!ctkentry"]
-    Pack_Volume_UoM_Fixed_Frame_Var.configure(placeholder_text="Fixed Volume UoM", placeholder_text_color="#949A9F")
-    Pack_Volume_UoM_Fixed_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Fixed_Options", "Fixed_Volume_UoM"], Information=Pack_Volume_UoM_Fixed_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=Pack_Volume_UoM_Fixed_Frame_Var, Value=Pack_Volume_UoM_Fixed)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def EXIDV2(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
-    # ---------------------------- Defaults ----------------------------#
-    EXIDV2_Assign_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Method"]
-    EXIDV2_Assign_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Methods_List"])
-    
-    EXIDV2_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Method"]
-    EXIDV2_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Methods_List"])
-    EXIDV2_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Automatic_Options"]["Prefix"]
-    EXIDV2_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Fixed_Options"]["Fixed_EXIDV2"]
-
-    EXIDV2_Assign_Method_Variable = StringVar(master=Frame, value=EXIDV2_Assign_Method, name="EXIDV2_Assign_Method_Variable")
-    EXIDV2_Numbers_Method_Variable = StringVar(master=Frame, value=EXIDV2_Numbers_Method, name="EXIDV2_Numbers_Method_Variable")
-
-    # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="EXIDV2", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="EXIDV2 Number logic assignment.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
-
-    # Field - Number Method
-    EXIDV2_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    EXIDV2_Number_Frame_Var = EXIDV2_Number_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    EXIDV2_Number_Frame_Var.configure(variable=EXIDV2_Numbers_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=EXIDV2_Number_Frame_Var, values=EXIDV2_Numbers_Method_List, command=lambda EXIDV2_Number_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=EXIDV2_Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Method"], Information=EXIDV2_Number_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Field - Fixed Number
-    NUM_EXIDV2_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Number", Field_Type="Input_Normal") 
-    NUM_EXIDV2_FIX_Frame_Var = NUM_EXIDV2_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    NUM_EXIDV2_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
-    NUM_EXIDV2_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Fixed_Options", "Fixed_EXIDV2"], Information=NUM_EXIDV2_FIX_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=NUM_EXIDV2_FIX_Frame_Var, Value=EXIDV2_Fixed_Number)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Automatic Prefix
-    AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
-    AUT_Prefix_Frame_Var = AUT_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    AUT_Prefix_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
-    AUT_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Automatic_Options", "Prefix"], Information=AUT_Prefix_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=AUT_Prefix_Frame_Var, Value=EXIDV2_Automatic_Prefix)
-
-    # Section Quantities
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Package Assign Method", Label_Size="Field_Label" , Font_Size="Section_Separator")
-
-    # Field - Assignment
-    EXIDV2_Assign_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Assign method", Field_Type="Input_OptionMenu") 
-    EXIDV2_Assign_Frame_Var = EXIDV2_Assign_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    EXIDV2_Assign_Frame_Var.configure(variable=EXIDV2_Assign_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=EXIDV2_Assign_Frame_Var, values=EXIDV2_Assign_Method_List, command=lambda EXIDV2_Assign_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=EXIDV2_Assign_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Method"], Information=EXIDV2_Assign_Frame_Var), GUI_Level_ID=GUI_Level_ID)
-
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
-
-    return Frame_Main
-
-def BillOfLanding(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> CTkFrame:
+def BillOfLanding(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     BOL_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Method"]
     BOL_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Methods_List"])
     BOL_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Automatic_Options"]["Prefix"]
     BOL_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["BillOfLanding"]["Number"]["Fixed_Options"]["Fixed_BOL"]
-
     BOL_Numbers_Method_Variable = StringVar(master=Frame, value=BOL_Numbers_Method, name="BOL_Numbers_Method_Variable")
 
     # ------------------------- Main Functions -------------------------#
-    # Frame - General
-    Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=Frame, Name="Bill of Landing", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Bill of Landing number logic assignment.", GUI_Level_ID=GUI_Level_ID)
-    Frame_Body = Frame_Main.children["!ctkframe2"]
+    # Widget
+    Del_Bill_Land_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Bill of Landing", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Bill of Landing number logic assignment.", GUI_Level_ID=GUI_Level_ID)
 
-    # Field - Number Method
-    BOL_Number_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Method", Field_Type="Input_OptionMenu") 
-    BOL_Number_Frame_Var = BOL_Number_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
-    BOL_Number_Frame_Var.configure(variable=BOL_Numbers_Method_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BOL_Number_Frame_Var, values=BOL_Numbers_Method_List, command=lambda BOL_Number_Frame_Var: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=BOL_Numbers_Method_Variable, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Method"], Information=BOL_Number_Frame_Var), GUI_Level_ID=GUI_Level_ID)
+    # Fields
+    NUM_BOL_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Bill_Land_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=BOL_Fixed_Number, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Fixed_Options", "Fixed_BOL"])
+    
+    Aut_BOL_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Bill_Land_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    AUT_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Bill_Land_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=BOL_Automatic_Prefix, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Automatic_Options", "Prefix"])
 
-    # Field - Fixed Number
-    NUM_BOL_FIX_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Fixed Number", Field_Type="Input_Normal") 
-    NUM_BOL_FIX_Frame_Var = NUM_BOL_FIX_Frame.children["!ctkframe3"].children["!ctkentry"]
-    NUM_BOL_FIX_Frame_Var.configure(placeholder_text="Manual Number", placeholder_text_color="#949A9F")
-    NUM_BOL_FIX_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Fixed_Options", "Fixed_BOL"], Information=NUM_BOL_FIX_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=NUM_BOL_FIX_Frame_Var, Value=BOL_Fixed_Number)
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Automatic", "Empty"], Freeze_fields=[[AUT_Prefix_Row],[NUM_BOL_FIX_Row],[NUM_BOL_FIX_Row, AUT_Prefix_Row]])
+    BOL_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Bill_Land_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=BOL_Numbers_Method_Variable, Values=BOL_Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Method"], Field_list=[NUM_BOL_FIX_Row, AUT_Prefix_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
-    # Section
-    Elements_Groups.Get_Widget_Section_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Automatic Setup", Label_Size="Field_Label" , Font_Size="Section_Separator")
+    # Add Fields to Widget Body
+    Del_Bill_Land_Widget.Add_row(Rows=[BOL_Number_Row, NUM_BOL_FIX_Row, Aut_BOL_Section_Row, AUT_Prefix_Row])
+ 
+    return Del_Bill_Land_Widget
 
-    # Field - Automatic Prefix
-    AUT_Prefix_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label="Prefix", Field_Type="Input_Normal") 
-    AUT_Prefix_Frame_Var = AUT_Prefix_Frame.children["!ctkframe3"].children["!ctkentry"]
-    AUT_Prefix_Frame_Var.configure(placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F")
-    AUT_Prefix_Frame_Var.bind("<FocusOut>", lambda Entry_value: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=None, File_Name="Settings", JSON_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "BillOfLanding", "Number", "Automatic_Options", "Prefix"], Information=AUT_Prefix_Frame_Var.get()))
-    Data_Functions.Entry_field_Insert(Field=AUT_Prefix_Frame_Var, Value=BOL_Automatic_Prefix)
+def Packages_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Pack_Number_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Method"]
+    Pack_Number_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Methods_List"])
+    Pack_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Automatic_Options"]["Prefix"]
+    Pack_Max_Records = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Automatic_Options"]["Max_Packages_Records"]
+    Pack_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Number"]["Fixed_Options"]["Fixed_Package_No"]
+    Pack_Number_Method_Variable = StringVar(master=Frame, value=Pack_Number_Method, name="Pack_Number_Method_Variable")
 
-    # Build look of Widget
-    Frame_Main.pack(side="top", padx=15, pady=15)
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_PACK_Num_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Numbers creation logic.", GUI_Level_ID=GUI_Level_ID)
 
-    return Frame_Main
+    # Fields
+    DEL_PACK_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=Pack_Fixed_Number, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Fixed_Options", "Fixed_Package_No"])
+
+    Aut_PACK_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    DEL_Pack_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=Pack_Prefix, placeholder_text="Prefix.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Automatic_Options", "Prefix"])
+    DEL_Pack_MAX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Maximal Package Count", Value=Pack_Max_Records, placeholder_text="Fill maximal Package count per Delivery.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Automatic_Options", "Max_Packages_Records"], Validation="Integer")
+
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Automatic"], Freeze_fields=[[DEL_Pack_Prefix_Row, DEL_Pack_MAX_Row],[DEL_PACK_FIX_Row]])
+    Pack_Number_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Pack_Number_Method_Variable, Values=Pack_Number_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Method"], Field_list=[DEL_PACK_FIX_Row, DEL_Pack_Prefix_Row, DEL_Pack_MAX_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_PACK_Num_Widget.Add_row(Rows=[Pack_Number_Method_Row, DEL_PACK_FIX_Row, Aut_PACK_Section_Row, DEL_Pack_Prefix_Row, DEL_Pack_MAX_Row])
+ 
+    return Del_PACK_Num_Widget
+
+def Packages_Plants(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Pack_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Method"]
+    Pack_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Methods_List"])
+    Pack_Fixed_Plant = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Fixed_Options"]["Fixed_Plant"]
+    Pack_Fixed_Plant_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Plants"]["Fixed_Options"]["Plant_List"])
+    Pack_Plant_Method_Variable = StringVar(master=Frame, value=Pack_Plant_Method, name="Pack_Plant_Method_Variable")
+    Pack_Fixed_Plant_Variable = StringVar(master=Frame, value=Pack_Fixed_Plant, name="Pack_Fixed_Plant_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_PACK_Plant_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    Pack_Plant_Fixed_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_Plant_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Plant", Variable=Pack_Fixed_Plant_Variable, Values=Pack_Fixed_Plant_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Plants", "Fixed_Options", "Fixed_Plant"], GUI_Level_ID=GUI_Level_ID) 
+    Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Empty", "Prompt"], Freeze_fields=[[],[Pack_Plant_Fixed_Row],[Pack_Plant_Fixed_Row],[Pack_Plant_Fixed_Row]])
+    Pack_Number_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_Plant_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Pack_Plant_Method_Variable, Values=Pack_Plant_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Plants", "Method"], Field_list=[Pack_Plant_Fixed_Row], Field_Blocking_dict=Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_PACK_Plant_Widget.Add_row(Rows=[Pack_Number_Method_Row, Pack_Plant_Fixed_Row])
+ 
+    return Del_PACK_Plant_Widget
+
+def Packages_UOM(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Pack_Weight_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Method"]
+    Pack_Weight_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Methods_List"])
+    Pack_Weight_UoM_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Weight"]["Fixed_Options"]["Fixed_Weight_UoM"]
+    Pack_Volume_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Method"]
+    Pack_Volume_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Methods_List"])
+    Pack_Volume_UoM_Fixed = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["Packages"]["Unit_Of_Measure"]["Volume"]["Fixed_Options"]["Fixed_Volume_UoM"]
+    Pack_Weight_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Weight_UoM_Method, name="Pack_Weight_UoM_Method_Variable")
+    Pack_Volume_UoM_Method_Variable = StringVar(master=Frame, value=Pack_Volume_UoM_Method, name="Pack_Volume_UoM_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_PACK_UoM_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Packages unit of measure for measurements.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    Weight_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Weight", Label_Size="Field_Label", Font_Size="Section_Separator")
+    Pack_Weight_UoM_Fixed_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Weight UoM", Value=Pack_Weight_UoM_Fixed, placeholder_text="Fixed weight UoM.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Fixed_Options", "Fixed_Weight_UoM"])
+    Weight_Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Empty"], Freeze_fields=[[],[Pack_Weight_UoM_Fixed_Row],[Pack_Weight_UoM_Fixed_Row]])
+    Pack_Weight_UoM_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Pack_Weight_UoM_Method_Variable, Values=Pack_Weight_UoM_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Weight", "Method"], Field_list=[Pack_Weight_UoM_Fixed_Row], Field_Blocking_dict=Weight_Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    Volume_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Volume", Label_Size="Field_Label", Font_Size="Section_Separator")
+    Pack_Volume_UoM_Fixed_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Volume UoM", Value=Pack_Volume_UoM_Fixed, placeholder_text="Fixed volume UoM.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Fixed_Options", "Fixed_Volume_UoM"])
+    Volume_Option_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Random", "Empty"], Freeze_fields=[[],[Pack_Volume_UoM_Fixed_Row],[Pack_Volume_UoM_Fixed_Row]])
+    Pack_Volume_UoM_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Pack_Volume_UoM_Method_Variable, Values=Pack_Volume_UoM_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Unit_Of_Measure", "Volume", "Method"], Field_list=[Pack_Volume_UoM_Fixed_Row], Field_Blocking_dict=Volume_Option_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_PACK_UoM_Widget.Add_row(Rows=[Weight_Section_Row, Pack_Weight_UoM_Method_Row, Pack_Weight_UoM_Fixed_Row, Volume_Section_Row, Pack_Volume_UoM_Method_Row, Pack_Volume_UoM_Fixed_Row])
+
+    return Del_PACK_UoM_Widget
+
+def EXIDV2(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    EXIDV2_Assign_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Method"]
+    EXIDV2_Assign_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Methods_List"])
+    EXIDV2_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Method"]
+    EXIDV2_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Methods_List"])
+    EXIDV2_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Automatic_Options"]["Prefix"]
+    EXIDV2_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Delivery"]["Delivery_Tracking_Information"]["EXIDV2"]["Number"]["Fixed_Options"]["Fixed_EXIDV2"]
+    EXIDV2_Assign_Method_Variable = StringVar(master=Frame, value=EXIDV2_Assign_Method, name="EXIDV2_Assign_Method_Variable")
+    EXIDV2_Numbers_Method_Variable = StringVar(master=Frame, value=EXIDV2_Numbers_Method, name="EXIDV2_Numbers_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Del_PACK_EXIDV_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="EXIDV2", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="EXIDV2 Number logic assignment.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    NUM_EXIDV2_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=EXIDV2_Fixed_Number, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Fixed_Options", "Fixed_EXIDV2"])
+    
+    Automatic_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    AUT_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=EXIDV2_Automatic_Prefix, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Automatic_Options", "Prefix"])
+    EXIDV2_Number_Menu_Blocking_dict = CustomTkinter_Functions.OptionMenu_Blocking(Values=["Fixed", "Automatic", "Empty"], Freeze_fields=[[AUT_Prefix_Row],[NUM_EXIDV2_FIX_Row],[NUM_EXIDV2_FIX_Row, AUT_Prefix_Row]])
+    EXIDV2_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=EXIDV2_Numbers_Method_Variable, Values=EXIDV2_Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Number", "Method"], Field_list=[NUM_EXIDV2_FIX_Row, AUT_Prefix_Row], Field_Blocking_dict=EXIDV2_Number_Menu_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    Assign_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Package Assign Method", Label_Size="Field_Label", Font_Size="Section_Separator")
+    EXIDV2_Assign_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_PACK_EXIDV_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Assign method", Variable=EXIDV2_Assign_Method_Variable, Values=EXIDV2_Assign_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "EXIDV2", "Method"], GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Del_PACK_EXIDV_Widget.Add_row(Rows=[EXIDV2_Number_Row, NUM_EXIDV2_FIX_Row, Automatic_Section_Row, AUT_Prefix_Row, Assign_Section_Row, EXIDV2_Assign_Row])
+
+    return Del_PACK_EXIDV_Widget
+

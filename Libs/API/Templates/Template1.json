@@ -134,7 +134,7 @@
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Prompt",
+                        "Method": "Connected Items",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -169,7 +169,7 @@
             "CPDI": {
                 "Use": false,
                 "Delivery_select": {
-                    "Method": "Prompt",
+                    "Method": "All Deliveries",
                     "Methods_List": [
                         "Fixed",
                         "All Deliveries",
@@ -192,7 +192,7 @@
                     }
                 },
                 "Status": {
-                    "Method": "Prompt",
+                    "Method": "All Statuses",
                     "Methods_List": [
                         "Fixed",
                         "All Statuses",

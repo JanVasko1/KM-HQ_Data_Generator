@@ -19,8 +19,9 @@ def Page_IAL(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: 
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_IAL_ToolTip_But, message="IAL Settings.", ToolTip_Size="Normal", GUI_Level_ID=2)
 
     Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_IAL, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_Column_A.pack_propagate(flag=False)
     Frame_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_IAL, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
-
+    Frame_Column_B.pack_propagate(flag=False)
 
     # Build look of Widget
     Frame_IAL_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)
