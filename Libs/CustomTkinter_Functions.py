@@ -83,8 +83,6 @@ def Field_Block_Bool(Settings: dict, window: CTk|None, Selected_Variable: Boolea
 
 def OptionMenu_Blocking(Values: list, Freeze_fields: list) -> dict:
     Field_Blocking_dict = dict()
-
     for Value_index, Value in enumerate(Values):
         Field_Blocking_dict[Value] = Freeze_fields[Value_index]      
     return Field_Blocking_dict
-    
