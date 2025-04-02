@@ -61,7 +61,7 @@ def Get_All_Templates_List(Settings: dict, window: CTk|None) -> list:
     return Files_Templates
 
 # --------------------------------------------- Global Settings update --------------------------------------------- #
-def Save_Value(Settings: dict|None, Configuration: dict|None|None, Documents: dict|None, window: CTk|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict, User_Change: bool|None = True) -> None:
+def Save_Value(Settings: dict|None, Configuration: dict|None, Documents: dict|None, window: CTk|None, Variable: StringVar|IntVar|BooleanVar|None, File_Name: str, JSON_path: list, Information: bool|int|str|list|dict, User_Change: bool|None = True) -> None:
     def Value_change(my_dict: dict, JSON_path: list, Information: bool|int|str|list|dict) -> None:
         for key in JSON_path[:-1]:
             my_dict = my_dict.setdefault(key, {})

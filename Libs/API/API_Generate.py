@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import json
 
 import Libs.Data_Functions as Data_Functions
-import Libs.Defaults_Lists as Defaults_Lists
+import Libs.File_Manipulation as File_Manipulation
 import Libs.Downloader.Downloader as Downloader
 
 app = FastAPI()
@@ -42,12 +42,37 @@ class PurchaseReturnOrder(BaseModel):
     Template: str
     Purchase_Return_Orders_List: list
 
-# TODO --> API --> ErrorHandler
-# TODO --> API --> Response structure
+class NewTemplate(BaseModel):
+    Template_Name: str
+    Content: dict
 
+# Return Models
+class Templates_list(BaseModel):
+    Templates: list
+
+# Get templates list
+@app.get("/v1/list/active-templates/")
+async def Generate_Purchase_Order(Area: str) -> Templates_list:
+    Allowed_Area = ["PO", "PRO", "BB"]
+    if Area in Allowed_Area:
+        files = File_Manipulation.Get_All_Files_Names(file_path=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{str(Area)}"))
+        Return_files = Templates_list(Templates=files)
+        return Return_files
+    else:
+        raise HTTPException(status_code=400, detail="Area is not Allowed.") 
+
+# Upload new template
+@app.put("/v1/upload/new-templates/")
+async def Generate_Purchase_Order(Template: NewTemplate):
+    try:
+        with open(Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Template.Template_Name}"), "w") as outfile: 
+            json.dump(Template.Content, outfile)
+        return True
+    except:
+        raise HTTPException(status_code=500, detail="Not possible to upload Template.") 
 
 # Purchase Order
-@app.post("/v1/data/global/purchase-order/")
+@app.post("/v1/create-doc/purchase-order/")
 async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
     if Request_PO.Environment == "PRD":
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
@@ -74,7 +99,7 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
         return True
 
 # BB Invoice
-@app.post("/v1/data/global/bb-invoice/")
+@app.post("/v1/create-doc/bb-invoice/")
 async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
     if Request_BB_INV.Environment == "PRD":
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
@@ -101,7 +126,7 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
         return True
 
 # Purchase Return Order
-@app.post("/v1/data/global/purchase-return-order/")
+@app.post("/v1/create-doc/purchase-return-order/")
 async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
     if Request_PRO.Environment == "PRD":
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")

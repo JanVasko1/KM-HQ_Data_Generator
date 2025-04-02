@@ -2,6 +2,9 @@
 # BUG --> sometimes it happened that "destroy for c in list(self.children.values()): c.destroy()" --> when page changes
 # BUG --> When PopUp window in Backend is turned off by ESC whole program crash
 # BUG --> Threat --> when open CTk it flickers a lot
+# BUG --> Template lost when switch page from Download to other
+
+# TODO --> Prompt page předělat taky na Class + Odstranit nepotřebný Element_Groups
 
 # Import Libraries
 import os
@@ -121,7 +124,7 @@ if __name__ == "__main__":
     Frame_Work_Area_Main.pack(side="left", fill="none", expand=False)
 
     P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
-    SideBar = P_Side_Bar.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
+    P_Side_Bar.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
     
     # run
     window.mainloop()

@@ -2,8 +2,11 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "",
-                "Templates_List": []
+                "Last_Used": "Test2",
+                "Templates_List": [
+                    "Test2",
+                    "test1"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -52,7 +55,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Fixed",
                         "Methods_List": [
@@ -234,7 +237,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Fixed",
                     "Methods_List": [

@@ -746,7 +746,7 @@ def Get_ToolTip(Configuration:dict, widget: any, message: str, ToolTip_Size: str
         padding = tuple(Configuration_ToolTip["padding"]))
     return ToolTip
 
-def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None, window: CTk|None|None = None) -> CTkMessagebox:
+def Get_MessageBox(Configuration:dict, title: str, message: str, icon: str, fade_in_duration: int, GUI_Level_ID: int, option_1: str = "OK", option_2: str|None = None, option_3: str|None = None, window: CTk|None = None) -> CTkMessagebox:
     Button_Normal = Configuration["Buttons"]["Small"]
     Label_Title_Label = Configuration["Labels"]["Field_Label"]
     if title == "Error":

@@ -174,7 +174,7 @@ class WidgetRow_Input_Entry:
 
 # -------------------------------------------------------------------------------- WidgetRow_Double_Input_Entry -------------------------------------------------------------------------------- #
 class WidgetRow_Double_Input_Entry:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path1", "Save_path2", "Documents", "placeholder_text1", "placeholder_text2", "placeholder_text_color", "Label_ToolTip", "Validation1", "Validation2", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value1", "Input_Entry1", "Frame_Space2", "Space_text", "Frame_Value2", "Input_Entry2", "Time_Format", "Value", "Date_Format"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path1", "Save_path2", "Documents", "placeholder_text1", "placeholder_text2", "placeholder_text_color", "Label_ToolTip", "Validation1", "Validation2", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value1", "Input_Entry1", "Frame_Space2", "Space_text", "Frame_Value2", "Input_Entry2", "Time_Format", "Value1", "Value2", "Date_Format"
     """
     Field row for Entry
     """
@@ -184,6 +184,8 @@ class WidgetRow_Double_Input_Entry:
                  window: CTk, 
                  Field_Frame_Type: str, 
                  Label: str, 
+                 Value1: str|int|float = "",
+                 Value2: str|int|float = "",
                  Save_To: str|None = None,
                  Save_path1: list|None = None,
                  Save_path2: list|None = None,
@@ -201,6 +203,8 @@ class WidgetRow_Double_Input_Entry:
         self.window = window
         self.Field_Frame_Type = Field_Frame_Type
         self.Label = Label
+        self.Value1 = Value1
+        self.Value2 = Value2
         self.Label_ToolTip = Label_ToolTip
         self.placeholder_text1 = placeholder_text1
         self.placeholder_text2 = placeholder_text2
@@ -228,7 +232,6 @@ class WidgetRow_Double_Input_Entry:
         # Frame Value1
         self.Frame_Value1 = Elements.Get_Widget_Field_Frame_Value(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
         self.Input_Entry1 = Elements.Get_Entry_Field(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Value1, Field_Size="Double_Input", Validation=self.Validation1)
-        self.Input_Entry1.bind("<FocusOut>", lambda Value1: self.Save1(Value=Value1))
 
         # Frame Space between Label and Value
         self.Frame_Space2 = Elements.Get_Widget_Field_Frame_Space(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
@@ -238,7 +241,43 @@ class WidgetRow_Double_Input_Entry:
         # Frame Value2
         self.Frame_Value2 = Elements.Get_Widget_Field_Frame_Value(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
         self.Input_Entry2 = Elements.Get_Entry_Field(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Value2, Field_Size="Double_Input", Validation=self.Validation2)
-        self.Input_Entry2.bind("<FocusOut>", lambda Value2: self.Save2(Value=Value2))
+
+        # Insert Value
+        if type(self.Value1) == str:
+            if self.Value1 != "":
+                self.Input_Entry1.delete(first_index=0, last_index=1000)
+                self.Input_Entry1.insert(index=0, string=self.Value1)
+            else:
+                pass
+        elif type(self.Value1) == int:
+            self.Input_Entry1.delete(first_index=0, last_index=1000)
+            self.Input_Entry1.insert(index=0, string=self.Value1)
+        else:
+            pass
+
+        if type(self.Value2) == str:
+            if self.Value2 != "":
+                self.Input_Entry2.delete(first_index=0, last_index=1000)
+                self.Input_Entry2.insert(index=0, string=self.Value2)
+            else:
+                pass
+        elif type(self.Value2) == int:
+            self.Input_Entry2.delete(first_index=0, last_index=1000)
+            self.Input_Entry2.insert(index=0, string=self.Value2)
+        else:
+            pass
+
+        # PlaceHolder
+        if placeholder_text_color == "":
+            self.Input_Entry1.configure(placeholder_text=self.placeholder_text1)
+            self.Input_Entry2.configure(placeholder_text=self.placeholder_text2)
+        else:
+            self.Input_Entry1.configure(placeholder_text=self.placeholder_text1, placeholder_text_color=self.placeholder_text_color)
+            self.Input_Entry2.configure(placeholder_text=self.placeholder_text2, placeholder_text_color=self.placeholder_text_color)
+
+        self.Input_Entry1.bind("<FocusOut>", lambda Value1: self.Save1(Value1=Value1))
+        self.Input_Entry2.bind("<FocusOut>", lambda Value2: self.Save2(Value2=Value2))
+        
 
     def Freeze(self):
         self.Input_Entry1.configure(state="disabled")
@@ -266,40 +305,40 @@ class WidgetRow_Double_Input_Entry:
     def Get_Value2(self):
         return self.Input_Entry2.get()
 
-    def Save1(self, Value):
+    def Save1(self, Value1):
         # Default
-        self.Value = self.Get_Value1()
+        self.Value1 = self.Get_Value1()
         self.Time_Format = self.Settings["0"]["General"]["Formats"]["Time"]
         self.Date_Format = self.Settings["0"]["General"]["Formats"]["Date"]
             
         # Test Validation
-        if self.Value != "":
+        if self.Value1 != "":
             if self.Validation1 == "Time":
                 try:
-                    datetime.strptime(self.Value, self.Time_Format)
+                    datetime.strptime(self.Value1, self.Time_Format)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
             elif self.Validation1 == "Date":
                 try:
-                    datetime.strptime(self.Value, self.Date_Format)
+                    datetime.strptime(self.Value1, self.Date_Format)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
             elif self.Validation1 == "Integer":
                 try:
-                    int(self.Value)
+                    int(self.Value1)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
             elif self.Validation1 == "Float":
                 try:
-                    float(self.Value)
+                    float(self.Value1)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
             else:
@@ -310,42 +349,42 @@ class WidgetRow_Double_Input_Entry:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
-    def Save2(self, Value):
+    def Save2(self, Value2):
         # Default
-        self.Value = self.Get_Value2()
+        self.Value2 = self.Get_Value2()
         self.Time_Format = self.Settings["0"]["General"]["Formats"]["Time"]
         self.Date_Format = self.Settings["0"]["General"]["Formats"]["Date"]
 
         # Test Validation
-        if self.Value != "":
+        if self.Value2 != "":
             if self.Validation2 == "Time":
                 try:
-                    datetime.strptime(self.Value, self.Time_Format)
+                    datetime.strptime(self.Value2, self.Time_Format)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
             elif self.Validation2 == "Date":
                 try:
-                    datetime.strptime(self.Value, self.Date_Format)
+                    datetime.strptime(self.Value2, self.Date_Format)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
             elif self.Validation2 == "Integer":
                 try:
-                    int(self.Value)
+                    int(self.Value2)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
             elif self.Validation2 == "Float":
                 try:
-                    float(self.Value)
+                    float(self.Value2)
                 except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
             else:
@@ -356,8 +395,7 @@ class WidgetRow_Double_Input_Entry:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
-
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_OptionMenu -------------------------------------------------------------------------------- #

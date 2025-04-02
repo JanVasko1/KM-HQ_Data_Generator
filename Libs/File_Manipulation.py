@@ -12,6 +12,15 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # --------------------------------------------- Folders / Files --------------------------------------------- #
+def Get_All_Files_Names(file_path: str) -> list:
+    file_names = []
+    for (dirpath, dirnames, filenames) in os.walk(file_path):
+        for file in filenames:
+            filename = str(file).split(".")[0]
+            file_names.append(filename)
+        break
+    return file_names
+
 def Create_Folder(Configuration: dict|None, window: CTk|None, file_path: str) -> None:
     # Create Folder
     try: 

@@ -4,7 +4,7 @@ import json
 from glob import glob
 
 import pywinstyles
-from customtkinter import CTk, CTkFrame, CTkButton, CTkOptionMenu, StringVar, BooleanVar, IntVar, set_appearance_mode
+from customtkinter import CTk, CTkFrame, CTkButton, StringVar, BooleanVar, IntVar, set_appearance_mode
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
 from tkhtmlview import HTMLLabel
 from markdown import markdown
