@@ -1326,6 +1326,77 @@
             "anchor": "center"
         }
     },
+    "Tables": {
+        "Single_size": {
+            "width": 420,
+            "colors": [
+                "#d0d0d0",
+                "#2C2C2C"
+            ],
+            "border_width": 0,
+            "border_color": [
+                "#2C2C2C",
+                "#111219"
+            ],
+            "color_phase": "horizontal",
+            "orientation": "horizontal",
+            "header_color": "#446b80",
+            "corner_radius": 10,
+            "hover_color": [
+                "#4f7c94",
+                "#4f7c94"
+            ],
+            "wraplength": 1000,
+            "justify": "center",
+            "anchor": "c"
+        },
+        "Double_size": {
+            "width": 970,
+            "colors": [
+                "#d0d0d0",
+                "#2C2C2C"
+            ],
+            "border_width": 0,
+            "border_color": [
+                "#2C2C2C",
+                "#111219"
+            ],
+            "color_phase": "horizontal",
+            "orientation": "horizontal",
+            "header_color": "#446b80",
+            "corner_radius": 10,
+            "hover_color": [
+                "#4f7c94",
+                "#4f7c94"
+            ],
+            "wraplength": 200,
+            "justify": "center",
+            "anchor": "l"
+        },
+        "Triple_size": {
+            "width": 1570,
+            "colors": [
+                "#d0d0d0",
+                "#2C2C2C"
+            ],
+            "border_width": 0,
+            "border_color": [
+                "#2C2C2C",
+                "#111219"
+            ],
+            "color_phase": "horizontal",
+            "orientation": "horizontal",
+            "header_color": "#446b80",
+            "corner_radius": 10,
+            "hover_color": [
+                "#4f7c94",
+                "#4f7c94"
+            ],
+            "wraplength": 1000,
+            "justify": "center",
+            "anchor": "l"
+        }
+    },
     "ProgressBar": {
         "Horizontal": {
             "Download_Process": {

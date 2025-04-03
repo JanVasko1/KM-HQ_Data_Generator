@@ -1,9 +1,9 @@
 # Import Libraries
 from PIL import Image
-from datetime import datetime
 
 from customtkinter import CTk, CTkButton, CTkFrame, CTkScrollableFrame, CTkEntry, CTkLabel, CTkFont, CTkImage, CTkRadioButton, CTkTabview, CTkOptionMenu, CTkCheckBox, CTkProgressBar, CTkInputDialog, CTkComboBox, get_appearance_mode
 from CTkColorPicker import CTkColorPicker
+from CTkTable import CTkTable
 from CTkToolTip import CTkToolTip
 from CTkMessagebox import CTkMessagebox
 
@@ -564,6 +564,50 @@ def Get_Tab_View(Configuration:dict, Frame: CTkFrame, Tab_size: str, GUI_Level_I
         text_color_disabled = tuple(Configuration_TabView_Normal["text_color_disabled"]),
         anchor = Configuration_TabView_Normal["anchor"])
     return TabView_Normal
+
+# ---------------------------------------------- Tables ----------------------------------------------# 
+def Get_Table(Configuration:dict, Frame: CTkFrame, Table_size: str, rows: int, columns: int, GUI_Level_ID: int|None = None) -> CTkTable:
+    def Colors_Theme_change(colors_rows: list) -> tuple:
+        # Will be obsolete if Table will implement Light/Dark colors
+        Current_Theme = get_appearance_mode()
+        if Current_Theme == "Light":
+            color1 = colors_rows[0]
+            color2 = lighten_hex_color(hex_color=color1, percentage=25)
+        elif Current_Theme == "Dark":
+            color1 = colors_rows[1]
+            color2 = lighten_hex_color(hex_color=color1, percentage=0.05)
+        return tuple([color1, color2])
+    
+    Configuration_Table_Single = Configuration["Tables"][f"{Table_size}"]
+
+    if type(GUI_Level_ID) is int:
+        colors_rows = list(Configuration["Global_Appearance"]["GUI_Level_ID"][f"{GUI_Level_ID}"]["fg_color"])
+    else:
+        colors_rows = Configuration_Table_Single["colors"]
+    
+    colors_rows = Colors_Theme_change(colors_rows=colors_rows)
+    header_color = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Table_Single["header_color"])
+    hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Table_Single["hover_color"], Accent_Color=header_color)
+
+    Table_Single = CTkTable(
+        master = Frame,
+        row = rows,
+        column = columns,
+        font = Get_Font(Configuration=Configuration, Font_Size="Field_Label"),
+        width = Configuration_Table_Single["width"],
+        colors = colors_rows,
+        border_width = Configuration_Table_Single["border_width"],
+        border_color = tuple(Configuration_Table_Single["border_color"]),
+        color_phase = Configuration_Table_Single["color_phase"],
+        orientation = Configuration_Table_Single["orientation"],
+        header_color = header_color,
+        corner_radius = Configuration_Table_Single["corner_radius"],
+        hover_color = hover_color,
+        wraplength = Configuration_Table_Single["wraplength"],
+        justify = Configuration_Table_Single["justify"],
+        anchor = Configuration_Table_Single["anchor"])
+    return Table_Single
+
 
 # ---------------------------------------------- Icons ----------------------------------------------# 
 def Create_Icon(Configuration:dict, Icon_Name: str, Icon_Size: str, Theme_index: int) -> Image:

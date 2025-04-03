@@ -3,10 +3,7 @@
         "General": {
             "Template": {
                 "Last_Used": "Test2",
-                "Templates_List": [
-                    "Test2",
-                    "test1"
-                ]
+                "Templates_List": []
             },
             "Formats": {
                 "Date": "%Y-%m-%d",

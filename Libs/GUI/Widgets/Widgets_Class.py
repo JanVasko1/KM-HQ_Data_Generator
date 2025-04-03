@@ -9,7 +9,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 
 # -------------------------------------------------------------------------------- WidgetRow_Input_Entry -------------------------------------------------------------------------------- #
 class WidgetRow_Input_Entry:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Field_Size", "Label", "Save_To", "Save_path", "Documents", "placeholder_text", "placeholder_text_color", "Label_ToolTip", "Validation", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Input_Entry", "Time_Format", "Value", "Date_Format", "Local_function_list"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Field_Size", "Label", "Save_To", "Save_path", "Documents", "placeholder_text", "placeholder_text_color", "Label_ToolTip", "Validation", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Input_Entry", "Time_Format", "Value", "Date_Format", "Local_function_list", "Can_Save"
     """
     Field row for Entry
     """
@@ -117,6 +117,7 @@ class WidgetRow_Input_Entry:
 
     def Save(self, Value):
         # Default
+        self.Can_Save = True
         self.Value = self.Get_Value()
         self.Time_Format = self.Settings["0"]["General"]["Formats"]["Time"]
         self.Date_Format = self.Settings["0"]["General"]["Formats"]["Date"]
@@ -130,6 +131,7 @@ class WidgetRow_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
+                    self.Can_Save = False
             elif self.Validation == "Date":
                 try:
                     datetime.strptime(self.Value, self.Date_Format)
@@ -137,6 +139,7 @@ class WidgetRow_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
+                    self.Can_Save = False
             elif self.Validation == "Integer":
                 try:
                     int(self.Value)
@@ -144,6 +147,7 @@ class WidgetRow_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
+                    self.Can_Save = False
             elif self.Validation == "Float":
                 try:
                     float(self.Value)
@@ -151,21 +155,22 @@ class WidgetRow_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
+                    self.Can_Save = False
             else:
                 pass
         else:
             pass
 
         # Save
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None) or (self.Can_Save == False):
             pass
         else:
             if self.Validation == "Integer":
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=int(self.Get_Value()))
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=int(self.Get_Value()))
             elif self.Validation == "Float":
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=float(self.Get_Value()))
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=float(self.Get_Value()))
             else:
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
         # Run Local Function
         if self.Local_function_list != None:
@@ -174,7 +179,7 @@ class WidgetRow_Input_Entry:
 
 # -------------------------------------------------------------------------------- WidgetRow_Double_Input_Entry -------------------------------------------------------------------------------- #
 class WidgetRow_Double_Input_Entry:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path1", "Save_path2", "Documents", "placeholder_text1", "placeholder_text2", "placeholder_text_color", "Label_ToolTip", "Validation1", "Validation2", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value1", "Input_Entry1", "Frame_Space2", "Space_text", "Frame_Value2", "Input_Entry2", "Time_Format", "Value1", "Value2", "Date_Format"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path1", "Save_path2", "Documents", "placeholder_text1", "placeholder_text2", "placeholder_text_color", "Label_ToolTip", "Validation1", "Validation2", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value1", "Input_Entry1", "Frame_Space2", "Space_text", "Frame_Value2", "Input_Entry2", "Time_Format", "Value1", "Value2", "Local_function1_list", "Local_function2_list", "Date_Format", "Can_Save1", "Can_Save2"
     """
     Field row for Entry
     """
@@ -193,7 +198,9 @@ class WidgetRow_Double_Input_Entry:
                  placeholder_text1: str|None = None, 
                  placeholder_text2: str|None = None, 
                  placeholder_text_color: str = "", 
-                 Label_ToolTip: list|None = None, 
+                 Label_ToolTip: list|None = None,
+                 Local_function1_list: any = None,
+                 Local_function2_list: any = None, 
                  Validation1: str|None = None,
                  Validation2: str|None = None):
         self.Settings = Settings
@@ -209,6 +216,8 @@ class WidgetRow_Double_Input_Entry:
         self.placeholder_text1 = placeholder_text1
         self.placeholder_text2 = placeholder_text2
         self.placeholder_text_color = placeholder_text_color
+        self.Local_function1_list = Local_function1_list
+        self.Local_function2_list = Local_function2_list
         self.Validation1 = Validation1
         self.Validation2 = Validation2
         self.Save_To = Save_To 
@@ -307,6 +316,7 @@ class WidgetRow_Double_Input_Entry:
 
     def Save1(self, Value1):
         # Default
+        self.Can_Save1 = True
         self.Value1 = self.Get_Value1()
         self.Time_Format = self.Settings["0"]["General"]["Formats"]["Time"]
         self.Date_Format = self.Settings["0"]["General"]["Formats"]["Date"]
@@ -320,6 +330,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
+                    self.Can_Save1 = False
             elif self.Validation1 == "Date":
                 try:
                     datetime.strptime(self.Value1, self.Date_Format)
@@ -327,6 +338,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
+                    self.Can_Save1 = False
             elif self.Validation1 == "Integer":
                 try:
                     int(self.Value1)
@@ -334,6 +346,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
+                    self.Can_Save1 = False
             elif self.Validation1 == "Float":
                 try:
                     float(self.Value1)
@@ -341,18 +354,26 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
+                    self.Can_Save1 = False
             else:
                 pass
         else:
             pass
 
-        if self.Save_To == None:
+        # Save
+        if (self.Save_To == None) or (self.Save_path1 == None) or (self.Can_Save1 == False):
             pass
         else:
             Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
+        # Run Local Function
+        if self.Local_function1_list != None:
+            for Local_Function1 in self.Local_function1_list:
+                Local_Function1()
+
     def Save2(self, Value2):
         # Default
+        self.Can_Save2 = True
         self.Value2 = self.Get_Value2()
         self.Time_Format = self.Settings["0"]["General"]["Formats"]["Time"]
         self.Date_Format = self.Settings["0"]["General"]["Formats"]["Date"]
@@ -366,6 +387,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not proper Time format, should be: {self.Time_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
+                    self.Can_Save2 = False
             elif self.Validation2 == "Date":
                 try:
                     datetime.strptime(self.Value2, self.Date_Format)
@@ -373,6 +395,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not in proper Date format, should be: {self.Date_Format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
+                    self.Can_Save2 = False
             elif self.Validation2 == "Integer":
                 try:
                     int(self.Value2)
@@ -380,6 +403,7 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
+                    self.Can_Save2 = False
             elif self.Validation2 == "Float":
                 try:
                     float(self.Value2)
@@ -387,16 +411,22 @@ class WidgetRow_Double_Input_Entry:
                     Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
+                    self.Can_Save2 = False
             else:
                 pass
         else:
             pass
 
-        if self.Save_To == None:
+        # Save
+        if (self.Save_To == None) or (self.Save_path2 == None) or (self.Can_Save2 == False):
             pass
         else:
             Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
+        # Run Local Function
+        if self.Local_function2_list != None:
+            for Local_Function2 in self.Local_function2_list:
+                Local_Function2()
 
 # -------------------------------------------------------------------------------- WidgetRow_OptionMenu -------------------------------------------------------------------------------- #
 class WidgetRow_OptionMenu:
@@ -514,7 +544,7 @@ class WidgetRow_OptionMenu:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_CheckBox -------------------------------------------------------------------------------- #
@@ -595,7 +625,7 @@ class WidgetRow_CheckBox:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_RadioButton -------------------------------------------------------------------------------- #
@@ -679,7 +709,7 @@ class WidgetRow_RadioButton:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
 
 
 
@@ -901,7 +931,7 @@ class WidgetRow_Date_Picker:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_Color_Picker -------------------------------------------------------------------------------- #
@@ -1037,7 +1067,7 @@ class WidgetRow_Color_Picker:
         if self.Save_To == None:
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 # -------------------------------------------------------------------------------- Widget_Buttons_Row -------------------------------------------------------------------------------- #
 class Widget_Buttons_Row:
@@ -1076,7 +1106,11 @@ class Widget_Buttons_Row:
         
         for Button in range(self.Buttons_count): 
             self.Button_Normal = Elements.Get_Button_Text(Configuration=self.Configuration, Frame=self.Frame_Buttons, Button_Size=self.Button_Size)
-            self.Button_Normal.configure(text=self.Button_Text[Button], command = self.Button_Functions[Button])
+            self.Button_Normal.configure(text=self.Button_Text[Button])
+            if self.Button_Functions:
+                self.Button_Normal.configure(command = self.Button_Functions[Button])
+            else:
+                pass
             Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Button_Normal, message=self.Button_ToolTips[Button], ToolTip_Size="Normal", GUI_Level_ID=self.GUI_Level_ID + 1)
             self.Button_Normal.pack(side="right", fill="none", expand=False, padx=(10,0))
 
@@ -1174,6 +1208,45 @@ class WidgetFrame:
         for Row in Rows:
             Row.Show()
 
+# -------------------------------------------------------------------------------- Widget_Table_Frame -------------------------------------------------------------------------------- #
+class WidgetTableFrame:
+    __slots__ = "Configuration", "Frame", "Table_Size", "Table_Values", "Table_Columns", "Table_Rows", "wraplength", "GUI_Level_ID", "Frame_Scrollable_Area", "Table", "Table_Values"
+    """
+    Widget for Pages
+    """
+    def __init__(self, 
+                 Configuration:dict, 
+                 Frame: CTkFrame, 
+                 Table_Size: str, 
+                 Table_Values: list|None, 
+                 Table_Columns: int, 
+                 Table_Rows: int, 
+                 wraplength: int|None = None,
+                 GUI_Level_ID: int|None = None):
+        self.Configuration = Configuration
+        self.Frame = Frame
+        self.Table_Size = Table_Size
+        self.Table_Values = Table_Values
+        self.Table_Columns = Table_Columns
+        self.Table_Rows = Table_Rows
+        self.wraplength = wraplength
+        self.GUI_Level_ID = GUI_Level_ID
+
+        # Build only one frame which contain whole Table
+        self.Frame_Scrollable_Area = Elements.Get_Widget_Scrollable_Frame(Configuration=self.Configuration, Frame=self.Frame, Frame_Size=self.Table_Size, GUI_Level_ID=self.GUI_Level_ID)
+        
+        # Table
+        self.Table = Elements.Get_Table(Configuration=self.Configuration, Frame=self.Frame_Scrollable_Area, Table_size=self.Table_Size, columns=self.Table_Columns, rows=self.Table_Rows, GUI_Level_ID=self.GUI_Level_ID)
+        self.Table.configure(wraplength=self.wraplength)
+        if self.Table_Values == None:
+            pass
+        else:
+            self.Table.configure(values=self.Table_Values)
+
+    def Show(self):
+        self.Frame_Scrollable_Area.pack(side="top", fill="y", expand=True, padx=10, pady=(0,5))
+        self.Table.pack(side="top", fill="y", expand=True, padx=10, pady=10)
+
 
 # -------------------------------------------------------------------------------- PopUp_window -------------------------------------------------------------------------------- #
 class PopUp_window:
@@ -1228,5 +1301,3 @@ class PopUp_window:
     def click_win(self):
         self.Pop_Up_Window._offsetx = self.Pop_Up_Window.winfo_pointerx() - self.Pop_Up_Window.winfo_rootx()
         self.Pop_Up_Window._offsety = self.Pop_Up_Window.winfo_pointery() - self.Pop_Up_Window.winfo_rooty()
-
-

@@ -21,7 +21,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['pyinstrument', 'fastapi', 'pydantic', 'pydantic_core', 'uvicorn', 'pydantic'],
+    excludes=['pyinstrument'],
     noarchive=False,
     optimize=0,
 )
