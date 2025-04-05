@@ -110,7 +110,7 @@ class SidebarApp:
 
     def create_Application_version(self):
         Program_Version_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Side_Bar_Frame, Label_Size="Field_Label", Font_Size="Field_Label")
-        Program_Version_text.configure(text=f"{self.Program_Version}")
+        Program_Version_text.configure(text=f"{self.Program_Version}", text_color = "#efefef")
         Program_Version_text.pack(side="top", fill="none", expand=False, padx=5, pady=(0, 10))
 
     def create_command(self, button_index, button_name):

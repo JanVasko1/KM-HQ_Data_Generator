@@ -9,7 +9,7 @@ import Libs.Data_Functions as Data_Functions
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Downloader.Downloader as Downloader
 from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
-from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_CheckBox, WidgetRow_Input_Entry, WidgetRow_OptionMenu, Widget_Section_Row, WidgetRow_Date_Picker
+from Libs.GUI.Widgets.Widgets_Class import WidgetRow_CheckBox
 
 
 def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Documents: dict, Frame: CTkFrame):
@@ -421,13 +421,23 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Tab_PO_ToolTip_But = TabView_PO.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PO_ToolTip_But, message="Purchase Order .json generator.", ToolTip_Size="Normal", GUI_Level_ID=2)
     
+    def Block_Invoice_PDF() ->  None:
+        if Generate_INV_Variable.get() == False:
+            Generate_INV_PDF_Variable.set(value=False)
+            Generate_INV_PDF_Row.Change_Value()
+        else:
+            pass
+
     # Fields
     Generate_Conf_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Confirmation", Variable=Generate_CON_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"])
     Generate_CPDI_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="CPDI", Variable=Generate_CPD_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Use"])
     Generate_PREA_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="PreAdvice", Variable=Generate_PRA_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"])
     Generate_DEL_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Delivery", Variable=Generate_DEL_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Use"])
-    Generate_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"])
     Generate_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice PDF", Variable=Generate_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"])
+
+    Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_INV_PDF_Row]])
+    Generate_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Field_list=[Generate_INV_PDF_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+    Generate_INV_Row.Local_function_list = [Block_Invoice_PDF]
 
     # -------- Select One -------- #
     TabView_One_PO = Elements.Get_Tab_View(Configuration=Configuration, Frame=Tab_PO, Tab_size="Download", GUI_Level_ID=3)
@@ -492,10 +502,21 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Tab_BB_ToolTip_But = TabView_BB.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_ToolTip_But, message="BackBone Billing invoice .json generator.", ToolTip_Size="Normal", GUI_Level_ID=2)
 
+    def Block_BB_Invoice_PDF() ->  None:
+        if Generate_BB_INV_Variable.get() == False:
+            Generate_BB_INV_PDF_Variable.set(value=False)
+            Generate_BB_IAL_Variable.set(value=False)
+            Generate_BB_INV_PDF_Row.Change_Value()
+            Generate_IAL_Row.Change_Value()
+        else:
+            pass
+
     # Fields
-    Generate_BB_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_BB, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_BB_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"])
     Generate_BB_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_BB, window=window, Field_Frame_Type="Half_size", Label="Invoice PDF", Variable=Generate_BB_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "PDF", "Generate"])
     Generate_IAL_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_BB, window=window, Field_Frame_Type="Half_size", Label="IAL", Variable=Generate_BB_IAL_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "IAL", "Use"])
+    Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_BB_INV_PDF_Row, Generate_IAL_Row]])
+    Generate_BB_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_BB, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_BB_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Use"], Field_list=[Generate_BB_INV_PDF_Row, Generate_IAL_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+    Generate_BB_INV_Row.Local_function_list = [Block_BB_Invoice_PDF]
 
     Generate_BB_INV_Row.Show()
     Generate_BB_INV_PDF_Row.Show()
@@ -534,10 +555,19 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Tab_PRO_ToolTip_But = TabView_PRO.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PRO_ToolTip_But, message="Purchase Return Order .json generator.", ToolTip_Size="Normal", GUI_Level_ID=2)
 
+    def Block_PRO_Invoice_PDF() ->  None:
+        if Generate_PRO_INV_Variable.get() == False:
+            Generate_PRO_INV_PDF_Variable.set(value=False)
+            Generate_PRO_INV_PDF_Row.Change_Value()
+        else:
+            pass
+
     # Fields
     Generate_PRO_Conf_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Confirmation", Variable=Generate_PRO_CON_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Use"])
-    Generate_PRO_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo", Variable=Generate_PRO_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"])
     Generate_PRO_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo PDF", Variable=Generate_PRO_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"])
+    Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_PRO_INV_PDF_Row]])
+    Generate_PRO_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo", Variable=Generate_PRO_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Field_list=[Generate_PRO_INV_PDF_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+    Generate_PRO_INV_Row.Local_function_list = [Block_PRO_Invoice_PDF]
 
     Generate_PRO_Conf_Row.Show()
     Generate_PRO_INV_Row.Show()

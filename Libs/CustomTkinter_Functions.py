@@ -71,17 +71,7 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict|None, window: CTk|N
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 # ------------------ Blocking Fields Functions ------------------ #
-def Field_Block_Bool(Settings: dict, window: CTk|None, Selected_Variable: BooleanVar, Selected_Field: CTkCheckBox, Selected_JSON_path: list, Block_Variable_list: list, Block_Field_list: list, Block_JSON_path_list: list) -> None:
-    Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Selected_Variable, File_Name="Settings", JSON_path=Selected_JSON_path, Information=Selected_Variable)
-    for i, Block_Variable in enumerate(Block_Variable_list):
-        if Selected_Variable.get() == True:
-            Block_Field_list[i].configure(state="normal")
-        elif Selected_Variable.get() == False:
-            Block_Field_list[i].configure(state="disabled")
-            Block_Variable_list[i].set(value=False)
-        Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Block_Variable_list[i], File_Name="Settings", JSON_path=Block_JSON_path_list[i], Information=Block_Variable_list[i])
-
-def OptionMenu_Blocking(Values: list, Freeze_fields: list) -> dict:
+def Fields_Blocking(Values: list, Freeze_fields: list) -> dict:
     Field_Blocking_dict = dict()
     for Value_index, Value in enumerate(Values):
         Field_Blocking_dict[Value] = Freeze_fields[Value_index]      

@@ -166,11 +166,11 @@ class WidgetRow_Input_Entry:
             pass
         else:
             if self.Validation == "Integer":
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=int(self.Get_Value()))
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=int(self.Get_Value()))
             elif self.Validation == "Float":
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=float(self.Get_Value()))
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=float(self.Get_Value()))
             else:
-                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+                Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
         # Run Local Function
         if self.Local_function_list != None:
@@ -364,7 +364,7 @@ class WidgetRow_Double_Input_Entry:
         if (self.Save_To == None) or (self.Save_path1 == None) or (self.Can_Save1 == False):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
         # Run Local Function
         if self.Local_function1_list != None:
@@ -421,7 +421,7 @@ class WidgetRow_Double_Input_Entry:
         if (self.Save_To == None) or (self.Save_path2 == None) or (self.Can_Save2 == False):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path1, Information=self.Get_Value1())
 
         # Run Local Function
         if self.Local_function2_list != None:
@@ -541,15 +541,15 @@ class WidgetRow_OptionMenu:
         return self.Input_OptionMenu.get()
 
     def Save(self):
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_CheckBox -------------------------------------------------------------------------------- #
 class WidgetRow_CheckBox:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Variable", "Documents", "Label_ToolTip", "Save_To", "Save_path", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Input_Check_Box"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Variable", "Documents", "Label_ToolTip", "Save_To", "Save_path", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Input_Check_Box", "Field_list", "Field_Blocking_dict", "Block_Fields_list", "Local_function_list"
     """
     Field row for Check Box
     """
@@ -564,7 +564,10 @@ class WidgetRow_CheckBox:
                  Documents: dict|None = None,
                  Label_ToolTip: list|None = None, 
                  Save_To: str|None = None,
-                 Save_path: list|None = None):
+                 Save_path: list|None = None,
+                 Field_list: list|None = None,
+                 Field_Blocking_dict: dict|None = None,
+                 Local_function_list: any = None,):
         self.Settings = Settings
         self.Configuration = Configuration
         self.Documents = Documents
@@ -576,6 +579,9 @@ class WidgetRow_CheckBox:
         self.Variable = Variable
         self.Save_To = Save_To
         self.Save_path = Save_path 
+        self.Field_list = Field_list
+        self.Field_Blocking_dict = Field_Blocking_dict
+        self.Local_function_list = Local_function_list
 
         # Whole Row Frame
         self.Row_Frame = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.master, Field_Frame_Type=self.Field_Frame_Type)
@@ -601,8 +607,9 @@ class WidgetRow_CheckBox:
         self.Frame_Value.pack_propagate(flag=False)
         
         self.Input_Check_Box = Elements.Get_CheckBox(Configuration=self.Configuration, Frame=self.Frame_Value)
-        self.Input_Check_Box.configure(variable=self.Variable, text="", command=lambda: self.Save())
+        self.Input_Check_Box.configure(variable=self.Variable, text="", command=lambda: self.Change_Value())
         self.Set_Value()
+        self.Change_Value()
 
     def Freeze(self):
         self.Input_Check_Box.configure(state="disabled")
@@ -618,14 +625,40 @@ class WidgetRow_CheckBox:
         self.Frame_Value.pack(side="left", fill="x", expand=False, padx=0, pady=0)
         self.Input_Check_Box.pack(side="left", fill="none", expand=False, padx=0, pady=0)
 
+    def Change_Value(self):
+        # Save
+        self.Save()
+
+        # Unfreeze all fields belonging to Field
+        if self.Field_list != None:
+            for UnFreeze_Field in self.Field_list:
+                UnFreeze_Field.UnFreeze()
+        else:
+            pass
+
+        # Freeze only selected
+        if self.Field_Blocking_dict != None:
+            # Filter Dictionary
+            self.Block_Fields_list = self.Field_Blocking_dict[self.Variable.get()]
+            for Freeze_Field in self.Block_Fields_list:
+                Freeze_Field.Freeze()
+                # TODO --> try to change look of freezed to help to identify freezed ones
+        else:
+            pass
+
+        # Run Local Function
+        if self.Local_function_list != None:
+            for Local_Function in self.Local_function_list:
+                Local_Function()
+
     def Set_Value(self):
         self.Input_Check_Box.configure(variable=self.Variable)
 
     def Save(self):
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_RadioButton -------------------------------------------------------------------------------- #
@@ -706,10 +739,10 @@ class WidgetRow_RadioButton:
         self.Input_RadioButton.configure(variable=self.Variable)
 
     def Save(self):
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Variable.get())
 
 
 
@@ -727,10 +760,10 @@ class WidgetRow_Date_Picker:
                  Field_Frame_Type: str, 
                  Label: str, 
                  Date_format: str,
-                 Save_To: str,
+                 Save_To: str|None = None,
                  Save_path: list|None = None,
                  Documents: dict|None = None,
-                 Value: str|None = None,
+                 Value: str|None = "",
                  placeholder_text_color: str = "",
                  Label_ToolTip: list|None = None, 
                  Button_ToolTip: list|None = None, 
@@ -928,10 +961,10 @@ class WidgetRow_Date_Picker:
             pass
 
         # Save
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 
 # -------------------------------------------------------------------------------- WidgetRow_Color_Picker -------------------------------------------------------------------------------- #
@@ -1064,10 +1097,10 @@ class WidgetRow_Color_Picker:
         self.Color_Entry.insert(index=0, string=self.Color_Picker.get())
 
     def Save(self):
-        if self.Save_To == None:
+        if (self.Save_To == None) or (self.Save_path == None):
             pass
         else:
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 # -------------------------------------------------------------------------------- Widget_Buttons_Row -------------------------------------------------------------------------------- #
 class Widget_Buttons_Row:
@@ -1152,17 +1185,19 @@ class Widget_Section_Row:
 
 # -------------------------------------------------------------------------------- WidgetFrame -------------------------------------------------------------------------------- #
 class WidgetFrame:
-    __slots__ = "Configuration", "Frame", "Name", "Additional_Text", "Widget_size", "Widget_Label_Tooltip", "GUI_Level_ID", "Widget_Frame", "Header_Frame", "Header_text", "Header_Icon", "Header_text_Additional", "Body_Frame"
+    __slots__ = "Configuration", "Frame", "Name", "Additional_Text", "Widget_size", "Widget_Label_Tooltip", "GUI_Level_ID", "Widget_Frame", "Header_Frame", "Header_text", "Header_Icon", "Header_text_Additional", "Body_Frame", "Scrollable", "TopUp_Frame", "content_row_count", "content_height"
     """
     Widget for Pages
     """
     def __init__(self, 
                  Configuration:dict, 
-                 Frame: CTkFrame, 
+                 Frame: CTkFrame|CTkToplevel, 
                  Name: str, 
                  Additional_Text: str, 
                  Widget_size: str, 
                  Widget_Label_Tooltip: str, 
+                 Scrollable: bool = False,
+                 TopUp_Frame: bool = False,
                  GUI_Level_ID: int|None = None):
         self.Configuration = Configuration
         self.Frame = Frame
@@ -1170,10 +1205,19 @@ class WidgetFrame:
         self.Additional_Text = Additional_Text
         self.Widget_size = Widget_size
         self.Widget_Label_Tooltip = Widget_Label_Tooltip
+        self.Scrollable = Scrollable
+        self.TopUp_Frame = TopUp_Frame
         self.GUI_Level_ID = GUI_Level_ID
 
         # Widget Main Frame
-        self.Widget_Frame = Elements.Get_Widget_Frame_Body(Configuration=self.Configuration, Frame=self.Frame, Widget_size=self.Widget_size, GUI_Level_ID=self.GUI_Level_ID)
+        if self.Scrollable == True:
+            self.Widget_Frame = Elements.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=self.Frame, Frame_Size=self.Widget_size, GUI_Level_ID=self.GUI_Level_ID)
+        else:
+            self.Widget_Frame = Elements.Get_Widget_Frame_Body(Configuration=self.Configuration, Frame=self.Frame, Widget_size=self.Widget_size, GUI_Level_ID=self.GUI_Level_ID)
+        if self.TopUp_Frame == True:
+            self.Widget_Frame.configure(bg_color="#000001")
+        else:
+            pass
 
         # Widget Header line
         self.Header_Frame = Elements.Get_Widget_Frame_Header(Configuration=self.Configuration, Frame=self.Widget_Frame, Widget_size=self.Widget_size)
@@ -1207,6 +1251,13 @@ class WidgetFrame:
     def Add_row(self, Rows: list):
         for Row in Rows:
             Row.Show()
+    
+    def Update_height(self, Max_Height: int):
+        self.content_row_count = len(self.Body_Frame.winfo_children())
+        self.content_height = self.content_row_count * 35 + 30 + (self.Header_Frame.winfo_height())    # Lines multiplied + button + Header if needed (50)
+        if self.content_height > Max_Height:
+            self.content_height = Max_Height
+        self.Widget_Frame.configure(height=self.content_height)
 
 # -------------------------------------------------------------------------------- Widget_Table_Frame -------------------------------------------------------------------------------- #
 class WidgetTableFrame:
@@ -1301,3 +1352,6 @@ class PopUp_window:
     def click_win(self):
         self.Pop_Up_Window._offsetx = self.Pop_Up_Window.winfo_pointerx() - self.Pop_Up_Window.winfo_rootx()
         self.Pop_Up_Window._offsety = self.Pop_Up_Window.winfo_pointery() - self.Pop_Up_Window.winfo_rooty()
+
+    def Destroy(self):
+        self.Pop_Up_Window.destroy()

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "Test2",
+                "Last_Used": "",
                 "Templates_List": []
             },
             "Formats": {
@@ -52,9 +52,9 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
-                        "Method": "Fixed",
+                        "Method": "Automatic",
                         "Methods_List": [
                             "Fixed",
                             "Automatic",
@@ -68,7 +68,7 @@
                         }
                     },
                     "Generation_Date": {
-                        "Method": "Fixed",
+                        "Method": "Today",
                         "Methods_List": [
                             "Fixed",
                             "Today",
@@ -79,7 +79,7 @@
                         }
                     },
                     "Unit_of_Measure": {
-                        "Method": "HQ Item Transport Export",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Line",
@@ -91,7 +91,7 @@
                         }
                     },
                     "Line_Flags": {
-                        "Use": false,
+                        "Use": true,
                         "Method": "Prompt",
                         "Methods_List": [
                             "Random Cancel",
@@ -164,7 +164,7 @@
                         }
                     },
                     "Free_Of_Charge": {
-                        "Method": "Fixed",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "Connected Items",
@@ -455,7 +455,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -549,11 +549,11 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -677,7 +677,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "Credit_Memo": {

@@ -4,18 +4,13 @@
 # BUG --> Threat --> when open CTk it flickers a lot
 # BUG --> Template lost when switch page from Download to other
 
-# TODO --> Prompt page předělat taky na Class + Odstranit nepotřebný Element_Groups
-
 # Import Libraries
 import os
+import pickle
 
 from customtkinter import CTk, set_appearance_mode, deactivate_automatic_dpi_awareness
 
-import Libs.GUI.Pages.P_Header as P_Header
-import Libs.GUI.Pages.P_Side_Bar as P_Side_Bar
 import Libs.GUI.Elements as Elements
-
-import Libs.Defaults_Lists as Defaults_Lists
 import Libs.File_Manipulation as File_Manipulation
 import Libs.Data_Functions as Data_Functions
 
@@ -57,8 +52,26 @@ class Win(CTk):
         self._offsety = super().winfo_pointery() - super().winfo_rooty()
 
 if __name__ == "__main__":
+    # Check authorization file
+    try:
+        # Crate authentication file if not exists
+        File_Exists = os.path.isfile(path=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"))
+        if File_Exists == True:
+            pass
+        else:
+            Auth_Data = {
+                "Display_name": "", 
+                "client_id": "", 
+                "object_id": "0dc98f9d-26eb-4085-8a26-0d1d8abd21e1", 
+                "tenant_id": "17f69c66-2114-4826-9fb1-6e496607aebc", 
+                "client_secret": ""}
+            with open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"), mode="wb") as Authorization:
+                pickle.dump(obj=Auth_Data, file=Authorization)
+    except:
+        pass
+
     window = Win()
-    deactivate_automatic_dpi_awareness()
+    import Libs.Defaults_Lists as Defaults_Lists
     Settings = Defaults_Lists.Load_Settings()
     Configuration = Defaults_Lists.Load_Configuration() 
     Documents = Defaults_Lists.Load_Documents() 
@@ -79,16 +92,7 @@ if __name__ == "__main__":
                                         include_hidden=True)
     except:
         pass
-    try:
-        # Crate authentication file if not exists
-        File_Exists = os.path.isfile(path=Data_Functions.Absolute_path(relative_path=f"Libs\\Azure\\Authorization.pkl"))
-        if File_Exists == True:
-            pass
-        else:
-            Defaults_Lists.Create_Azure_Auth()
-    except:
-        pass
-
+    
     # Delete Operational data from Documents
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
@@ -97,10 +101,11 @@ if __name__ == "__main__":
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Order", "Purchase_Order_List"], Information=[])
     Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=[])
 
-    # Base Windows style setup --> always keep normal before change
+    # Create window
     Theme_Actual = Configuration["Global_Appearance"]["Window"]["Theme"]
     SideBar_Width = Configuration["Frames"]["Page_Frames"]["SideBar"]["width"]
     set_appearance_mode(mode_string=Theme_Actual)
+    deactivate_automatic_dpi_awareness()
 
     # ---------------------------------- Content ----------------------------------#
     # Background
@@ -123,6 +128,8 @@ if __name__ == "__main__":
     Frame_Work_Area_Main.pack_propagate(flag=False)
     Frame_Work_Area_Main.pack(side="left", fill="none", expand=False)
 
+    import Libs.GUI.Pages.P_Header as P_Header
+    import Libs.GUI.Pages.P_Side_Bar as P_Side_Bar
     P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
     P_Side_Bar.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
     
