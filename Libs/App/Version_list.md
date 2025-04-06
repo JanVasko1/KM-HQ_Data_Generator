@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+### 0.8.0
+- Purchase Return Order Confirmation and Invoice PDF
+
 ### 0.7.0
 - GUI optimization
 

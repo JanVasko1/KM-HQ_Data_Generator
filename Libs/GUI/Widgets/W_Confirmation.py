@@ -301,3 +301,122 @@ def PO_Items_Free_Face_Sheet(Settings: dict, Configuration: dict|None, window: C
     Con_Free_Face_Widget.Add_row(Rows=[Face_Sheet_Number_Row, Face_Sheet_Description_Row, Face_Sheet_QTY_per_Machine_Row, Face_Sheet_Price_Row])
 
     return Con_Free_Face_Widget
+
+
+def PRO_CON_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Number"]["Method"]
+    PRO_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Number"]["Methods_List"])
+    PRO_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Number"]["Automatic_Options"]["Prefix"]
+    PRO_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Number"]["Fixed_Options"]["Number"]
+    PRO_Numbers_Method_Variable = StringVar(master=Frame, value=PRO_Numbers_Method, name="PRO_Numbers_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Con_PRO_Number_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Return Confirmation Number.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_NUM_CON_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=PRO_Fixed_Number, placeholder_text="Manual Number", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Number", "Fixed_Options", "Number"])
+    Section_Row = Widget_Section_Row(Configuration=Configuration, master=Con_PRO_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    PRO_AUT_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=PRO_Automatic_Prefix, placeholder_text="Prefix for unique number", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Number", "Automatic_Options", "Prefix"])
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Automatic", "Prompt"], Freeze_fields=[[PRO_AUT_Prefix_Row],[PRO_NUM_CON_FIX_Row],[PRO_AUT_Prefix_Row,PRO_NUM_CON_FIX_Row]])
+    PRO_CON_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Numbers_Method_Variable, Values=PRO_Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Number", "Method"], Field_list=[PRO_NUM_CON_FIX_Row, PRO_AUT_Prefix_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Con_PRO_Number_Widget.Add_row(Rows=[PRO_CON_Number_Row, PRO_NUM_CON_FIX_Row, Section_Row, PRO_AUT_Prefix_Row])
+
+    return Con_PRO_Number_Widget
+
+def PRO_Generation_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Date_Format = Settings["0"]["General"]["Formats"]["Date"]
+    PRO_Generation_Date_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Generation_Date"]["Method"]
+    PRO_Generation_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Generation_Date"]["Methods_List"])
+    PRO_Gen_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Generation_Date"]["Fixed_Options"]["Fix_Date"]
+    PRO_Generation_Date_Method_Variable = StringVar(master=Frame, value=PRO_Generation_Date_Method, name="PRO_Generation_Date_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Con_PRO_Gen_Date_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Generation Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Date of generation Return Confirmation.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_Gen_Fixed_Date_Row = WidgetRow_Date_Picker(Settings=Settings, Configuration=Configuration, master=Con_PRO_Gen_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Date", Date_format=Date_Format, Value=PRO_Gen_Fix_Date, placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Generation_Date", "Fixed_Options", "Fix_Date"], Button_ToolTip="Date Picker.", Picker_Always_on_Top=True, Validation="Date", GUI_Level_ID=GUI_Level_ID + 1)
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Today", "Prompt"], Freeze_fields=[[],[PRO_Gen_Fixed_Date_Row],[PRO_Gen_Fixed_Date_Row]])
+    PRO_CON_Date_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_Gen_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Generation_Date_Method_Variable, Values=PRO_Generation_Date_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Generation_Date", "Method"], Field_list=[PRO_Gen_Fixed_Date_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Con_PRO_Gen_Date_Widget.Add_row(Rows=[PRO_CON_Date_Method_Row, PRO_Gen_Fixed_Date_Row])
+
+    return Con_PRO_Gen_Date_Widget
+
+def PRO_Unit_of_Measure(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_UoM_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Unit_of_Measure"]["Method"]
+    PRO_UoM_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Unit_of_Measure"]["Methods_List"])
+    PRO_Fixed_UoM = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Unit_of_Measure"]["Fixed_Options"]["Fix_UoM"]
+    PRO_UoM_Method_Variable = StringVar(master=Frame, value=PRO_UoM_Method, name="PRO_UoM_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#f
+    # Widget
+    Con_PRO_UoM_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Unit of Measure", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Unit of Measure in Return Confirmation.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_Fixed_UoM_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Unit of Measure", Value=PRO_Fixed_UoM, placeholder_text="Manual Unit of Measure", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Unit_of_Measure", "Fixed_Options", "Fix_UoM"])
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Purchase Return Line", "HQ Item Transport Export", "Prompt"], Freeze_fields=[[],[PRO_Fixed_UoM_Row],[PRO_Fixed_UoM_Row],[PRO_Fixed_UoM_Row]])
+    PRO_UoM_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_UoM_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Unit of Measure", Variable=PRO_UoM_Method_Variable, Values=PRO_UoM_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Unit_of_Measure", "Method"], Field_list=[PRO_Fixed_UoM_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Con_PRO_UoM_Widget.Add_row(Rows=[PRO_UoM_Method_Row, PRO_Fixed_UoM_Row])
+
+    return Con_PRO_UoM_Widget
+
+def PRO_Price_Currency(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Currency_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Currency"]["Method"]
+    PRO_Currency_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Currency"]["Methods_List"])
+    PRO_Fixed_Currency = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Currency"]["Fixed_Options"]["Fix_Currency"]
+    PRO_Price_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Prices"]["Method"]
+    PRO_Price_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Prices"]["Methods_List"])
+    PRO_Price_Method_Variable = StringVar(master=Frame, value=PRO_Price_Method, name="PRO_Price_Method_Variable")
+    PRO_Currency_Method_Variable = StringVar(master=Frame, value=PRO_Currency_Method, name="PRO_Currency_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    Con_PRO_Price_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Return Confirmation.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_Prices_Method_Frame = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Price", Variable=PRO_Price_Method_Variable, Values=PRO_Price_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Prices", "Method"], GUI_Level_ID=GUI_Level_ID) 
+    PRO_Fixed_Currency_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Currency", Value=PRO_Fixed_Currency, placeholder_text="Manual Currency", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Currency", "Fixed_Options", "Fix_Currency"])
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Purchase Return Order"], Freeze_fields=[[],[PRO_Fixed_Currency_Row]])
+    PRO_Currency_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Currency", Variable=PRO_Currency_Method_Variable, Values=PRO_Currency_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Currency", "Method"], Field_list=[PRO_Fixed_Currency_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Con_PRO_Price_Widget.Add_row(Rows=[PRO_Prices_Method_Frame, PRO_Currency_Method_Row, PRO_Fixed_Currency_Row])
+
+    return Con_PRO_Price_Widget
+
+def PRO_Item_Rejection(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Reject_Method = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Rejection"]["Method"]
+    PRO_Reject_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Rejection"]["Methods_List"])
+    PRO_Reject_Ration_Confirm = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Rejection"]["Ratio"]["Confirm"]
+    PRO_Reject_Ration_Reject = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Rejection"]["Ratio"]["Reject"]
+
+    PRO_Reject_Method_Variable = StringVar(master=Frame, value=PRO_Reject_Method, name="PRO_Reject_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#f
+    # Widget
+    Con_PRO_Reject_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Item Rejection", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will simulate Items rejection by BEU on Return Confirmation.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    Ratio_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Con_PRO_Reject_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Ratio", Label_Size="Field_Label", Font_Size="Section_Separator")
+    PRO_Ratio_Confirm = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_Reject_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Ratio Confirm", Value=PRO_Reject_Ration_Confirm, placeholder_text="Confirm Ratio", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Rejection", "Ratio", "Confirm"], Validation="Integer")
+    PRO_Ratio_Reject = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Con_PRO_Reject_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Ratio Reject", Value=PRO_Reject_Ration_Reject, placeholder_text="Reject Ratio", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Rejection", "Ratio", "Reject"], Validation="Integer")
+
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Confirm All", "Reject All", "Random Reject", "Ratio", "Prompt"], Freeze_fields=[[PRO_Ratio_Confirm,PRO_Ratio_Reject],[PRO_Ratio_Confirm,PRO_Ratio_Reject],[PRO_Ratio_Confirm,PRO_Ratio_Reject],[],[PRO_Ratio_Confirm,PRO_Ratio_Reject]])
+    PRO_Rejection_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Con_PRO_Reject_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Currency", Variable=PRO_Reject_Method_Variable, Values=PRO_Reject_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Rejection", "Method"], Field_list=[PRO_Ratio_Confirm,PRO_Ratio_Reject], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    Con_PRO_Reject_Widget.Add_row(Rows=[PRO_Rejection_Method_Row, Ratio_Section_Row, PRO_Ratio_Confirm, PRO_Ratio_Reject])
+
+    return Con_PRO_Reject_Widget

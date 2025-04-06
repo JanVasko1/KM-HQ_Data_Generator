@@ -479,24 +479,154 @@ def Process_BackBoneBilling(Settings: dict,
         pass
 
 
-def Process_Purchase_Return_Orders(Settings: dict,
-                                   Configuration: dict|None) -> None:
+def Process_Purchase_Return_Orders(Settings: dict, 
+                                    Configuration: dict|None,
+                                    window: CTk|None,
+                                    headers: dict, 
+                                    tenant_id: str, 
+                                    NUS_version: str, 
+                                    NOC: str, 
+                                    Environment: str, 
+                                    Company: str,
+                                    Can_Process: bool, 
+                                    Purchase_Return_Headers_df: DataFrame, 
+                                    Purchase_Return_Lines_df: DataFrame, 
+                                    HQ_Communication_Setup_df: DataFrame, 
+                                    Company_Information_df: DataFrame, 
+                                    Country_ISO_Code_list: list, 
+                                    HQ_Item_Transport_Register_df: DataFrame, 
+                                    Items_df: DataFrame, 
+                                    Items_Price_List_Detail_df: DataFrame, 
+                                    NVR_FS_Connect_df: DataFrame, 
+                                    UoM_df: DataFrame,
+                                    GUI: bool=True) -> None:
+    
+    # Get what should be prepared from Settings
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
     Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
     Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
+    Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
-    if Generate_PRO_Confirmation == True:
-        print("Generate_PRO_Confirmation")
-    else:
-        pass
+    # Generate Purchase Return Order List
+    Purchase_Return_Orders_List = Purchase_Return_Headers_df["No"].to_list()
 
-    if Generate_PRO_Invoice == True:
-        # TIP --> Pozor na situaci, kdy Invoice bude generovaná v jiném běhu než Confirmation --> pak by se měl program zeptat na základě čeho chceme Invoice dělat (Většinou je Credit Memo = Confirmaiton)
-        print("Generate_PRO_Invoice")
-    else:
-        pass
+    for Purchase_Return_Order in Purchase_Return_Orders_List:
+        # Get Vendor for correct Export NAV folders for each PO (might be different Vendors)
+        mask_PRO = Purchase_Return_Headers_df["No"] == Purchase_Return_Order
+        Single_PRO_df = DataFrame(Purchase_Return_Headers_df[mask_PRO])
+        Buy_from_Vendor_No = Single_PRO_df.iloc[0]["Buy_from_Vendor_No"]
 
-    if Generate_PRO_Invoice_PDF == True:
-        print("Generate_PRO_Invoice_PDF")
-    else:
-        pass
+        # -------------------------------- Confirmation -------------------------------- #
+        if Generate_PRO_Confirmation == True:
+            import Libs.Process.Purchase_Return_Orders.Generate_PRO_Confirmation_Header as Generate_PRO_Confirmation_Header
+            import Libs.Process.Purchase_Return_Orders.Generate_PRO_Confirmation_Lines as Generate_PRO_Confirmation_Lines
+            import Libs.Process.Purchase_Return_Orders.Generate_PRO_Confirmation_ATP as Generate_PRO_Confirmation_ATP
+
+            # Header
+            PRO_Confirmation_Header, PRO_Confirmation_Number = Generate_PRO_Confirmation_Header.Generate_PRO_CON_Header(Settings=Settings, 
+                                                                                                                        Configuration=Configuration, 
+                                                                                                                        window=window,
+                                                                                                                        Purchase_Return_Order=Purchase_Return_Order,
+                                                                                                                        Purchase_Return_Headers_df=Purchase_Return_Headers_df,
+                                                                                                                        Company_Information_df=Company_Information_df, 
+                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
+                                                                                                                        HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
+                                                                                                                        GUI=GUI)
+
+            # Lines
+            PRO_Confirmed_Lines_df, PRO_Confirmation_Lines, Total_Line_Amount, Lines_No = Generate_PRO_Confirmation_Lines.Generate_PRO_CON_Lines(Settings=Settings, 
+                                                                                                                                            Configuration=Configuration, 
+                                                                                                                                            window=window,
+                                                                                                                                            Purchase_Return_Order=Purchase_Return_Order,
+                                                                                                                                            Purchase_Return_Lines_df=Purchase_Return_Lines_df,
+                                                                                                                                            HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df,
+                                                                                                                                            Items_df=Items_df,
+                                                                                                                                            Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
+                                                                                                                                            UoM_df=UoM_df, 
+                                                                                                                                            GUI=GUI)
+
+            # ATP
+            PRO_Confirmation_Lines = Generate_PRO_Confirmation_ATP.Generate_PRO_ATP_CON_Lines(Settings=Settings, Configuration=Configuration, window=window, PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df, PRO_Confirmation_Lines=PRO_Confirmation_Lines, GUI=GUI)
+
+            # Put Header, Lines with ATP together
+            PRO_Confirmation_Header["orderresponse"]["orderresponse_item_list"] = PRO_Confirmation_Lines
+
+            # Update Footer
+            PRO_Confirmation_Header["orderresponse"]["orderresponse_summary"]["total_item_num"] = Lines_No
+            PRO_Confirmation_Header["orderresponse"]["orderresponse_summary"]["total_amount"] = round(number=Total_Line_Amount, ndigits=2)
+
+            # Export 
+            Confirmation_File_Name = f"ORDRSP_{PRO_Confirmation_Number}_Test"
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Confirmation_Header, HQ_File_Type_Path="HQ_R_O_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+            else:
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+
+
+        else:
+            pass
+
+        # -------------------------------- Credit Memo -------------------------------- #
+        if Generate_PRO_Invoice == True:
+            import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Header as Generate_PRO_Invoice_Header
+            import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Lines as Generate_PRO_Invoice_Lines
+
+            # Header
+            PO_Invoices, PO_Invoice_Number_list = Generate_PRO_Invoice_Header.Generate_Invoice_Header(Settings=Settings, 
+                                                                                                  Configuration=Configuration, 
+                                                                                                  window=window, 
+                                                                                                  Purchase_Return_Order=Purchase_Return_Order, 
+                                                                                                  Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
+                                                                                                  PRO_Confirmation_Number=PRO_Confirmation_Number, 
+                                                                                                  PO_Delivery_Number_list=PO_Delivery_Number_list, 
+                                                                                                  PO_Delivery_Date_list=PO_Delivery_Date_list,
+                                                                                                  PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
+                                                                                                  Delivery_Lines_df=Delivery_Lines_df,
+                                                                                                  Company_Information_df=Company_Information_df, 
+                                                                                                  HQ_Communication_Setup_df=HQ_Communication_Setup_df,
+                                                                                                  GUI=GUI)
+
+            # Lines
+            PO_Invoices, PO_Invoice_Table_Data_list = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+                                                                                                    Configuration=Configuration, 
+                                                                                                    window=window, 
+                                                                                                    Purchase_Return_Order=Purchase_Return_Order, 
+                                                                                                    Purchase_Lines_df=Purchase_Lines_df, 
+                                                                                                    PO_Invoices=PO_Invoices,
+                                                                                                    PO_Invoice_Number_list=PO_Invoice_Number_list,
+                                                                                                    PO_Delivery_Number_list=PO_Delivery_Number_list,
+                                                                                                    Delivery_Lines_df=Delivery_Lines_df, 
+                                                                                                    PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
+                                                                                                    Items_df=Items_df,
+                                                                                                    Items_Price_List_Detail_df=Items_Price_List_Detail_df,
+                                                                                                    Country_ISO_Code_list=Country_ISO_Code_list,
+                                                                                                    Tariff_Number_list=Tariff_Number_list,
+                                                                                                    GUI=GUI)
+
+            # Export 
+            for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
+                Invoice_Content = PO_Invoices[Invoice_Index]
+                Invoice_File_Name = f"INVOIC02_{Invoice_Number}_Test"
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+        else:
+            pass
+
+        # -------------------------------- Invoice PDF -------------------------------- #
+        if Generate_PRO_Invoice_PDF == True:
+            import Libs.Process.PDF_Generator as PDF_Generator
+            for Invoice_Index, Invoice_Number in enumerate(PRO_Invoice_Number_list):
+                Invoice_Content = PRO_Invoices[Invoice_Index]
+                PRO_Invoice_Table_Data = PRO_Invoice_Table_Data_list[Invoice_Index]
+                PRO_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=Invoice_Content, Table_Data=PRO_Invoice_Table_Data)
+
+                # Export 
+                # File name must be same as Invoice Number
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+        else:
+            pass

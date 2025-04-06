@@ -133,10 +133,10 @@ def Generate_PO_CON_Lines(Settings: dict,
                 Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
                 Main_Window_Centre[0] = Main_Window_Centre[0] - PO_Price_Window_geometry[0] //2
                 Main_Window_Centre[1] = Main_Window_Centre[1] - PO_Price_Window_geometry[1] //2
-                PO_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Price for Items Items.", max_width=PO_Price_Window_geometry[0], max_height=PO_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
+                PO_Price_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Price for Items.", max_width=PO_Price_Window_geometry[0], max_height=PO_Price_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=True, Always_on_Top=True)
 
                 # Frame - General
-                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Price_Window, Name="Select Price for Items Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of Confirmation.", GUI_Level_ID=3)
+                Frame_Main = Elements_Groups.Get_Widget_Scrollable_Frame(Configuration=Configuration, Frame=PO_Price_Window, Name="Select Price for Items.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select proper Price for each Item of Confirmation.", GUI_Level_ID=3)
                 Frame_Body = Frame_Main.children["!ctkframe2"]
 
                 # Prices

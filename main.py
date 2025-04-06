@@ -3,6 +3,7 @@
 # BUG --> When PopUp window in Backend is turned off by ESC whole program crash
 # BUG --> Threat --> when open CTk it flickers a lot
 # BUG --> Template lost when switch page from Download to other
+# BUG --> Method: Price List --> not taking correct one, it takes now just first one
 
 # Import Libraries
 import os

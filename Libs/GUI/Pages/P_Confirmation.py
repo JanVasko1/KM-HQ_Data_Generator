@@ -63,6 +63,12 @@ def Page_Confirmation(Settings: dict, Configuration: dict|None, window: CTk|None
     Frame_PRO_Column_A.pack_propagate(flag=False)
     Frame_PRO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PRO, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PRO_Column_B.pack_propagate(flag=False)
+
+    Con_PRO_Number_Widget = W_Confirmation.PRO_CON_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PRO_Column_A, GUI_Level_ID=2)
+    Con_PRO_Price_Widget = W_Confirmation.PRO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PRO_Column_A, GUI_Level_ID=2)
+    Con_PRO_UoM_Widget = W_Confirmation.PRO_Unit_of_Measure(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PRO_Column_A, GUI_Level_ID=2)
+    Con_PRO_Gen_Date_Widget = W_Confirmation.PRO_Generation_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PRO_Column_B, GUI_Level_ID=2)
+    Con_PRO_Reject_Widget = W_Confirmation.PRO_Item_Rejection(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PRO_Column_B, GUI_Level_ID=2)
     
     # ------------------------- Build look of Widget-------------------------#
     Frame_Confirmation_Work_Detail_Area.pack(side="top", fill="both", expand=True, padx=0, pady=0)
@@ -92,3 +98,8 @@ def Page_Confirmation(Settings: dict, Configuration: dict|None, window: CTk|None
 
     Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PRO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    Con_PRO_Number_Widget.Show()
+    Con_PRO_Price_Widget.Show()
+    Con_PRO_UoM_Widget.Show()    
+    Con_PRO_Gen_Date_Widget.Show()
+    Con_PRO_Reject_Widget.Show()

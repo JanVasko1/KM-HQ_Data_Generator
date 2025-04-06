@@ -52,7 +52,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -202,10 +202,10 @@
                             "Prompt"
                         ],
                         "Automatic_Options": {
-                            "Prefix": "CON"
+                            "Prefix": "RCON"
                         },
                         "Fixed_Options": {
-                            "Number": "CON_JVA_001"
+                            "Number": "RCON_JVA_001"
                         }
                     },
                     "Generation_Date": {
@@ -216,37 +216,37 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-03-26"
+                            "Fix_Date": "2025-04-07"
                         }
                     },
                     "Unit_of_Measure": {
-                        "Method": "HQ Item Transport Export",
+                        "Method": "Purchase Return Line",
                         "Methods_List": [
                             "Fixed",
-                            "Purchase Line",
+                            "Purchase Return Line",
                             "HQ Item Transport Export",
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_UoM": "JVA"
+                            "Fix_UoM": "C62"
                         }
                     },
                     "Prices": {
-                        "Method": "Purchase Line",
+                        "Method": "Purchase Return Line",
                         "Methods_List": [
                             "Price List",
-                            "Purchase Line",
+                            "Purchase Return Line",
                             "Prompt"
                         ]
                     },
                     "Currency": {
-                        "Method": "Purchase Order",
+                        "Method": "Purchase Return Order",
                         "Methods_List": [
                             "Fixed",
-                            "Purchase Order"
+                            "Purchase Return Order"
                         ],
                         "Fixed_Options": {
-                            "Fix_Currency": "RON"
+                            "Fix_Currency": "JVA"
                         }
                     },
                     "Rejection": {
@@ -259,8 +259,8 @@
                             "Prompt"
                         ],
                         "Ratio": {
-                            "Confirm": 90,
-                            "Reject": 10
+                            "Confirm": 80,
+                            "Reject": 20
                         }
                     }
                 }
@@ -303,7 +303,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -326,7 +326,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Random",
                     "Methods_List": [
@@ -525,7 +525,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -619,7 +619,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
@@ -751,9 +751,9 @@
                     }
                 },
                 "Credit_Memo": {
-                    "Use": false,
+                    "Use": true,
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 }
             }

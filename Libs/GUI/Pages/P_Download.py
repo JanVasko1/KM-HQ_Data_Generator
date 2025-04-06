@@ -233,7 +233,6 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
             Column_PRO_A_Children = PRO_Select_Scrollable_Body.children["!ctkframe"]
             Column_PRO_B_Children = PRO_Select_Scrollable_Body.children["!ctkframe2"]
-            Column_PRO_C_Children = PRO_Select_Scrollable_Body.children["!ctkframe3"]
 
             # Column A
             Frame_PRO_A_len = len(Column_PRO_A_Children.children)
@@ -259,18 +258,6 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
                 
                 Selected_PROs_List = Find_if_Marked(PRO_Frame_row=Column_PRO_B_Children.children[f"!ctkframe{frame}"] ,Selected_PROs_List=Selected_PROs_List)
 
-            # Column C
-            Frame_PRO_C_len = len(Column_PRO_C_Children.children)
-            for Counter in range(0, Frame_PRO_C_len - 1):
-                if Counter == 0:
-                    frame = ""
-                elif Counter > 0:
-                    frame = str(Counter + 1)
-                else:
-                    pass
-                
-                Selected_PROs_List = Find_if_Marked(PRO_Frame_row=Column_PRO_C_Children.children[f"!ctkframe{frame}"] ,Selected_PROs_List=Selected_PROs_List)
-                
             # Save Purchase Orders to Documents.json
             Selected_PROs_List.sort()
             Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Purchase_Return_Order", "Purchase_Return_Order_List"], Information=Selected_PROs_List)
@@ -289,7 +276,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         if len(Purchase_Return_Orders_List) == 0:
             pass
         else:
-            PRO_Select_window_geometry = (500, 0)
+            PRO_Select_window_geometry = (600, 400)
             Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=Button, New_Window_width=PRO_Select_window_geometry[0])
             PRO_Select_window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Recalculate", max_width=PRO_Select_window_geometry[0], max_height=PRO_Select_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=True, Always_on_Top=True)
 

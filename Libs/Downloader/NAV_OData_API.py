@@ -273,6 +273,124 @@ def Get_Purchase_Lines_df(Configuration: dict|None, window: CTk|None, headers: d
     Items_list = list(set(No_list))
     return Purchase_Lines_df, Items_list
 
+# ------------------- Get_Purchase_Return_Headers_info_df ------------------- #
+def Get_Purchase_Return_Headers_info_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Return_Orders_List: list, HQ_Vendors_list: list, GUI: bool=True):
+    # Fields
+    fields_list = ["No", "Buy_from_Vendor_No", "HQShippingConditionFieldNUS", "Order_Date", "Currency_Code"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Prepare DataFrame
+    Purchase_Return_Order_No_list = []
+    Buy_from_Vendor_No_list = []
+    HQShippingConditionFieldNUS_list = []
+    Order_Date_list = []
+    Currency_Code_list = []
+
+    Non_HQ_Orders = []
+    Non_HQ_Vendors = []
+
+    for Purchase_Return_Order in Purchase_Return_Orders_List:
+        # Filters
+        filters_list_string = f"""Document_Type eq 'Return Order' and No eq '{Purchase_Return_Order}'"""
+
+        # Params
+        params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+        # Request
+        response_values_List, list_len = Request_Endpoint(Configuration=Configuration, window=window, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_PRO_Header_Detail", GUI=GUI)
+
+        for index in range(0, list_len):
+            if response_values_List[index]["Buy_from_Vendor_No"] in HQ_Vendors_list:
+                Purchase_Return_Order_No_list.append(response_values_List[index]["No"])
+                Buy_from_Vendor_No_list.append(response_values_List[index]["Buy_from_Vendor_No"])
+                HQShippingConditionFieldNUS_list.append(response_values_List[index]["HQShippingConditionFieldNUS"])
+                Order_Date_list.append(response_values_List[index]["Order_Date"])
+                Currency_Code_list.append(response_values_List[index]["Currency_Code"])
+            else:
+                Non_HQ_Orders.append(response_values_List[index]["No"])
+                Non_HQ_Vendors.append(response_values_List[index]["Buy_from_Vendor_No"])
+
+    response_values_dict = {
+        "No": Purchase_Return_Order_No_list,
+        "Buy_from_Vendor_No": Buy_from_Vendor_No_list,
+        "HQShippingConditionFieldNUS": HQShippingConditionFieldNUS_list,
+        "Order_Date": Order_Date_list,
+        "Currency_Code": Currency_Code_list}
+
+    if len(response_values_dict) == 1:
+        Purchase_Return_Headers_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        Purchase_Return_Headers_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Purchase_Return_Headers_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Purchase_Return_Headers_df, Columns_list=["No"], Accenting_list=[True]) 
+
+    # Non-HQ Purchase Orders Message
+    if len(Non_HQ_Orders) > 0:
+        Non_HQ_Orders = list(set(Non_HQ_Orders))
+        Non_HQ_Orders = Get_Field_List_string(fields_list=Non_HQ_Orders, Join_sign=", ")
+        Non_HQ_Vendors = list(set(Non_HQ_Vendors))
+        Non_HQ_Vendors = Get_Field_List_string(fields_list=Non_HQ_Vendors, Join_sign=", ")
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Program will not process these Purchase Orders: {Non_HQ_Orders} \n as this/these Vendors: {Non_HQ_Vendors}\n are not part of HQ Communication.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+    else:
+        pass
+
+    Purchase_Return_Orders_List = list(set(Purchase_Return_Order_No_list))
+    return Purchase_Return_Headers_df, Purchase_Return_Orders_List
+
+# ------------------- HQ_Testing_PRO_Lines ------------------- #
+def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Return_Orders_List: list, GUI: bool=True):
+    # Fields
+    fields_list = ["Document_No", "Type", "Line_No", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Purchase_Order = Get_Field_List_string(fields_list=Purchase_Return_Orders_List, Join_sign="','")
+    filters_list_string = f"""Document_Type eq 'Return Order' and Type eq 'Item' and Document_No in ('{filters_Purchase_Order}')"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, window=window, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_PRO_Lines", GUI=GUI)
+
+    # Prepare DataFrame
+    Purchase_Return_Order_No_list = []
+    Type_list = []
+    Line_No_list = []
+    No_list = []
+    Description_list = []
+    Quantity_list = []
+    Unit_of_Measure_Code_list = []
+    Direct_Unit_Cost_list = []
+
+    for index in range(0, list_len):
+        Purchase_Return_Order_No_list.append(response_values_List[index]["Document_No"])
+        Type_list.append(response_values_List[index]["Type"])
+        Line_No_list.append(response_values_List[index]["Line_No"])
+        No_list.append(response_values_List[index]["No"])
+        Description_list.append(response_values_List[index]["Description"])
+        Quantity_list.append(response_values_List[index]["Quantity"])
+        Unit_of_Measure_Code_list.append(response_values_List[index]["Unit_of_Measure_Code"])
+        Direct_Unit_Cost_list.append(response_values_List[index]["Direct_Unit_Cost"])
+
+    response_values_dict = {
+        "Document_No": Purchase_Return_Order_No_list,
+        "Type": Type_list,
+        "Line_No": Line_No_list,
+        "No": No_list,
+        "Description": Description_list,
+        "Quantity": Quantity_list,
+        "Unit_of_Measure_Code": Unit_of_Measure_Code_list,
+        "Direct_Unit_Cost": Direct_Unit_Cost_list}
+    
+    if list_len == 1:
+        Purchase_Return_Lines_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        Purchase_Return_Lines_df = DataFrame(data=response_values_dict, columns=fields_list)
+    Purchase_Return_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Purchase_Return_Lines_df, Columns_list=["Document_No", "Line_No"], Accenting_list=[True, True]) 
+
+    Items_list = list(set(No_list))
+    return Purchase_Return_Lines_df, Items_list
+
 # ------------------- HQ_Testing_HQ_Communication ------------------- #
 def Get_HQ_Communication_Setup_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, GUI: bool=True):
     # Fields
