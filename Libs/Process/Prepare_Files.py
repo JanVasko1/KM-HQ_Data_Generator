@@ -127,12 +127,11 @@ def Process_Purchase_Orders(Settings: dict,
             if Generate_Confirmation == True:
                 if Confirmed_Lines_df.empty:
                     if GUI == True:
-                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
+                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"Confirmed_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        # TODO --> API must select one of the options
-                        pass
+                        response = "Confirmation"
                     if response == "Confirmation":    
-                        Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
+                        Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Order, Document_Type="Order", Document_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                         Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                     elif response == "Export":  
                         Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
@@ -144,10 +143,9 @@ def Process_Purchase_Orders(Settings: dict,
                 if GUI == True:
                     response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Delivery", message=f"You select to create Delivery without creation of Confirmation, do you want to use already imported Confirmation or Export data as source data for delivery?", icon="question", option_1="Confirmation", option_2="Export", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    # TODO --> API must select one of the options
-                    pass
+                    response = "Confirmation"
                 if response == "Confirmation":    
-                    Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
+                    Confirmed_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Order, Document_Type="Order", Document_Lines_df=Purchase_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                     Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
                 elif response == "Export":  
                     Exported_Lines_df, PO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration=Configuration, window=window, Purchase_Order=Purchase_Order, Purchase_Lines_df=Purchase_Lines_df, HQ_Item_Transport_Register_df=HQ_Item_Transport_Register_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
@@ -262,8 +260,7 @@ def Process_Purchase_Orders(Settings: dict,
                     if GUI == True:
                         response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="CPDI document generation.", message=f"Do you want to download Deliveries from HQ Item Transport Register related to {Purchase_Order} to make an choice?", icon="question", option_1="Download", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        # TODO --> API must select one of the options
-                        pass
+                        response = "Download"
                     if response == "Download":                    
                         import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
@@ -314,8 +311,7 @@ def Process_Purchase_Orders(Settings: dict,
                     if GUI == True:
                         response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        # TODO --> API must select one of the options
-                        pass
+                        response = "Confirm"
                     if response == "Confirm":    
                         PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
                     elif response == "Reject":  
@@ -327,8 +323,7 @@ def Process_Purchase_Orders(Settings: dict,
                 if GUI == True:
                     response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"You select to create Invoice without creation of Delivery, do you want to use already imported Delivery data as source data for Invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    # TODO --> API must select one of the options
-                    pass
+                    response = "Confirm"
                 if response == "Confirm":    
                     PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
                 elif response == "Reject":  
@@ -383,7 +378,7 @@ def Process_Purchase_Orders(Settings: dict,
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 Invoice_Content = PO_Invoices[Invoice_Index]
                 PO_Invoice_Table_Data = PO_Invoice_Table_Data_list[Invoice_Index]
-                PO_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=Invoice_Content, Table_Data=PO_Invoice_Table_Data)
+                PO_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=Invoice_Content, Document_Type="Order", Table_Data=PO_Invoice_Table_Data)
 
                 # Export 
                 # File name must be same as Invoice Number
@@ -461,7 +456,7 @@ def Process_BackBoneBilling(Settings: dict,
     # -------------------------------- Invoice PDF -------------------------------- #
     if Generate_BB_Invoice_PDF == True:
         import Libs.Process.PDF_Generator as PDF_Generator
-        BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=BB_Invoice, Table_Data=BB_Table_Data)
+        BB_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=BB_Invoice, Document_Type="Order", Table_Data=BB_Table_Data)
 
         # Export 
         # File name must be same as Invoice Number
@@ -491,6 +486,8 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                     Can_Process: bool, 
                                     Purchase_Return_Headers_df: DataFrame, 
                                     Purchase_Return_Lines_df: DataFrame, 
+                                    PRO_Return_Shipment_list: list,
+                                    PRO_Shipment_Lines_df: DataFrame,
                                     HQ_Communication_Setup_df: DataFrame, 
                                     Company_Information_df: DataFrame, 
                                     Country_ISO_Code_list: list, 
@@ -499,12 +496,13 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                     Items_Price_List_Detail_df: DataFrame, 
                                     NVR_FS_Connect_df: DataFrame, 
                                     UoM_df: DataFrame,
+                                    Tariff_Number_list: list,
                                     GUI: bool=True) -> None:
     
     # Get what should be prepared from Settings
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
-    Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
-    Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
+    Generate_PRO_Credit_Memo = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
+    Generate_PRO_Credit_Memo_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
     Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
     # Generate Purchase Return Order List
@@ -561,72 +559,97 @@ def Process_Purchase_Return_Orders(Settings: dict,
                 File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Confirmation_Header, HQ_File_Type_Path="HQ_R_O_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
             else:
                 File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
-
-
         else:
             pass
 
         # -------------------------------- Credit Memo -------------------------------- #
-        if Generate_PRO_Invoice == True:
+        if Generate_PRO_Credit_Memo == True:
             import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Header as Generate_PRO_Invoice_Header
             import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Lines as Generate_PRO_Invoice_Lines
 
+            # Define if Confirmation lines existing
+            if Generate_PRO_Confirmation == True:
+                if PRO_Confirmed_Lines_df.empty:
+                    if GUI == True:
+                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"Confirmed_Lines_df data are empty, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    else:
+                        # TODO --> API must select one of the options
+                        pass
+                    if response == "OK":    
+                        PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
+                    elif response == "Reject":  
+                        # TODO --> 
+                        pass
+                else:
+                    # Just pass as all is already prepared
+                    pass
+            else:
+                if GUI == True:
+                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"You select to create Credit Memo without creation of Confirmation, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    # TODO --> API must select one of the options
+                    pass
+                if response == "OK":    
+                    PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
+                elif response == "Reject":  
+                    # TODO --> 
+                    pass
+                    
+
             # Header
-            PO_Invoices, PO_Invoice_Number_list = Generate_PRO_Invoice_Header.Generate_Invoice_Header(Settings=Settings, 
-                                                                                                  Configuration=Configuration, 
-                                                                                                  window=window, 
-                                                                                                  Purchase_Return_Order=Purchase_Return_Order, 
-                                                                                                  Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
-                                                                                                  PRO_Confirmation_Number=PRO_Confirmation_Number, 
-                                                                                                  PO_Delivery_Number_list=PO_Delivery_Number_list, 
-                                                                                                  PO_Delivery_Date_list=PO_Delivery_Date_list,
-                                                                                                  PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
-                                                                                                  Delivery_Lines_df=Delivery_Lines_df,
-                                                                                                  Company_Information_df=Company_Information_df, 
-                                                                                                  HQ_Communication_Setup_df=HQ_Communication_Setup_df,
-                                                                                                  GUI=GUI)
+            PRO_Credit_Memos, PRO_Credit_Number_list = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
+                                                                                                                Configuration=Configuration, 
+                                                                                                                window=window, 
+                                                                                                                Purchase_Return_Order=Purchase_Return_Order, 
+                                                                                                                Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
+                                                                                                                PRO_Confirmation_Number=PRO_Confirmation_Number, 
+                                                                                                                PRO_Return_Shipment_list=PRO_Return_Shipment_list, 
+                                                                                                                PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
+                                                                                                                Company_Information_df=Company_Information_df, 
+                                                                                                                HQ_Communication_Setup_df=HQ_Communication_Setup_df,
+                                                                                                                GUI=GUI)
 
             # Lines
-            PO_Invoices, PO_Invoice_Table_Data_list = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
-                                                                                                    Configuration=Configuration, 
-                                                                                                    window=window, 
-                                                                                                    Purchase_Return_Order=Purchase_Return_Order, 
-                                                                                                    Purchase_Lines_df=Purchase_Lines_df, 
-                                                                                                    PO_Invoices=PO_Invoices,
-                                                                                                    PO_Invoice_Number_list=PO_Invoice_Number_list,
-                                                                                                    PO_Delivery_Number_list=PO_Delivery_Number_list,
-                                                                                                    Delivery_Lines_df=Delivery_Lines_df, 
-                                                                                                    PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
-                                                                                                    Items_df=Items_df,
-                                                                                                    Items_Price_List_Detail_df=Items_Price_List_Detail_df,
-                                                                                                    Country_ISO_Code_list=Country_ISO_Code_list,
-                                                                                                    Tariff_Number_list=Tariff_Number_list,
-                                                                                                    GUI=GUI)
+            PRO_Credit_Memos, PRO_Credit_Memo_Table_Data_list = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+                                                                                                                Configuration=Configuration, 
+                                                                                                                window=window, 
+                                                                                                                Purchase_Return_Order=Purchase_Return_Order, 
+                                                                                                                Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
+                                                                                                                PRO_Credit_Memos=PRO_Credit_Memos,
+                                                                                                                PRO_Credit_Number_list=PRO_Credit_Number_list,
+                                                                                                                PRO_Return_Shipment_list=PRO_Return_Shipment_list,
+                                                                                                                PRO_Shipment_Lines_df=PRO_Shipment_Lines_df, 
+                                                                                                                PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
+                                                                                                                Items_df=Items_df,
+                                                                                                                Items_Price_List_Detail_df=Items_Price_List_Detail_df,
+                                                                                                                Country_ISO_Code_list=Country_ISO_Code_list,
+                                                                                                                Tariff_Number_list=Tariff_Number_list,
+                                                                                                                GUI=GUI)
 
             # Export 
-            for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
-                Invoice_Content = PO_Invoices[Invoice_Index]
-                Invoice_File_Name = f"INVOIC02_{Invoice_Number}_Test"
+            for Credit_Memo_Index, Credit_Memo_Number in enumerate(PRO_Credit_Number_list):
+                Credit_Memo_Content = PRO_Credit_Memos[Credit_Memo_Index]
+                Credit_Memo_File_Name = f"INVOIC02_{Credit_Memo_Number}_Test"
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Credit_Memo_Content, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Credit_Memo_Content, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
 
-        # -------------------------------- Invoice PDF -------------------------------- #
-        if Generate_PRO_Invoice_PDF == True:
+        # -------------------------------- Credit Memo PDF -------------------------------- #
+        if Generate_PRO_Credit_Memo_PDF == True:
             import Libs.Process.PDF_Generator as PDF_Generator
-            for Invoice_Index, Invoice_Number in enumerate(PRO_Invoice_Number_list):
-                Invoice_Content = PRO_Invoices[Invoice_Index]
-                PRO_Invoice_Table_Data = PRO_Invoice_Table_Data_list[Invoice_Index]
-                PRO_Invoice_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Invoice=Invoice_Content, Table_Data=PRO_Invoice_Table_Data)
+            for Credit_Memo_Index, Credit_Memo_Number in enumerate(PRO_Credit_Number_list):
+                Credit_Memo_Content = PRO_Credit_Memos[Credit_Memo_Index]
+                PRO_Credit_Memo_Table_Data = PRO_Credit_Memo_Table_Data_list[Credit_Memo_Index]
+                PRO_Credit_Memo_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=Credit_Memo_Content, Document_Type="Return Order", Table_Data=PRO_Credit_Memo_Table_Data)
 
                 # Export 
-                # File name must be same as Invoice Number
+                # File name must be same as Credit Memo Number
                 if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Credit_Memo_Number, File_suffix="pdf", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo_PDF, File_Name=Credit_Memo_Number, File_suffix="pdf", GUI=GUI)
         else:
             pass

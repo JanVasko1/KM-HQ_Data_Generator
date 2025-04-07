@@ -45,25 +45,35 @@ def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame, Items_df: Data
 
     return Confirmed_Lines_df
 
-def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order: str, Purchase_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
+def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str, Environment: str, Company: str, Document_Number: str, Document_Type: str, Document_Lines_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:
     import Libs.Downloader.NAV_OData_API as NAV_OData_API
     
     Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "PO_UoM"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
 
     # HQ_Testing_HQ_Item_Transport_Register
-    HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Confirmation", GUI=GUI)
+    HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Document_Number], Document_Type=Document_Type, Vendor_Document_Type="Confirmation", GUI=GUI)
     if HQ_Confirmed_Lines_df.empty:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            if Document_Type == "Order":
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Document_Number} during preparation of Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            elif Document_Type == "Return Order":
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Confirmation for {Document_Number} during preparation of Return Credit Memo.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                pass
         else:
-            raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Purchase_Order} during preparation of Delivery.")
+            if Document_Type == "Order":
+                raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Document_Number} during preparation of Delivery.")
+            elif Document_Type == "Return Order":
+                raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Document_Number} during preparation of Return Credit Memo.")
+            else:
+                pass
     else:
         PO_Confirmation_Number = HQ_Confirmed_Lines_df.iloc[0]["Vendor_Document_No"]
 
         # Preparation
-        mask_Purch_Line = Purchase_Lines_df["Document_No"] == Purchase_Order
-        Purchase_Lines_df_Filtered = DataFrame(Purchase_Lines_df[mask_Purch_Line])
+        mask_Purch_Line = Document_Lines_df["Document_No"] == Document_Number
+        Purchase_Lines_df_Filtered = DataFrame(Document_Lines_df[mask_Purch_Line])
 
         # Assing Data to Dataframe
         Exported_Items_list = HQ_Confirmed_Lines_df["Item_No"].to_list()
@@ -126,6 +136,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
         Confirmed_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
         Confirmed_Lines_df.reset_index(drop=True, inplace=True)
 
+    print(Confirmed_Lines_df)
     return Confirmed_Lines_df, PO_Confirmation_Number
 
 def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:

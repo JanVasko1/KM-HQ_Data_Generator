@@ -27,6 +27,8 @@ def Progress_Bar_set(window: CTk|None, Progress_Bar: CTkProgressBar|None, value:
 def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: str, NOC: str, Environment: str, Companies_Frame_Var: CTkScrollableDropdown) -> list:
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
     Companies_list = []
+    # To clean before new list applied
+    Companies_Frame_Var.configure(values=Companies_list)
 
     access_token = Authorization.Azure_OAuth(Configuration=Configuration, window=window, client_id=client_id, client_secret=client_secret, tenant_id=tenant_id)
     headers = {
@@ -708,13 +710,15 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
-        Progress_Bar.configure(determinate_speed = round(number=50 / 9, ndigits=3), progress_color="#517A31")
+        Progress_Bar.configure(determinate_speed = round(number=50 / 12, ndigits=3), progress_color="#517A31")
     else:
         pass
     Can_Process = True
 
     Purchase_Return_Headers_df = DataFrame()
     Purchase_Return_Lines_df = DataFrame()
+    PRO_Return_Shipment_list = []
+    PRO_Shipment_Lines_df = DataFrame()
     HQ_Communication_Setup_df = DataFrame()
     Company_Information_df = DataFrame()
     Country_ISO_Code_list = []
@@ -722,6 +726,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     Items_df = DataFrame()
     Items_Price_List_Detail_df = DataFrame()
     NVR_FS_Connect_df = DataFrame()
+    Tariff_Number_list = []
     UoM_df = DataFrame()
 
     # Headers for all pages
@@ -811,6 +816,29 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
+    # PRO_Return_Shipment_list
+    if Can_Process == True:
+        PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
+        if GUI == True:
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+        else:
+            pass
+    else:
+        pass
+
+    # HQ_Testing_PRO_Ship_Lines
+    if Can_Process == True:
+        PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
+        # Drop Duplicate rows amd reset index
+        PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
+        PRO_Shipment_Lines_df.reset_index(drop=True, inplace=True)
+        if GUI == True:
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+        else:
+            pass
+    else:
+        pass
+
     # HQ_Testing_HQ_Item_Transport_Register
     if Can_Process == True:
         HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Return_Orders_List, Document_Type="Return Order", Vendor_Document_Type="Export", GUI=GUI)
@@ -865,6 +893,16 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
+    # HQ_Testing_Tariff_Numbers
+    if Can_Process == True:
+        Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
+        if GUI == True:
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+        else:
+            pass
+    else:
+        pass
+
     # HQ_Testing_Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
@@ -907,6 +945,8 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             Can_Process=Can_Process, 
             Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
             Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
+            PRO_Return_Shipment_list=PRO_Return_Shipment_list,
+            PRO_Shipment_Lines_df=PRO_Shipment_Lines_df,
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
             Company_Information_df=Company_Information_df, 
             Country_ISO_Code_list=Country_ISO_Code_list, 
@@ -915,6 +955,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             Items_Price_List_Detail_df=Items_Price_List_Detail_df, 
             NVR_FS_Connect_df=NVR_FS_Connect_df, 
             UoM_df=UoM_df,
+            Tariff_Number_list=Tariff_Number_list, 
             GUI=GUI)
     else:
         if GUI == True:

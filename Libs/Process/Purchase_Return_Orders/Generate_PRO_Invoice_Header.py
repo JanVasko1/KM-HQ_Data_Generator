@@ -10,7 +10,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
+def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Return_Order: str, mask_Purchase_Return_Header: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, Confirmed_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -33,8 +33,8 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
     PO_Invoice_Date_list = []
 
     # Filter Dataframes by Purchase Order
-    mask_Purchase_Header = Purchase_Headers_df["No"] == Purchase_Order
-    Purchase_Headers_df_Filtered = DataFrame(Purchase_Headers_df[mask_Purchase_Header])
+    mask_Purchase_Return_Header = mask_Purchase_Return_Header["No"] == Purchase_Return_Order
+    Purchase_Headers_df_Filtered = DataFrame(mask_Purchase_Return_Header[mask_Purchase_Return_Header])
 
     # --------------------------------------------- Preparation based on Delivery --------------------------------------------- #
     Invoice_Count = len(PO_Delivery_Number_list)
@@ -288,17 +288,17 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
         for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_id"] = Purchase_Order
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["supplier_order_id"] = PO_Confirmation_Number
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_date"] = Delivery_Lines_df.iloc[0]["order_date"]
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["order_date"] = # Take from Confirmation
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["delivery_note_id"] = PO_Delivery_Number_list[Invoice_Index]
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["delivery_note_date"] = PO_Delivery_Date_list[Invoice_Index]
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["order_history"]["delivery_note_date"] = # Take from Generation Date
     else:
         pass
 
     # --------------------------------------------- Order Date --------------------------------------------- #
     if Can_Continue == True:
         for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_start_date"] = PO_Delivery_Date_list[Invoice_Index]
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_end_date"] = PO_Delivery_Date_list[Invoice_Index]
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_start_date"] = # Take from Generation Date
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_end_date"] = # Take from Generation Date
     else:
         pass
 

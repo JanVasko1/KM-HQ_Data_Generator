@@ -9,7 +9,7 @@ import Libs.GUI.Pages.P_CPDI as P_CPDI
 import Libs.GUI.Pages.P_PreAdvice as P_PreAdvice
 import Libs.GUI.Pages.P_Delivery as P_Delivery
 import Libs.GUI.Pages.P_Invoice as P_Invoice
-import Libs.GUI.Pages.P_IAL as P_IAL
+import Libs.GUI.Pages.P_Information as P_Information
 import Libs.GUI.Pages.P_Settings as P_Settings
 
 import Libs.Data_Functions as Data_Functions
@@ -38,7 +38,7 @@ class SidebarApp:
                         "PreAdvice", 
                         "Delivery", 
                         "Invoice", 
-                        "IAL", 
+                        "Information", 
                         "Settings",
                         "Close"]
         
@@ -48,7 +48,7 @@ class SidebarApp:
                       "package-check", 
                       "truck", 
                       "file-text",
-                      "coins",
+                      "info",
                       "settings",
                       "power"]
         
@@ -58,7 +58,7 @@ class SidebarApp:
                         "PreAdvice setup page.", 
                         "Delivery setup page.", 
                         "Invoice setup page.",
-                        "IAL setup page.",
+                        "Program Information page.",
                         "Application settings page.",
                         "Close application."]
         
@@ -140,8 +140,8 @@ class SidebarApp:
             self.Show_Delivery_Page()
         elif button_name == "Invoice":
             self.Show_Invoice_Page()
-        elif button_name == "IAL":
-            self.Show_IAL_Page()
+        elif button_name == "Information":
+            self.Show_Information_Page()
         elif button_name == "Settings":
             self.Show_Settings_Page()
         elif button_name == "Close":
@@ -178,15 +178,14 @@ class SidebarApp:
         self.Clear_Frame(Pre_Working_Frame=self.Frame_Work_Area_Main)
         P_Invoice.Page_Invoice(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Work_Area_Main)
         
-    def Show_IAL_Page(self) -> None:
+    def Show_Information_Page(self) -> None:
         self.Clear_Frame(Pre_Working_Frame=self.Frame_Work_Area_Main)
-        P_IAL.Page_IAL(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Work_Area_Main)
+        P_Information.Page_Information(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Work_Area_Main)
         
     def Show_Settings_Page(self) -> None:
         self.Clear_Frame(Pre_Working_Frame=self.Frame_Work_Area_Main)
         P_Settings.Page_Settings(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Work_Area_Main)
         
-
     def Show_Close_Page(self) -> None:
         # Delete Operational data from Settings
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=self.Documents, window=self.window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")

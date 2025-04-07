@@ -74,7 +74,8 @@ def Get_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Docum
             html_markdown=markdown(text=file.read())
         file.close()
 
-        Information_html = HTMLLabel(Frame_Information_Scrollable_Area, html=html_markdown, background=HTML_Background_Color, font=("Roboto", 11), fg=HTML_Font_Color,)
+        Information_html = HTMLLabel(Frame_Information_Scrollable_Area, html=f"""<p style="color: {HTML_Font_Color};">{html_markdown}</p>""", background=HTML_Background_Color, font=("Roboto", 11))
+        Information_html.configure(height=210)
 
         # Build look of Widget
         Frame_Main.pack(side="top", fill="y", expand=False, padx=10, pady=10)

@@ -1,9 +1,9 @@
 from fpdf import FPDF
 
-def Generate_PDF(Settings: dict, Configuration: dict|None, Invoice: dict, Table_Data: list) -> FPDF:
+def Generate_PDF(Settings: dict, Configuration: dict|None, Document_Content: dict, Document_Type: str, Table_Data: list) -> FPDF:
     # ---------------------------- Defaults ----------------------------#
-    Invoice_Number = Invoice["invoice"]["invoice_header"]["invoice_info"]["invoice_id"]
-    Invoice_Date = Invoice["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] 
+    Document_Number = Document_Content["invoice"]["invoice_header"]["invoice_info"]["invoice_id"]
+    Document_Date = Document_Content["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] 
 
     class PDF(FPDF):
         def header(self):
@@ -14,7 +14,12 @@ def Generate_PDF(Settings: dict, Configuration: dict|None, Invoice: dict, Table_
             # Moving cursor to the right:
             self.cell(40)
             # Printing title:
-            header_text = f"Invoice: {Invoice_Number}\nInvoice date: {Invoice_Date}"
+            if Document_Type == "Order":
+                header_text = f"Invoice: {Document_Number}\nInvoice date: {Document_Date}"
+            elif Document_Type == "Return Order":
+                header_text = f"Credit Memo: {Document_Number}\nCredit Memo date: {Document_Date}"
+            else:
+                header_text = f"Invoice: {Document_Number}\nInvoice date: {Document_Date}"
             self.multi_cell(0, 10, header_text, 0, '')
             self.ln(10)
 

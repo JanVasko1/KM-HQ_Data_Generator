@@ -391,6 +391,84 @@ def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, hea
     Items_list = list(set(No_list))
     return Purchase_Return_Lines_df, Items_list
 
+# ------------------- HQ_Testing_PRO_Ship_Header ------------------- #
+def Get_Purchase_Ret_Shipment_list(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Return_Orders_List: list, HQ_Vendors_list: list, GUI: bool=True) -> list:
+    # Fields
+    fields_list = ["No"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Return_Orders = Get_Field_List_string(fields_list=Purchase_Return_Orders_List, Join_sign="','")
+    filters_list_string = f"""Return_Order_No in ('{filters_Return_Orders}')"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, window=window, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_PRO_Ship_Header", GUI=GUI)
+
+    # Prepare DataFrame
+    PRO_Return_Shipment_list = []
+    for index in range(0, list_len):
+        PRO_Return_Shipment_list.append(response_values_List[index]["No"])
+    
+    return PRO_Return_Shipment_list
+
+# ------------------- HQ_Testing_PRO_Ship_Lines ------------------- #
+def Get_Purchase_Ret_Shipment_Lines_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, PRO_Return_Shipment_list: list, GUI: bool=True) -> DataFrame:
+    # Fields
+    fields_list = ["Document_No", "Type", "Line_No", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
+    fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
+
+    # Filters
+    filters_Shipments = Get_Field_List_string(fields_list=PRO_Return_Shipment_list, Join_sign="','")
+    filters_list_string = f"""Document_No in ('{filters_Shipments}') and Type eq 'Item' and Quantity gt 0"""
+
+    # Params
+    params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
+
+    # Request
+    response_values_List, list_len = Request_Endpoint(Configuration=Configuration, window=window, headers=headers, params=params, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Table="HQ_Testing_PRO_Ship_Lines", GUI=GUI)
+
+    # Prepare DataFrame
+    Return_Order_No_list = []
+    Document_No_list = []
+    Type_list = []
+    Line_No_list = []
+    No_list = []
+    Description_list = []
+    Quantity_list = []
+    Unit_of_Measure_Code_list = []
+    Direct_Unit_Cost_list = []
+
+    for index in range(0, list_len):
+        Document_No_list.append(response_values_List[index]["Document_No"])
+        Type_list.append(response_values_List[index]["Type"])
+        Line_No_list.append(response_values_List[index]["Line_No"])
+        No_list.append(response_values_List[index]["No"])
+        Description_list.append(response_values_List[index]["Description"])
+        Quantity_list.append(response_values_List[index]["Quantity"])
+        Unit_of_Measure_Code_list.append(response_values_List[index]["Unit_of_Measure_Code"])
+        Direct_Unit_Cost_list.append(response_values_List[index]["Direct_Unit_Cost"])
+
+    response_values_dict = {
+        "Document_No": Document_No_list,
+        "Type": Type_list,
+        "Line_No": Line_No_list,
+        "No": No_list,
+        "Description": Description_list,
+        "Quantity": Quantity_list,
+        "Unit_of_Measure_Code": Unit_of_Measure_Code_list,
+        "Direct_Unit_Cost": Direct_Unit_Cost_list}
+    
+    if list_len == 1:
+        PRO_Shipment_Lines_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])
+    else:
+        PRO_Shipment_Lines_df = DataFrame(data=response_values_dict, columns=fields_list)
+    PRO_Shipment_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=PRO_Shipment_Lines_df, Columns_list=["Document_No", "Line_No"], Accenting_list=[True, True]) 
+
+    return PRO_Shipment_Lines_df
+
 # ------------------- HQ_Testing_HQ_Communication ------------------- #
 def Get_HQ_Communication_Setup_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, GUI: bool=True):
     # Fields

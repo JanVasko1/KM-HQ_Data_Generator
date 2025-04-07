@@ -415,15 +415,26 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         else:
             pass
 
+    def Block_Preadvice() ->  None:
+        if Generate_DEL_Variable.get() == False:
+            Generate_PRA_Variable.set(value=False)
+            Generate_PREA_Row.Change_Value()
+        else:
+            pass
+
     # Fields
     Generate_Conf_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Confirmation", Variable=Generate_CON_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Purchase_Order", "Use"])
     Generate_CPDI_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="CPDI", Variable=Generate_CPD_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "CPDI", "Use"])
     Generate_PREA_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="PreAdvice", Variable=Generate_PRA_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "PreAdvice", "Use"])
-    Generate_DEL_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Delivery", Variable=Generate_DEL_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Use"])
+    
+    DEL_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_PREA_Row]])
+    Generate_DEL_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Delivery", Variable=Generate_DEL_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Use"], Field_list=[Generate_PREA_Row], Field_Blocking_dict=DEL_Fields_Blocking_dict)
+    Generate_DEL_Row.Local_function_list = [Block_Preadvice]
+
     Generate_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice PDF", Variable=Generate_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "PDF", "Generate"])
 
-    Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_INV_PDF_Row]])
-    Generate_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Field_list=[Generate_INV_PDF_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+    INV_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_INV_PDF_Row]])
+    Generate_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PO, window=window, Field_Frame_Type="Half_size", Label="Invoice", Variable=Generate_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Use"], Field_list=[Generate_INV_PDF_Row], Field_Blocking_dict=INV_Fields_Blocking_dict)
     Generate_INV_Row.Local_function_list = [Block_Invoice_PDF]
 
     # -------- Select One -------- #

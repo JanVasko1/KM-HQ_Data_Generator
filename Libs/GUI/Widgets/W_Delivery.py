@@ -18,16 +18,16 @@ def DEL_Count(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
     Del_Count_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Delivery Count", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Definition how many Deliveries will be created.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
-    DEL_Random_Max_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Maximal count", Value=Random_Max_count, placeholder_text="Maximal delivery Count.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Validation="Integer")
-    
-    Del_Count_Fix_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Count_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
     DEL_Count_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed count", Value=Fixed_Count, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Fixed_Options", "Count"], Validation="Integer")
 
+    Del_Count_Random_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Count_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Random Count", Label_Size="Field_Label", Font_Size="Section_Separator")
+    DEL_Random_Max_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Maximal count", Value=Random_Max_count, placeholder_text="Maximal delivery Count.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Random_Options", "Random_Max_count"], Validation="Integer")
+    
     Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Random", "Prompt"], Freeze_fields=[[],[DEL_Count_FIX_Row],[DEL_Count_FIX_Row]])
     DEL_Count_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Count_Method_Variable, Values=DEL_Count_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Method"], Field_list=[DEL_Random_Max_Row, DEL_Count_FIX_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
     # Add Fields to Widget Body
-    Del_Count_Widget.Add_row(Rows=[DEL_Count_Row, DEL_Random_Max_Row, Del_Count_Fix_Section_Row, DEL_Count_FIX_Row])
+    Del_Count_Widget.Add_row(Rows=[DEL_Count_Row, DEL_Count_FIX_Row, DEL_Random_Max_Row, Del_Count_Random_Section_Row])
 
     return Del_Count_Widget
 
@@ -44,7 +44,6 @@ def DEL_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame
     Del_Number_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Delivery Number.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
-    Del_Fix_Num_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Number", Label_Size="Field_Label", Font_Size="Section_Separator")
     NUM_CON_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=Fixed_Number, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Fixed_Options", "Number"])
 
     Del_Auto_Num_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
@@ -54,7 +53,7 @@ def DEL_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame
     DEL_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Numbers_Method_Variable, Values=Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Number", "Method"], Field_list=[AUT_Prefix_Row, NUM_CON_FIX_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
     # Add Fields to Widget Body
-    Del_Number_Widget.Add_row(Rows=[DEL_Number_Row, Del_Fix_Num_Section_Row, NUM_CON_FIX_Row, Del_Auto_Num_Section_Row, AUT_Prefix_Row])
+    Del_Number_Widget.Add_row(Rows=[DEL_Number_Row, NUM_CON_FIX_Row, Del_Auto_Num_Section_Row, AUT_Prefix_Row])
 
     return Del_Number_Widget
 
@@ -94,7 +93,6 @@ def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Fr
     Del_Dates_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Delivery Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Delivery Date for PreAdvice.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
-    Fixed_Date_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Fixed Date", Label_Size="Field_Label", Font_Size="Section_Separator")
     DEL_Fixed_Date_Row = WidgetRow_Date_Picker(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Date", Date_format=Date_Format, Value=DEL_Fix_Date, placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Fixed_Options", "Fix_Date"], Button_ToolTip="Date Picker.", Picker_Always_on_Top=True, Validation="Date", GUI_Level_ID=GUI_Level_ID + 1)
 
     Interval_Date_Section_Row = Widget_Section_Row(Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Interval Date", Label_Size="Field_Label", Font_Size="Section_Separator")
@@ -105,7 +103,7 @@ def Delivery_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Fr
     Delivery_Date_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Dates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=Delivery_Dates_Method_Variable, Values=Delivery_Dates_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Date", "Method"], Field_list=[DEL_Fixed_Date_Row, DEL_Random_From_Row, DEL_Random_To_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
     # Add Fields to Widget Body
-    Del_Dates_Widget.Add_row(Rows=[Delivery_Date_Method_Row, Fixed_Date_Section_Row, DEL_Fixed_Date_Row, Interval_Date_Section_Row, DEL_Random_From_Row, DEL_Random_To_Row])
+    Del_Dates_Widget.Add_row(Rows=[Delivery_Date_Method_Row, DEL_Fixed_Date_Row, Interval_Date_Section_Row, DEL_Random_From_Row, DEL_Random_To_Row])
 
     return Del_Dates_Widget
 
@@ -222,7 +220,7 @@ def Packages_Numbers(Settings: dict, Configuration: dict|None, window: CTk|None,
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    Del_PACK_Num_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Numbers creation logic.", GUI_Level_ID=GUI_Level_ID)
+    Del_PACK_Num_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Package Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Package numbers creation logic.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
     DEL_PACK_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=Del_PACK_Num_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=Pack_Fixed_Number, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Tracking_Information", "Packages", "Number", "Fixed_Options", "Fixed_Package_No"])

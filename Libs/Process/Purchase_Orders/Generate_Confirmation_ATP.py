@@ -120,7 +120,7 @@ def Generate_PO_ATP_CON_Lines(Settings: dict, Configuration: dict|None, window: 
                 ATP_ONB_week = Defaults_Lists.Date_str_to_Week_str(Date_str=ATP_ONB_Date, Format=Date_format)
                 Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Lines_ATP_df, conditions=ONB_conditions, Set_Column="date", Set_Value=ATP_ONB_week)
 
-            elif ATP_Quantity_Method != "All BackOrder":
+            if ATP_Quantity_Method != "All BackOrder":
                 # Create ATP Dictionary
                 PO_ATP_Lines = []
                 Lines_ATP_df["quantity"] = Lines_ATP_df["quantity"].round(2)
