@@ -79,6 +79,14 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
     Frame_PRO_Column_B = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PCM, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_PRO_Column_B.pack_propagate(flag=False)
 
+    PRO_INV_Number_Widget = W_Invoice.PRO_INV_Number(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PRO_INV_Price_Widget = W_Invoice.PRO_Price_Currency(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PRO_INV_Plant_Widget = W_Invoice.PRO_Plant(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_A, GUI_Level_ID=2)
+    PRO_INV_Date_Widget = W_Invoice.PRO_Invoice_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PRO_INV_Origin_Widget = W_Invoice.PRO_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+    PRO_INV_Tariff_Widget = W_Invoice.PRO_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+
+
     # ------------------------- Build look of Widget-------------------------#
     Frame_Invoice_Work_Area_Main.pack(side="top", fill="both", expand=True, padx=0, pady=0)
     TabView.pack(side="top", fill="both", expand=True, padx=10, pady=10)
@@ -111,3 +119,9 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
 
     Frame_PRO_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_PRO_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    PRO_INV_Number_Widget.Show()
+    PRO_INV_Price_Widget.Show()
+    PRO_INV_Plant_Widget.Show()
+    PRO_INV_Date_Widget.Show()
+    PRO_INV_Origin_Widget.Show()
+    PRO_INV_Tariff_Widget.Show()

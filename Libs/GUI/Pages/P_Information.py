@@ -37,7 +37,7 @@ def Page_Information(Settings: dict, Configuration: dict, window: CTk|None, Fram
     file.close()
 
     Information_html = HTMLLabel(Frame_Information_Scrollable_Area, html=f"""<p style="color: {HTML_Font_Color};">{html_markdown}</p>""", background=HTML_Background_Color, font="Roboto")
-    Information_html.configure(height=800)
+    Information_html.configure(height=850)
 
     # Build look of Widget
     Frame_Information_Scrollable_Area.pack(side="top", fill="both", expand=True, padx=10, pady=10)

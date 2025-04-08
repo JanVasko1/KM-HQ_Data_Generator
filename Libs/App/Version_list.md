@@ -4,6 +4,10 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.8.2
+- automatically delete unnecessary files with installation
+- delete whole app folder after uninstallation
+
 #### 0.8.1
 - Information page created
 - markdown color based on theme issue corrected

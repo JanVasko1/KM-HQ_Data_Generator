@@ -501,8 +501,8 @@ def Process_Purchase_Return_Orders(Settings: dict,
     
     # Get what should be prepared from Settings
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
-    Generate_PRO_Credit_Memo = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
-    Generate_PRO_Credit_Memo_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
+    Generate_PRO_Credit_Memo = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Use"]
+    Generate_PRO_Credit_Memo_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["PDF"]["Generate"]
     Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
     # Generate Purchase Return Order List

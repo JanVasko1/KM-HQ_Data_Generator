@@ -538,8 +538,8 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # ---------------- Purchase Return Order Tab ---------------- #
     Generate_PRO_Confirmation = Settings["0"]["HQ_Data_Handler"]["Confirmation"]["Return_Order"]["Use"]
-    Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["Use"]
-    Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Credit_Memo"]["PDF"]["Generate"]
+    Generate_PRO_Invoice = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Use"]
+    Generate_PRO_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["PDF"]["Generate"]
 
     Generate_PRO_CON_Variable = BooleanVar(master=Frame, value=Generate_PRO_Confirmation, name="Generate_PRO_CON_Variable")
     Generate_PRO_INV_Variable = BooleanVar(master=Frame, value=Generate_PRO_Invoice, name="Generate_PRO_INV_Variable")
@@ -562,9 +562,9 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # Fields
     Generate_PRO_Conf_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Confirmation", Variable=Generate_PRO_CON_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Confirmation", "Return_Order", "Use"])
-    Generate_PRO_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo PDF", Variable=Generate_PRO_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "PDF", "Generate"])
+    Generate_PRO_INV_PDF_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo PDF", Variable=Generate_PRO_INV_PDF_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "PDF", "Generate"])
     Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[Generate_PRO_INV_PDF_Row]])
-    Generate_PRO_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo", Variable=Generate_PRO_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Credit_Memo", "Use"], Field_list=[Generate_PRO_INV_PDF_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+    Generate_PRO_INV_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=Tab_PRO, window=window, Field_Frame_Type="Half_size", Label="Credit Memo", Variable=Generate_PRO_INV_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Use"], Field_list=[Generate_PRO_INV_PDF_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
     Generate_PRO_INV_Row.Local_function_list = [Block_PRO_Invoice_PDF]
 
     Generate_PRO_Conf_Row.Show()

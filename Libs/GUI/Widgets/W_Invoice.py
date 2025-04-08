@@ -6,6 +6,7 @@ from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_Input_Entry, W
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
+# --------------------------------------------------------------------------- Purchase Orders ---------------------------------------------------------------------------#
 def PO_INV_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Number"]["Method"]
@@ -153,6 +154,7 @@ def PO_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
 
     return PO_INV_Tariff_Widget
 
+# --------------------------------------------------------------------------- BackBone Billing Invoices ---------------------------------------------------------------------------#
 def BB_INV_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
     # ---------------------------- Defaults ----------------------------#
     BB_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["BackBone_Billing"]["Number"]["Method"]
@@ -360,3 +362,150 @@ def BB_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
     BB_INV_Tariff_Widget.Add_row(Rows=[BB_Tariff_Method_Row, BB_Fixed_Tariff_Row])
 
     return BB_INV_Tariff_Widget
+
+# --------------------------------------------------------------------------- Purchase Return Order ---------------------------------------------------------------------------#
+def PRO_INV_Number(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Number"]["Method"]
+    PRO_Numbers_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Number"]["Methods_List"])
+    PRO_Automatic_Prefix = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Number"]["Automatic_Options"]["Prefix"]
+    PRO_Fixed_Number = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Number"]["Fixed_Options"]["Number"]
+
+    PRO_Numbers_Method_Variable = StringVar(master=Frame, value=PRO_Numbers_Method, name="PRO_Numbers_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Number_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Numbers", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will build Credit Memo Number.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_NUM_INV_FIX_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Number", Value=PRO_Fixed_Number, placeholder_text="Manual Number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Number", "Fixed_Options", "Number"])
+
+    Section_Row = Widget_Section_Row(Configuration=Configuration, master=PRO_INV_Number_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Automatic Setup", Label_Size="Field_Label", Font_Size="Section_Separator")
+    PRO_AUT_Prefix_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Prefix", Value=PRO_Automatic_Prefix, placeholder_text="Prefix for unique number.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Number", "Automatic_Options", "Prefix"])
+
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Automatic", "Prompt"], Freeze_fields=[[PRO_AUT_Prefix_Row],[PRO_NUM_INV_FIX_Row],[PRO_NUM_INV_FIX_Row, PRO_AUT_Prefix_Row]])
+    PRO_INV_Number_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Number_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Numbers_Method_Variable, Values=PRO_Numbers_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Number", "Method"], Field_list=[PRO_NUM_INV_FIX_Row, PRO_AUT_Prefix_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Number_Widget.Add_row(Rows=[PRO_INV_Number_Row, PRO_NUM_INV_FIX_Row, Section_Row, PRO_AUT_Prefix_Row])
+
+    return PRO_INV_Number_Widget
+
+def PRO_Price_Currency(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Currency_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Currency"]["Method"]
+    PRO_Currency_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Currency"]["Methods_List"])
+    PRO_Fixed_Currency = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Currency"]["Fixed_Options"]["Fix_Currency"]
+    PRO_Price_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Prices"]["Method"]
+    PRO_Price_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Prices"]["Methods_List"])
+    PRO_Price_Method_Variable = StringVar(master=Frame, value=PRO_Price_Method, name="PRO_Price_Method_Variable")
+    PRO_Currency_Method_Variable = StringVar(master=Frame, value=PRO_Currency_Method, name="PRO_Currency_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Price_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Price and Currency", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define price and currency in Credit Memo.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_Prices_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Price", Variable=PRO_Price_Method_Variable, Values=PRO_Price_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Prices", "Method"], GUI_Level_ID=GUI_Level_ID) 
+    PRO_Fixed_Currency_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Currency", Value=PRO_Fixed_Currency, placeholder_text="Manual Currency.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Currency", "Fixed_Options", "Fix_Currency"])
+    PRO_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Purchase Return Order", "From Confirmation"], Freeze_fields=[[],[PRO_Fixed_Currency_Row],[PRO_Fixed_Currency_Row]])
+    PRO_Currency_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Price_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Currency", Variable=PRO_Currency_Method_Variable, Values=PRO_Currency_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Currency", "Method"], Field_list=[PRO_Fixed_Currency_Row], Field_Blocking_dict=PRO_Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Price_Widget.Add_row(Rows=[PRO_Prices_Method_Row, PRO_Currency_Method_Row, PRO_Fixed_Currency_Row])
+
+    return PRO_INV_Price_Widget
+
+def PRO_Invoice_Date(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Date_Format = Settings["0"]["General"]["Formats"]["Date"]
+    PRO_Posting_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Invoice_Date"]["Method"]
+    PRO_Posting_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Invoice_Date"]["Methods_List"])
+    PRO_INV_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Invoice_Date"]["Fixed_Options"]["Fix_Date"]
+    PRO_INV_Rand_From_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Invoice_Date"]["Random_Options"]["From"]
+    PRO_INV_Rand_To_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Invoice_Date"]["Random_Options"]["To"]
+    PRO_Posting_Date_Method_Variable = StringVar(master=Frame, value=PRO_Posting_Date_Method, name="PRO_Posting_Date_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Date_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Invoice Date", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program define Vendor Invoice Date.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_INV_Fixed_Date_Row = WidgetRow_Date_Picker(Settings=Settings, Configuration=Configuration, master=PRO_INV_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Date", Date_format=Date_Format, Value=PRO_INV_Fix_Date, placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Invoice_Date", "Fixed_Options", "Fix_Date"], Button_ToolTip="Date Picker.", Picker_Always_on_Top=True, Validation="Date", GUI_Level_ID=GUI_Level_ID + 1)
+
+    Section_Row = Widget_Section_Row(Configuration=Configuration, master=PRO_INV_Date_Widget.Body_Frame, Field_Frame_Type="Single_Column", Label="Random Date interval", Label_Size="Field_Label", Font_Size="Section_Separator")
+    PRO_INV_Random_From_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Date - From CD +", Value=PRO_INV_Rand_From_Date, placeholder_text="Number of Days", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Invoice_Date", "Random_Options", "From"], Validation="Integer")
+    PRO_INV_Random_To_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Date - To CD +", Value=PRO_INV_Rand_To_Date, placeholder_text="Number of Days", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Invoice_Date", "Random_Options", "To"], Validation="Integer")
+
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Random", "Today", "Prompt"], Freeze_fields=[[PRO_INV_Random_From_Row, PRO_INV_Random_To_Row],[PRO_INV_Fixed_Date_Row],[PRO_INV_Fixed_Date_Row, PRO_INV_Random_From_Row, PRO_INV_Random_To_Row],[PRO_INV_Fixed_Date_Row, PRO_INV_Random_From_Row, PRO_INV_Random_To_Row]])
+    PRO_Invoice_Date_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Date_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Posting_Date_Method_Variable, Values=PRO_Posting_Date_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Invoice_Date", "Method"], Field_list=[PRO_INV_Fixed_Date_Row, PRO_INV_Random_From_Row, PRO_INV_Random_To_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Date_Widget.Add_row(Rows=[PRO_Invoice_Date_Method_Row, PRO_INV_Fixed_Date_Row, Section_Row, PRO_INV_Random_From_Row, PRO_INV_Random_To_Row])
+
+    return PRO_INV_Date_Widget
+
+def PRO_Plant(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Inv_Plant_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Plants"]["Method"]
+    PRO_Inv_Plant_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Plants"]["Methods_List"])
+    PRO_Inv_Fixed_Plant = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Plants"]["Fixed_Options"]["Fixed_Plant"]
+    PRO_Inv_Fixed_Plants_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Plants"]["Fixed_Options"]["Plants_List"])
+    PRO_Inv_Plant_Method_Variable = StringVar(master=Frame, value=PRO_Inv_Plant_Method, name="PRO_Inv_Plant_Method_Variable")
+    PRO_Inv_Fixed_Plant_Variable = StringVar(master=Frame, value=PRO_Inv_Fixed_Plant, name="PRO_Inv_Fixed_Plant_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Plant_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Plants", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Plants assignment details.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_INV_Plant_Fixed_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Plant_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Plant", Variable=PRO_Inv_Fixed_Plant_Variable, Values=PRO_Inv_Fixed_Plants_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Plants", "Fixed_Options", "Fixed_Plant"], GUI_Level_ID=GUI_Level_ID) 
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Random", "Empty", "Prompt"], Freeze_fields=[[],[PRO_INV_Plant_Fixed_Row],[PRO_INV_Plant_Fixed_Row],[PRO_INV_Plant_Fixed_Row]])
+    PRO_INV_Plant_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Plant_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Inv_Plant_Method_Variable, Values=PRO_Inv_Plant_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Plants", "Method"], Field_list=[PRO_INV_Plant_Fixed_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Plant_Widget.Add_row(Rows=[PRO_INV_Plant_Method_Row, PRO_INV_Plant_Fixed_Row])
+
+    return PRO_INV_Plant_Widget
+
+def PRO_CountryOrigin(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Count_Origin_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Country_Of_Origin"]["Method"]
+    PRO_Count_Origin_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Country_Of_Origin"]["Methods_List"])
+    PRO_Fixed_Count_Origin = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Country_Of_Origin"]["Fixed_Options"]["Fix_Country_Of_Origin"]
+    PRO_Count_Origin_Method_Variable = StringVar(master=Frame, value=PRO_Count_Origin_Method, name="PRO_Count_Origin_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Credit Memo.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields 
+    PRO_Fixed_Count_Origin_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Origin_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Country Code", Value=PRO_Fixed_Count_Origin, placeholder_text="Manual Country Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"])
+    Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Random", "Empty", "Prompt"], Freeze_fields=[[],[PRO_Fixed_Count_Origin_Row],[PRO_Fixed_Count_Origin_Row],[PRO_Fixed_Count_Origin_Row]])
+    PRO_INV_Plant_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Origin_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Count_Origin_Method_Variable, Values=PRO_Count_Origin_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Country_Of_Origin", "Method"], Field_list=[PRO_Fixed_Count_Origin_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Origin_Widget.Add_row(Rows=[PRO_INV_Plant_Method_Row, PRO_Fixed_Count_Origin_Row])
+
+    return PRO_INV_Origin_Widget
+
+def PRO_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    PRO_Tariff_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Tariff"]["Method"]
+    PRO_Tariff_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Tariff"]["Methods_List"])
+    PRO_Fixed_Tariff = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Tariff"]["Fixed_Options"]["Fix_Tariff"]
+    PRO_Tariff_Method_Variable = StringVar(master=Frame, value=PRO_Tariff_Method, name="PRO_Tariff_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    PRO_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Credit Memo.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    PRO_Fixed_Tariff_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Tariff_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Tariff code", Value=PRO_Fixed_Tariff, placeholder_text="Manual Tariff Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Tariff", "Fixed_Options", "Fix_Tariff"])
+    PRO_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Random", "Empty", "Prompt"], Freeze_fields=[[],[PRO_Fixed_Tariff_Row],[PRO_Fixed_Tariff_Row],[PRO_Fixed_Tariff_Row]])
+    PRO_Tariff_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=PRO_INV_Tariff_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=PRO_Tariff_Method_Variable, Values=PRO_Tariff_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Tariff", "Method"], Field_list=[PRO_Fixed_Tariff_Row], Field_Blocking_dict=PRO_Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    # Add Fields to Widget Body
+    PRO_INV_Tariff_Widget.Add_row(Rows=[PRO_Tariff_Method_Row, PRO_Fixed_Tariff_Row])
+
+    return PRO_INV_Tariff_Widget

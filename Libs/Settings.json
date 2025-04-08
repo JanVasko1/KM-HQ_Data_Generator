@@ -750,8 +750,99 @@
                         "Generate": false
                     }
                 },
-                "Credit_Memo": {
+                "Return_Order": {
                     "Use": true,
+                    "Number": {
+                        "Method": "Automatic",
+                        "Methods_List": [
+                            "Fixed",
+                            "Automatic",
+                            "Prompt"
+                        ],
+                        "Automatic_Options": {
+                            "Prefix": "CR"
+                        },
+                        "Fixed_Options": {
+                            "Number": "CR_JVA_0005"
+                        }
+                    },
+                    "Prices": {
+                        "Method": "From Confirmation",
+                        "Methods_List": [
+                            "Price List",
+                            "Purchase Return Line",
+                            "From Confirmation",
+                            "Prompt"
+                        ]
+                    },
+                    "Currency": {
+                        "Method": "Fixed",
+                        "Methods_List": [
+                            "Fixed",
+                            "Purchase Return Order",
+                            "From Confirmation"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_Currency": "EUR"
+                        }
+                    },
+                    "Invoice_Date": {
+                        "Method": "Random",
+                        "Methods_List": [
+                            "Fixed",
+                            "Random",
+                            "Today",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_Date": "2025-04-16"
+                        },
+                        "Random_Options": {
+                            "From": -3,
+                            "To": 0
+                        }
+                    },
+                    "Plants": {
+                        "Method": "Fixed",
+                        "Methods_List": [
+                            "Fixed",
+                            "Random",
+                            "Empty",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fixed_Plant": "1000",
+                            "Plants_List": [
+                                "1000",
+                                "1002",
+                                "1004"
+                            ]
+                        }
+                    },
+                    "Country_Of_Origin": {
+                        "Method": "Random",
+                        "Methods_List": [
+                            "Fixed",
+                            "Random",
+                            "Empty",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_Country_Of_Origin": "JP"
+                        }
+                    },
+                    "Tariff": {
+                        "Method": "Random",
+                        "Methods_List": [
+                            "Fixed",
+                            "Random",
+                            "Empty",
+                            "Prompt"
+                        ],
+                        "Fixed_Options": {
+                            "Fix_Tariff": "164316461654"
+                        }
+                    },
                     "PDF": {
                         "Generate": true
                     }

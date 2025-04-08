@@ -456,6 +456,65 @@
 2. **Fixed Tariff Code** - This Tariff Code will be used when **Method** = Fixed
 
 ### <u>Credit Memo</u>
+#### Numbers
+- define how program will choose number for Credit Memo
+1. **Method**
+    * Fixed - Uses only one Credit Memo Number selected field "Fixed Number"
+    * Automatic - uses timestamp with prefix
+    * Prompt - program request input from user when it is needed
+2. **Fixed Number** - Credit Memo Number which will be used when **Method** = Fixed
+3. **Prefix** - Prefix given before timestamp used when **Method** = Automatic
+
+#### Price and Currency
+1. **Price**
+    * Price List - Use active price of Item related to the Vendor 
+    * Purchase Line - takes Direct unit Cost from Purchase Line
+    * From Confirmation - takes price from Confirmation 
+    * Prompt - program request input from user when it is needed
+2. **Currency**
+    * Fixed - Uses only one Currency selected int the field "Fixed Currency"
+    * Purchase Order - Takes Currency from Purchase Header
+    * From Confirmation - takes currency from Confirmation 
+3. **Fixed Currency** - Currency for all Confirmations created will be used when **Method** = Fixed
+
+#### Plants
+1. **Method**
+    * Fixed - Use manually provided Plant
+    * Random - Program will randomly pick Plant from list downloaded from NAV (Plants No./VAT)
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Plant** - This plant will be used when **Method** = Fixed (only options available)
+
+#### Credit Memo Date
+- Setup which is used to put BEU Posting(Credit Memo) Date
+1. **Method**
+    * Fixed - Uses only one Date selected field "Fixed Date"
+    * Random - Uses creates interval and randomly select on date from it
+    * Today - Uses only one Today Date
+    * Prompt - program request input from user when it is needed
+2. **Fixed Date** - Date for all Confirmations created will be used when **Method** = Fixed (Date Picker available)
+3. **Interval Date - Section**
+    - will be used when **Method** = Random
+    - this setup create date interval for Delivery Date and randomly pick one date from it
+    - it is allowed to to use negative numbers to create interval also to the past
+    - Date interval works only with working days (keeps Global Dates Interval setup)
+    - interval is created based "From - To" method, where both is defined as "Current Date +/- number of days"
+
+#### Country of Origin
+1. **Method**
+    * Fixed - Use manually provided Country Code
+    * Random - Program will randomly pick Country Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
+
+#### Tariffs
+1. **Method**
+    * Fixed - Use manually provided Tariff Code
+    * Random - Program will randomly pick Tariff Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Tariff Code** - This Tariff Code will be used when **Method** = Fixed
 
 
 ## <u>Settings</u>
