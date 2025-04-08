@@ -27,7 +27,7 @@
 ## <u>Download</u>
 
 ## <u>Confirmation</u>
-### Purchase Order
+### <u>Purchase Order</u>
 #### Numbers
 - define how program will choose number for Confirmation
 1. **Method**
@@ -112,7 +112,7 @@
     - Date interval works only with working days (keeps Global Dates Interval setup)
     - interval is created based "From - To" method, where both is defined as "Current Date +/- number of days"
 
-### Return Order
+### <u>Return Order</u>
 #### Numbers
 - define how program will choose number for Return Confirmation
 1. **Method**
@@ -318,8 +318,145 @@
     * Prompt - program request input from user when it is needed
 2. **Fixed Plant** - This plant will be used when **Method** = Fixed (only options available)
 
-
 ## <u>Invoice</u>
+### <u>Purchase Order</u>
+#### Numbers
+- define how program will choose number for Invoice
+1. **Method**
+    * Fixed - Uses only one Invoice Number selected field "Fixed Number"
+    * Automatic - uses timestamp with prefix
+    * Prompt - program request input from user when it is needed
+2. **Fixed Number** - Invoice Number which will be used when **Method** = Fixed
+3. **Prefix** - Prefix given before timestamp used when **Method** = Automatic
+
+#### Price and Currency
+1. **Price**
+    * Price List - Use active price of Item related to the Vendor 
+    * Purchase Line - takes Direct unit Cost from Purchase Line
+    * From Confirmation - takes price from Confirmation 
+    * Prompt - program request input from user when it is needed
+2. **Currency**
+    * Fixed - Uses only one Currency selected int the field "Fixed Currency"
+    * Purchase Order - Takes Currency from Purchase Header
+    * From Confirmation - takes currency from Confirmation 
+3. **Fixed Currency** - Currency for all Confirmations created will be used when **Method** = Fixed
+
+#### Plants
+1. **Method**
+    * Fixed - Use manually provided Plant
+    * Random - Program will randomly pick Plant from list downloaded from NAV (Plants No./VAT)
+    * From Delivery - Takes plan according to plant from connected Delivery file
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Plant** - This plant will be used when **Method** = Fixed (only options available)
+
+#### Invoice Date
+- Setup which is used to put BEU Posting(Invoice) Date
+1. **Method**
+    * Fixed - Uses only one Date selected field "Fixed Date"
+    * Random - Uses creates interval and randomly select on date from it
+    * Today - Uses only one Today Date
+    * Prompt - program request input from user when it is needed
+2. **Fixed Date** - Date for all Confirmations created will be used when **Method** = Fixed (Date Picker available)
+3. **Interval Date - Section**
+    - will be used when **Method** = Random
+    - this setup create date interval for Delivery Date and randomly pick one date from it
+    - it is allowed to to use negative numbers to create interval also to the past
+    - Date interval works only with working days (keeps Global Dates Interval setup)
+    - interval is created based "From - To" method, where both is defined as "Current Date +/- number of days"
+
+#### Country of Origin
+1. **Method**
+    * Fixed - Use manually provided Country Code
+    * Random - Program will randomly pick Country Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
+
+#### Tariffs
+1. **Method**
+    * Fixed - Use manually provided Tariff Code
+    * Random - Program will randomly pick Tariff Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Tariff Code** - This Tariff Code will be used when **Method** = Fixed
+
+### <u>BackBone billing</u>
+#### Numbers
+- define how program will choose number for BackBone Invoice
+1. **Method**
+    * Fixed - Uses only one BackBone Invoice Number selected field "Fixed Number"
+    * Automatic - uses timestamp with prefix
+    * Prompt - program request input from user when it is needed
+2. **Fixed Number** - BackBone Invoice Number which will be used when **Method** = Fixed
+3. **Prefix** - Prefix given before timestamp used when **Method** = Automatic
+
+#### Vendor Service Functions
+- part of functionlity responsible which Items be selected into BB Invoice
+1. **Items**
+    * Fixed - Uses only one BackBone Invoice Item selected field "Fixed Service ID"
+    * All - uses all Service IDs (Items) related to Vendor selected
+    * Prompt - program request input from user when it is needed
+2. **Fixed Service ID** - BackBone Invoice Item which will be used when **Method** = Fixed
+
+#### Price and Currency
+1. **Price**
+    * Fixed - Uses only one Price selected field "Fixed Service ID"
+    * Prompt - program request input from user when it is needed
+2. **Fixed Price** - Price for all Items on BB Invoice, will be used when **Price** = Fixed
+3. **Fixed Currency** - Currency for all Items on BB Invoice
+
+#### Quantity
+1. **Items**
+    * One - use 1 for all lines
+    * Prompt - program request input from user when it is needed
+
+#### Invoice Date
+- Setup which is used to put BEU Posting(Invoice) Date
+1. **Method**
+    * Fixed - Uses only one Date selected field "Fixed Date"
+    * Today - Uses only one Today Date
+    * Prompt - program request input from user when it is needed
+2. **Fixed Date** - Date for Back Bone Invoice created will be used when **Method** = Fixed (Date Picker available)
+
+#### Order Reference
+1. **Order ID - Section**
+    1. **Method**
+        * Fixed - Uses only one text selected field "Fixed Order ID"
+        * Previous Month - Program calculates previous month and transfer it as text 
+    2. **Fixed Order ID** - Text for Back Bone Invoice created will be used when **Method** = Fixed
+2. **Order Date - Section**
+    1. **Method**
+        * Fixed - Uses only one Date selected field "Fixed Date"
+        * Invoice Date - Program copy value from Invoice Date (previous setup)
+    2. **Fixed Date** - Date for Back Bone Invoice created will be used when **Method** = Fixed (Date Picker available)
+
+#### Plants
+1. **Method**
+    * Fixed - Use manually provided Plant
+    * Random - Program will randomly pick Plant from list downloaded from NAV (Plants No./VAT)
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Plant** - This plant will be used when **Method** = Fixed (only options available)
+
+#### Country of Origin
+1. **Method**
+    * Fixed - Use manually provided Country Code
+    * Random - Program will randomly pick Country Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
+
+#### Tariffs
+1. **Method**
+    * Fixed - Use manually provided Tariff Code
+    * Random - Program will randomly pick Tariff Code from list downloaded from NAV
+    * Empty - be empty
+    * Prompt - program request input from user when it is needed
+2. **Fixed Tariff Code** - This Tariff Code will be used when **Method** = Fixed
+
+### <u>Credit Memo</u>
+
 
 ## <u>Settings</u>
 #### Appearance
@@ -333,6 +470,6 @@
 1. **Fields**
     1. **Client Name** - App Name from link
     2. **Client ID** - Client ID from link
-    3. **Client Secret** - You should have your own or ask Jiři Adamec for new one
+    3. **Client Secret** - You should have your own or ask Jiří Adamec for new one
     4. **Tenant ID** - non-changeable field 
     5. **Export NAV folders** - defines if to exports to real Fileserver/Azure or just my personal Download folder 
