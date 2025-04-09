@@ -1,4 +1,3 @@
-# TODO --> When Template Applied must be updated actual page
 # BUG --> sometimes it happened that "destroy for c in list(self.children.values()): c.destroy()" --> when page changes
 # BUG --> When PopUp window in Backend is turned off by ESC whole program crash
 # BUG --> Threat --> when open CTk it flickers a lot
@@ -131,8 +130,8 @@ if __name__ == "__main__":
 
     import Libs.GUI.Pages.P_Header as P_Header
     import Libs.GUI.Pages.P_Side_Bar as P_Side_Bar
-    P_Header.Get_Header(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header)
     P_Side_Bar.SidebarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame_Work_Area_Main=Frame_Work_Area_Main, Side_Bar_Frame=Frame_Side_Bar)
-    
+    P_Header.HeaderBarApp(Settings=Settings, Configuration=Configuration, window=window, Documents=Documents, Frame=Frame_Header, Frame_Side_Bar=Frame_Side_Bar)
+
     # run
     window.mainloop()

@@ -135,13 +135,16 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 raise HTTPException(status_code=500, detail=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
-    # Max Delivery Count
-    if Delivery_Count > Random_Max_count:
-        Delivery_Count = Random_Max_count
-        if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+    # Max Delivery Count if not Fixed
+    if DEL_Count_Method != "Fixed":
+        if Delivery_Count > Random_Max_count:
+            Delivery_Count = Random_Max_count
+            if GUI == True:
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Delivery Count", message=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.", icon="question", option_1="Confirm", fade_in_duration=1, GUI_Level_ID=1)
+            else:
+                raise HTTPException(status_code=500, detail=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.")
         else:
-            raise HTTPException(status_code=500, detail=f"Program set Delivery Count = {Random_Max_count} as this is maximal Deliveries set in setup.")
+            pass
     else:
         pass
 

@@ -9,8 +9,7 @@ def PD_Column_to_DateTime(PD_DataFrame: DataFrame, Column: str, Covert_Format: s
 def Dataframe_sort(Sort_Dataframe: DataFrame, Columns_list: list, Accenting_list: list) -> DataFrame:
     # Sort Dataframe and reindex 
     Sort_Dataframe.sort_values(by=Columns_list, ascending=Accenting_list, axis=0, inplace = True)
-    Sort_Dataframe.reset_index(inplace=True)
-    Sort_Dataframe.drop(labels=["index"], inplace=True, axis=1)
+    Sort_Dataframe.reset_index(inplace=True, drop=True)
     return Sort_Dataframe
 
 def Dataframe_Filter_on_Multiple(Filter_df: DataFrame, Filter_Column: str, Filter_Values: list) -> DataFrame:

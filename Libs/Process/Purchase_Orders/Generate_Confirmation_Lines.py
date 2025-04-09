@@ -81,12 +81,11 @@ def Generate_PO_CON_Lines(Settings: dict,
     Purchase_Lines_df_Filtered = DataFrame(Purchase_Lines_df[mask_Purch_Line])
 
     # --------------------------------------------- Items Definition --------------------------------------------- #
-    Exported_Items_list = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
-    Confirmed_Lines_df["buyer_aid"] = Exported_Items_list
-    Confirmed_Lines_df["supplier_aid"] = Exported_Items_list
-    Confirmed_Lines_df["Exported_Line_No"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Exported_Line_No", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Exported_Line_No"), axis=1)
-    Confirmed_Lines_df["quantity"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
-    Confirmed_Lines_df["ordered_quantity"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="ordered_quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
+    Confirmed_Lines_df["buyer_aid"] = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
+    Confirmed_Lines_df["supplier_aid"] = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
+    Confirmed_Lines_df["Exported_Line_No"] = HQ_Item_Tr_Reg_Filtered["Exported_Line_No"].to_list()
+    Confirmed_Lines_df["quantity"] = HQ_Item_Tr_Reg_Filtered["Quantity"].to_list()
+    Confirmed_Lines_df["ordered_quantity"] = HQ_Item_Tr_Reg_Filtered["Quantity"].to_list()
     Confirmed_Lines_df["item_category"] = "YN01"
     Confirmed_Lines_df["price_currency"] = PO_Confirmation_Currency     # Because of Invoice Generation
     Confirmed_Lines_df["discontinued"] = False
@@ -630,8 +629,39 @@ def Generate_PO_CON_Lines(Settings: dict,
     # Update after assigning Possible Substitution changes
     Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
 
-    # Check if Machine is Canceled / Finished --> to do it with FOCHs too
-    # TODO --> when Machine marked --> free of charge Items must be deleted according to Exported_Line_No
+    # Check if Machine is Canceled / Finished --> to do it with FOCHs Should not be in the Confirmation and Label
+    Confirmed_Lines_df["Material_Group_help"] = ""
+    Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
+
+    mask_discontinued = Confirmed_Lines_df["discontinued"] == True
+    mask_cancelled = Confirmed_Lines_df["cancelled"] == True
+    mask_Machines = Confirmed_Lines_df["Material_Group_help"] == "0100"
+    Confirmed_Lines_df_To_Check = DataFrame(Confirmed_Lines_df[(mask_discontinued|mask_cancelled) & mask_Machines])    
+    if Confirmed_Lines_df_To_Check.empty:
+        pass
+    else:
+        Index_to_Delete = []
+        Exported_Line_No_to_del_list = Confirmed_Lines_df_To_Check["Exported_Line_No"].tolist()
+        Exported_Line_No_to_del_list = list(set(Exported_Line_No_to_del_list))
+        
+        for row in Confirmed_Lines_df.iterrows():
+            row_Index = row[0]
+            row_Series = Series(row[1])
+            Material_group = row_Series["Material_Group_help"]
+            Exported_Line_No = int(row_Series["Exported_Line_No"])
+            bom = row_Series["bom"]
+
+            if (Material_group != "0100") and (Exported_Line_No in Exported_Line_No_to_del_list):
+                Index_to_Delete.append(row_Index)
+            elif (bom == True) and (Exported_Line_No in Exported_Line_No_to_del_list):
+                Index_to_Delete.append(row_Index)
+            else:
+                pass
+
+        Index_to_Delete = list(set(Index_to_Delete))
+        Confirmed_Lines_df.drop(index=Index_to_Delete, inplace=True)
+    Confirmed_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
+    Confirmed_Lines_df.reset_index(inplace=True, drop=True)
 
     # --------------------------------------------- Solution Items --------------------------------------------- #
     # Set: "item_category": "TAS" --> cannot create PreAdvice and Delivery for that Item marked this way

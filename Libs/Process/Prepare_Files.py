@@ -309,25 +309,19 @@ def Process_Purchase_Orders(Settings: dict,
             if Generate_Delivery == True:
                 if Delivery_Lines_df.empty:
                     if GUI == True:
-                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"Delivery_Lines_df data are empty (not created or all data are Cancelled/Finished ..), do you want to use already imported Delivery data as source data for invoice?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        response = "Confirm"
-                    if response == "Confirm":    
-                        PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
-                    elif response == "Reject":  
-                        pass
+                        pass 
+                    PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
                 else:
                     # Just pass as all is already prepared
                     pass
             else:
                 if GUI == True:
-                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"You select to create Invoice without creation of Delivery, do you want to use already imported Delivery data as source data for Invoice?", icon="question", option_1="Confirm", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Invoice", message=f"You select to create Invoice without creation of Delivery, do you want to use already imported Delivery data as source data for Invoice?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    response = "Confirm"
-                if response == "Confirm":    
-                    PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
-                elif response == "Reject":  
                     pass
+                PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df = Prepare_Files_Helpers.Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings=Settings, Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, GUI=GUI)
 
             # Header
             PO_Invoices, PO_Invoice_Number_list = Generate_Invoice_Header.Generate_Invoice_Header(Settings=Settings, 
@@ -571,30 +565,19 @@ def Process_Purchase_Return_Orders(Settings: dict,
             if Generate_PRO_Confirmation == True:
                 if PRO_Confirmed_Lines_df.empty:
                     if GUI == True:
-                        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"Confirmed_Lines_df data are empty, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"Confirmed_Lines_df data are empty, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
                     else:
-                        # TODO --> API must select one of the options
-                        pass
-                    if response == "OK":    
-                        PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
-                    elif response == "Reject":  
-                        # TODO --> 
-                        pass
+                        pass  
+                    PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
                 else:
                     # Just pass as all is already prepared
                     pass
             else:
                 if GUI == True:
-                    response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"You select to create Credit Memo without creation of Confirmation, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", option_2="Reject", fade_in_duration=1, GUI_Level_ID=1)
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"You select to create Credit Memo without creation of Confirmation, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    # TODO --> API must select one of the options
-                    pass
-                if response == "OK":    
-                    PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
-                elif response == "Reject":  
-                    # TODO --> 
-                    pass
-                    
+                    pass    
+                PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)    
 
             # Header
             PRO_Credit_Memos, PRO_Credit_Number_list = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 

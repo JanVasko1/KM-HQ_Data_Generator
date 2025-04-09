@@ -43,18 +43,16 @@ def Generate_PRO_CON_Lines(Settings: dict,
     Purchase_Ret_Lines_df_Filtered = DataFrame(Purchase_Return_Lines_df[mask_Purch_Ret_Line])
 
     # --------------------------------------------- Items Definition --------------------------------------------- #
-    Exported_Items_list = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
-    PRO_Confirmed_Lines_df["buyer_aid"] = Exported_Items_list
-    PRO_Confirmed_Lines_df["supplier_aid"] = Exported_Items_list
+    PRO_Confirmed_Lines_df["buyer_aid"] = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
+    PRO_Confirmed_Lines_df["supplier_aid"] = HQ_Item_Tr_Reg_Filtered["Item_No"].to_list()
     PRO_Confirmed_Lines_df["description_long"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
-    PRO_Confirmed_Lines_df["Exported_Line_No"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Exported_Line_No", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Exported_Line_No"), axis=1)
-    PRO_Confirmed_Lines_df["quantity"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
-    PRO_Confirmed_Lines_df["ordered_quantity"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="ordered_quantity", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Quantity"), axis=1)
-    PRO_Confirmed_Lines_df["delivery_start_date"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="delivery_start_date", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Order_Date"), axis=1)
-    PRO_Confirmed_Lines_df["delivery_end_date"] = PRO_Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="delivery_start_date", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["Item_No"], Search_df=HQ_Item_Tr_Reg_Filtered, Search_Column="Order_Date"), axis=1)
+    PRO_Confirmed_Lines_df["Exported_Line_No"] = HQ_Item_Tr_Reg_Filtered["Exported_Line_No"].to_list()
+    PRO_Confirmed_Lines_df["quantity"] = HQ_Item_Tr_Reg_Filtered["Quantity"].to_list()
+    PRO_Confirmed_Lines_df["ordered_quantity"] = HQ_Item_Tr_Reg_Filtered["Quantity"].to_list()
+    PRO_Confirmed_Lines_df["delivery_start_date"] = HQ_Item_Tr_Reg_Filtered["Order_Date"].to_list()
+    PRO_Confirmed_Lines_df["delivery_end_date"] = HQ_Item_Tr_Reg_Filtered["Order_Date"].to_list()
     PRO_Confirmed_Lines_df["item_category"] = "YN01"
     PRO_Confirmed_Lines_df["cancelled"] = False
-    print(PRO_Confirmed_Lines_df)
 
     # Number of Lines in Document
     Lines_No = len(PRO_Confirmed_Lines_df)
@@ -242,8 +240,32 @@ def Generate_PRO_CON_Lines(Settings: dict,
             for index in Index_to_Reject_list:
                 PRO_Confirmed_Lines_df.at[index, "cancelled"] = "rejected for parts return"
         elif PRO_Reject_Method == "Ratio":
-            pass
-            # TODO --> dodělat
+            ratio = [PRO_Reject_Ration_Confirm, PRO_Reject_Ration_Reject]
+            ratio_sum = sum(ratio)
+            
+            Lines_sum = PRO_Confirmed_Lines_df["quantity"].sum()
+            raw_split = [Lines_sum * part // ratio_sum for part in ratio]
+
+            # Sort according to qty
+            PRO_Confirmed_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=PRO_Confirmed_Lines_df, Columns_list=["quantity"], Accenting_list=[False]) 
+    
+            Conf_rem_Qty = 0
+            PRO_Confirmed_Lines_df["cancelled"] = PRO_Confirmed_Lines_df["cancelled"].astype(str)
+            for row in PRO_Confirmed_Lines_df.iterrows():
+                # Dataframe
+                row_index = row[0]
+                row_Series = Series(row[1])
+                Quantity = row_Series["quantity"]
+
+                if Conf_rem_Qty < raw_split[0]:
+                    pass
+                else:
+                    PRO_Confirmed_Lines_df.at[row_index, "cancelled"] = "rejected for parts return"
+                Conf_rem_Qty += Quantity
+
+            # Sort according back again
+            PRO_Confirmed_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=PRO_Confirmed_Lines_df, Columns_list=["Exported_Line_No"], Accenting_list=[True]) 
+    
         elif PRO_Reject_Method == "Prompt":
             if GUI == True:
                 # Select Delivery PopUp

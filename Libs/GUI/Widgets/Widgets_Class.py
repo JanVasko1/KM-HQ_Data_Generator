@@ -88,6 +88,9 @@ class WidgetRow_Input_Entry:
         elif type(self.Value) == int:
             self.Input_Entry.delete(first_index=0, last_index=1000)
             self.Input_Entry.insert(index=0, string=self.Value)
+        elif type(self.Value) == float:
+            self.Input_Entry.delete(first_index=0, last_index=1000)
+            self.Input_Entry.insert(index=0, string=self.Value)
         else:
             pass
 
@@ -261,6 +264,9 @@ class WidgetRow_Double_Input_Entry:
         elif type(self.Value1) == int:
             self.Input_Entry1.delete(first_index=0, last_index=1000)
             self.Input_Entry1.insert(index=0, string=self.Value1)
+        elif type(self.Value1) == float:
+            self.Input_Entry1.delete(first_index=0, last_index=1000)
+            self.Input_Entry1.insert(index=0, string=self.Value)
         else:
             pass
 
@@ -273,6 +279,9 @@ class WidgetRow_Double_Input_Entry:
         elif type(self.Value2) == int:
             self.Input_Entry2.delete(first_index=0, last_index=1000)
             self.Input_Entry2.insert(index=0, string=self.Value2)
+        elif type(self.Value2) == float:
+            self.Input_Entry2.delete(first_index=0, last_index=1000)
+            self.Input_Entry2.insert(index=0, string=self.Value)
         else:
             pass
 
@@ -520,7 +529,6 @@ class WidgetRow_OptionMenu:
             self.Block_Fields_list = self.Field_Blocking_dict[Value]
             for Freeze_Field in self.Block_Fields_list:
                 Freeze_Field.Freeze()
-                # TODO --> try to change look of freezed to help to identify freezed ones
         else:
             pass
 
@@ -642,7 +650,6 @@ class WidgetRow_CheckBox:
             self.Block_Fields_list = self.Field_Blocking_dict[self.Variable.get()]
             for Freeze_Field in self.Block_Fields_list:
                 Freeze_Field.Freeze()
-                # TODO --> try to change look of freezed to help to identify freezed ones
         else:
             pass
 

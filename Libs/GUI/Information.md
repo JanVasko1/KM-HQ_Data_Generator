@@ -1,11 +1,11 @@
-# HQ Data Generator 
-## General Information
+# <u>HQ Data Generator</u>
+## <u>General Information</u>
 - Save value is done by existing field entry field
 - Random methods usually create interval and then randomly pick from interval
 - numbers and dates Entry Fields always check proper format
 - Fields are available from editing only when needed (defined method is selected)
 
-# Header
+# <u>Header</u>
 - display status of Connection (Authorization) right after program start (top right circle)
 - display status of Exports folders (bottom right circle) - can be changed in Settings/Authorization widget
 - Theme change
@@ -17,14 +17,49 @@
     * Import Templates - Function to import one / multiple templates at once (Drag&Drop)
     * Delete Templates - Function to delete templates from my list of Templates
 
-# Side Bar
+# <u>Side Bar</u>
 - KM logo
 - used for orientation in the program (pages select)
 - drag&move, program can be moved only from this area
 - version 
 
-# Setup Pages
+# <u>Setup Pages</u>
 ## <u>Download</u>
+- page designed for connection to NAV / Business Central and download and process data according to setup
+### Connect
+- connection the desired NAV / Business Central is done through top bar on the page (not Header)
+- you have to select all parts of connection string and confirm by  **Get Companies**:
+    1. NUS Version
+    2. Environment
+    3. NOC
+- Company list is updated and you can select it in the right dropdown button 
+- after selection of Company 2 additional information are automatically downloaded
+    * Logistic Process list - is used for as filtering option for multiple Purchase Order select
+    * HQ Vendors - is used for selection of Vendor for BackBone Billing Invoice
+
+#### Download and process areas
+##### Purchase Order
+- contains checkbox fields defining if program will generate document or not
+- selection of Purchase Order is done by 2 possible ways 
+1. One Purchase Order
+- place **1** Purchase Order Number into Field and press button **Generate**
+- you have to leave field by "Tabulator" or any other way so PO will be taken into account (as General information describe about Entry field)
+2. Multiple POs
+- this option can be used for generation one or multiple POs
+- here you can pre-filter list of Purchase Order by Logistic Process --> to make list shorter
+- in the list you have checkbox next to each Purchase Order, by selecting of one or multiple you confirm your choice and press button **Generate**
+##### BackBone Billing
+- contains checkbox fields defining if program will generate document or not
+- you have to select Vendor from who you expect to receive BackBone Billing Invoice and press button **Generate**
+##### Purchase Return Order
+- contains checkbox fields defining if program will generate document or not
+- you have 2 possibilities how to select desired Purchase Return Order as in Purchase Order, just this option is shrink to fit the size of widget
+* **Options**:
+    1. One Purchase Return Order
+        - place **1** Purchase Return Oder Number into Field and press button **Generate**
+        - you have to leave field by "Tabulator" or any other way so PO will be taken into account (as General information describe about Entry field)
+    2. Multiple POs
+        - in the list you have checkbox next to each Purchase Return Order, by selecting of one or multiple you confirm your choice and press button **Generate**
 
 ## <u>Confirmation</u>
 ### <u>Purchase Order</u>

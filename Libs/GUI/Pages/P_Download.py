@@ -468,6 +468,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Log_Proc_Used_Variable = StringVar(master=Frame, value=Log_Proc_Used, name="Log_Proc_Used_Variable")
 
     # Field - Logistic Process Filter
+    # BUG --> here is place when Tempalte is deleted
     PO_MUL_LOG_PROC_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Tab_Multi_PO, Field_Frame_Type="Half_size" , Label="Log. Process", Field_Type="Input_OptionMenu")  
     PO_MUL_LOG_PROC_Frame_Var = PO_MUL_LOG_PROC_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
     PO_MUL_LOG_PROC_Frame_Var.configure(variable=Log_Proc_Used_Variable)

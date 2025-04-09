@@ -3,7 +3,11 @@
         "General": {
             "Template": {
                 "Last_Used": "",
-                "Templates_List": []
+                "Templates_List": [
+                    "All",
+                    "Confirmation_only",
+                    "No_Delivery"
+                ]
             },
             "Formats": {
                 "Date": "%Y-%m-%d",
@@ -91,7 +95,7 @@
                         }
                     },
                     "Line_Flags": {
-                        "Use": false,
+                        "Use": true,
                         "Method": "Prompt",
                         "Methods_List": [
                             "Random Cancel",
@@ -111,7 +115,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "Purchase Order",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Order"
@@ -175,25 +179,25 @@
                                 "Number": "Cable1",
                                 "Description": "Kabel do 220V",
                                 "QTY_per_Machine": 2,
-                                "Price": 7
+                                "Price": 1.1
                             },
                             "Documentation": {
                                 "Number": "Document1",
                                 "Description": "C220i documentation",
                                 "QTY_per_Machine": 1,
-                                "Price": 3
+                                "Price": 2.2
                             },
                             "Face_Sheet": {
                                 "Number": "FaceSheet1",
                                 "Description": "Nice C220i FaceSheet",
                                 "QTY_per_Machine": 3,
-                                "Price": 1
+                                "Price": 3.3
                             }
                         }
                     }
                 },
                 "Return_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -250,7 +254,7 @@
                         }
                     },
                     "Rejection": {
-                        "Method": "Confirm All",
+                        "Method": "Ratio",
                         "Methods_List": [
                             "Confirm All",
                             "Reject All",
@@ -751,7 +755,7 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -760,14 +764,14 @@
                             "Prompt"
                         ],
                         "Automatic_Options": {
-                            "Prefix": "CR"
+                            "Prefix": "CR01"
                         },
                         "Fixed_Options": {
-                            "Number": "CR_JVA_0005"
+                            "Number": "CR_0001"
                         }
                     },
                     "Prices": {
-                        "Method": "From Confirmation",
+                        "Method": "Price List",
                         "Methods_List": [
                             "Price List",
                             "Purchase Return Line",
@@ -787,7 +791,7 @@
                         }
                     },
                     "Invoice_Date": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -795,11 +799,11 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-04-16"
+                            "Fix_Date": "2025-04-11"
                         },
                         "Random_Options": {
-                            "From": -3,
-                            "To": 0
+                            "From": 0,
+                            "To": 3
                         }
                     },
                     "Plants": {
@@ -811,7 +815,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fixed_Plant": "1000",
+                            "Fixed_Plant": "1002",
                             "Plants_List": [
                                 "1000",
                                 "1002",
@@ -820,7 +824,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -828,11 +832,11 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Country_Of_Origin": "JP"
+                            "Fix_Country_Of_Origin": "CH"
                         }
                     },
                     "Tariff": {
-                        "Method": "Random",
+                        "Method": "Empty",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -844,7 +848,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 }
             }
