@@ -135,8 +135,8 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 raise HTTPException(status_code=500, detail=f"Delivery Count Method selected: {DEL_Count_Method} which is not supporter. Cancel File creation.")
             Can_Continue = False
 
-    # Max Delivery Count if not Fixed
-    if DEL_Count_Method != "Fixed":
+    # Max Delivery Count is only Random
+    if DEL_Count_Method == "Random":
         if Delivery_Count > Random_Max_count:
             Delivery_Count = Random_Max_count
             if GUI == True:

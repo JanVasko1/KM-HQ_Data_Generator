@@ -95,7 +95,7 @@
                         }
                     },
                     "Line_Flags": {
-                        "Use": true,
+                        "Use": false,
                         "Method": "Prompt",
                         "Methods_List": [
                             "Random Cancel",
@@ -179,19 +179,19 @@
                                 "Number": "Cable1",
                                 "Description": "Kabel do 220V",
                                 "QTY_per_Machine": 2,
-                                "Price": 1.1
+                                "Price": 7
                             },
                             "Documentation": {
                                 "Number": "Document1",
                                 "Description": "C220i documentation",
                                 "QTY_per_Machine": 1,
-                                "Price": 2.2
+                                "Price": 3
                             },
                             "Face_Sheet": {
                                 "Number": "FaceSheet1",
                                 "Description": "Nice C220i FaceSheet",
                                 "QTY_per_Machine": 3,
-                                "Price": 3.3
+                                "Price": 1
                             }
                         }
                     }
@@ -270,7 +270,7 @@
                 }
             },
             "CPDI": {
-                "Use": false,
+                "Use": true,
                 "Delivery_select": {
                     "Method": "All Deliveries",
                     "Methods_List": [
@@ -307,7 +307,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -330,7 +330,7 @@
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
                     "Method": "Random",
                     "Methods_List": [
@@ -529,7 +529,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -623,7 +623,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {

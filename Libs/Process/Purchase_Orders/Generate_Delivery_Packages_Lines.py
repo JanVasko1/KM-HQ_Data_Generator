@@ -195,8 +195,19 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, w
     Package_Lines_df["Item_Weight_Help"] = Package_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Weight_Help", Compare_Column_df1=["package_itemnumber", "order_unit_Help"], Compare_Column_df2=["Item_No", "Code"], Search_df=Items_UoM_df, Search_Column="Weight"), axis=1)
     Package_Lines_df["Item_Volume_Help"] = Package_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Volume_Help", Compare_Column_df1=["package_itemnumber", "order_unit_Help"], Compare_Column_df2=["Item_No", "Code"], Search_df=Items_UoM_df, Search_Column="Cubage"), axis=1)
 
-    Package_Lines_df["Package_Line_Total_Weight"] =  Package_Lines_df["package_quantity"] * Package_Lines_df["Item_Weight_Help"]
-    Package_Lines_df["Package_Line_Total_Volume"] =  Package_Lines_df["package_quantity"] * Package_Lines_df["Item_Volume_Help"]
+    Package_Lines_df["Package_Line_Total_Weight"] = 0
+    PreWeight_conditions = [(Package_Lines_df["Item_Weight_Help"] == "")]
+    Package_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Package_Lines_df, conditions=PreWeight_conditions, Set_Column="Item_Weight_Help", Set_Value=0)
+    Package_Lines_df["Item_Weight_Help"] = Package_Lines_df["Item_Weight_Help"].astype(float)
+    Weight_conditions = [(Package_Lines_df["Item_Weight_Help"] > 0)]
+    Package_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Package_Lines_df, conditions=Weight_conditions, Set_Column="Package_Line_Total_Weight", Set_Value=(Package_Lines_df["package_quantity"] * Package_Lines_df["Item_Weight_Help"]))
+    
+    Package_Lines_df["Package_Line_Total_Volume"] = 0
+    PreVolume_conditions = [(Package_Lines_df["Item_Volume_Help"] == "")]
+    Package_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Package_Lines_df, conditions=PreVolume_conditions, Set_Column="Item_Volume_Help", Set_Value=0)
+    Package_Lines_df["Item_Volume_Help"] = Package_Lines_df["Item_Volume_Help"].astype(float)
+    Volume_conditions = [(Package_Lines_df["Item_Volume_Help"] > 0)]
+    Package_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Package_Lines_df, conditions=Volume_conditions, Set_Column="Package_Line_Total_Volume", Set_Value=(Package_Lines_df["package_quantity"] * Package_Lines_df["Item_Volume_Help"]))
 
     Package_Lines_df.drop(labels=["order_unit_Help", "Item_Weight_Help", "Item_Volume_Help"], inplace=True, axis=1)
     # --------------------------------------------- Apply Lines functions --------------------------------------------- #

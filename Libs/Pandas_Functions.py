@@ -24,7 +24,7 @@ def DataFrame_Get_One_Value(Search_df: DataFrame, Search_Column: str, Filter_Col
         Value = "False"
     return Value
 
-def Dataframe_Set_Value_on_Condition(Set_df: DataFrame, conditions: list, Set_Column: str, Set_Value: int|str|bool) -> DataFrame:
+def Dataframe_Set_Value_on_Condition(Set_df: DataFrame, conditions: list, Set_Column: str, Set_Value: int|float|str|bool) -> DataFrame:
     combined_condition = conditions[0]
     for condition in conditions[1:]:
         combined_condition &= condition

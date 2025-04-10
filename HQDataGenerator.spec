@@ -44,6 +44,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['Libs\\GUI\\Icons\\HQ_Data_Generator.ico'],
+    version='Version.rc',
 )
 coll = COLLECT(
     exe,

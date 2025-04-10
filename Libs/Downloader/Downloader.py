@@ -59,6 +59,7 @@ def Get_Logistic_Process_List(Configuration: dict|None, window: CTk|None, Docume
     if len(Log_Process_List) > 0:
         # Add empty value for all
         Log_Process_List.append(" ")    # space because of OptionMenu full row list
+        Log_Process_List = list(set(Log_Process_List))
         
         # Update Option List
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
@@ -79,7 +80,8 @@ def Get_HQ_Vendors_List(Configuration: dict|None, window: CTk|None, Documents: d
         'Content-Type': 'application/json'}
 
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
-    
+    HQ_Vendors_list = list(set(HQ_Vendors_list))
+
     if len(HQ_Vendors_list) > 0:
         # Update Option List
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["BackBone_Billing", "Vendors_List"], Information=HQ_Vendors_list)

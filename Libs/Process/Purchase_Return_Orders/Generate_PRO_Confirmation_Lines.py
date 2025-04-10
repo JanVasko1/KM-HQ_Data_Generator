@@ -392,5 +392,4 @@ def Generate_PRO_CON_Lines(Settings: dict,
         del Current_line_json
 
     Lines_No = len(PRO_Confirmed_Lines_df)
-    print(PRO_Confirmed_Lines_df)
     return PRO_Confirmed_Lines_df, PRO_Confirmation_Lines, Total_Line_Amount, Lines_No

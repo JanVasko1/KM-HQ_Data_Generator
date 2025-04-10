@@ -260,6 +260,8 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
 
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Prompt_Delivery_Assignment(Settings=Settings, Configuration=Configuration, Frame=Frame_Body, Line_Item_No=Line_Item_No, Line_Item_Desc=Line_Item_Desc, Line_Qty=Line_Qty, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI_Level_ID=3) 
+                    Option_Menu_Var = Fields_Frame.children["!ctkframe4"].children["!ctkoptionmenu"]
+                    Option_Menu_Var.set(value="")
                     
                 # Dynamic Content height
                 content_row_count = len(Frame_Body.winfo_children())
@@ -295,13 +297,13 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
 
     # --------------------------------------------- Serial Numbers  --------------------------------------------- #
     # Data preparation
-    Delivery_Lines_df["Material_Group_NUS"] = ""
+    Delivery_Lines_df["Material_Group_help"] = ""
     Delivery_Lines_df["Item_Tracking_Code"] = ""
     Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] = ""
-    Delivery_Lines_df["Material_Group_NUS"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
+    Delivery_Lines_df["Material_Group_help"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
     Delivery_Lines_df["Item_Tracking_Code"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Item_Tracking_Code", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Item_Tracking_Code"), axis=1)
     Delivery_Lines_df["SN_Purchase_Inbound_Tracking"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="SN_Purchase_Inbound_Tracking", Compare_Column_df1=["Item_Tracking_Code"], Compare_Column_df2=["Code"], Search_df=Items_Tracking_df, Search_Column="SN_Purchase_Inbound_Tracking"), axis=1)
-    Delivery_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Delivery_Lines_df, Columns_list=["Delivery_No", "order_ref_line_item_id", "Material_Group_NUS"], Accenting_list=[True, True, True]) 
+    Delivery_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=Delivery_Lines_df, Columns_list=["Delivery_No", "order_ref_line_item_id", "Material_Group_help"], Accenting_list=[True, True, True]) 
 
     def Assing_SN(Filtered_row: tuple) -> None:
         Can_Continue = True
@@ -337,7 +339,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
         # Machines
         if SN_Machines == True:
             # Add Material Group to every line
-            mask_Machines = Delivery_Lines_df["Material_Group_NUS"] == "0100"
+            mask_Machines = Delivery_Lines_df["Material_Group_help"] == "0100"
             Delivery_Machine_df = DataFrame(Delivery_Lines_df[mask_Machines]) 
             if Delivery_Machine_df.empty:
                 pass
@@ -378,7 +380,7 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
 
             Delivery_Lines_df.at[row_index, "line_item_id"] = Delivery_line_item_id
 
-    Delivery_Lines_df.drop(labels=["Material_Group_NUS"], inplace=True, axis=1)
+    Delivery_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
 
     # --------------------------------------------- Apply Lines functions --------------------------------------------- #
     # Loop of Each Delivery Separate

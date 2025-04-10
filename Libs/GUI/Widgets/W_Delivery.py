@@ -27,7 +27,7 @@ def DEL_Count(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
     DEL_Count_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=Del_Count_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Method", Variable=DEL_Count_Method_Variable, Values=DEL_Count_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Delivery", "Delivery_Counts", "Method"], Field_list=[DEL_Random_Max_Row, DEL_Count_FIX_Row], Field_Blocking_dict=Fields_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
 
     # Add Fields to Widget Body
-    Del_Count_Widget.Add_row(Rows=[DEL_Count_Row, DEL_Count_FIX_Row, DEL_Random_Max_Row, Del_Count_Random_Section_Row])
+    Del_Count_Widget.Add_row(Rows=[DEL_Count_Row, DEL_Count_FIX_Row, Del_Count_Random_Section_Row, DEL_Random_Max_Row])
 
     return Del_Count_Widget
 
