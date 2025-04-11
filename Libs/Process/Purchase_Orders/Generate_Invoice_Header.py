@@ -10,7 +10,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar
 
-def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
+def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Order_index: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -49,11 +49,11 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
     if Can_Continue == True:
         if Invoice_Count == 1:
             if Numbers_Method == "Fixed":
-                PO_Invoice_Number_list.append(Fixed_Number)
+                PO_Invoice_Number_list.append(Fixed_Number + Purchase_Order_index)
             elif Numbers_Method == "Automatic":
                 Today_dt = datetime.now()
                 Today_str = Today_dt.strftime(Numbers_DateTime_format)
-                PO_Invoice_Number_list.append(Automatic_Prefix + Today_str)
+                PO_Invoice_Number_list.append(Automatic_Prefix + Today_str + Purchase_Order_index)
             else:
                 pass
         elif Invoice_Count > 1:
@@ -70,7 +70,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                 Today_dt = datetime.now()
                 Today_str = Today_dt.strftime(Numbers_DateTime_format)
                 for i in range(1, Invoice_Count + 1 ):
-                    PO_Invoice_Number_list.append(Automatic_Prefix + Today_str + "_" + str(i))
+                    PO_Invoice_Number_list.append(Automatic_Prefix + Today_str + Purchase_Order_index + "_" + str(i))
             else:
                 pass
 
@@ -95,7 +95,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                         if Value_Invoice == "":
                             Full_List = False
                         else:
-                            PO_Invoice_Number_list.append(Value_Invoice)
+                            PO_Invoice_Number_list.append(Value_Invoice + Purchase_Order_index)
 
                     if Full_List == True:
                         PO_Invoice_Number_list_joined = ";".join(PO_Invoice_Number_list)

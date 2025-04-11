@@ -12,7 +12,7 @@ import Libs.GUI.Elements as Elements
 
 from customtkinter import CTk, CTkFrame, StringVar, IntVar
 
-def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Confirmed_Lines_df: DataFrame, Shipping_Agent_list: list, Shipment_Method_list: list, GUI: bool=True):
+def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Order_index: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Confirmed_Lines_df: DataFrame, Shipping_Agent_list: list, Shipment_Method_list: list, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
@@ -168,11 +168,11 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
     if Can_Continue == True:
         if Delivery_Count == 1:
             if PO_Numbers_Method == "Fixed":
-                PO_Delivery_Number_list.append(PO_Fixed_Number)
+                PO_Delivery_Number_list.append(PO_Fixed_Number + Purchase_Order_index)
             elif PO_Numbers_Method == "Automatic":
                 Today_dt = datetime.now()
                 Today_str = Today_dt.strftime(Numbers_DateTime_format)
-                PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str)
+                PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str + Purchase_Order_index)
             else:
                 pass
         elif Delivery_Count > 1:
@@ -189,7 +189,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 Today_dt = datetime.now()
                 Today_str = Today_dt.strftime(Numbers_DateTime_format)
                 for i in range(1, Delivery_Count + 1 ):
-                    PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str + "_" + str(i))
+                    PO_Delivery_Number_list.append(PO_Automatic_Prefix + Today_str + Purchase_Order_index + "_" + str(i))
             else:
                 pass
         
@@ -214,7 +214,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                         if Value_Delivery == "":
                             Full_List = False
                         else:
-                            PO_Delivery_Number_list.append(Value_Delivery)
+                            PO_Delivery_Number_list.append(Value_Delivery + Purchase_Order_index)
 
                     if Full_List == True:
                         PO_Delivery_Number_list_joined = ";".join(PO_Delivery_Number_list)

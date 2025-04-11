@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.8.4
+- multi Purchase Document and Purchase Return Documents issue correction
+
 #### 0.8.3
 - when template change the GUI is updated
 

@@ -54,7 +54,10 @@ def Process_Purchase_Orders(Settings: dict,
     # Generate Purchase Order List
     Purchase_Orders_List = Purchase_Headers_df["No"].to_list()
 
-    for Purchase_Order in Purchase_Orders_List:
+    for Purchase_Order_index, Purchase_Order in enumerate(Purchase_Orders_List):
+        # Purchase Order index --> because of multiple POs processing 
+        Purchase_Order_index = str(Purchase_Order_index)
+
         # Get Vendor for correct Export NAV folders for each PO (might be different Vendors)
         mask_PO = Purchase_Headers_df["No"] == Purchase_Order
         Single_PO_df = DataFrame(Purchase_Headers_df[mask_PO])
@@ -72,6 +75,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                             Configuration=Configuration, 
                                                                                                                                             window=window,
                                                                                                                                             Purchase_Order=Purchase_Order,
+                                                                                                                                            Purchase_Order_index=Purchase_Order_index,
                                                                                                                                             Purchase_Headers_df=Purchase_Headers_df,
                                                                                                                                             Company_Information_df=Company_Information_df, 
                                                                                                                                             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
@@ -156,6 +160,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                                                                 Configuration=Configuration, 
                                                                                                                                                 window=window, 
                                                                                                                                                 Purchase_Order=Purchase_Order,
+                                                                                                                                                Purchase_Order_index=Purchase_Order_index,
                                                                                                                                                 Purchase_Headers_df=Purchase_Headers_df,
                                                                                                                                                 Company_Information_df=Company_Information_df, 
                                                                                                                                                 HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
@@ -203,10 +208,13 @@ def Process_Purchase_Orders(Settings: dict,
 
             # Update Footer
             for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
+                mask_Delivery = Delivery_Lines_df["Delivery_No"] == Delivery_Number
+                Delivery_Lines_df_Filtered = DataFrame(Delivery_Lines_df[mask_Delivery])
+                
                 mask_Delivery = Package_Lines_df["Delivery_No"] == Delivery_Number
                 Package_Lines_df_Filtered = DataFrame(Package_Lines_df[mask_Delivery])
 
-                Delivery_total_item_num = Package_Lines_df_Filtered.shape[0]
+                Delivery_total_item_num = Delivery_Lines_df_Filtered.shape[0]
                 Delivery_total_weight = round(number=float(Package_Lines_df_Filtered["Package_Line_Total_Weight"].sum()), ndigits=2)
                 Delivery_total_volume = round(number=float(Package_Lines_df_Filtered["Package_Line_Total_Volume"].sum()), ndigits=2)
 
@@ -328,6 +336,7 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                   Configuration=Configuration, 
                                                                                                   window=window, 
                                                                                                   Purchase_Order=Purchase_Order, 
+                                                                                                  Purchase_Order_index=Purchase_Order_index,
                                                                                                   Purchase_Headers_df=Purchase_Headers_df, 
                                                                                                   PO_Confirmation_Number=PO_Confirmation_Number, 
                                                                                                   PO_Delivery_Number_list=PO_Delivery_Number_list, 
@@ -502,7 +511,10 @@ def Process_Purchase_Return_Orders(Settings: dict,
     # Generate Purchase Return Order List
     Purchase_Return_Orders_List = Purchase_Return_Headers_df["No"].to_list()
 
-    for Purchase_Return_Order in Purchase_Return_Orders_List:
+    for Purchase_Return_Order_index, Purchase_Return_Order in enumerate(Purchase_Return_Orders_List):
+        # Purchase Return Order index --> because of multiple PROs processing 
+        Purchase_Return_Order_index = str(Purchase_Return_Order_index)
+
         # Get Vendor for correct Export NAV folders for each PO (might be different Vendors)
         mask_PRO = Purchase_Return_Headers_df["No"] == Purchase_Return_Order
         Single_PRO_df = DataFrame(Purchase_Return_Headers_df[mask_PRO])
@@ -519,6 +531,7 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                                                                                                         Configuration=Configuration, 
                                                                                                                         window=window,
                                                                                                                         Purchase_Return_Order=Purchase_Return_Order,
+                                                                                                                        Purchase_Return_Order_index=Purchase_Return_Order_index,
                                                                                                                         Purchase_Return_Headers_df=Purchase_Return_Headers_df,
                                                                                                                         Company_Information_df=Company_Information_df, 
                                                                                                                         HQ_Communication_Setup_df=HQ_Communication_Setup_df, 

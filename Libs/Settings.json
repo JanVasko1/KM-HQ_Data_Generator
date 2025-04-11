@@ -375,14 +375,13 @@
                     },
                     "Prefix": "SN",
                     "Middle": {
-                        "Method": "DateTime stamp",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Item No",
                             "DateTime stamp"
                         ],
-                        "Fixed": "",
-                        "Manual": ""
+                        "Fixed": ""
                     },
                     "Suffix": "Counter"
                 },

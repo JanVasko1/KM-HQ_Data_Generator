@@ -10,7 +10,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Return_Order: str, Purchase_Return_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, GUI: bool=True):
+def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Return_Order: str, Purchase_Return_Order_index: str, Purchase_Return_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     PRO_Confirmation_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PRO_Confirmation_Header")
@@ -40,16 +40,17 @@ def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CT
     # --------------------------------------------- Confirmation Number --------------------------------------------- #
     if Can_Continue == True:
         if PRO_Numbers_Method == "Fixed":
-            PRO_Confirmation_Number = PRO_Fixed_Number
+            PRO_Confirmation_Number = PRO_Fixed_Number + Purchase_Return_Order_index
         elif PRO_Numbers_Method == "Automatic":
             Today_dt = datetime.now()
             Today_str = Today_dt.strftime(Numbers_DateTime_format)
-            PRO_Confirmation_Number = PRO_Automatic_Prefix + Today_str
+            PRO_Confirmation_Number = PRO_Automatic_Prefix + Today_str + Purchase_Return_Order_index
         elif PRO_Numbers_Method == "Prompt":
             if GUI == True:
                 def Select_PRO_CON_Number(Prompt_Number_Frame: CTkFrame):
                     PRO_CON_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
                     PRO_CON_Number = PRO_CON_Number_Var.get()
+                    PRO_CON_Number = PRO_CON_Number + Purchase_Return_Order_index
                     PRO_CON_Number_Variable.set(value=PRO_CON_Number)
                     PRO_CON_Number_Window.destroy()
                     

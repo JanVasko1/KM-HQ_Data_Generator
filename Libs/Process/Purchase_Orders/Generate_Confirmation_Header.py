@@ -10,7 +10,7 @@ import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, GUI: bool=True):
+def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Order_index: str, Purchase_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
     Can_Continue = True
     PO_Confirmation_Header = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PO_Confirmation_Header")
@@ -40,16 +40,17 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
     # --------------------------------------------- Confirmation Number --------------------------------------------- #
     if Can_Continue == True:
         if PO_Numbers_Method == "Fixed":
-            PO_Confirmation_Number = PO_Fixed_Number
+            PO_Confirmation_Number = PO_Fixed_Number + Purchase_Order_index
         elif PO_Numbers_Method == "Automatic":
             Today_dt = datetime.now()
             Today_str = Today_dt.strftime(Numbers_DateTime_format)
-            PO_Confirmation_Number = PO_Automatic_Prefix + Today_str
+            PO_Confirmation_Number = PO_Automatic_Prefix + Today_str + Purchase_Order_index
         elif PO_Numbers_Method == "Prompt":
             if GUI == True:
                 def Select_PO_CON_Number(Prompt_Number_Frame: CTkFrame):
                     PO_CON_Number_Var = Prompt_Number_Frame.children["!ctkframe3"].children["!ctkentry"]
                     PO_CON_Number = PO_CON_Number_Var.get()
+                    PO_CON_Number = PO_CON_Number + Purchase_Order_index
                     PO_CON_Number_Variable.set(value=PO_CON_Number)
                     PO_CON_Number_Window.destroy()
                     

@@ -59,7 +59,6 @@ def Get_Logistic_Process_List(Configuration: dict|None, window: CTk|None, Docume
     if len(Log_Process_List) > 0:
         # Add empty value for all
         Log_Process_List.append(" ")    # space because of OptionMenu full row list
-        Log_Process_List = list(set(Log_Process_List))
         
         # Update Option List
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=Log_Process_List)
