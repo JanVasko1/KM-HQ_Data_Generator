@@ -26,13 +26,13 @@ def Create_Folder(Configuration: dict|None, window: CTk|None, file_path: str) ->
     try: 
         os.makedirs(f"{file_path}")
     except Exception as Error:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to create folder int {file_path}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 def Copy_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str) -> None:
     try:
         copy(src=Source_Path, dst=Destination_Path)
     except Exception as Error:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 def Copy_All_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str, include_hidden: bool) -> None:
     files = glob(pathname=os.path.join(Source_Path, "*"), include_hidden=include_hidden)
@@ -41,7 +41,7 @@ def Copy_All_File(Configuration: dict|None, window: CTk|None, Source_Path: str, 
         try:
             copy(src=source_file, dst=dest_file)
         except Exception as Error:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 def Delete_Folder(file_path: str) -> None:
     # Create Folder
@@ -103,7 +103,7 @@ def Export_NAV_Folders(Configuration: dict, window: CTk, NVR_FS_Connect_df: Data
             File_Content.output(rf"\\{Root_Path_NUS}{Root_Path_Suffix_NUS}\{HQ_Path}{File_Name}.{File_suffix}")
     except:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             raise HTTPException(status_code=500, detail="Impossible to store data in FileServer.")
 
@@ -117,6 +117,6 @@ def Export_Download_Folders(Configuration: dict, window: CTk, File_Content: dict
             File_Content.output(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}")
     except:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             raise HTTPException(status_code=500, detail="Impossible to store data in Downloads folder.")

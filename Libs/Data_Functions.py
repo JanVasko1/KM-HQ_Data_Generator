@@ -126,7 +126,7 @@ def Import_Data(Settings: dict, Configuration: dict|None, window: CTk|None, impo
         pass
     else:
         Can_Import = False
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Imported file is not .json you have to import only .json.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
     # Check if file contain Supported Type
     if Can_Import == True:
@@ -138,7 +138,7 @@ def Import_Data(Settings: dict, Configuration: dict|None, window: CTk|None, impo
             pass
         else:
             Can_Import = False
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"You try to import not supported file. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
     else:
         pass
 

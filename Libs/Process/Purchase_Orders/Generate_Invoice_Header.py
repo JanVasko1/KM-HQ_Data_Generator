@@ -256,7 +256,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
         # Fill value in template
         for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
             # Fill value in template
-            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["control_info"]["generation_date"] = [Invoice_Index]
+            Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["control_info"]["generation_date"] = PO_Invoice_Date_list[Invoice_Index]
             Invoice_Header_Template_List[Invoice_Index]["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] = PO_Invoice_Date_list[Invoice_Index]
     else:
         pass

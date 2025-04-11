@@ -244,8 +244,10 @@ def Process_Purchase_Orders(Settings: dict,
                 PO_PreAdviceNumber_list = PO_Delivery_Number_list
                 PO_PreAdvices = Generate_PreAdvice_File.Generate_PreAdvice_from_Delivery_dict(Settings=Settings, Configuration=Configuration, window=window, PO_Deliveries=PO_Deliveries, GUI=GUI)
             else:
-                # TODO --> postavit tuhle cestu podobně jako s Delviery / Cpnfirmation nechat vybrat na základě čeho postavit
-                pass
+                if GUI == True:
+                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It should not be possible to create PreAdvice without Delivery.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                else:
+                    pass
 
             # Export 
             for PreAdvice_Index, PreAdvice_Number in enumerate(PO_PreAdviceNumber_list):

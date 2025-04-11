@@ -68,7 +68,7 @@ def Insert_Data_to_Table(Settings: dict, Configuration: dict|None, window: CTk|N
             Table.add_row(index=row_index, values=[data])
             row_index += 1
     else:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to insert data to table. Data are uploaded, just restart application.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
 # ------------------ Blocking Fields Functions ------------------ #
 def Fields_Blocking(Values: list, Freeze_fields: list) -> dict:
