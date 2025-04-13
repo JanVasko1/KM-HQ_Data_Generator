@@ -56,7 +56,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -197,7 +197,7 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -270,7 +270,7 @@
                 }
             },
             "CPDI": {
-                "Use": true,
+                "Use": false,
                 "Delivery_select": {
                     "Method": "All Deliveries",
                     "Methods_List": [
@@ -307,7 +307,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -330,7 +330,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Random",
                     "Methods_List": [
@@ -528,7 +528,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -622,7 +622,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
@@ -754,7 +754,7 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -847,7 +847,7 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 }
             }

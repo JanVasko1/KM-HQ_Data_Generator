@@ -711,15 +711,13 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
-        Progress_Bar.configure(determinate_speed = round(number=50 / 12, ndigits=3), progress_color="#517A31")
+        Progress_Bar.configure(determinate_speed = round(number=50 / 10, ndigits=3), progress_color="#517A31")
     else:
         pass
     Can_Process = True
 
     Purchase_Return_Headers_df = DataFrame()
     Purchase_Return_Lines_df = DataFrame()
-    PRO_Return_Shipment_list = []
-    PRO_Shipment_Lines_df = DataFrame()
     HQ_Communication_Setup_df = DataFrame()
     Company_Information_df = DataFrame()
     Country_ISO_Code_list = []
@@ -814,29 +812,6 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
                 Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
             else:
                 pass
-    else:
-        pass
-
-    # PRO_Return_Shipment_list
-    if Can_Process == True:
-        PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
-        if GUI == True:
-            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-        else:
-            pass
-    else:
-        pass
-
-    # HQ_Testing_PRO_Ship_Lines
-    if Can_Process == True:
-        PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
-        # Drop Duplicate rows amd reset index
-        PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
-        PRO_Shipment_Lines_df.reset_index(drop=True, inplace=True)
-        if GUI == True:
-            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
-        else:
-            pass
     else:
         pass
 
@@ -944,10 +919,9 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             Environment=Environment, 
             Company=Company,
             Can_Process=Can_Process, 
+            HQ_Vendors_list=HQ_Vendors_list,
             Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
             Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
-            PRO_Return_Shipment_list=PRO_Return_Shipment_list,
-            PRO_Shipment_Lines_df=PRO_Shipment_Lines_df,
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
             Company_Information_df=Company_Information_df, 
             Country_ISO_Code_list=Country_ISO_Code_list, 

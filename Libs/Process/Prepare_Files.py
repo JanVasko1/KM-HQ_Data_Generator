@@ -489,10 +489,9 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                     Environment: str, 
                                     Company: str,
                                     Can_Process: bool, 
+                                    HQ_Vendors_list: list,
                                     Purchase_Return_Headers_df: DataFrame, 
                                     Purchase_Return_Lines_df: DataFrame, 
-                                    PRO_Return_Shipment_list: list,
-                                    PRO_Shipment_Lines_df: DataFrame,
                                     HQ_Communication_Setup_df: DataFrame, 
                                     Company_Information_df: DataFrame, 
                                     Country_ISO_Code_list: list, 
@@ -594,9 +593,25 @@ def Process_Purchase_Return_Orders(Settings: dict,
                     pass    
                 PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)    
 
+            # ---------------- Posted Return Shipments ---------------- #
+            # PRO_Return_Shipment_list
+            import Libs.Downloader.NAV_OData_API as NAV_OData_API
+            if Can_Process == True:
+                PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
+            else:
+                pass
+
+            # HQ_Testing_PRO_Ship_Lines
+            if Can_Process == True:
+                PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
+                # Drop Duplicate rows amd reset index
+                PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
+                PRO_Shipment_Lines_df.reset_index(drop=True, inplace=True)
+            else:
+                pass
+
             # Header
-            # TODO --> Finish whole Credit Memo!!!!
-            PRO_Credit_Memos, PRO_Credit_Number_list = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
+            PRO_Credit_Memos, PRO_Credit_Number = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
                                                                                                                 Configuration=Configuration, 
                                                                                                                 window=window, 
                                                                                                                 Purchase_Return_Order=Purchase_Return_Order, 
@@ -609,13 +624,14 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                                                                                                 GUI=GUI)
 
             # Lines
-            PRO_Credit_Memos, PRO_Credit_Memo_Table_Data_list = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+            # TODO --> Finish whole Credit Memo!!!!
+            PRO_Credit_Memos, PRO_Credit_Memo_Table_Data = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
                                                                                                                 Configuration=Configuration, 
                                                                                                                 window=window, 
                                                                                                                 Purchase_Return_Order=Purchase_Return_Order, 
                                                                                                                 Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
                                                                                                                 PRO_Credit_Memos=PRO_Credit_Memos,
-                                                                                                                PRO_Credit_Number_list=PRO_Credit_Number_list,
+                                                                                                                PRO_Credit_Number=PRO_Credit_Number,
                                                                                                                 PRO_Return_Shipment_list=PRO_Return_Shipment_list,
                                                                                                                 PRO_Shipment_Lines_df=PRO_Shipment_Lines_df, 
                                                                                                                 PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
@@ -626,29 +642,24 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                                                                                                 GUI=GUI)
 
             # Export 
-            for Credit_Memo_Index, Credit_Memo_Number in enumerate(PRO_Credit_Number_list):
-                Credit_Memo_Content = PRO_Credit_Memos[Credit_Memo_Index]
-                Credit_Memo_File_Name = f"INVOIC02_{Credit_Memo_Number}_Test"
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Credit_Memo_Content, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
-                else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Credit_Memo_Content, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+            Credit_Memo_File_Name = f"INVOIC02_{PRO_Credit_Number}_Test"
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memos, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+            else:
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memos, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
 
         # -------------------------------- Credit Memo PDF -------------------------------- #
         if Generate_PRO_Credit_Memo_PDF == True:
-            import Libs.Process.PDF_Generator as PDF_Generator
-            for Credit_Memo_Index, Credit_Memo_Number in enumerate(PRO_Credit_Number_list):
-                Credit_Memo_Content = PRO_Credit_Memos[Credit_Memo_Index]
-                PRO_Credit_Memo_Table_Data = PRO_Credit_Memo_Table_Data_list[Credit_Memo_Index]
-                PRO_Credit_Memo_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=Credit_Memo_Content, Document_Type="Return Order", Table_Data=PRO_Credit_Memo_Table_Data)
+            import Libs.Process.PDF_Generator as PDF_Generator 
+            PRO_Credit_Memo_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=PRO_Credit_Memos, Document_Type="Return Order", Table_Data=PRO_Credit_Memo_Table_Data)
 
-                # Export 
-                # File name must be same as Credit Memo Number
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Credit_Memo_Number, File_suffix="pdf", GUI=GUI)
-                else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo_PDF, File_Name=Credit_Memo_Number, File_suffix="pdf", GUI=GUI)
+            # Export 
+            # File name must be same as Credit Memo Number
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
+            else:
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo_PDF, File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
         else:
             pass

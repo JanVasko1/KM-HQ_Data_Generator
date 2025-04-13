@@ -136,7 +136,6 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
         Confirmed_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
         Confirmed_Lines_df.reset_index(drop=True, inplace=True)
 
-    print(Confirmed_Lines_df)
     return Confirmed_Lines_df, PO_Confirmation_Number
 
 def Prepare_Confirmed_Lines_df_from_HQ_Exported(Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Lines_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, UoM_df: DataFrame, GUI: bool=True) -> DataFrame:

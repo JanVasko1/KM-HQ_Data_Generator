@@ -1,0 +1,75 @@
+{
+    "invoice": {
+        "invoice_header": {
+            "control_info": {
+                "generation_date": ""
+            },
+            "invoice_info": {
+                "invoice_id": "",
+                "invoice_date": "",
+                "delivery_date": {
+                    "type": "fixed",
+                    "delivery_start_date": "",
+                    "delivery_end_date": ""
+                },
+                "buyer_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "name3": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "country": "",
+                            "vat_id": "",
+                            "phone": "",
+                            "fax": ""
+                        }
+                    }
+                },
+                "invoice_party": {
+                    "party": {
+                        "type": "supplier_specific",
+                        "party_id": "",
+                        "address": {
+                            "name": "",
+                            "name2": "",
+                            "name3": "",
+                            "street": "",
+                            "zip": "",
+                            "city": "",
+                            "country": "",
+                            "phone": ""
+                        }
+                    }
+                },
+                "price_currency": "",
+                "payment": {
+                    "account": {
+                        "holder": "Konica Minolta BEU",
+                        "bank_name": "The Bank of Tokyo-Mitsubishi UFJ, Ltd.",
+                        "bank_country": "DE",
+                        "bank_code": "30010700",
+                        "bank_account": "2203038638"
+                    }
+                }
+            },
+            "order_history": {
+                "order_id": "",
+                "supplier_order_id": "",
+                "order_date": "",
+                "delivery_note_id": "",
+                "delivery_note_date": ""
+            }
+        },
+        "invoice_item_list": [],
+        "invoice_summary": {
+            "total_item_num": 0.0,
+            "total_amount": 0.0,
+            "total_tax_amount": 0.0
+        }
+    }
+}

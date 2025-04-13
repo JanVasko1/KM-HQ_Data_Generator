@@ -104,7 +104,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
                 def Select_PO_Gen_Date_Date(Prompt_Date_Frame: CTkFrame):
                     Generation_Date_Var = Prompt_Date_Frame.children["!ctkframe3"].children["!ctkentry"]
                     PO_Gen_Date_Date = Generation_Date_Var.get()
-                    PO_Gen_Date_Date_Variable.set(value=PO_Gen_Date_Date)
+                    PO_Gen_Date_Variable.set(value=PO_Gen_Date_Date)
                     PO_Gen_Date_Window.destroy()
                     
                 # TopUp Window
@@ -115,7 +115,7 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
                 PO_Gen_Date_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Generation Date for Confirmation.", max_width=PO_Gen_Date_Window_geometry[0], max_height=PO_Gen_Date_Window_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
                 # Frame - General
-                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Gen_Date_Window, Name="Select Generation Date for Confirmation.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select GEneration Date of BEU Confirmation.", GUI_Level_ID=3)
+                Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PO_Gen_Date_Window, Name="Select Generation Date for Confirmation.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Generation Date of BEU Confirmation.", GUI_Level_ID=3)
                 Frame_Main.configure(bg_color = "#000001")
                 Frame_Body = Frame_Main.children["!ctkframe2"]
 
@@ -127,13 +127,13 @@ def Generate_PO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Prompt_Date_Frame_Var, message="Entry DropDown", ToolTip_Size="Normal", GUI_Level_ID=3)
 
                 # Buttons
-                PO_Gen_Date_Date_Variable = StringVar(master=PO_Gen_Date_Window, value="", name="PO_Gen_Date_Date_Variable")
+                PO_Gen_Date_Variable = StringVar(master=PO_Gen_Date_Window, value="", name="PO_Gen_Date_Variable")
                 Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
                 Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
                 Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PO_Gen_Date_Date(Prompt_Date_Frame=Prompt_Date_Frame))
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Generation Date for Confirmation.", ToolTip_Size="Normal", GUI_Level_ID=3)   
-                Button_Confirm_Var.wait_variable(PO_Gen_Date_Date_Variable)
-                PO_Generation_Date = PO_Gen_Date_Date_Variable.get()
+                Button_Confirm_Var.wait_variable(PO_Gen_Date_Variable)
+                PO_Generation_Date = PO_Gen_Date_Variable.get()
             else:
                 raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Header:Generation_Date")
         else:
