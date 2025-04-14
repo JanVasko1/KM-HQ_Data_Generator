@@ -15,7 +15,7 @@ def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window
     Can_Continue = True
     Date_format = Settings["0"]["General"]["Formats"]["Date"]
     Numbers_DateTime_format = Settings["0"]["General"]["Formats"]["Numbers_DateTime"]
-    Credit_Memo_Header_Template = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PRO_Credit_Memo_Header")
+    PRO_Credit_Memos = Defaults_Lists.Load_Template(NUS_Version="NUS_Cloud", Template="PRO_Credit_Memo_Header")
     PRO_Return_Shipment_Number = ""
     
     Numbers_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Return_Order"]["Number"]["Method"]
@@ -38,8 +38,41 @@ def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window
     Purchase_Ret_Headers_df_Filtered = DataFrame(Purchase_Return_Headers_df[mask_Purchase_Return_Header])
 
     # --------------------------------------------- Preparation based on Return Shipment --------------------------------------------- #
-    # TODO -->select Shipment !!!!
+    if GUI == False:
+        def Select_PRO_Shipment(Frame_Body: CTkFrame):
+            Value_CTkEntry = Frame_Body.children[f"!ctkframe"].children["!ctkframe3"].children["!ctkoptionmenu"]
+            Value_PRO_Shipment = Value_CTkEntry.get()
+            PRO_Return_Shipment_Variable.set(value=Value_PRO_Shipment)
+            PRO_Shipment_Window.destroy()
+            
+        # TopUp Window
+        PRO_Shipment_geometry = (500, 250)
+        Main_Window_Centre = CustomTkinter_Functions.Get_coordinate_Main_Window(Main_Window=window)
+        Main_Window_Centre[0] = Main_Window_Centre[0] - PRO_Shipment_geometry[0] //2
+        Main_Window_Centre[1] = Main_Window_Centre[1] - PRO_Shipment_geometry[1] //2
+        PRO_Shipment_Window = Elements_Groups.Get_Pop_up_window(Configuration=Configuration, title="Select Posted Return Shipment.", max_width=PRO_Shipment_geometry[0], max_height=PRO_Shipment_geometry[1], Top_middle_point=Main_Window_Centre, Fixed=False, Always_on_Top=True)
 
+        # Frame - General
+        Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=Configuration, Frame=PRO_Shipment_Window, Name="Select Posted Return Shipment.", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="To select Posted Return Shipment for Credit Memo creation.", GUI_Level_ID=3)
+        Frame_Main.configure(bg_color = "#000001")
+        Frame_Body = Frame_Main.children["!ctkframe2"]
+
+        Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"Posted Return Shipment", Field_Type="Input_OptionMenu") 
+        Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+        Fields_Frame_Var.set(value="")
+        Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Fields_Frame_Var, values=PRO_Return_Shipment_list, command=None, GUI_Level_ID=3)
+
+        # Buttons
+        PRO_Return_Shipment_Variable = StringVar(master=PRO_Shipment_Window, value="", name="PRO_Return_Shipment_Variable")
+        Button_Frame = Elements_Groups.Get_Widget_Button_row(Configuration=Configuration, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Buttons_count=1, Button_Size="Small") 
+        Button_Confirm_Var = Button_Frame.children["!ctkframe"].children["!ctkbutton"]
+        Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PRO_Shipment(Frame_Body=Frame_Body))
+        Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Posted Return Shipment.", ToolTip_Size="Normal", GUI_Level_ID=3)   
+        Button_Confirm_Var.wait_variable(PRO_Return_Shipment_Variable)
+        PRO_Return_Shipment_Number = PRO_Return_Shipment_Variable.get()
+    else:
+        PRO_Return_Shipment_Number = PRO_Return_Shipment_list[1]
+        
     # --------------------------------------------- Invoice Number --------------------------------------------- #
     if Can_Continue == True:
         if Numbers_Method == "Fixed":
@@ -81,11 +114,11 @@ def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window
                 Button_Confirm_Var.wait_variable(CR_Number_Variable)
                 PRO_Credit_Number = CR_Number_Variable.get()
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_BB_Header:Invoice_Number")
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Credit_Memo_Header:Invoice_Number")
     else:
         pass
 
-    Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_id"] = PRO_Credit_Number
+    PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_id"] = PRO_Credit_Number
 
     # --------------------------------------------- Invoice Date --------------------------------------------- #
     if Can_Continue == True:
@@ -134,12 +167,12 @@ def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window
                 Button_Confirm_Var.wait_variable(PRO_Inv_Date_Variable)
                 PRO_Invoice_Date = PRO_Inv_Date_Variable.get()
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PO_CON_Header:Generation_Date")
+                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Credit_Memo_Header:Generation_Date")
         else:
             pass
         # Fill value in template
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["control_info"]["generation_date"] = PRO_Invoice_Date
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] = PRO_Invoice_Date
+        PRO_Credit_Memos["invoice"]["invoice_header"]["control_info"]["generation_date"] = PRO_Invoice_Date
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_date"] = PRO_Invoice_Date
     else:
         pass
 
@@ -153,54 +186,54 @@ def Generate_Credit_Memo_Header(Settings: dict, Configuration: dict|None, window
             PRO_Currency = PRO_Confirmed_Lines_df.iloc[0]["price_currency"]
         else:
             if GUI == True:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Credit_Memo_Header:Currency", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.")
+                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Credit_Memo_Header:Currency")
             Can_Continue = False
 
         # Fill value in template
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["price_currency"] = PRO_Currency
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["price_currency"] = PRO_Currency
     else:
         pass
 
     # --------------------------------------------- Orders --------------------------------------------- #        
     if Can_Continue == True:
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["order_history"]["order_id"] = Purchase_Return_Order
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["order_history"]["supplier_order_id"] = PRO_Confirmation_Number
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["order_history"]["order_date"] = PRO_Confirmed_Lines_df.iloc[0]["delivery_start_date"] # There was no other choice 
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["order_history"]["delivery_note_id"] = PRO_Return_Shipment_Number
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["order_history"]["delivery_note_date"] = PRO_Invoice_Date
+        PRO_Credit_Memos["invoice"]["invoice_header"]["order_history"]["order_id"] = Purchase_Return_Order
+        PRO_Credit_Memos["invoice"]["invoice_header"]["order_history"]["supplier_order_id"] = PRO_Confirmation_Number
+        PRO_Credit_Memos["invoice"]["invoice_header"]["order_history"]["order_date"] = PRO_Confirmed_Lines_df.iloc[0]["delivery_start_date"] # There was no other choice 
+        PRO_Credit_Memos["invoice"]["invoice_header"]["order_history"]["delivery_note_id"] = PRO_Return_Shipment_Number
+        PRO_Credit_Memos["invoice"]["invoice_header"]["order_history"]["delivery_note_date"] = PRO_Invoice_Date
     else:
         pass
 
     # --------------------------------------------- Order Date --------------------------------------------- #
     if Can_Continue == True:
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_start_date"] = PRO_Invoice_Date
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_end_date"] = PRO_Invoice_Date
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_start_date"] = PRO_Invoice_Date
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["delivery_date"]["delivery_end_date"] = PRO_Invoice_Date
     else:
         pass
 
     # --------------------------------------------- HQ Identification No --------------------------------------------- #
     if Can_Continue == True:
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["party_id"] = HQ_Communication_Setup_df.iloc[0]["HQ_Identification_No"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["party_id"] = HQ_Communication_Setup_df.iloc[0]["HQ_Identification_No"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["party_id"] = HQ_Communication_Setup_df.iloc[0]["HQ_Identification_No"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["party_id"] = HQ_Communication_Setup_df.iloc[0]["HQ_Identification_No"]
     else:
         pass
 
     # --------------------------------------------- Company Information --------------------------------------------- #
     if Can_Continue == True:
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["name"] = Company_Information_df.iloc[0]["English_Name_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["street"] = Company_Information_df.iloc[0]["English_Address_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["zip"] = Company_Information_df.iloc[0]["English_Post_Code_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["city"] = Company_Information_df.iloc[0]["English_City_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["country"] = Company_Information_df.iloc[0]["English_Country_Reg_Code_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["name"] = Company_Information_df.iloc[0]["English_Name_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["street"] = Company_Information_df.iloc[0]["English_Address_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["zip"] = Company_Information_df.iloc[0]["English_Post_Code_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["city"] = Company_Information_df.iloc[0]["English_City_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["buyer_party"]["party"]["address"]["country"] = Company_Information_df.iloc[0]["English_Country_Reg_Code_NUS"]
 
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["name"] = Company_Information_df.iloc[0]["English_Name_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["street"] = Company_Information_df.iloc[0]["English_Address_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["zip"] = Company_Information_df.iloc[0]["English_Post_Code_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["city"] = Company_Information_df.iloc[0]["English_City_NUS"]
-        Credit_Memo_Header_Template["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["country"] = Company_Information_df.iloc[0]["English_Country_Reg_Code_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["name"] = Company_Information_df.iloc[0]["English_Name_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["street"] = Company_Information_df.iloc[0]["English_Address_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["zip"] = Company_Information_df.iloc[0]["English_Post_Code_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["city"] = Company_Information_df.iloc[0]["English_City_NUS"]
+        PRO_Credit_Memos["invoice"]["invoice_header"]["invoice_info"]["invoice_party"]["party"]["address"]["country"] = Company_Information_df.iloc[0]["English_Country_Reg_Code_NUS"]
     else:
         pass
 
-    return Credit_Memo_Header_Template, PRO_Credit_Number, PRO_Return_Shipment_Number
+    return PRO_Credit_Memos, PRO_Credit_Number, PRO_Return_Shipment_Number

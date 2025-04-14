@@ -50,15 +50,17 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         NOC = NOC_Variable.get()
         Environment = Environment_Variable.get()
 
-        # Logistic Process
-        Log_Proc_thread = threading.Thread(target=Downloader.Get_Logistic_Process_List, args=(Configuration, window, Documents, NUS_Version, NOC, Environment, Selected_Company, Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame))
-        Log_Proc_thread.start()
-        Log_Proc_thread.join(timeout=0.1) 
+        # Function Company Select --> because multiple thread (in previous version was wrong)
+        Company_Select_thread = threading.Thread(target=Downloader.Select_Company_Process, args=(Configuration, window, Documents, NUS_Version, NOC, Environment, Selected_Company, Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Variable, BB_Vendor_Used_Frame))
+        Company_Select_thread.start()
+        Company_Select_thread.join(timeout=0.1) 
 
-        # Vendor List
-        Vendors_thread = threading.Thread(target=Downloader.Get_HQ_Vendors_List, args=(Configuration, window, Documents, NUS_Version, NOC, Environment, Selected_Company, BB_Vendor_Used_Variable, BB_Vendor_Used_Frame))
-        Vendors_thread.start()
-        Vendors_thread.join(timeout=0.1) 
+        # Make Buttons available
+        Button_PO_One_Generate_Var.configure(state="normal")
+        Button_PO_Show_Var.configure(state="normal")
+        Button_PO_Multi_Generate_Var.configure(state="normal")
+        Button_Generate_BB.configure(state="normal")
+        Button_PRO_Show_Var.configure(state="normal")
         
     def Generate_Purchase_Orders() -> None:
         Purchase_Order_list = Documents["Purchase_Order"]["Purchase_Order_List"]
@@ -340,7 +342,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # Buttons - Generate
     Button_PO_One_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_One_PO, Button_Size="Normal")
-    Button_PO_One_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
+    Button_PO_One_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders(), state="disabled")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_One_Generate_Var, message="Generate selected documents for one Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # -------- Select Multiple -------- #
@@ -362,12 +364,12 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # Buttons
     Button_PO_Show_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_Multi_PO, Button_Size="Normal")
-    Button_PO_Show_Var.configure(text="List", command = lambda: Start_Order_Show_Thread(Button=Button_PO_Show_Var, PO_MUL_LOG_PROC_Frame_Var=PO_MUL_LOG_PROC_Frame_Var, Document_Type="Order"))
+    Button_PO_Show_Var.configure(text="List", command = lambda: Start_Order_Show_Thread(Button=Button_PO_Show_Var, PO_MUL_LOG_PROC_Frame_Var=PO_MUL_LOG_PROC_Frame_Var, Document_Type="Order"), state="disabled")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Show_Var, message="Show Listbox with all available Purchase Orders for selection.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Buttons - Generate
     Button_PO_Multi_Generate_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_Multi_PO, Button_Size="Normal")
-    Button_PO_Multi_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders())
+    Button_PO_Multi_Generate_Var.configure(text="Generate", command = lambda: Generate_Purchase_Orders(), state="disabled")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PO_Multi_Generate_Var, message="Process selected files for filtered Purchase Orders.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # ---------------- BackBone Billing Tab -------- #
@@ -419,7 +421,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # Button - Generate BackBone Billing Invoice
     Button_Generate_BB = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_BB, Button_Size="Normal")
-    Button_Generate_BB.configure(text="Generate", command = lambda:Generate_BackBone_Billing())
+    Button_Generate_BB.configure(text="Generate", command = lambda:Generate_BackBone_Billing(), state="disabled")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Generate_BB, message="Generate marked documents for selected BackBoneBilling Invoice.", ToolTip_Size="Normal", GUI_Level_ID=2)
 
     # ---------------- Purchase Return Order Tab ---------------- #
@@ -474,7 +476,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
 
     # Buttons - Generate
     Button_PRO_Show_Var = Elements.Get_Button_Text(Configuration=Configuration, Frame=Tab_PRO, Button_Size="Normal")
-    Button_PRO_Show_Var.configure(text="Generate", command = lambda: Generate_Purchase_Return_Orders())
+    Button_PRO_Show_Var.configure(text="Generate", command = lambda: Generate_Purchase_Return_Orders(), state="disabled")
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Show_Var, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Must be at the end !!!

@@ -223,7 +223,7 @@ def Generate_PRO_CON_Lines(Settings: dict,
         if PRO_Reject_Method == "Confirm All":
             PRO_Confirmed_Lines_df["cancelled"] = False
         elif PRO_Reject_Method == "Reject All":
-            PRO_Confirmed_Lines_df["cancelled"] = "rejected for parts return"
+            PRO_Confirmed_Lines_df["cancelled"] = True
         elif PRO_Reject_Method == "Random Reject":
             Index_to_Reject_list = []
             index_list = PRO_Confirmed_Lines_df.index.to_list()
@@ -238,7 +238,7 @@ def Generate_PRO_CON_Lines(Settings: dict,
 
             # Reject lines
             for index in Index_to_Reject_list:
-                PRO_Confirmed_Lines_df.at[index, "cancelled"] = "rejected for parts return"
+                PRO_Confirmed_Lines_df.at[index, "cancelled"] = True
         elif PRO_Reject_Method == "Ratio":
             ratio = [PRO_Reject_Ration_Confirm, PRO_Reject_Ration_Reject]
             ratio_sum = sum(ratio)
@@ -250,7 +250,6 @@ def Generate_PRO_CON_Lines(Settings: dict,
             PRO_Confirmed_Lines_df = Pandas_Functions.Dataframe_sort(Sort_Dataframe=PRO_Confirmed_Lines_df, Columns_list=["quantity"], Accenting_list=[False]) 
     
             Conf_rem_Qty = 0
-            PRO_Confirmed_Lines_df["cancelled"] = PRO_Confirmed_Lines_df["cancelled"].astype(str)
             for row in PRO_Confirmed_Lines_df.iterrows():
                 # Dataframe
                 row_index = row[0]
@@ -260,7 +259,7 @@ def Generate_PRO_CON_Lines(Settings: dict,
                 if Conf_rem_Qty < raw_split[0]:
                     pass
                 else:
-                    PRO_Confirmed_Lines_df.at[row_index, "cancelled"] = "rejected for parts return"
+                    PRO_Confirmed_Lines_df.at[row_index, "cancelled"] = True
                 Conf_rem_Qty += Quantity
 
             # Sort according back again
@@ -282,7 +281,7 @@ def Generate_PRO_CON_Lines(Settings: dict,
                         Value_CTkCheck = Frame_Body.children[f"!ctkframe{i}"].children["!ctkframe3"].children["!ctkcheckbox"]
                         Value_CTkCheck_Value = Value_CTkCheck.get()
                         if Value_CTkCheck_Value == True:
-                            PRO_Reject_list.append("rejected for parts return")
+                            PRO_Reject_list.append("True")
                         else:
                             PRO_Reject_list.append("False")
                     PO_DEL_Number_list_joined = ";".join(PRO_Reject_list)
@@ -325,8 +324,9 @@ def Generate_PRO_CON_Lines(Settings: dict,
                 Button_Confirm_Var.configure(text="Confirm", command = lambda: Select_PRO_Reject(Frame_Body=Frame_Body, Lines_No=Lines_No))
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Number selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PRO_Reject_Variable)
-                PO_Delivery_Number_list = PRO_Reject_Variable.get().split(";")
-                PRO_Confirmed_Lines_df["cancelled"] = PO_Delivery_Number_list
+                PRO_Cancelled_list = PRO_Reject_Variable.get().split(";")
+                PRO_Cancelled_list = list(map(lambda x: True if x.lower() == "true" else False, PRO_Cancelled_list))
+                PRO_Confirmed_Lines_df["cancelled"] = PRO_Cancelled_list
             else:
                 raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Unit_of_Measure")
         else:
@@ -386,7 +386,10 @@ def Generate_PRO_CON_Lines(Settings: dict,
         Current_line_json["remarks"]["ordered_quantity"] = row_Series["ordered_quantity"]
         Current_line_json["remarks"]["supplier_order_item_id"] = row_Series["supplier_order_item_id"]
         Current_line_json["remarks"]["item_category"] = row_Series["item_category"]
-        Current_line_json["remarks"]["cancelled"] = row_Series["cancelled"]
+        if row_Series["cancelled"] == "False":
+            Current_line_json["remarks"]["cancelled"] = False
+        else:
+            Current_line_json["remarks"]["cancelled"] = row_Series["cancelled"]
 
         PRO_Confirmation_Lines.append(Current_line_json)
         del Current_line_json

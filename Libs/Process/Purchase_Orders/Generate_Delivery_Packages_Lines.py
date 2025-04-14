@@ -147,6 +147,7 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, w
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Delivery}", Field_Type="Input_OptionMenu") 
                     Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    Fields_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Fields_Frame_Var, values=Pack_Fixed_Plant_List, command=None, GUI_Level_ID=3)
 
                 # Dynamic Content height

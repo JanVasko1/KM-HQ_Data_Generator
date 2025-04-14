@@ -79,8 +79,10 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
         Exported_Items_list = HQ_Confirmed_Lines_df["Item_No"].to_list()
         Confirmed_Lines_df["supplier_aid"] = Exported_Items_list
         Confirmed_Lines_df["buyer_aid"] = Exported_Items_list
+        Confirmed_Lines_df["Vendor_Document_No"] = HQ_Confirmed_Lines_df["Vendor_Document_No"].to_list()
         Confirmed_Lines_df["item_category"] = "YN01"
         Confirmed_Lines_df["price_currency"] = HQ_Confirmed_Lines_df["Currency_Code"].to_list()      # Because of Invoice Generation
+        Confirmed_Lines_df["delivery_start_date"] = HQ_Confirmed_Lines_df["Order_Date"].to_list()
         Confirmed_Lines_df["discontinued"] = False
         Confirmed_Lines_df["set"] = False
         Confirmed_Lines_df["bom"] = False

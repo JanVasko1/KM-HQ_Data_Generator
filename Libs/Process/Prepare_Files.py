@@ -575,23 +575,8 @@ def Process_Purchase_Return_Orders(Settings: dict,
             import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Header as Generate_PRO_Invoice_Header
             import Libs.Process.Purchase_Return_Orders.Generate_PRO_Invoice_Lines as Generate_PRO_Invoice_Lines
 
-            # Define if Confirmation lines existing
-            if Generate_PRO_Confirmation == True:
-                if PRO_Confirmed_Lines_df.empty:
-                    if GUI == True:
-                        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"Confirmed_Lines_df data are empty, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
-                    else:
-                        pass  
-                    PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)
-                else:
-                    # Just pass as all is already prepared
-                    pass
-            else:
-                if GUI == True:
-                    Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Data for Credit Memo", message=f"You select to create Credit Memo without creation of Confirmation, do you want to use already imported Confirmation data as source data for Credit Memo?", icon="question", option_1="OK", fade_in_duration=1, GUI_Level_ID=1)
-                else:
-                    pass    
-                PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)    
+            # Download Confirmation lines 
+            PRO_Confirmed_Lines_df, PRO_Confirmation_Number = Prepare_Files_Helpers.Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Number=Purchase_Return_Order, Document_Type="Return Order", Document_Lines_df=Purchase_Return_Lines_df, Items_df=Items_df, UoM_df=UoM_df, GUI=GUI)    
 
             # ---------------- Posted Return Shipments ---------------- #
             # PRO_Return_Shipment_list
@@ -611,28 +596,26 @@ def Process_Purchase_Return_Orders(Settings: dict,
                 pass
 
             # Header
-            PRO_Credit_Memos, PRO_Credit_Number = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
-                                                                                                                Configuration=Configuration, 
-                                                                                                                window=window, 
-                                                                                                                Purchase_Return_Order=Purchase_Return_Order, 
-                                                                                                                Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
-                                                                                                                PRO_Confirmation_Number=PRO_Confirmation_Number, 
-                                                                                                                PRO_Return_Shipment_list=PRO_Return_Shipment_list, 
-                                                                                                                PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
-                                                                                                                Company_Information_df=Company_Information_df, 
-                                                                                                                HQ_Communication_Setup_df=HQ_Communication_Setup_df,
-                                                                                                                GUI=GUI)
+            PRO_Credit_Memo, PRO_Credit_Number, PRO_Return_Shipment_Number = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
+                                                                                                                                        Configuration=Configuration, 
+                                                                                                                                        window=window, 
+                                                                                                                                        Purchase_Return_Order=Purchase_Return_Order, 
+                                                                                                                                        Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
+                                                                                                                                        PRO_Confirmation_Number=PRO_Confirmation_Number, 
+                                                                                                                                        PRO_Return_Shipment_list=PRO_Return_Shipment_list, 
+                                                                                                                                        PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
+                                                                                                                                        Company_Information_df=Company_Information_df, 
+                                                                                                                                        HQ_Communication_Setup_df=HQ_Communication_Setup_df,
+                                                                                                                                        GUI=GUI)
 
             # Lines
-            # TODO --> Finish whole Credit Memo!!!!
-            PRO_Credit_Memos, PRO_Credit_Memo_Table_Data = Generate_PRO_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+            PRO_Credit_Memo, PRO_Credit_Memo_Table_Data = Generate_PRO_Invoice_Lines.Generate_Credit_Memo_Lines(Settings=Settings, 
                                                                                                                 Configuration=Configuration, 
                                                                                                                 window=window, 
                                                                                                                 Purchase_Return_Order=Purchase_Return_Order, 
                                                                                                                 Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
-                                                                                                                PRO_Credit_Memos=PRO_Credit_Memos,
-                                                                                                                PRO_Credit_Number=PRO_Credit_Number,
-                                                                                                                PRO_Return_Shipment_list=PRO_Return_Shipment_list,
+                                                                                                                PRO_Credit_Memo=PRO_Credit_Memo,
+                                                                                                                PRO_Return_Shipment_Number=PRO_Return_Shipment_Number,
                                                                                                                 PRO_Shipment_Lines_df=PRO_Shipment_Lines_df, 
                                                                                                                 PRO_Confirmed_Lines_df=PRO_Confirmed_Lines_df,
                                                                                                                 Items_df=Items_df,
@@ -644,16 +627,16 @@ def Process_Purchase_Return_Orders(Settings: dict,
             # Export 
             Credit_Memo_File_Name = f"INVOIC02_{PRO_Credit_Number}_Test"
             if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memos, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memos, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
         else:
             pass
 
         # -------------------------------- Credit Memo PDF -------------------------------- #
         if Generate_PRO_Credit_Memo_PDF == True:
             import Libs.Process.PDF_Generator as PDF_Generator 
-            PRO_Credit_Memo_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=PRO_Credit_Memos, Document_Type="Return Order", Table_Data=PRO_Credit_Memo_Table_Data)
+            PRO_Credit_Memo_PDF = PDF_Generator.Generate_PDF(Settings=Settings, Configuration=Configuration, Document_Content=PRO_Credit_Memo, Document_Type="Return Order", Table_Data=PRO_Credit_Memo_Table_Data)
 
             # Export 
             # File name must be same as Credit Memo Number

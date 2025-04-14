@@ -271,9 +271,9 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
             PO_Currency = Confirmed_Lines_df.iloc[0]["price_currency"]
         else:
             if GUI == True:
-                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Invoice_Header:Currency", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Cancel File creation.")
+                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Invoice_Header:Currency")
             Can_Continue = False
 
         # Fill value in template

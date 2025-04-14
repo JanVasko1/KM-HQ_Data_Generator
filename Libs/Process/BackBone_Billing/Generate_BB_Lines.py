@@ -343,6 +343,7 @@ def Generate_BB_Lines(Settings: dict,
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                     BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    BB_Fields_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=BB_Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
 
                 # Dynamic Content height
@@ -421,6 +422,7 @@ def Generate_BB_Lines(Settings: dict,
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                     BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    BB_Fields_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
 
                 # Dynamic Content height
@@ -499,6 +501,7 @@ def Generate_BB_Lines(Settings: dict,
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                     BB_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    BB_Fields_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
 
                 # Dynamic Content height

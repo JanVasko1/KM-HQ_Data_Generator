@@ -204,6 +204,7 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                     # CPDI Level
                     CPDI_Level_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"CPDI Level", Field_Type="Input_OptionMenu") 
                     CPDI_Level_Frame_Var = CPDI_Level_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    CPDI_Level_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=CPDI_Level_Frame_Var, values=CPDI_Levels_List, command=None, GUI_Level_ID=3)
 
                     # Buttons

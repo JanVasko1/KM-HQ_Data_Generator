@@ -339,7 +339,7 @@ def Get_Purchase_Return_Headers_info_df(Configuration: dict|None, window: CTk|No
 # ------------------- HQ_Testing_PRO_Lines ------------------- #
 def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, Purchase_Return_Orders_List: list, GUI: bool=True):
     # Fields
-    fields_list = ["Document_No", "Type", "Line_No", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost"]
+    fields_list = ["Document_No", "Type", "Line_No", "No", "Description", "Quantity", "Unit_of_Measure_Code", "Direct_Unit_Cost", "Order_Date_NUS"]
     fields_list_string = Get_Field_List_string(fields_list=fields_list, Join_sign=",")
 
     # Filters
@@ -361,6 +361,7 @@ def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, hea
     Quantity_list = []
     Unit_of_Measure_Code_list = []
     Direct_Unit_Cost_list = []
+    Order_Date_NUS_list = []
 
     for index in range(0, list_len):
         Purchase_Return_Order_No_list.append(response_values_List[index]["Document_No"])
@@ -371,6 +372,7 @@ def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, hea
         Quantity_list.append(response_values_List[index]["Quantity"])
         Unit_of_Measure_Code_list.append(response_values_List[index]["Unit_of_Measure_Code"])
         Direct_Unit_Cost_list.append(response_values_List[index]["Direct_Unit_Cost"])
+        Order_Date_NUS_list.append(response_values_List[index]["Order_Date_NUS"])
 
     response_values_dict = {
         "Document_No": Purchase_Return_Order_No_list,
@@ -380,7 +382,8 @@ def Get_Purchase_Return_Lines_df(Configuration: dict|None, window: CTk|None, hea
         "Description": Description_list,
         "Quantity": Quantity_list,
         "Unit_of_Measure_Code": Unit_of_Measure_Code_list,
-        "Direct_Unit_Cost": Direct_Unit_Cost_list}
+        "Direct_Unit_Cost": Direct_Unit_Cost_list, 
+        "Order_Date_NUS": Order_Date_NUS_list}
     
     if list_len == 1:
         Purchase_Return_Lines_df = DataFrame(data=response_values_dict, columns=fields_list, index=[0])

@@ -147,7 +147,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                         Item_No = row_Series["supplier_aid"]
 
                         # Fields
-                        Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal") 
+                        Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_Normal", Validation="Float") 
                         PO_Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkentry"]
                         PO_Fields_Frame_Var.configure(placeholder_text="Manual Price", placeholder_text_color="#949A9F")
 
@@ -240,6 +240,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     # Fields
                     Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Invoice_Number}", Field_Type="Input_OptionMenu") 
                     Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                    Fields_Frame_Var.set(value="")
                     Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Fields_Frame_Var, values=Inv_Fixed_Plants_List, command=None, GUI_Level_ID=3)
 
                 # Dynamic Content height
@@ -330,6 +331,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
 
                         Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                         Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                        Fields_Frame_Var.set(value="")
                         Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Fields_Frame_Var, values=Country_ISO_Code_list, command=None, GUI_Level_ID=3)
 
                     # Dynamic Content height
@@ -417,6 +419,7 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
 
                         Fields_Frame = Elements_Groups.Get_Widget_Input_row(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_Body, Field_Frame_Type="Single_Column" , Label=f"{Item_No}", Field_Type="Input_OptionMenu") 
                         Fields_Frame_Var = Fields_Frame.children["!ctkframe3"].children["!ctkoptionmenu"]
+                        Fields_Frame_Var.set(value="")
                         Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Fields_Frame_Var, values=Tariff_Number_list, command=None, GUI_Level_ID=3)
 
                     # Dynamic Content height

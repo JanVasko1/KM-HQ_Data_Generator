@@ -258,9 +258,6 @@ def Generate_PO_CON_Lines(Settings: dict,
     else:
         pass
 
-    # -------------------- BEU Set -------------------- #
-    # Not existing Case now - discontinued
-
     # -------------------- Free of Charge -------------------- #
     # Find Machine in Confirmed_Lines_df
     if Machines_df.empty:
@@ -288,7 +285,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Free_Cable_Description = Cable_Description
                         Free_Cable_Quantity = Cable_QTY_per_Machine * Machine_Quantity
                         Free_Cable_Price = Cable_Price
-                        Free_Cable_Line_list = [0, Free_Cable_Number, "", Free_Cable_Description, Free_Cable_Quantity, "C62", Free_Cable_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                        Free_Cable_Line_list = [0, Free_Cable_Number, "", Free_Cable_Description, Free_Cable_Quantity, "C62", Free_Cable_Price, 0, "", "", Machine_Quantity, "", "Free_help", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
 
                         # Add to Confirmed_Lines_df
                         Free_Cable_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Cable_Line_list))
@@ -303,7 +300,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Free_Documentation_Description = Documentation_Description
                         Free_Documentation_Quantity = Documentation_QTY_per_Machine * Machine_Quantity
                         Free_Documentation_Price = Documentation_Price
-                        Free_Documentation_Line_list = [0, Free_Documentation_Number, "", Free_Documentation_Description, Free_Documentation_Quantity, "C62", Free_Documentation_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                        Free_Documentation_Line_list = [0, Free_Documentation_Number, "", Free_Documentation_Description, Free_Documentation_Quantity, "C62", Free_Documentation_Price, 0, "", "", Machine_Quantity, "", "Free_help", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
 
                         # Add to Confirmed_Lines_df
                         Free_Documentation_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Documentation_Line_list))
@@ -318,7 +315,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Free_Face_Sheet_Description = Face_Sheet_Description
                         Free_Face_Sheet_Quantity = Face_Sheet_QTY_per_Machine * Machine_Quantity
                         Free_Face_Sheet_Price = Face_Sheet_Price
-                        Free_Face_Sheet_Line_list = [0, Free_Face_Sheet_Number, "", Free_Face_Sheet_Description, Free_Face_Sheet_Quantity, "C62", Free_Face_Sheet_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                        Free_Face_Sheet_Line_list = [0, Free_Face_Sheet_Number, "", Free_Face_Sheet_Description, Free_Face_Sheet_Quantity, "C62", Free_Face_Sheet_Price, 0, "", "", Machine_Quantity, "", "Free_help", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
 
                         # Add to Confirmed_Lines_df
                         Free_Face_Sheet_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Face_Sheet_Line_list))
@@ -336,7 +333,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                         Free_Item_row_Series = Series(Connected_Free_row[1])
                         Free_Item_No = Free_Item_row_Series["No"]
                         Free_Item_Quantity = int(Free_Item_row_Series["Quantity"]) * Machine_Quantity
-                        Free_Item_Line_list = [0, Free_Item_No, "", "", Free_Item_Quantity, "C62", 0, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                        Free_Item_Line_list = [0, Free_Item_No, "", "", Free_Item_Quantity, "C62", 0, 0, "", "", Machine_Quantity, "", "Free_help", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
 
                         # Add to Confirmed_Lines_df
                         Free_Item_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Item_Line_list))
@@ -377,7 +374,7 @@ def Generate_PO_CON_Lines(Settings: dict,
                                         Value_Free_Price = float(Price_CTkEntry.get())
                                     except:
                                         Value_Free_Price = 0
-                                    Free_Item_Line_list = [0, Value_Free_No, "", Value_Free_Desc, Value_Free_Qty, "C62", Value_Free_Price, 0, "", "", Machine_Quantity, "", "YNF1", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
+                                    Free_Item_Line_list = [0, Value_Free_No, "", Value_Free_Desc, Value_Free_Qty, "C62", Value_Free_Price, 0, "", "", Machine_Quantity, "", "Free_help", False, False, False, False, False, f"{Machine_Exported_Line_No}"]
                                     
                                     # Add to Confirmed_Lines_df
                                     Free_Item_dict = dict(zip(Confirmed_Lines_df_Columns, Free_Item_Line_list))
@@ -436,40 +433,6 @@ def Generate_PO_CON_Lines(Settings: dict,
     # --------------------------------------------- Line Flags --------------------------------------------- #
     # -------- Before General Definition -------- #
     # Run this before generation as Prompt then can also show already marked Lines Flags
-    # Label Always
-    if Can_Continue == True:
-        if Line_Flag_Label_Enabled == True:
-            # Find Machines
-            Confirmed_Lines_df["Material_Group_help"] = ""
-            Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
-            mask_Machines = Confirmed_Lines_df["Material_Group_help"] == "0100"
-            Machines_df = DataFrame(Confirmed_Lines_df[mask_Machines])
-            Machines_df = Machines_df.sort_index(ascending=False)
-            Confirmed_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
-
-            if Machines_df.empty:
-                pass
-            else:
-                # Loop Over Machines 
-                for machine_row in Machines_df.iterrows():
-                    Machine_Index = machine_row[0]
-                    Machine_row_Series = Series(machine_row[1])
-                    Machine = Machine_row_Series["supplier_aid"]
-                    Machine_Description = Pandas_Functions.DataFrame_Get_One_Value(Search_df=Items_df, Search_Column="Description", Filter_Column="No", Filter_Value=Machine)
-                    Machine_Exported_Line_No = str(Machine_row_Series["Exported_Line_No"])
-                    Machine_Quantity = Machine_row_Series["quantity"]
-
-                    Label_Number = f"Label{Machine}"
-                    Label_Line_list = [0, Label_Number, Machine, Machine_Description, Machine_Quantity, "C62", 0, 0, "", "", Machine_Quantity, "", "ZST", False, False, True, False, False, f"{Machine_Exported_Line_No}"]
-
-                    # Add to Confirmed_Lines_df
-                    Label_dict = dict(zip(Confirmed_Lines_df_Columns, Label_Line_list))
-                    Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Machine_Index, New_Row=Label_dict)
-        else:
-            pass
-    else:
-        pass
-
     # Finished for EOL Items (Distribution status set as blocked for Purchase)
     if Can_Continue == True:
         if Line_Flag_Item_EOL_Finished == True:
@@ -531,13 +494,23 @@ def Generate_PO_CON_Lines(Settings: dict,
                                 if Sub_Item_No != "":
                                     Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Sub_Item_No
                                 else:
+                                    # Find if Items is not Free of Charge
+                                    Item_Category = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["item_category"]
+                                    if Item_Category == "Free_help":
+                                        pass
+                                    else:
+                                        # Changed form Substituted into Non-Substituted
+                                        Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
+                                        Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
+                            elif Use_Substitution == False:
+                                # Find if Items is not Free of Charge
+                                Item_Category = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["item_category"]
+                                if Item_Category == "Free_help":
+                                    pass
+                                else:
                                     # Changed form Substituted into Non-Substituted
                                     Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
                                     Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
-                            elif Use_Substitution == False:
-                                # Changed form Substituted into Non-Substituted
-                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "supplier_aid"] = Confirmed_Lines_df.iloc[Confirmed_Lines_df_index]["buyer_aid"] 
-                                Confirmed_Lines_df.at[Confirmed_Lines_df_index, "item_category"] = "YN01"
                             else:
                                 pass
 
@@ -626,8 +599,46 @@ def Generate_PO_CON_Lines(Settings: dict,
     else:
         pass
 
+    # Return Free of Charge Item_Category back 
+    Free_Category_conditions = [(Confirmed_Lines_df["item_category"] == "Label")]
+    Confirmed_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Confirmed_Lines_df, conditions=Free_Category_conditions, Set_Column="item_category", Set_Value="YN01")
+
     # Update after assigning Possible Substitution changes
     Confirmed_Lines_df["description_long"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="description_long", Compare_Column_df1=["supplier_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Description"), axis=1)
+
+    # Label Always - run here in case that machine would be substituted (so label is created based on new machine)
+    if Can_Continue == True:
+        if Line_Flag_Label_Enabled == True:
+            # Find Machines
+            Confirmed_Lines_df["Material_Group_help"] = ""
+            Confirmed_Lines_df["Material_Group_help"] = Confirmed_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Material_Group_help", Compare_Column_df1=["buyer_aid"], Compare_Column_df2=["No"], Search_df=Items_df, Search_Column="Material_Group_NUS"), axis=1)
+            mask_Machines = Confirmed_Lines_df["Material_Group_help"] == "0100"
+            Machines_df = DataFrame(Confirmed_Lines_df[mask_Machines])
+            Machines_df = Machines_df.sort_index(ascending=False)
+            Confirmed_Lines_df.drop(labels=["Material_Group_help"], inplace=True, axis=1)
+
+            if Machines_df.empty:
+                pass
+            else:
+                # Loop Over Machines 
+                for machine_row in Machines_df.iterrows():
+                    Machine_Index = machine_row[0]
+                    Machine_row_Series = Series(machine_row[1])
+                    Machine = Machine_row_Series["supplier_aid"]
+                    Machine_Description = Pandas_Functions.DataFrame_Get_One_Value(Search_df=Items_df, Search_Column="Description", Filter_Column="No", Filter_Value=Machine)
+                    Machine_Exported_Line_No = str(Machine_row_Series["Exported_Line_No"])
+                    Machine_Quantity = Machine_row_Series["quantity"]
+
+                    Label_Number = f"Label{Machine}"
+                    Label_Line_list = [0, Label_Number, Machine, Machine_Description, Machine_Quantity, "C62", 0, 0, "", "", Machine_Quantity, "", "ZST", False, False, True, False, False, f"{Machine_Exported_Line_No}"]
+
+                    # Add to Confirmed_Lines_df
+                    Label_dict = dict(zip(Confirmed_Lines_df_Columns, Label_Line_list))
+                    Confirmed_Lines_df = Pandas_Functions.Dataframe_Insert_Row_at_position(Insert_DataFrame=Confirmed_Lines_df, Insert_At_index=Machine_Index, New_Row=Label_dict)
+        else:
+            pass
+    else:
+        pass
 
     # Check if Machine is Canceled / Finished --> to do it with FOCHs Should not be in the Confirmation and Label
     Confirmed_Lines_df["Material_Group_help"] = ""

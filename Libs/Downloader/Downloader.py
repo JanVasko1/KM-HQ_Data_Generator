@@ -44,6 +44,10 @@ def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: 
     else:
         pass
 
+def Select_Company_Process(Configuration: dict|None, window: CTk|None, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame) -> None:
+    Get_Logistic_Process_List(Configuration=Configuration, window=window, Documents=Documents, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Log_Proc_Used_Variable=Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame)
+    Get_HQ_Vendors_List(Configuration=Configuration, window=window, Documents=Documents, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, BB_Vendor_Used_Variable=BB_Vendor_Used_Variable, BB_Vendor_Used_Frame=BB_Vendor_Used_Frame)
+
 def Get_Logistic_Process_List(Configuration: dict|None, window: CTk|None, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame) -> None:
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
     Company = Data_Functions.Company_Name_prepare(Company=Company)
@@ -88,7 +92,7 @@ def Get_HQ_Vendors_List(Configuration: dict|None, window: CTk|None, Documents: d
         BB_Vendor_Used_Frame_Var.configure(values=HQ_Vendors_list)
         Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=BB_Vendor_Used_Frame_Var, values=HQ_Vendors_list, command=lambda BB_Vendor_Used_Frame_Var: Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=BB_Vendor_Used_Variable, File_Name="Documents", JSON_path=["BackBone_Billing", "Used"], Information=BB_Vendor_Used_Frame_Var), GUI_Level_ID=3)
         # Last step to confirm that company is selected and all data downloaded
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Company Selected, you can continue.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        response = Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Company Selected, you can continue.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
     else:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download Vendors or HQ Communication Setup table is empty, will not be possible to use filter for Multiple POs.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
@@ -711,7 +715,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
-        Progress_Bar.configure(determinate_speed = round(number=50 / 10, ndigits=3), progress_color="#517A31")
+        Progress_Bar.configure(determinate_speed = round(number=50 / 11, ndigits=3), progress_color="#517A31")
     else:
         pass
     Can_Process = True
@@ -862,6 +866,16 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
         # Drop Duplicate rows
         Items_Price_List_Detail_df.drop_duplicates(inplace=True, ignore_index=True)
         Items_Price_List_Detail_df.reset_index(drop=True, inplace=True)
+        if GUI == True:
+            Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
+        else:
+            pass
+    else:
+        pass
+
+    # HQ_Testing_Country_Regions
+    if Can_Process == True:
+        Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
             Progress_Bar_step(window=window, Progress_Bar=Progress_Bar)
         else:
