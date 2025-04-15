@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.8.5
+- Settings loads change because of API
+
 #### 0.8.4
 - multi Purchase Document and Purchase Return Documents issue correction
 - Correction of issues found in Beta Testing
