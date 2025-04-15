@@ -53,7 +53,7 @@ class HeaderBarApp:
         self.Export_folder_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=self.Export_folder_Variable)
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Export_folder_Frame, message="Export files to NAV folders.", ToolTip_Size="Normal", GUI_Level_ID=0)
         
-        # ------------------- Tempaltes ------------------- #
+        # ------------------- Templates ------------------- #
         # Actual Template
         self.Actual_Template_Frame = Elements.Get_Option_Menu(Configuration=self.Configuration, Frame=self.Frame)
         self.Actual_Template_Frame.configure(variable=self.Actual_Template_Variable)
@@ -70,20 +70,26 @@ class HeaderBarApp:
         self.Icon_Versions.configure(command = lambda: self.Show_Version_List(Clicked_on=self.Icon_Versions))
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Versions, message="Show version changes log.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
-        # Button - Save Template
-        self.Icon_Save_Template = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_Transparent")
+        # Button - Save New Template
+        self.Icon_Save_Template = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="file-plus-2", Icon_Size="Header", Button_Size="Picture_Transparent")
         self.Icon_Save_Template.configure(text="")
-        self.Icon_Save_Template.configure(command = lambda: self.Save_Template(Button=self.Icon_Save_Template, Actual_Template_Frame_Var=self.Actual_Template_Frame_Var))
-        Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Save_Template, message="Save Current settings.", ToolTip_Size="Normal", GUI_Level_ID=0)
+        self.Icon_Save_Template.configure(command = lambda: self.Save_New_Template(Actual_Template_Frame_Var=self.Actual_Template_Frame_Var))
+        Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Save_Template, message="Save as new Template.", ToolTip_Size="Normal", GUI_Level_ID=0)
+
+        # Button - Update Current Template
+        self.Icon_Update_Templates = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="save", Icon_Size="Header", Button_Size="Picture_Transparent")
+        self.Icon_Update_Templates.configure(text="")
+        self.Icon_Update_Templates.configure(command = lambda: self.Update_Template())
+        Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Update_Templates, message="Save Current settings.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
         # Button - Export Templates
-        self.Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="folder-output", Icon_Size="Header", Button_Size="Picture_Transparent")
+        self.Icon_Export_Templates = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="upload", Icon_Size="Header", Button_Size="Picture_Transparent")
         self.Icon_Export_Templates.configure(text="")
         self.Icon_Export_Templates.configure(command = lambda: self.Export_Templates())
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Export_Templates, message="Export all templates to Download folder.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
         # Button - Import Templates
-        self.Icon_Import_Templates = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="import", Icon_Size="Header", Button_Size="Picture_Transparent")
+        self.Icon_Import_Templates = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame, Icon_Name="download", Icon_Size="Header", Button_Size="Picture_Transparent")
         self.Icon_Import_Templates.configure(text="")
         self.Icon_Import_Templates.configure(command = lambda: self.Import_Template(Button=self.Icon_Import_Templates, Actual_Template_Frame_Var=self.Actual_Template_Frame_Var))
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Import_Templates, message="Import Template file to program.", ToolTip_Size="Normal", GUI_Level_ID=0)
@@ -101,11 +107,13 @@ class HeaderBarApp:
         self.Icon_Theme.pack(side="right", fill="none", expand=False, padx=5, pady=5)
         self.Icon_Versions.pack(side="right", fill="none", expand=False, padx=5, pady=5)
 
-        self.Icon_Save_Template.pack(side="left", fill="none", expand=False, padx=5, pady=5)
-        self.Actual_Template_Frame.pack(side="left", fill="none", expand=False, padx=5, pady=5)
-        self.Icon_Export_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
-        self.Icon_Import_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
-        self.Icon_Delete_Templates.pack(side="left", fill="none", expand=False, padx=5, pady=5)
+        self.Icon_Delete_Templates.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        self.Icon_Save_Template.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        self.Icon_Update_Templates.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        self.Actual_Template_Frame.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        self.Icon_Export_Templates.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        self.Icon_Import_Templates.pack(side="left", fill="none", expand=False, padx=0, pady=5)
+        
 
     def Theme_Change(self):
         self.Current_Theme = CustomTkinter_Functions.Get_Current_Theme() 
@@ -162,10 +170,9 @@ class HeaderBarApp:
         Frame_Information_Scrollable_Area.pack(side="top", fill="none", expand=False, padx=10, pady=10)
         Information_html.pack(side="top", fill="both", expand=False, padx=10, pady=10)
 
-
-    def Save_Template(self, Button: CTkButton, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
+    def Save_New_Template(self, Actual_Template_Frame_Var: CTkScrollableDropdown) -> None:
         Template_List = Data_Functions.Get_All_Templates_List(Settings=self.Settings, window=self.window)
-        # Define Name for new Template
+
         File_Name = CustomTkinter_Functions.Dialog_Window_Request(Configuration=self.Configuration, title="File Name", text="Write your desire Template name.", Dialog_Type="Confirmation", GUI_Level_ID=1)
         File_Name = File_Name.replace(" ", "_")
 
@@ -173,10 +180,10 @@ class HeaderBarApp:
             Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message="Cannot save, because of missing Filename.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             # Actual_Template_Variable.set(value=File_Name)
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=self.Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name, User_Change=False)
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=self.Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=File_Name)
             Template_List.append(File_Name)
             Template_List = list(set(Template_List))
-            Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List, User_Change=False)
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Templates_List"], Information=Template_List)
 
             # Save Template to Operational folder
             Actual_Template_Settings = self.Settings["0"]["HQ_Data_Handler"]
@@ -193,14 +200,27 @@ class HeaderBarApp:
 
             Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Success", message="Actual settings were saved into saved templates.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
-    def Apply_Template(self, Selected_Value: str) -> None:
-        # Save actual Template
-        Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=self.Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value, User_Change=False)
+    def Update_Template(self) -> None:
+        # Get name of actual Template
+        Actual_Template = self.Settings["0"]["General"]["Template"]["Last_Used"]
 
+        # Save Template to Operational folder
+        Actual_Template_Settings = self.Settings["0"]["HQ_Data_Handler"]
+        Save_Template_dict = {
+            "Type": "Template",
+            "Data": Actual_Template_Settings}
+        
+        Save_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Actual_Template}.json")
+        with open(file=Save_Path, mode="w") as file: 
+            json.dump(Save_Template_dict, file)
+
+        Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Success", message="Actual settings were saved into current template.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+
+    def Apply_Template(self, Selected_Value: str) -> None:
         # Load File
         Load_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Selected_Value}.json")
         Load_Path_List = [Load_Path] # Must be here because the "Import Data" function require it to be as first element (Drag&Drop works tis way)
-        Data_Functions.Import_Data(Settings=self.Settings, Configuration=self.Configuration, window=self.window, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite", User_Change=False)
+        Data_Functions.Import_Data(Settings=self.Settings, Configuration=self.Configuration, window=self.window, import_file_path=Load_Path_List, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
         # Press Download page button to refresh
         Download_Button = self.Frame_Side_Bar.children["!ctkbutton"]
@@ -208,6 +228,7 @@ class HeaderBarApp:
 
         # To keep actual template
         self.Actual_Template_Variable.set(value=Selected_Value)
+        Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=self.Actual_Template_Variable, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information=Selected_Value)
 
     def Export_Templates(self) -> None:
         Source_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template")
@@ -281,7 +302,7 @@ class HeaderBarApp:
                     # Update Template Variable if needed
                     if Delete_Label == self.Actual_Template_Variable.get():
                         self.Actual_Template_Variable.set(value="")
-                        Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="", User_Change=False)
+                        Data_Functions.Save_Value(Settings=self.Settings, Configuration=None, Documents=None, window=self.window, Variable=None, File_Name="Settings", JSON_path=["0", "General", "Template", "Last_Used"], Information="")
                     else:
                         pass
 

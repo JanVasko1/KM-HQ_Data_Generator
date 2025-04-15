@@ -1,7 +1,6 @@
 # BUG --> sometimes it happened that "destroy for c in list(self.children.values()): c.destroy()" --> when page changes
 # BUG --> When PopUp window in Backend is turned off by ESC whole program crash
 # BUG --> Threat --> when open CTk it flickers a lot
-# BUG --> Template lost when switch page
 # BUG --> Method: Price List --> not taking correct one, it takes now just first one
 
 # Import Libraries

@@ -6,6 +6,7 @@
 ### Version List
 #### 0.8.5
 - Settings loads change because of API
+- issue related template visibility and save solved
 
 #### 0.8.4
 - multi Purchase Document and Purchase Return Documents issue correction

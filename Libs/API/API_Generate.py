@@ -78,8 +78,14 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
         # Load selected Template to Settings
-        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Settings.json"), mode="r", encoding="UTF-8", errors="ignore")
         Settings = json.load(fp=File)
+        try:
+            Template_path = Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\PO\\{Request_PO.Template}.json")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_PO.Template} not found.")
+        Template_path_list = [Template_path]
+        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
         # Process Data
         Downloader.Download_Data_Purchase_Orders(Settings=Settings, 
@@ -105,8 +111,14 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
         # Load selected Template to Settings
-        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_BB_INV.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Settings.json"), mode="r", encoding="UTF-8", errors="ignore")
         Settings = json.load(fp=File)
+        try:
+            Template_path = Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\BB\\{Request_BB_INV.Template}.json")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_BB_INV.Template} not found.")
+        Template_path_list = [Template_path]
+        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
         # Process Data
         Downloader.Download_Data_BackBoneBilling(Settings=Settings, 
@@ -132,8 +144,14 @@ async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
         raise HTTPException(status_code=405, detail="Testing on PRD environment strictly forbidden.")
     else:
     # Load selected Template to Settings
-        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\{Request_PRO.Template}.json"), mode="r", encoding="UTF-8", errors="ignore")
+        File = open(file=Data_Functions.Absolute_path(relative_path=f"Libs\\Settings.json"), mode="r", encoding="UTF-8", errors="ignore")
         Settings = json.load(fp=File)
+        try:
+            Template_path = Data_Functions.Absolute_path(relative_path=f"Libs\\API\\Templates\\PRO\\{Request_PRO.Template}.json")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_PRO.Template} not found.")
+        Template_path_list = [Template_path]
+        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
 
         # Process Data
         Downloader.Download_Data_Purchase_Orders(Settings=Settings, 
