@@ -401,6 +401,7 @@
     - interval is created based "From - To" method, where both is defined as "Current Date +/- number of days"
 
 #### Country of Origin
+- always takes only 5 random Country Iso Codes from Business Central and add Major JP, CN, DE, HU
 1. **Method**
     * Fixed - Use manually provided Country Code
     * Random - Program will randomly pick Country Code from list downloaded from NAV
@@ -409,6 +410,7 @@
 2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
 
 #### Tariffs
+- always takes random 10 tariffs from Business Central
 1. **Method**
     * Fixed - Use manually provided Tariff Code
     * Random - Program will randomly pick Tariff Code from list downloaded from NAV
@@ -475,6 +477,7 @@
 2. **Fixed Plant** - This plant will be used when **Method** = Fixed (only options available)
 
 #### Country of Origin
+- always takes only 5 random Country Iso Codes from Business Central and add Major JP, CN, DE, HU
 1. **Method**
     * Fixed - Use manually provided Country Code
     * Random - Program will randomly pick Country Code from list downloaded from NAV
@@ -483,6 +486,7 @@
 2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
 
 #### Tariffs
+- always takes random 10 tariffs from Business Central
 1. **Method**
     * Fixed - Use manually provided Tariff Code
     * Random - Program will randomly pick Tariff Code from list downloaded from NAV
@@ -536,6 +540,7 @@
     - interval is created based "From - To" method, where both is defined as "Current Date +/- number of days"
 
 #### Country of Origin
+- always takes only 5 random Country Iso Codes from Business Central and add Major JP, CN, DE, HU
 1. **Method**
     * Fixed - Use manually provided Country Code
     * Random - Program will randomly pick Country Code from list downloaded from NAV
@@ -544,6 +549,7 @@
 2. **Fixed Country Code** - This Country Code will be used when **Method** = Fixed
 
 #### Tariffs
+- always takes random 10 tariffs from Business Central
 1. **Method**
     * Fixed - Use manually provided Tariff Code
     * Random - Program will randomly pick Tariff Code from list downloaded from NAV

@@ -121,7 +121,7 @@ def PO_CountryOrigin(Settings: dict, Configuration: dict|None, window: CTk|None,
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    PO_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice.", GUI_Level_ID=GUI_Level_ID)
+    PO_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice. \n Always takes 4 major codes + 5 random from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields 
     Fixed_Count_Origin_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PO_INV_Origin_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Country Code", Value=Fixed_Count_Origin, placeholder_text="Manual Country Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"])
@@ -142,7 +142,7 @@ def PO_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    PO_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice.", GUI_Level_ID=GUI_Level_ID)
+    PO_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice. \n Always takes only random 10 tariffs from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
     Fixed_Tariff_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PO_INV_Tariff_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Tariff code", Value=Fixed_Tariff, placeholder_text="Manual Tariff Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Tariff", "Fixed_Options", "Fix_Tariff"])
@@ -329,7 +329,7 @@ def BB_CountryOrigin(Settings: dict, Configuration: dict|None, window: CTk|None,
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    BB_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice.", GUI_Level_ID=GUI_Level_ID)
+    BB_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Invoice. \n Always takes 4 major codes + 5 random from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
     BB_Fixed_Count_Origin_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=BB_INV_Origin_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Country code", Value=BB_Fixed_Count_Origin, placeholder_text="Manual Country Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"])
@@ -351,7 +351,7 @@ def BB_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    BB_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice.", GUI_Level_ID=GUI_Level_ID)
+    BB_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Invoice. \n Always takes only random 10 tariffs from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
     BB_Fixed_Tariff_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=BB_INV_Tariff_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Tariff", Value=BB_Fixed_Tariff, placeholder_text="Manual Tariff Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "BackBone_Billing", "Tariff", "Fixed_Options", "Fix_Tariff"])
@@ -477,7 +477,7 @@ def PRO_CountryOrigin(Settings: dict, Configuration: dict|None, window: CTk|None
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    PRO_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Credit Memo.", GUI_Level_ID=GUI_Level_ID)
+    PRO_INV_Origin_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Country of Origin", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define Country Codes in Credit Memo. \n Always takes 4 major codes + 5 random from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields 
     PRO_Fixed_Count_Origin_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Origin_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Country Code", Value=PRO_Fixed_Count_Origin, placeholder_text="Manual Country Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Country_Of_Origin", "Fixed_Options", "Fix_Country_Of_Origin"])
@@ -498,7 +498,7 @@ def PRO_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame
 
     # ------------------------- Main Functions -------------------------#
     # Widget
-    PRO_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Credit Memo.", GUI_Level_ID=GUI_Level_ID)
+    PRO_INV_Tariff_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="Tariffs", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Settings related to how program will define tariffs numbers in Credit Memo. \n Always takes only random 10 tariffs from Business Central.", GUI_Level_ID=GUI_Level_ID)
 
     # Fields
     PRO_Fixed_Tariff_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=PRO_INV_Tariff_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Fixed Tariff code", Value=PRO_Fixed_Tariff, placeholder_text="Manual Tariff Code.", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Return_Order", "Tariff", "Fixed_Options", "Fix_Tariff"])

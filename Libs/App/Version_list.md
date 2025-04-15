@@ -7,6 +7,7 @@
 #### 0.8.5
 - Settings loads change because of API
 - issue related template visibility and save solved
+- limits Tariffs list to 10 and Country of Origin to 9 (4 major + 5 random)
 
 #### 0.8.4
 - multi Purchase Document and Purchase Return Documents issue correction

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "DDL_Consumables",
+                "Last_Used": "BB_Invoice",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",
@@ -63,7 +63,7 @@
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -314,7 +314,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -337,7 +337,7 @@
                 }
             },
             "Delivery": {
-                "Use": true,
+                "Use": false,
                 "Delivery_Counts": {
                     "Method": "Fixed",
                     "Methods_List": [
@@ -536,7 +536,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -630,11 +630,11 @@
                         }
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -674,7 +674,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Price": 2500.0
+                            "Fix_Price": 100.0
                         }
                     },
                     "Currency": {
@@ -714,7 +714,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -731,7 +731,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Random",
+                        "Method": "Fixed",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -739,7 +739,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Country_Of_Origin": "CZ"
+                            "Fix_Country_Of_Origin": "DE"
                         }
                     },
                     "Tariff": {
@@ -758,7 +758,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Return_Order": {

@@ -2,6 +2,7 @@
 from pandas import DataFrame
 import requests
 import json
+import random
 from fastapi import HTTPException
 
 import Libs.GUI.Elements as Elements
@@ -581,6 +582,12 @@ def Get_Country_ISO_Code_list(Configuration: dict|None, window: CTk|None, header
     for index in range(0, list_len):
         Country_ISO_Code_list.append(response_values_List[index]["ISO_Code"])
 
+    # Create limited list --> no need in to have more
+    Major_ISO_Code_list = ["CN", "JP", "DE", "HQ"]
+    Minor_ISO_Code_list = [var for var in Country_ISO_Code_list if var not in Major_ISO_Code_list]
+    Minor_ISO_Code_list = random.sample(Minor_ISO_Code_list, 5)
+    Country_ISO_Code_list = Major_ISO_Code_list + Minor_ISO_Code_list
+    Country_ISO_Code_list.sort()
     return Country_ISO_Code_list
 
 # ------------------- HQ_Testing_HQ_CPDI_Levels ------------------- #
@@ -1387,6 +1394,9 @@ def Get_Tariff_Number_list(Configuration: dict|None, window: CTk|None, headers: 
     for index in range(0, list_len):
         Tariff_Number_list.append(response_values_List[index]["No"])
 
+    # Take random 10 tariffs number --> no need more
+    Tariff_Number_list = random.sample(Tariff_Number_list, 10)
+    Tariff_Number_list.sort()
     return Tariff_Number_list
 
 # ------------------- HQ_Testing_UoM ------------------- #

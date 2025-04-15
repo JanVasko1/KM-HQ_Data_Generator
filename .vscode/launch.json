@@ -14,15 +14,16 @@
             "justMyCode": true
         },
         {
-            "name": "FastAPI - Orders",
-            "justMyCode": false,
+            "name": "FastAPI",
+            "justMyCode": true,
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
             "args": [
                 "Libs.API.API_Generate:app",
                 "--reload"
-            ]
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }
