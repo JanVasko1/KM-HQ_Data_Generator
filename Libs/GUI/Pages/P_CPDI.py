@@ -16,7 +16,7 @@ def Page_CPDI(Settings: dict, Configuration: dict|None, window: CTk|None, Frame:
     Tab_CPDI = TabView.add("CPDI")
     TabView.set("CPDI")
     Tab_CPDI_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_CPDI_ToolTip_But, message="CPDI Settings.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_CPDI_ToolTip_But, message="CPDI Settings.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
     Frame_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_CPDI, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
     Frame_Column_A.pack_propagate(flag=False)

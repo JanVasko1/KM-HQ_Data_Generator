@@ -573,3 +573,16 @@
     3. **Client Secret** - You should have your own or ask Jiří Adamec for new one
     4. **Tenant ID** - non-changeable field 
     5. **Export NAV folders** - defines if to exports to real Fileserver/Azure or just my personal Download folder 
+
+## <u>Business Central</u>
+#### Microsoft Entra Application Card
+- make sure that you have your "Microsoft Entra Application Card" created by following these steps
+1. Create Card
+    - App Field: **Client Name** --> Business Central Field: **Description**
+    - App Field: **Client ID** --> Business Central Field: **Client ID**
+    - add your email into field **Contact Information**
+2. Add Permission
+    - NUS_BASIC_CORE
+    - NUS_BASIC_W1
+    - SUPER (DATA)
+3. Enable

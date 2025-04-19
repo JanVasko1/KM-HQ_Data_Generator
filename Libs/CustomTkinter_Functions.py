@@ -1,10 +1,9 @@
 # Import Libraries
 import pyautogui
-from customtkinter import CTk, CTkButton, get_appearance_mode, BooleanVar, CTkCheckBox
+from customtkinter import CTk, CTkButton, get_appearance_mode
 from CTkTable import CTkTable
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.Data_Functions as Data_Functions
 
 # --------------------------------------------- CustomTkinter --------------------------------------------- #
 def Dialog_Window_Request(Configuration: dict|None, title: str, text: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> str|None:

@@ -36,7 +36,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         Companies_thread.start()
         Companies_thread.join(timeout=0.1) 
 
-    def Get_Logistic_Process(PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Frame: CTkFrame, Selected_Company: str) -> list:
+    def Select_Company(PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Frame: CTkFrame, Selected_Company: str) -> list:
         # Delete Operational data from Settings to clear lists
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
@@ -480,7 +480,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Elements.Get_ToolTip(Configuration=Configuration, widget=Button_PRO_Show_Var, message="Generate marked documents for selected PROs.", ToolTip_Size="Normal", GUI_Level_ID=3)
 
     # Must be at the end !!!
-    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command = lambda Selected_Company: Get_Logistic_Process(PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Frame=BB_Vendor_Used_Frame, Selected_Company=Selected_Company) , GUI_Level_ID=1)
+    Companies_Frame_Var = Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Companies_Frame, values=Companies_List, command = lambda Selected_Company: Select_Company(PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Frame=BB_Vendor_Used_Frame, Selected_Company=Selected_Company) , GUI_Level_ID=1)
     Button_Download_Company.configure(text="Get Companies", command = lambda: Download_Companies(Companies_Frame_Var=Companies_Frame_Var))
     
     # Build look of Widget

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "BB_Invoice",
+                "Last_Used": "PRO_Confirmation_All",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",
@@ -204,7 +204,7 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -261,7 +261,7 @@
                         }
                     },
                     "Rejection": {
-                        "Method": "Ratio",
+                        "Method": "Confirm All",
                         "Methods_List": [
                             "Confirm All",
                             "Reject All",
@@ -634,7 +634,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -758,7 +758,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "Return_Order": {

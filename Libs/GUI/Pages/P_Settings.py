@@ -14,7 +14,6 @@ def Page_Settings(Settings: dict, Configuration: dict|None, window: CTk|None, Fr
     TabView.pack_propagate(flag=False)
     Tab_Gen = TabView.add("General")
     TabView.set("General")
-
     Tab_App_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_App_ToolTip_But, message="Application appearance Setup.", ToolTip_Size="Normal", GUI_Level_ID=1)
 

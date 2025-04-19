@@ -825,14 +825,13 @@ class WidgetRow_Date_Picker:
             self.Date_Entry.configure(placeholder_text=self.Date_format, placeholder_text_color=self.Date_Entry._placeholder_text_color)
         else:
             self.Date_Entry.configure(placeholder_text=self.Date_format, placeholder_text_color=self.placeholder_text_color)
-        self.Date_Entry.bind("<FocusOut>", lambda Value: self.Save(Value=Value))
-
         # Insert Value
         if self.Value != "":
             self.Date_Entry.delete(first_index=0, last_index=12)
             self.Date_Entry.insert(index=0, string=self.Value)
         else:
             pass
+        self.Date_Entry.bind("<FocusOut>", lambda Value: self.Save(Value=Value))
 
         self.Button_Drop_Down = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame_Value, Icon_Name="calendar-days", Icon_Size="Entry_DropDown", Button_Size="Tiny")
         self.Button_Drop_Down.configure(command= lambda: self.Chose_date())
@@ -1044,14 +1043,13 @@ class WidgetRow_Color_Picker:
             self.Color_Entry.configure(placeholder_text="#NNNNNN", placeholder_text_color=self.Color_Entry._placeholder_text_color)
         else:
             self.Color_Entry.configure(placeholder_text="#NNNNNN", placeholder_text_color=self.placeholder_text_color)
-        self.Color_Entry.bind("<FocusOut>", self.Save())
-
         # Insert Value
         if self.Value != "":
             self.Color_Entry.delete(first_index=0, last_index=12)
             self.Color_Entry.insert(index=0, string=self.Value)
         else:
             pass
+        self.Color_Entry.bind("<FocusOut>", self.Save())
 
         self.Button_Drop_Down = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame_Value, Icon_Name="paintbrush", Icon_Size="Entry_DropDown", Button_Size="Tiny")
         self.Button_Drop_Down.configure(command= lambda: self.Chose_color())

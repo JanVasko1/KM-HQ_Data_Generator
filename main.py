@@ -17,7 +17,7 @@ class Win(CTk):
     def __init__(self):
         super().__init__()
         super().overrideredirect(True)
-        super().title("HQ Testing Tool")
+        super().title("HQ Data Generator")
         super().iconbitmap(bitmap=Data_Functions.Absolute_path(relative_path=f"Libs\\GUI\\Icons\\HQ_Data_Generator.ico"))
 
         display_width = self.winfo_screenwidth()

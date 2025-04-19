@@ -20,9 +20,9 @@ def Page_Delivery(Settings: dict, Configuration: dict|None, window: CTk|None, Fr
     Tab_DEL1_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
     Tab_DEL2_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
     Tab_T_P_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_DEL1_ToolTip_But, message="Base delivery Settings.", ToolTip_Size="Normal", GUI_Level_ID=2)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_DEL2_ToolTip_But, message="Base delivery Settings.", ToolTip_Size="Normal", GUI_Level_ID=2)
-    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_T_P_ToolTip_But, message="Packages Settings.", ToolTip_Size="Normal", GUI_Level_ID=2)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_DEL1_ToolTip_But, message="Base delivery Settings.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_DEL2_ToolTip_But, message="Base delivery Settings.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_T_P_ToolTip_But, message="Packages Settings.", ToolTip_Size="Normal", GUI_Level_ID=1)
 
     # ---------- Delivery - 1 ---------- #
     Frame_Tab_DEL1_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_DEL1, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
