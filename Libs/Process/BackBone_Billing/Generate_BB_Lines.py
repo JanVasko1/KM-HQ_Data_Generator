@@ -562,7 +562,6 @@ def Generate_BB_Lines(Settings: dict,
         Current_line_json["article_price"]["price_line_amount"] = row_Series["price_line_amount"]
 
         Current_line_json["order_reference"]["order_id"] = row_Series["order_id"]
-        Current_line_json["order_reference"]["line_item_id"] = row_Series["line_item_id"]
         Current_line_json["order_reference"]["order_date"] = row_Series["order_date"]
 
         Current_line_json["supplier_order_reference"]["supplier_order_id"] = row_Series["supplier_order_id"]

@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 0.8.6
+- BackBoneBilling lines segment corrected, Key/Value pair "Order_Reference"/"line_item_id" deleted
+
 #### 0.8.5
 - Settings loads change because of API
 - issue related template visibility and save solved
