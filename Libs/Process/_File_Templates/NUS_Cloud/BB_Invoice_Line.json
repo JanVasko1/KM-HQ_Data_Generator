@@ -13,6 +13,7 @@
     },
     "order_reference": {
         "order_id": "",
+        "line_item_id": "",
         "order_date": ""
     },
     "supplier_order_reference": {
