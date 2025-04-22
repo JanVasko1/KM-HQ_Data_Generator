@@ -755,7 +755,7 @@ class WidgetRow_RadioButton:
 
 # -------------------------------------------------------------------------------- WidgetRow_Date_Picker -------------------------------------------------------------------------------- #
 class WidgetRow_Date_Picker:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Date_format", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Date_Entry", "Button_Drop_Down", "Date_Picker_window", "Frame_Picker", "Value", "Date_Format"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Date_format", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Date_Entry", "Button_Drop_Down", "Date_Picker_window", "Frame_Picker", "Value", "DatePicker_opened"
     """
     Field row for DatePicker
     """
@@ -796,6 +796,9 @@ class WidgetRow_Date_Picker:
         self.Save_To = Save_To 
         self.Save_path = Save_path
         self.GUI_Level_ID = GUI_Level_ID
+
+        # DatePicker Variable Open
+        self.DatePicker_opened = False
 
         # Whole Row Frame
         self.Row_Frame = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.master, Field_Frame_Type=self.Field_Frame_Type)
@@ -863,6 +866,7 @@ class WidgetRow_Date_Picker:
             self.Date_Entry.insert(0, selected_date.strftime(self.Date_format))
             self.Date_Picker_window.Pop_Up_Window.destroy()
             self.Save(Value=selected_date)
+            self.DatePicker_opened = False
 
         def build_calendar(Shown_Month: int, Shown_Year: int) -> None:
             calendar_frame = Elements.Get_Frame(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, Frame_Size="DatePicker", GUI_Level_ID=self.GUI_Level_ID)
@@ -913,23 +917,27 @@ class WidgetRow_Date_Picker:
                         btn.grid(row=week, column=day_col)
                         day += 1
 
-        # CTkToplevel window
-        Import_window_geometry = (320, 320)
-        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=self.Button_Drop_Down, New_Window_width=Import_window_geometry[0])
-        self.Date_Picker_window = PopUp_window(Configuration=self.Configuration, max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=self.Picker_Fixed_position, Always_on_Top=self.Picker_Always_on_Top)
-        self.Date_Picker_window.Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: self.Date_Picker_window.Pop_Up_Window.destroy())
+        if self.DatePicker_opened == False:
+            self.DatePicker_opened = True
+            # CTkToplevel window
+            Import_window_geometry = (320, 320)
+            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=self.Button_Drop_Down, New_Window_width=Import_window_geometry[0])
+            self.Date_Picker_window = PopUp_window(Configuration=self.Configuration, max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=self.Picker_Fixed_position, Always_on_Top=self.Picker_Always_on_Top)
+            self.Date_Picker_window.Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: self.Date_Picker_window.Pop_Up_Window.destroy())
 
-        # Frame - Date Picker
-        self.Frame_Picker = WidgetFrame(Configuration=self.Configuration, Frame=self.Date_Picker_window.Pop_Up_Window, Name="Date picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Use to select date.", GUI_Level_ID=self.GUI_Level_ID)
-        self.Frame_Picker.Widget_Frame.configure(bg_color = "#000001")
+            # Frame - Date Picker
+            self.Frame_Picker = WidgetFrame(Configuration=self.Configuration, Frame=self.Date_Picker_window.Pop_Up_Window, Name="Date picker", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Use to select date.", GUI_Level_ID=self.GUI_Level_ID)
+            self.Frame_Picker.Widget_Frame.configure(bg_color = "#000001")
 
-        Current_Year = datetime.now().year
-        Current_Month = datetime.now().month
-        Current_Day = datetime.now().day
-        build_calendar(Shown_Month=Current_Month, Shown_Year=Current_Year)
+            Current_Year = datetime.now().year
+            Current_Month = datetime.now().month
+            Current_Day = datetime.now().day
+            build_calendar(Shown_Month=Current_Month, Shown_Year=Current_Year)
 
-        # Build look of Widget --> must be before inset
-        self.Frame_Picker.Show()
+            # Build look of Widget --> must be before inset
+            self.Frame_Picker.Show()
+        else:
+            pass
     
     def Freeze(self):
         self.Date_Entry.configure(state="disabled")
@@ -972,10 +980,227 @@ class WidgetRow_Date_Picker:
         else:
             Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
+# -------------------------------------------------------------------------------- WidgetRow_Time_Picker -------------------------------------------------------------------------------- #
+class WidgetRow_Time_Picker:
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Time_format", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Time_Entry", "Button_Drop_Down", "Time_Picker_window", "Frame_Picker", "Value", "Hour_Variable", "Minute_Variable", "Frame_Picker", "Frame_Label_Row", "Hour_text", "Comma_text", "Minute_text", "Frame_Hour_Row", "Hour_text_0", "Hour_Slider", "Hour_text_23", "Frame_Minute_Row", "Minute_text_0", "Minutes_Slider", "Minute_text_59", "Time_Picker_opened", "Current_Minutes"
+    """
+    Field row for DatePicker
+    """
+    def __init__(self, 
+                 Settings: dict|None, 
+                 Configuration: dict|None, 
+                 master: CTkFrame, 
+                 window: CTk, 
+                 Field_Frame_Type: str, 
+                 Label: str, 
+                 Time_format: str,
+                 Save_To: str|None = None,
+                 Save_path: list|None = None,
+                 Documents: dict|None = None,
+                 Value: str|None = "",
+                 placeholder_text_color: str = "",
+                 Label_ToolTip: list|None = None, 
+                 Button_ToolTip: list|None = None, 
+                 Picker_Always_on_Top: bool = False,
+                 Picker_Fixed_position: bool = False,
+                 Validation: str|None = None,
+                 GUI_Level_ID: int|None = None):
+        self.Settings = Settings
+        self.Configuration = Configuration
+        self.Documents = Documents
+        self.master = master
+        self.window = window
+        self.Field_Frame_Type = Field_Frame_Type
+        self.Label = Label
+        self.Time_format = Time_format
+        self.Label_ToolTip = Label_ToolTip
+        self.Value = Value
+        self.placeholder_text_color = placeholder_text_color
+        self.Validation = Validation
+        self.Button_ToolTip = Button_ToolTip
+        self.Picker_Always_on_Top = Picker_Always_on_Top
+        self.Picker_Fixed_position = Picker_Fixed_position
+        self.Save_To = Save_To 
+        self.Save_path = Save_path
+        self.GUI_Level_ID = GUI_Level_ID
+
+        # TimePicker Variable Open
+        self.Time_Picker_opened = False
+
+        # Whole Row Frame
+        self.Row_Frame = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.master, Field_Frame_Type=self.Field_Frame_Type)
+        self.Row_Frame.pack_propagate(flag=False)
+
+        # Field Description
+        self.Frame_Label = Elements.Get_Widget_Field_Frame_Label(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
+        self.Frame_Label.pack_propagate(flag=False)
+
+        self.Label_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label, Label_Size="Field_Label", Font_Size="Field_Label")
+        self.Label_text.configure(text=f"{self.Label}:")
+
+        if type(self.Label_ToolTip) == list:
+            Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Label_text, message=self.Label_ToolTip[0], ToolTip_Size="Normal", GUI_Level_ID=self.Label_ToolTip[1])
+        else:
+            pass
+
+        # Row indent
+        self.Frame_Space = Elements.Get_Widget_Field_Frame_Space(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
+        
+        # Field Value
+        self.Frame_Value = Elements.Get_Widget_Field_Frame_Value(Configuration=self.Configuration, Frame=self.Row_Frame, Field_Frame_Type=self.Field_Frame_Type)
+        self.Frame_Value.pack_propagate(flag=False)
+        
+        self.Time_Entry = Elements.Get_Entry_Field(Settings=self.Settings, Configuration=self.Configuration, window=self.window, Frame=self.Frame_Value, Field_Size="Pickers", Validation=self.Validation)
+        if placeholder_text_color == "":
+            self.Time_Entry.configure(placeholder_text=self.Time_format, placeholder_text_color=self.Time_Entry._placeholder_text_color)
+        else:
+            self.Time_Entry.configure(placeholder_text=self.Time_format, placeholder_text_color=self.placeholder_text_color)
+        # Insert Value
+        if self.Value != "":
+            self.Time_Entry.delete(first_index=0, last_index=12)
+            self.Time_Entry.insert(index=0, string=self.Value)
+        else:
+            pass
+        self.Time_Entry.bind("<FocusOut>", lambda Value: self.Save())
+
+        self.Button_Drop_Down = Elements.Get_Button_Icon(Configuration=self.Configuration, Frame=self.Frame_Value, Icon_Name="clock-10", Icon_Size="Entry_DropDown", Button_Size="Tiny")
+        self.Button_Drop_Down.configure(command= lambda: self.Chose_time())
+
+        Elements.Get_ToolTip(Configuration=Configuration, widget=self.Button_Drop_Down, message=self.Button_ToolTip, ToolTip_Size="Normal", GUI_Level_ID=self.GUI_Level_ID)
+
+    def Chose_time(self):
+        def Quit_Save():
+            self.Set_Value()
+            self.Time_Picker_window.Pop_Up_Window.destroy()
+            self.Save()
+            self.Time_Picker_opened = False
+        
+        if self.Time_Picker_opened == False:
+            self.Time_Picker_opened = True
+
+            # CTkToplevel window
+            Import_window_geometry = (500, 250)
+            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=self.Button_Drop_Down, New_Window_width=Import_window_geometry[0])
+            self.Time_Picker_window = PopUp_window(Configuration=self.Configuration, max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=self.Picker_Fixed_position, Always_on_Top=self.Picker_Always_on_Top)
+            self.Time_Picker_window.Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: Quit_Save())
+
+            # Time 
+            Current_time = self.Get_Value()
+            Current_time_list = Current_time.split(":")
+            self.Hour_Variable = IntVar(master=self.Time_Picker_window.Pop_Up_Window, value=int(Current_time_list[0]))
+            self.Minute_Variable = IntVar(master=self.Time_Picker_window.Pop_Up_Window, value=int(Current_time_list[1]))
+
+            # Frame - Time Picker
+            self.Frame_Picker = WidgetFrame(Configuration=self.Configuration, Frame=self.Time_Picker_window.Pop_Up_Window, Name="Time picker", Additional_Text="<ESC> to confirm.", Widget_size="Single_size", Widget_Label_Tooltip="Use to select time.", GUI_Level_ID=self.GUI_Level_ID)
+            self.Frame_Picker.Widget_Frame.configure(bg_color = "#000001")
+
+            # Time label 
+            self.Frame_Label_Row = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, Field_Frame_Type="Single_Column")
+            self.Frame_Label_Row.pack(side="top", fill="y", expand=False, padx=10, pady=(0,5))
+
+            self.Hour_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
+            self.Hour_text.configure(textvariable=self.Hour_Variable)
+            self.Hour_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+            self.Comma_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
+            self.Comma_text.configure(text=":")
+            self.Comma_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+            self.Minute_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
+            self.Minute_text.configure(textvariable=self.Minute_Variable)
+            self.Minute_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+
+            # Hour
+            self.Frame_Hour_Row = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, Field_Frame_Type="Single_Column")
+            self.Frame_Hour_Row.pack_propagate(flag=False)
+            self.Frame_Hour_Row.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+            self.Hour_text_0 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Hour_Row, Label_Size="Field_Label", Font_Size="Field_Label")
+            self.Hour_text_0.configure(text="0")
+            self.Hour_text_0.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+
+            self.Hour_Slider = Elements.Get_Slider(Configuration=self.Configuration, Frame=self.Frame_Hour_Row, orientation="Horizontal", Slider_Size="TimePicker_Hours", GUI_Level_ID=self.GUI_Level_ID)
+            self.Hour_Slider.configure(variable=self.Hour_Variable)
+            self.Hour_Slider.pack(side="left", fill="x", expand=True, padx=0, pady=(0,5))
+
+            self.Hour_text_23 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Hour_Row, Label_Size="Field_Label", Font_Size="Field_Label")
+            self.Hour_text_23.configure(text="23")
+            self.Hour_text_23.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+
+            # Minute
+            self.Frame_Minute_Row = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, Field_Frame_Type="Single_Column")
+            self.Frame_Minute_Row.pack_propagate(flag=False)
+            self.Frame_Minute_Row.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+
+            self.Minute_text_0 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Minute_Row, Label_Size="Field_Label", Font_Size="Field_Label")
+            self.Minute_text_0.configure(text="0")
+            self.Minute_text_0.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+
+            self.Minutes_Slider = Elements.Get_Slider(Configuration=self.Configuration, Frame=self.Frame_Minute_Row, orientation="Horizontal", Slider_Size="TimePicker_Minutes", GUI_Level_ID=self.GUI_Level_ID)
+            self.Minutes_Slider.configure(variable=self.Minute_Variable)
+            self.Minutes_Slider.pack(side="left", fill="x", expand=True, padx=0, pady=(0,5))
+
+            self.Minute_text_59 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Minute_Row, Label_Size="Field_Label", Font_Size="Field_Label")
+            self.Minute_text_59.configure(text="59")
+            self.Minute_text_59.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
+
+            # Build look of Widget --> must be before inset
+            self.Frame_Picker.Show()
+        else:
+            pass
+
+    def Freeze(self):
+        self.Time_Entry.configure(state="disabled")
+        self.Button_Drop_Down.configure(state="disabled")
+
+    def UnFreeze(self):
+        self.Time_Entry.configure(state="normal")
+        self.Button_Drop_Down.configure(state="normal")
+
+    def Show(self):
+        self.Row_Frame.pack(side="top", fill="none", expand=True, padx=10, pady=(0,5))
+        self.Frame_Label.pack(side="left", fill="none", expand=False, padx=0, pady=7)
+        self.Label_text.pack(side="right", fill="none", expand=False, padx=0, pady=0)
+        self.Frame_Space.pack(side="left", fill="none", expand=False, padx=0, pady=0)
+        self.Frame_Value.pack(side="left", fill="x", expand=True, padx=0, pady=0)
+        self.Time_Entry.pack(side="left", fill="none", expand=False, padx=0, pady=0)
+        self.Button_Drop_Down.pack(side="left", fill="none", expand=False, padx=(5, 0), pady=0)
+
+    def Get_Value(self):
+        return self.Time_Entry.get()
+    
+    def Set_Value(self):
+        # Check minutes 
+        if self.Minute_Variable.get() < 10:
+            self.Current_Minutes = f"0{self.Minute_Variable.get()}"
+        else:
+            self.Current_Minutes = self.Minute_Variable.get()
+
+        self.Time_Entry.delete(first_index=0, last_index=8)
+        self.Time_Entry.insert(index=0, string=f"{self.Hour_Variable.get()}:{self.Current_Minutes}")
+
+    def Save(self):
+        # Default
+        self.Value = self.Get_Value()
+
+        # Time Check
+        if self.Value != "":
+            try:
+                datetime.strptime(self.Value, self.Time_format)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not in proper Time format, should be: {self.Time_format}.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Time_Entry.delete(first_index=0, last_index=100)
+                self.Time_Entry.focus()
+        else:
+            pass
+
+        # Save
+        if (self.Save_To == None) or (self.Save_path == None):
+            pass
+        else:
+            Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=self.Get_Value())
 
 # -------------------------------------------------------------------------------- WidgetRow_Color_Picker -------------------------------------------------------------------------------- #
 class WidgetRow_Color_Picker:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Color_Entry", "Button_Drop_Down", "Color_Picker_window", "Frame_Picker", "Color_Picker"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Color_Entry", "Button_Drop_Down", "Color_Picker_window", "Frame_Picker", "Color_Picker", "ColorPicker_opened"
     """
     Field row for ColorPicker
     """
@@ -1014,6 +1239,9 @@ class WidgetRow_Color_Picker:
         self.Save_To = Save_To 
         self.Save_path = Save_path
         self.GUI_Level_ID = GUI_Level_ID
+
+        # ColorPicker Variable Open
+        self.ColorPicker_opened = False
 
         # Whole Row Frame
         self.Row_Frame = Elements.Get_Widget_Field_Frame_Area(Configuration=self.Configuration, Frame=self.master, Field_Frame_Type=self.Field_Frame_Type)
@@ -1061,21 +1289,26 @@ class WidgetRow_Color_Picker:
             self.Set_Value()
             self.Color_Picker_window.Pop_Up_Window.destroy()
             self.Save()
+            self.ColorPicker_opened = False
 
-        # CTkToplevel window
-        Import_window_geometry = (320, 320)
-        Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=self.Button_Drop_Down, New_Window_width=Import_window_geometry[0])
-        self.Color_Picker_window = PopUp_window(Configuration=self.Configuration, max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=self.Picker_Fixed_position, Always_on_Top=self.Picker_Always_on_Top)
-        self.Color_Picker_window.Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: Quit_Save())
+        if self.ColorPicker_opened == False:
+            self.ColorPicker_opened = True
+            # CTkToplevel window
+            Import_window_geometry = (320, 320)
+            Top_middle_point = CustomTkinter_Functions.Count_coordinate_for_new_window(Clicked_on=self.Button_Drop_Down, New_Window_width=Import_window_geometry[0])
+            self.Color_Picker_window = PopUp_window(Configuration=self.Configuration, max_width=Import_window_geometry[0], max_height=Import_window_geometry[1], Top_middle_point=Top_middle_point, Fixed=self.Picker_Fixed_position, Always_on_Top=self.Picker_Always_on_Top)
+            self.Color_Picker_window.Pop_Up_Window.bind(sequence="<Escape>", func=lambda event: Quit_Save())
 
-        # Frame - Color Picker
-        self.Frame_Picker = WidgetFrame(Configuration=self.Configuration, Frame=self.Color_Picker_window.Pop_Up_Window, Name="Color picker", Additional_Text="<ESC> to confirm.", Widget_size="Single_size", Widget_Label_Tooltip="Use to select color.", GUI_Level_ID=self.GUI_Level_ID)
-        self.Frame_Picker.Widget_Frame.configure(bg_color = "#000001")
-        self.Color_Picker = Elements.Get_Color_Picker(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, GUI_Level_ID=self.GUI_Level_ID)
+            # Frame - Color Picker
+            self.Frame_Picker = WidgetFrame(Configuration=self.Configuration, Frame=self.Color_Picker_window.Pop_Up_Window, Name="Color picker", Additional_Text="<ESC> to confirm.", Widget_size="Single_size", Widget_Label_Tooltip="Use to select color.", GUI_Level_ID=self.GUI_Level_ID)
+            self.Frame_Picker.Widget_Frame.configure(bg_color = "#000001")
+            self.Color_Picker = Elements.Get_Color_Picker(Configuration=self.Configuration, Frame=self.Frame_Picker.Body_Frame, GUI_Level_ID=self.GUI_Level_ID)
 
-        # Build look of Widget --> must be before inset
-        self.Frame_Picker.Show()
-        self.Color_Picker.pack(padx=0, pady=0) 
+            # Build look of Widget --> must be before inset
+            self.Frame_Picker.Show()
+            self.Color_Picker.pack(padx=0, pady=0) 
+        else:
+            pass
     
     def Freeze(self):
         self.Color_Entry.configure(state="disabled")

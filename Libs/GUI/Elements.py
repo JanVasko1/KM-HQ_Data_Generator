@@ -1,7 +1,7 @@
 # Import Libraries
 from PIL import Image
 
-from customtkinter import CTk, CTkButton, CTkFrame, CTkScrollableFrame, CTkEntry, CTkLabel, CTkFont, CTkImage, CTkRadioButton, CTkTabview, CTkOptionMenu, CTkCheckBox, CTkProgressBar, CTkInputDialog, CTkComboBox, get_appearance_mode
+from customtkinter import CTk, CTkButton, CTkFrame, CTkScrollableFrame, CTkEntry, CTkLabel, CTkFont, CTkImage, CTkRadioButton, CTkTabview, CTkOptionMenu, CTkCheckBox, CTkProgressBar, CTkSlider, CTkInputDialog, CTkComboBox, get_appearance_mode
 from CTkColorPicker import CTkColorPicker
 from CTkTable import CTkTable
 from CTkToolTip import CTkToolTip
@@ -669,6 +669,36 @@ def Get_ProgressBar(Configuration:dict, Frame: CTkFrame, orientation: str, Progr
         mode = Configuration_ProgressBar["mode"])
     return Progress_Bar
 
+# ---------------------------------------------- Sliders ----------------------------------------------# 
+def Get_Slider(Configuration:dict, Frame: CTkFrame, orientation: str, Slider_Size: str, GUI_Level_ID: int|None = None) -> CTkProgressBar:
+    Configuration_Sliders = Configuration["Sliders"][f"{orientation}"][f"{Slider_Size}"]
+
+    if type(GUI_Level_ID) is int:
+        border_color = tuple(Configuration["Global_Appearance"]["GUI_Level_ID"][f"{GUI_Level_ID}"]["border_color"])
+    else:
+        border_color = tuple(Configuration_Sliders["border_color"])
+
+    Button_color = Define_Accent_Color(Configuration=Configuration, Color_json=Configuration_Sliders["button_color"])
+    hover_color = Define_Hover_Color(Configuration=Configuration, Color_json=Configuration_Sliders["hover_color"], Accent_Color=Button_color)
+
+    Slider = CTkSlider(
+        master = Frame,
+        width = Configuration_Sliders["width"],
+        height = Configuration_Sliders["height"],
+        corner_radius = Configuration_Sliders["corner_radius"],
+        border_width = Configuration_Sliders["border_width"],
+        border_color = border_color,
+        bg_color = Configuration_Sliders["bg_color"],
+        fg_color = tuple(Configuration_Sliders["fg_color"]),
+        progress_color = tuple(Configuration_Sliders["fg_color"]),
+        button_color = Button_color,
+        button_hover_color = hover_color,
+        from_ = Configuration_Sliders["from_"],
+        to = Configuration_Sliders["to"],
+        number_of_steps = Configuration_Sliders["number_of_steps"],
+        hover = Configuration_Sliders["hover"],
+        orientation = Configuration_Sliders["orientation"])
+    return Slider
 
 # ---------------------------------------------- InputDialog ----------------------------------------------# 
 def Get_DialogWindow(Configuration:dict, text: str, title: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> CTkInputDialog:

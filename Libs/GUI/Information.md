@@ -23,7 +23,7 @@
 - drag&move, program can be moved only from this area
 - version 
 
-# <u>Setup Pages</u>
+# <u>Pages</u>
 ## <u>Download</u>
 - page designed for connection to NAV / Business Central and download and process data according to setup
 ### Connect

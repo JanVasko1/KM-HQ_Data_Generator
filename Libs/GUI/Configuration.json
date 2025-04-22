@@ -10,7 +10,7 @@
             "Colors": {
                 "Accent": {
                     "Accent_Color_Mode": "App Default",
-                    "Accent_Color_Manual": "",
+                    "Accent_Color_Manual": "#40ff67",
                     "Accent_Color_List": [
                         "App Default",
                         "Windows",
@@ -759,6 +759,24 @@
                     "#f7f9f9",
                     "#2C2C2C"
                 ]
+            },
+            "TimePicker": {
+                "width": 400,
+                "height": 200,
+                "corner_radius": 0,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "bg_color": [
+                    "#000001",
+                    "#000001"
+                ],
+                "fg_color": [
+                    "#f7f9f9",
+                    "#2C2C2C"
+                ]
             }
         },
         "Widgets": {
@@ -1425,6 +1443,75 @@
         },
         "Vertical": {}
     },
+    "Sliders": {
+        "Horizontal": {
+            "TimePicker_Hours": {
+                "width": 300,
+                "height": 10,
+                "corner_radius": 10,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "fg_color": [
+                    "#D0D0D0",
+                    "#111219"
+                ],
+                "bg_color": "transparent",
+                "progress_color": [
+                    "#517A31",
+                    "#517A31"
+                ],
+                "button_color": [
+                    "#446b80",
+                    "#446b80"
+                ],
+                "hover_color": [
+                    "#4f7c94",
+                    "#4f7c94"
+                ],
+                "from_": 0,
+                "to": 23,
+                "number_of_steps": 24,
+                "hover": true,
+                "orientation": "horizontal"
+            },
+            "TimePicker_Minutes": {
+                "width": 300,
+                "height": 10,
+                "corner_radius": 10,
+                "border_width": 0,
+                "border_color": [
+                    "#2C2C2C",
+                    "#efefef"
+                ],
+                "fg_color": [
+                    "#D0D0D0",
+                    "#111219"
+                ],
+                "bg_color": "transparent",
+                "progress_color": [
+                    "#517A31",
+                    "#517A31"
+                ],
+                "button_color": [
+                    "#446b80",
+                    "#446b80"
+                ],
+                "hover_color": [
+                    "#4f7c94",
+                    "#4f7c94"
+                ],
+                "from_": 0,
+                "to": 59,
+                "number_of_steps": 60,
+                "hover": true,
+                "orientation": "horizontal"
+            }
+        },
+        "Vertical": {}
+    },
     "InputDialog": {
         "Password": {
             "fg_color": [
@@ -1496,7 +1583,6 @@
             "password": false
         }
     },
-    "Sliders": {},
     "Color_Picker": {
         "width": 300,
         "initial_color": "#446b80",

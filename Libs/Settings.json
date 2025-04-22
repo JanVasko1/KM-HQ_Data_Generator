@@ -59,7 +59,7 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": true
+                "Download_Folder": false
             },
             "Confirmation": {
                 "Purchase_Order": {
@@ -86,7 +86,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-04-08"
+                            "Fix_Date": "2025-04-21"
                         }
                     },
                     "Unit_of_Measure": {

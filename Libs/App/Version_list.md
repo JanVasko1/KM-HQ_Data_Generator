@@ -6,6 +6,7 @@
 ### Version List
 #### 0.8.6
 - BackBoneBilling lines segment corrected, Key/Value pair "Order_Reference"/"line_item_id" deleted
+- Block to open multiple same Pickers for one Field
 
 #### 0.8.5
 - Settings loads change because of API
