@@ -1,5 +1,5 @@
 # Import Libraries
-from pandas import DataFrame, Series
+from pandas import DataFrame
 
 import Libs.File_Manipulation as File_Manipulation
 import Libs.GUI.Elements as Elements

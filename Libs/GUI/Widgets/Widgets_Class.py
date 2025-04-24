@@ -1074,7 +1074,18 @@ class WidgetRow_Time_Picker:
             self.Time_Picker_window.Pop_Up_Window.destroy()
             self.Save()
             self.Time_Picker_opened = False
-        
+
+        def Sliding_Hours(value):
+            self.Hour_text.configure(text=f"{int(self.Hour_Variable.get())}")
+
+        def Sliding_Minutes(value):
+            if self.Minute_Variable.get() < 10:
+                Minutes_str = f"0{int(self.Minute_Variable.get())}"
+            else:
+                Minutes_str = f"{int(self.Minute_Variable.get())}"
+
+            self.Minute_text.configure(text=f"{Minutes_str}")
+
         if self.Time_Picker_opened == False:
             self.Time_Picker_opened = True
 
@@ -1099,13 +1110,13 @@ class WidgetRow_Time_Picker:
             self.Frame_Label_Row.pack(side="top", fill="y", expand=False, padx=10, pady=(0,5))
 
             self.Hour_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
-            self.Hour_text.configure(textvariable=self.Hour_Variable)
+            self.Hour_text.configure(text=f"{self.Hour_Variable.get()}")
             self.Hour_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
             self.Comma_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
             self.Comma_text.configure(text=":")
             self.Comma_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
             self.Minute_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
-            self.Minute_text.configure(textvariable=self.Minute_Variable)
+            self.Minute_text.configure(text=f"{self.Minute_Variable.get()}")
             self.Minute_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
 
             # Hour
@@ -1118,7 +1129,7 @@ class WidgetRow_Time_Picker:
             self.Hour_text_0.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
 
             self.Hour_Slider = Elements.Get_Slider(Configuration=self.Configuration, Frame=self.Frame_Hour_Row, orientation="Horizontal", Slider_Size="TimePicker_Hours", GUI_Level_ID=self.GUI_Level_ID)
-            self.Hour_Slider.configure(variable=self.Hour_Variable)
+            self.Hour_Slider.configure(variable=self.Hour_Variable, command=lambda value: Sliding_Hours(value))
             self.Hour_Slider.pack(side="left", fill="x", expand=True, padx=0, pady=(0,5))
 
             self.Hour_text_23 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Hour_Row, Label_Size="Field_Label", Font_Size="Field_Label")
@@ -1135,7 +1146,7 @@ class WidgetRow_Time_Picker:
             self.Minute_text_0.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
 
             self.Minutes_Slider = Elements.Get_Slider(Configuration=self.Configuration, Frame=self.Frame_Minute_Row, orientation="Horizontal", Slider_Size="TimePicker_Minutes", GUI_Level_ID=self.GUI_Level_ID)
-            self.Minutes_Slider.configure(variable=self.Minute_Variable)
+            self.Minutes_Slider.configure(variable=self.Minute_Variable, command=lambda value: Sliding_Minutes(value))
             self.Minutes_Slider.pack(side="left", fill="x", expand=True, padx=0, pady=(0,5))
 
             self.Minute_text_59 = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Minute_Row, Label_Size="Field_Label", Font_Size="Field_Label")
