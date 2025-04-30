@@ -541,17 +541,16 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             Tariff_Number_list=Tariff_Number_list, 
             UoM_df=UoM_df,
             GUI=GUI)
+        
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            raise HTTPException(status_code=200, detail="Selected files for selected Purchase Order/s successfully created.")
     else:
         if GUI == True:
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass
-    
-    if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-    else:
-        raise HTTPException(status_code=200, detail="Selected files for selected Purchase Order/s successfully created.")
-
 
 def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
@@ -699,17 +698,16 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             Country_ISO_Code_list=Country_ISO_Code_list,  
             Tariff_Number_list=Tariff_Number_list,
             GUI=GUI)
+        
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoice/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            raise HTTPException(status_code=200, detail="Selected files for selected BackBone Billing Invoice/s successfully created.")
     else:
         if GUI == True:
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass
-
-    if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoice/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-    else:
-        raise HTTPException(status_code=200, detail="Selected files for selected BackBone Billing Invoice/s successfully created.")
-        
 
 def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
@@ -946,13 +944,13 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             UoM_df=UoM_df,
             Tariff_Number_list=Tariff_Number_list, 
             GUI=GUI)
+        
+        if GUI == True:
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            raise HTTPException(status_code=200, detail="Selected files for selected Return Purchase Order/s successfully created.")
     else:
         if GUI == True:
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass
-
-    if GUI == True:
-        Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
-    else:
-        raise HTTPException(status_code=200, detail="Selected files for selected Return Purchase Order/s successfully created.")

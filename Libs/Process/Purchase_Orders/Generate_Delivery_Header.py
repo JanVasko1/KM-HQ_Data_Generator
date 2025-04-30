@@ -246,6 +246,9 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_DEL_Number_Window_geometry[1]:
                     content_height = PO_DEL_Number_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PO_DEL_Number_Window.maxsize(width=PO_DEL_Number_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -351,6 +354,9 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_DEL_Date_Window_geometry[1]:
                     content_height = PO_DEL_Date_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PO_DEL_Date_Window.maxsize(width=PO_DEL_Date_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons

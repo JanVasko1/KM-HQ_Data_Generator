@@ -309,6 +309,9 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
             content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
             if content_height > PO_DEL_Number_Window_geometry[1]:
                 content_height = PO_DEL_Number_Window_geometry[1]
+            else:
+                # Update height of TopUp when content is smaller than max_height
+                PO_DEL_Number_Window.maxsize(width=PO_DEL_Number_Window_geometry[0], height=content_height)
             Frame_Main.configure(bg_color = "#000001", height=content_height)
 
             # Buttons

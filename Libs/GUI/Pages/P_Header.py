@@ -345,6 +345,9 @@ class HeaderBarApp:
         content_height = content_row_count * 35 + 30 + 50  # Lines multiplied + button + additional space for header
         if content_height > Delete_Activity_Correct_Window_geometry[1]:
             content_height = Delete_Activity_Correct_Window_geometry[1]
+        else:
+            # Update height of TopUp when content is smaller than max_height
+            Delete_Activity_Correct_Window.maxsize(width=Delete_Activity_Correct_Window_geometry[0], height=content_height)
         Frame_Main.configure(bg_color = "#000001", height=content_height)
 
         # Buttons

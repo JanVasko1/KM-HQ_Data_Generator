@@ -154,6 +154,9 @@ def Generate_PO_CON_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_Price_Window_geometry[1]:
                     content_height = PO_Price_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PO_Price_Window.maxsize(width=PO_Price_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -238,6 +241,9 @@ def Generate_PO_CON_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_UoM_Window_geometry[1]:
                     content_height = PO_UoM_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PO_UoM_Window.maxsize(width=PO_UoM_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -577,6 +583,9 @@ def Generate_PO_CON_Lines(Settings: dict,
                     content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                     if content_height > PO_Flags_Window_geometry[1]:
                         content_height = PO_Flags_Window_geometry[1]
+                    else:
+                        # Update height of TopUp when content is smaller than max_height
+                        PO_Flags_Window.maxsize(width=PO_Flags_Window_geometry[0], height=content_height)
                     Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                     # Buttons

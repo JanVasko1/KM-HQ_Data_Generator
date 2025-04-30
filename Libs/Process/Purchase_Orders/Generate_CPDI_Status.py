@@ -146,6 +146,9 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > CPDI_Delivery_Window_geometry [1]:
                     content_height = CPDI_Delivery_Window_geometry [1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    CPDI_Delivery_Window.maxsize(width=CPDI_Delivery_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -279,6 +282,9 @@ def Generate_PO_CPDI_Messages(Settings: dict,
                         content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                         if content_height > CPDI_Status_Window_geometry [1]:
                             content_height = CPDI_Status_Window_geometry [1]
+                        else:
+                            # Update height of TopUp when content is smaller than max_height
+                            CPDI_Status_Window.maxsize(width=CPDI_Status_Window_geometry[0], height=content_height)
                         Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                         # Buttons

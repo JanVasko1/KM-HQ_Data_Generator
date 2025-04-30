@@ -156,6 +156,9 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                     if content_height > PO_INV_Price_Window_geometry[1]:
                         content_height = PO_INV_Price_Window_geometry[1]
+                    else:
+                        # Update height of TopUp when content is smaller than max_height
+                        PO_INV_Price_Window.maxsize(width=PO_INV_Price_Window_geometry[0], height=content_height)
                     Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                     # Buttons
@@ -248,6 +251,9 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_INV_Plant_Window_geometry[1]:
                     content_height = PO_INV_Plant_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PO_INV_Plant_Window.maxsize(width=PO_INV_Plant_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -339,6 +345,9 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                     if content_height > PO_INV_Country_Origin_Window_geometry[1]:
                         content_height = PO_INV_Country_Origin_Window_geometry[1]
+                    else:
+                        # Update height of TopUp when content is smaller than max_height
+                        PO_INV_Country_Origin_Window.maxsize(width=PO_INV_Country_Origin_Window_geometry[0], height=content_height)
                     Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                     # Buttons
@@ -427,6 +436,9 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                     if content_height > PO_INV_Tariff_Window_geometry[1]:
                         content_height = PO_INV_Tariff_Window_geometry[1]
+                    else:
+                        # Update height of TopUp when content is smaller than max_height
+                        PO_INV_Tariff_Window.maxsize(width=PO_INV_Tariff_Window_geometry[0], height=content_height)
                     Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                     # Buttons

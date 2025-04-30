@@ -105,6 +105,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Items_Window_geometry [1]:
                     content_height = BB_Items_Window_geometry [1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Item_Window.maxsize(width=BB_Items_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -190,6 +193,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Quantity_Window_geometry[1]:
                     content_height = BB_Quantity_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Quantity_Window.maxsize(width=BB_Quantity_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -265,6 +271,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Price_Window_geometry[1]:
                     content_height = BB_Price_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Price_Window.maxsize(width=BB_Price_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -351,6 +360,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Plant_Window_geometry[1]:
                     content_height = BB_Plant_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Plant_Window.maxsize(width=BB_Plant_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -430,6 +442,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Country_Origin_Window_geometry[1]:
                     content_height = BB_Country_Origin_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Country_Origin_Window.maxsize(width=BB_Country_Origin_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -509,6 +524,9 @@ def Generate_BB_Lines(Settings: dict,
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > BB_Tariff_Window_geometry[1]:
                     content_height = BB_Tariff_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    BB_Tariff_Window.maxsize(width=BB_Tariff_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons

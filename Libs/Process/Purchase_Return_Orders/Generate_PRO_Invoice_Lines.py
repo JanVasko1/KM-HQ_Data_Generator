@@ -126,6 +126,9 @@ def Generate_Credit_Memo_Lines(Settings: dict, Configuration: dict|None, window:
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PRO_CR_Price_Window_geometry[1]:
                     content_height = PRO_CR_Price_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PRO_CR_Price_Window.maxsize(width=PRO_CR_Price_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -271,6 +274,9 @@ def Generate_Credit_Memo_Lines(Settings: dict, Configuration: dict|None, window:
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PRO_CR_Country_Origin_Window_geometry[1]:
                     content_height = PRO_CR_Country_Origin_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PRO_CR_Country_Origin_Window.maxsize(width=PRO_CR_Country_Origin_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons
@@ -353,6 +359,9 @@ def Generate_Credit_Memo_Lines(Settings: dict, Configuration: dict|None, window:
                 content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PRO_CR_Tariff_Window_geometry[1]:
                     content_height = PRO_CR_Tariff_Window_geometry[1]
+                else:
+                    # Update height of TopUp when content is smaller than max_height
+                    PRO_CR_Tariff_Window.maxsize(width=PRO_CR_Tariff_Window_geometry[0], height=content_height)
                 Frame_Main.configure(bg_color = "#000001", height=content_height)
 
                 # Buttons

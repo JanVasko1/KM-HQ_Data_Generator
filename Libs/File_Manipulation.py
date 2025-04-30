@@ -117,6 +117,6 @@ def Export_Download_Folders(Configuration: dict, window: CTk, File_Content: dict
             File_Content.output(f"{Export_Folder_Path}\\{File_Name}.{File_suffix}")
     except:
         if GUI == True:
-            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in Downloads folder.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
             raise HTTPException(status_code=500, detail="Impossible to store data in Downloads folder.")
