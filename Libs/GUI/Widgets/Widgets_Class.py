@@ -982,7 +982,7 @@ class WidgetRow_Date_Picker:
 
 # -------------------------------------------------------------------------------- WidgetRow_Time_Picker -------------------------------------------------------------------------------- #
 class WidgetRow_Time_Picker:
-    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Time_format", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Time_Entry", "Button_Drop_Down", "Time_Picker_window", "Frame_Picker", "Value", "Hour_Variable", "Minute_Variable", "Frame_Picker", "Frame_Label_Row", "Hour_text", "Comma_text", "Minute_text", "Frame_Hour_Row", "Hour_text_0", "Hour_Slider", "Hour_text_23", "Frame_Minute_Row", "Minute_text_0", "Minutes_Slider", "Minute_text_59", "Time_Picker_opened", "Current_Minutes"
+    __slots__ = "Settings", "Configuration", "master", "window", "Field_Frame_Type", "Label", "Time_format", "Save_To", "Save_path", "Documents", "Value", "placeholder_text_color", "Label_ToolTip", "Button_ToolTip", "Picker_Always_on_Top", "Picker_Fixed_position", "Validation", "GUI_Level_ID", "Row_Frame", "Frame_Label", "Label_text", "Frame_Space", "Frame_Value", "Time_Entry", "Button_Drop_Down", "Time_Picker_window", "Frame_Picker", "Value", "Hour_Variable", "Minute_Variable", "Frame_Picker", "Frame_Label_Row", "Hour_text", "Comma_text", "Minute_text", "Frame_Hour_Row", "Hour_text_0", "Hour_Slider", "Hour_text_23", "Frame_Minute_Row", "Minute_text_0", "Minutes_Slider", "Minute_text_59", "Time_Picker_opened", "Current_Hour", "Current_Minutes"
     """
     Field row for DatePicker
     """
@@ -1076,7 +1076,12 @@ class WidgetRow_Time_Picker:
             self.Time_Picker_opened = False
 
         def Sliding_Hours(value):
-            self.Hour_text.configure(text=f"{int(self.Hour_Variable.get())}")
+            if self.Hour_Variable.get() < 10:
+                Hour_str = f"0{int(self.Hour_Variable.get())}"
+            else:
+                Hour_str = f"{int(self.Hour_Variable.get())}"
+
+            self.Hour_text.configure(text=f"{Hour_str}")
 
         def Sliding_Minutes(value):
             if self.Minute_Variable.get() < 10:
@@ -1110,13 +1115,21 @@ class WidgetRow_Time_Picker:
             self.Frame_Label_Row.pack(side="top", fill="y", expand=False, padx=10, pady=(0,5))
 
             self.Hour_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
-            self.Hour_text.configure(text=f"{self.Hour_Variable.get()}")
+            if self.Hour_Variable.get() < 10:
+                Hour_str = f"0{int(self.Hour_Variable.get())}"
+            else:
+                Hour_str = f"{int(self.Hour_Variable.get())}"
+            self.Hour_text.configure(text=f"{Hour_str}")
             self.Hour_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
             self.Comma_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
             self.Comma_text.configure(text=":")
             self.Comma_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
             self.Minute_text = Elements.Get_Label(Configuration=self.Configuration, Frame=self.Frame_Label_Row, Label_Size="Main", Font_Size="Main")
-            self.Minute_text.configure(text=f"{self.Minute_Variable.get()}")
+            if self.Minute_Variable.get() < 10:
+                Minutes_str = f"0{int(self.Minute_Variable.get())}"
+            else:
+                Minutes_str = f"{int(self.Minute_Variable.get())}"
+            self.Minute_text.configure(text=f"{Minutes_str}")
             self.Minute_text.pack(side="left", fill="none", expand=False, padx=0, pady=(0,5))
 
             # Hour
@@ -1179,6 +1192,12 @@ class WidgetRow_Time_Picker:
         return self.Time_Entry.get()
     
     def Set_Value(self):
+        # Check hours
+        if self.Hour_Variable.get() < 10:
+            self.Current_Hour = f"0{self.Hour_Variable.get()}"
+        else:
+            self.Current_Hour = self.Hour_Variable.get()
+
         # Check minutes 
         if self.Minute_Variable.get() < 10:
             self.Current_Minutes = f"0{self.Minute_Variable.get()}"
@@ -1186,7 +1205,7 @@ class WidgetRow_Time_Picker:
             self.Current_Minutes = self.Minute_Variable.get()
 
         self.Time_Entry.delete(first_index=0, last_index=8)
-        self.Time_Entry.insert(index=0, string=f"{self.Hour_Variable.get()}:{self.Current_Minutes}")
+        self.Time_Entry.insert(index=0, string=f"{self.Current_Hour}:{self.Current_Minutes}")
 
     def Save(self):
         # Default
