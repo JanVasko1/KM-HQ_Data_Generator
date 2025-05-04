@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "PRO_Confirmation_All",
+                "Last_Used": "BB_Invoice",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",
@@ -86,7 +86,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Date": "2025-04-21"
+                            "Fix_Date": "2025-04-08"
                         }
                     },
                     "Unit_of_Measure": {
@@ -204,7 +204,7 @@
                     }
                 },
                 "Return_Order": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -261,7 +261,7 @@
                         }
                     },
                     "Rejection": {
-                        "Method": "Confirm All",
+                        "Method": "Ratio",
                         "Methods_List": [
                             "Confirm All",
                             "Reject All",
@@ -634,7 +634,7 @@
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -650,7 +650,7 @@
                         }
                     },
                     "Items": {
-                        "Method": "All",
+                        "Method": "Prompt",
                         "Methods_List": [
                             "Fixed",
                             "All",
@@ -758,7 +758,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "Return_Order": {
