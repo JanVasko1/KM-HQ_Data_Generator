@@ -151,6 +151,17 @@ class WidgetRow_Input_Entry:
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
                     self.Can_Save = False
+            elif self.Validation == "Percentage":
+                try:
+                    if (int(self.Value) >= 0) and (int(self.Value) <= 100):
+                        pass
+                    else:
+                        raise
+                except:
+                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole percentage belonging to interval 0 .. 100.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                    self.Input_Entry.delete(first_index=0, last_index=100)
+                    self.Input_Entry.focus()
+                    self.Can_Save = False
             elif self.Validation == "Float":
                 try:
                     float(self.Value)
@@ -168,7 +179,7 @@ class WidgetRow_Input_Entry:
         if (self.Save_To == None) or (self.Save_path == None) or (self.Can_Save == False):
             pass
         else:
-            if self.Validation == "Integer":
+            if (self.Validation == "Integer") or (self.Validation == "Percentage"):
                 Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=int(self.Get_Value()))
             elif self.Validation == "Float":
                 Data_Functions.Save_Value(Settings=self.Settings, Configuration=self.Configuration, Documents=self.Documents, window=self.window, Variable=None, File_Name=self.Save_To, JSON_path=self.Save_path, Information=float(self.Get_Value()))

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "BB_Invoice",
+                "Last_Used": "DDL_Dealer",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",
@@ -59,11 +59,11 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": false
+                "Download_Folder": true
             },
             "Confirmation": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -109,7 +109,7 @@
                             "Random Finished",
                             "Prompt"
                         ],
-                        "Labels_always": false,
+                        "Labels_always": true,
                         "Item_EOL_Finish": true,
                         "Always_Substitute": true
                     },
@@ -290,7 +290,7 @@
                     }
                 },
                 "Level_Provided": {
-                    "Method": "Purchase Order",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Purchase Order",
@@ -302,7 +302,7 @@
                     }
                 },
                 "Status": {
-                    "Method": "Fixed",
+                    "Method": "All Statuses",
                     "Methods_List": [
                         "Fixed",
                         "All Statuses",
@@ -314,7 +314,7 @@
                 }
             },
             "PreAdvice": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Date": {
                     "Method": "Delivery Date Shift",
                     "Methods_List": [
@@ -331,22 +331,22 @@
                         "To": 6
                     },
                     "Shift_Options": {
-                        "Generation_Date_Shift_by": -1,
-                        "Delivery_Date_Shift_by": -1
+                        "Generation_Date_Shift_by": -3,
+                        "Delivery_Date_Shift_by": -2
                     }
                 }
             },
             "Delivery": {
-                "Use": false,
+                "Use": true,
                 "Delivery_Counts": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
                         "Prompt"
                     ],
                     "Random_Options": {
-                        "Random_Max_count": 1
+                        "Random_Max_count": 6
                     },
                     "Fixed_Options": {
                         "Count": 1
@@ -373,12 +373,12 @@
                         "Lines random",
                         "Prompt"
                     ],
-                    "FreeOfCharge_with_Main": false
+                    "FreeOfCharge_with_Main": true
                 },
                 "Serial_Numbers": {
                     "Generate": {
-                        "Machines": false,
-                        "Tracked": false
+                        "Machines": true,
+                        "Tracked": true
                     },
                     "Prefix": "SN",
                     "Middle": {
@@ -405,7 +405,7 @@
                     },
                     "Random_Options": {
                         "From": 2,
-                        "To": 2
+                        "To": 5
                     }
                 },
                 "Carrier_ID": {
@@ -420,7 +420,7 @@
                     }
                 },
                 "Shipment_Method": {
-                    "Method": "Fixed",
+                    "Method": "Random",
                     "Methods_List": [
                         "Fixed",
                         "Random",
@@ -440,7 +440,7 @@
                             ],
                             "Automatic_Options": {
                                 "Prefix": "PACK",
-                                "Max_Packages_Records": 1
+                                "Max_Packages_Records": 3
                             },
                             "Fixed_Options": {
                                 "Fixed_Package_No": "PACKAGE0001"
@@ -454,7 +454,7 @@
                             ]
                         },
                         "Plants": {
-                            "Method": "Fixed",
+                            "Method": "Random",
                             "Methods_List": [
                                 "Fixed",
                                 "Random",
@@ -462,7 +462,7 @@
                                 "Prompt"
                             ],
                             "Fixed_Options": {
-                                "Fixed_Plant": "1004",
+                                "Fixed_Plant": "1000",
                                 "Plant_List": [
                                     "1000",
                                     "1002",
@@ -536,7 +536,7 @@
             },
             "Invoice": {
                 "Purchase_Order": {
-                    "Use": false,
+                    "Use": true,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -561,7 +561,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "From Confirmation",
+                        "Method": "Purchase Order",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Order",
@@ -583,12 +583,12 @@
                             "Fix_Date": "2025-04-16"
                         },
                         "Random_Options": {
-                            "From": 2,
-                            "To": 2
+                            "From": 4,
+                            "To": 6
                         }
                     },
                     "Plants": {
-                        "Method": "Fixed",
+                        "Method": "From Delivery",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -597,7 +597,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fixed_Plant": "1004",
+                            "Fixed_Plant": "1000",
                             "Plants_List": [
                                 "1000",
                                 "1002",
@@ -630,11 +630,11 @@
                         }
                     },
                     "PDF": {
-                        "Generate": false
+                        "Generate": true
                     }
                 },
                 "BackBone_Billing": {
-                    "Use": true,
+                    "Use": false,
                     "Number": {
                         "Method": "Automatic",
                         "Methods_List": [
@@ -650,7 +650,7 @@
                         }
                     },
                     "Items": {
-                        "Method": "Prompt",
+                        "Method": "All",
                         "Methods_List": [
                             "Fixed",
                             "All",
@@ -674,7 +674,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Price": 100.0
+                            "Fix_Price": 2500.0
                         }
                     },
                     "Currency": {
@@ -714,7 +714,7 @@
                         }
                     },
                     "Plants": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -731,7 +731,7 @@
                         }
                     },
                     "Country_Of_Origin": {
-                        "Method": "Fixed",
+                        "Method": "Random",
                         "Methods_List": [
                             "Fixed",
                             "Random",
@@ -739,7 +739,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fix_Country_Of_Origin": "DE"
+                            "Fix_Country_Of_Origin": "CZ"
                         }
                     },
                     "Tariff": {
@@ -758,7 +758,7 @@
                         "Use": false
                     },
                     "PDF": {
-                        "Generate": true
+                        "Generate": false
                     }
                 },
                 "Return_Order": {

@@ -1224,8 +1224,7 @@ def Get_Items_UoM_df(Configuration: dict|None, window: CTk|None, headers: dict, 
 
     return Items_UoM_df
 
-
-# ------------------- HQ_Testing_Items_UoM ------------------- #
+# ------------------- Items_Distr_Status_df ------------------- #
 def Get_Items_Distr_Status_df(Configuration: dict|None, window: CTk|None, headers: dict, tenant_id: str, NUS_version: str, NOC: str,  Environment: str, Company: str, GUI: bool=True) -> DataFrame:
     # Fields
     fields_list = ["Distribution_Status", "Blocked_for_Purchase"]
