@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+## 1.0.0
+- Official Application Release (Beta testing finished, thank you Karolina)
+
 #### 0.8.7
 - TopUp window max height corrected when content is smaller that max_height parameter
 - return Company_Logo.png
