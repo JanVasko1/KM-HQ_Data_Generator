@@ -342,7 +342,7 @@ class HeaderBarApp:
 
         # Dynamic Content height
         content_row_count = len(Frame_Body.winfo_children())
-        content_height = content_row_count * 35 + 30 + 50  # Lines multiplied + button + additional space for header
+        content_height = (content_row_count + 1) * 35 + 30 + 50  # Lines multiplied + button + additional space for header
         if content_height > Delete_Activity_Correct_Window_geometry[1]:
             content_height = Delete_Activity_Correct_Window_geometry[1]
         else:

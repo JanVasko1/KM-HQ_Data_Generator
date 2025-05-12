@@ -4,6 +4,9 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 1.0.1
+- Prompt page height - added one line to secure nicer look
+
 ## 1.0.0
 - Official Application Release (Beta testing finished, thank you Karolina)
 

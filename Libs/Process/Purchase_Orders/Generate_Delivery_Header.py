@@ -243,7 +243,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
                     
                 # Dynamic Content height
                 content_row_count = len(Frame_Body.winfo_children())
-                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                content_height = (content_row_count + 1) * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_DEL_Number_Window_geometry[1]:
                     content_height = PO_DEL_Number_Window_geometry[1]
                 else:
@@ -351,7 +351,7 @@ def Generate_Delivery_Header(Settings: dict, Configuration: dict|None, window: C
 
                 # Dynamic Content height
                 content_row_count = len(Frame_Body.winfo_children())
-                content_height = content_row_count * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
+                content_height = (content_row_count + 1) * 35 + 30 + 50    # Lines multiplied + button + Header if needed (50)
                 if content_height > PO_DEL_Date_Window_geometry[1]:
                     content_height = PO_DEL_Date_Window_geometry[1]
                 else:
