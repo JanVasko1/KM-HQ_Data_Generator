@@ -24,9 +24,12 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Log_Process_List = []
     Vendor_Lists = []
 
-    NUS_Version_Variable = StringVar(master=Frame, value="Cloud", name="NUS_Version_Variable")
-    Environment_Variable = StringVar(master=Frame, value="QA", name="Environment_Variable")
-    NOC_Variable = StringVar(master=Frame, value="Core", name="NOC_Variable")
+    Last_Used_NUS_Version = Settings["0"]["Connection"]["Last_Used_NUS_Version"]
+    NUS_Version_Variable = StringVar(master=Frame, value=Last_Used_NUS_Version, name="NUS_Version_Variable")
+    Last_Used_Environment = Settings["0"]["Connection"]["Last_Used_Environment"]
+    Environment_Variable = StringVar(master=Frame, value=Last_Used_Environment, name="Environment_Variable")
+    Last_Used_NOC = Settings["0"]["Connection"]["Last_Used_NOC"]
+    NOC_Variable = StringVar(master=Frame, value=Last_Used_NOC, name="NOC_Variable")
     Company_Variable = StringVar(master=Frame, value="-", name="Company_Variable")
     Logistic_Process_Variable = StringVar(master=Frame, value="-", name="Logistic_Process_Variable")
 
@@ -234,7 +237,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     NUS_Version_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame_Download_State_Area)
     NUS_Version_Frame.configure(width=140)
     NUS_Version_Frame.configure(variable=NUS_Version_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=NUS_Version_Frame, values=NUS_Version_List, command=None, GUI_Level_ID=1)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=NUS_Version_Frame, values=NUS_Version_List, command=lambda Actual_NUS_Version: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=NUS_Version_Variable, File_Name="Settings", JSON_path=["0", "Connection", "Last_Used_NUS_Version"], Information=Actual_NUS_Version), GUI_Level_ID=1)
 
     # Environment
     Environment_Text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Download_State_Area, Label_Size="Field_Label", Font_Size="Field_Label")
@@ -243,7 +246,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Environment_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame_Download_State_Area)
     Environment_Frame.configure(width=140)
     Environment_Frame.configure(variable=Environment_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Environment_Frame, values=Environment_List, command=None, GUI_Level_ID=1)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=Environment_Frame, values=Environment_List, command=lambda Actual_Environment: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=Environment_Variable, File_Name="Settings", JSON_path=["0", "Connection", "Last_Used_Environment"], Information=Actual_Environment), GUI_Level_ID=1)
 
     # NOCs
     NOC_Text = Elements.Get_Label(Configuration=Configuration, Frame=Frame_Download_State_Area, Label_Size="Field_Label", Font_Size="Field_Label")
@@ -252,7 +255,7 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     NOC_Frame = Elements.Get_Option_Menu(Configuration=Configuration, Frame=Frame_Download_State_Area)
     NOC_Frame.configure(width=140)
     NOC_Frame.configure(variable=NOC_Variable)
-    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=NOC_Frame, values=NOC_List, command=None, GUI_Level_ID=1)
+    Elements.Get_Option_Menu_Advance(Configuration=Configuration, attach=NOC_Frame, values=NOC_List, command=lambda Actual_NOC: Data_Functions.Save_Value(Settings=Settings, Configuration=None, Documents=None, window=window, Variable=NOC_Variable, File_Name="Settings", JSON_path=["0", "Connection", "Last_Used_NOC"], Information=Actual_NOC), GUI_Level_ID=1)
 
     # Button - Download Company
     Button_Download_Company = Elements.Get_Button_Text(Configuration=Configuration, Frame=Frame_Download_State_Area, Button_Size="Normal")

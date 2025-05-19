@@ -23,15 +23,18 @@
             }
         },
         "Connection": {
+            "Last_Used_NUS_Version": "Cloud",
             "NUS_Version_List": [
                 "Cloud",
                 "NUS3"
             ],
+            "Last_Used_Environment": "QA",
             "Environment_List": [
                 "QA",
                 "FIX",
                 "Sandbox"
             ],
+            "Last_Used_NOC": "Core",
             "NOC_List": [
                 "BBG",
                 "BBL",
@@ -401,7 +404,7 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": "2025-04-17"
+                        "Fix_Date": "2025-05-16"
                     },
                     "Random_Options": {
                         "From": 2,
