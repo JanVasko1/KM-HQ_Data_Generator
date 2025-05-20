@@ -772,6 +772,7 @@ def Get_HQ_Testing_HQ_Pack_Reg_df(Configuration: dict|None, window: CTk|None, he
     # Filters
     filters_Delivery_Number = Get_Field_List_string(fields_list=PO_Delivery_Number_list, Join_sign="','")
     filters_list_string = f"""Purchase_Order_No eq '{Purchase_Order}' and Delivery_No in ('{filters_Delivery_Number}')"""
+    
     # Params
     params = Get_Params(fields_list_string=fields_list_string, filters_list_string=filters_list_string)
 

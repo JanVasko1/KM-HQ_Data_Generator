@@ -1394,7 +1394,7 @@ class Widget_Buttons_Row:
                  Buttons_count: int,
                  Button_Size: str,
                  Button_Text: list,
-                 Button_Functions: any,
+                 Button_Functions: list|None = None,
                  Button_ToolTips: list|None = None, 
                  GUI_Level_ID: int|None = None):
         
@@ -1419,16 +1419,30 @@ class Widget_Buttons_Row:
         for Button in range(self.Buttons_count): 
             self.Button_Normal = Elements.Get_Button_Text(Configuration=self.Configuration, Frame=self.Frame_Buttons, Button_Size=self.Button_Size)
             self.Button_Normal.configure(text=self.Button_Text[Button])
-            if self.Button_Functions:
+            if self.Button_Functions != None:
                 self.Button_Normal.configure(command = self.Button_Functions[Button])
             else:
                 pass
             Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Button_Normal, message=self.Button_ToolTips[Button], ToolTip_Size="Normal", GUI_Level_ID=self.GUI_Level_ID + 1)
             self.Button_Normal.pack(side="right", fill="none", expand=False, padx=(10,0))
 
+    def Add_Function(self, Button_Functions: list):
+        Counter = 0
+        for Button in self.Frame_Buttons.winfo_children():
+            self.Button_Normal.configure(command = Button_Functions[Counter])
+            Counter += 1
+
     def Show(self):
         self.Row_Frame.pack(side="top", fill="none", expand=True, padx=10, pady=(5,5))
         self.Frame_Buttons.pack(side="right", fill="x", expand=True, padx=0, pady=0)
+
+    def Freeze(self):
+        for Button in self.Frame_Buttons.winfo_children():
+            Button.configure(state="disabled")
+
+    def UnFreeze(self):
+        for Button in self.Frame_Buttons.winfo_children():
+            Button.configure(state="normal")
 
 # -------------------------------------------------------------------------------- Widget_Section_Row -------------------------------------------------------------------------------- #
 class Widget_Section_Row:

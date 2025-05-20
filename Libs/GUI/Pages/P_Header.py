@@ -35,7 +35,6 @@ class HeaderBarApp:
 
         # ------------------- Statuses ------------------- #
         self.Status_Frame = Elements.Get_Frame(Configuration=self.Configuration, Frame=self.Frame, Frame_Size="Work_Area_Columns", GUI_Level_ID=0)
-        self.Status_Frame.configure(width=15)
 
         # Authorization OAuth2 Flag
         try:

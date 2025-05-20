@@ -707,7 +707,7 @@
                 ]
             },
             "Work_Area_Columns": {
-                "width": 10,
+                "width": 15,
                 "height": 10,
                 "corner_radius": 0,
                 "border_width": 0,

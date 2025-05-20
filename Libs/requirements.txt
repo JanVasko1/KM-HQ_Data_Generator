@@ -2,9 +2,11 @@ altgraph==0.17.4
 annotated-types==0.7.0
 anyio==4.9.0
 certifi==2025.1.31
+cffi==1.17.1
 charset-normalizer==3.4.1
 click==8.1.8
 colorama==0.4.6
+cryptography==44.0.2
 CTkColorPicker==0.9.0
 CTkMessagebox==2.7
 CTkTable==1.1
@@ -27,6 +29,7 @@ pandas==2.2.3
 pefile==2023.2.7
 pillow==10.4.0
 PyAutoGUI==0.9.54
+pycparser==2.22
 pydantic==2.10.6
 pydantic_core==2.27.2
 PyGetWindow==0.0.9
