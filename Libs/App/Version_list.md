@@ -6,6 +6,7 @@
 ### Version List
 #### 1.0.2
 - Program is remembering last used NUS Version, Environment and NOC on Download page
+- Upload to empty template issue corrected
 
 #### 1.0.1
 - Prompt page height - added one line to secure nicer look

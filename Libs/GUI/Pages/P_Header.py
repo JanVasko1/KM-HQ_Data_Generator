@@ -203,17 +203,20 @@ class HeaderBarApp:
         # Get name of actual Template
         Actual_Template = self.Settings["0"]["General"]["Template"]["Last_Used"]
 
-        # Save Template to Operational folder
-        Actual_Template_Settings = self.Settings["0"]["HQ_Data_Handler"]
-        Save_Template_dict = {
-            "Type": "Template",
-            "Data": Actual_Template_Settings}
-        
-        Save_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Actual_Template}.json")
-        with open(file=Save_Path, mode="w") as file: 
-            json.dump(Save_Template_dict, file)
+        if Actual_Template == "":
+            Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message="Cannot update data to actual template, as no template selected. You have to save First template or select one.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+        else:
+            # Save Template to Operational folder
+            Actual_Template_Settings = self.Settings["0"]["HQ_Data_Handler"]
+            Save_Template_dict = {
+                "Type": "Template",
+                "Data": Actual_Template_Settings}
+            
+            Save_Path = Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\{Actual_Template}.json")
+            with open(file=Save_Path, mode="w") as file: 
+                json.dump(Save_Template_dict, file)
 
-        Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Success", message="Actual settings were saved into current template.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
+            Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Success", message="Actual settings were saved into current template.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
 
     def Apply_Template(self, Selected_Value: str) -> None:
         # Load File
