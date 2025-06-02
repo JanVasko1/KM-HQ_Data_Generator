@@ -4,6 +4,11 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 1.0.3
+- Correct Function assignment for Button Widget Class
+- Correct Entry Field Widget Class Validation for Integer, Float and Percentage not allowing empty 
+- General Usage Template added as default
+
 #### 1.0.2
 - Program is remembering last used NUS Version, Environment and NOC on Download page
 - Upload to empty template issue corrected

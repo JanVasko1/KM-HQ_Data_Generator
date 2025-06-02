@@ -143,35 +143,36 @@ class WidgetRow_Input_Entry:
                     self.Input_Entry.delete(first_index=0, last_index=100)
                     self.Input_Entry.focus()
                     self.Can_Save = False
-            elif self.Validation == "Integer":
-                try:
-                    int(self.Value)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry.delete(first_index=0, last_index=100)
-                    self.Input_Entry.focus()
-                    self.Can_Save = False
-            elif self.Validation == "Percentage":
-                try:
-                    if (int(self.Value) >= 0) and (int(self.Value) <= 100):
-                        pass
-                    else:
-                        raise
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole percentage belonging to interval 0 .. 100.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry.delete(first_index=0, last_index=100)
-                    self.Input_Entry.focus()
-                    self.Can_Save = False
-            elif self.Validation == "Float":
-                try:
-                    float(self.Value)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry.delete(first_index=0, last_index=100)
-                    self.Input_Entry.focus()
-                    self.Can_Save = False
-            else:
-                pass
+        else:
+            pass
+
+        if self.Validation == "Integer":
+            try:
+                int(self.Value)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry.delete(first_index=0, last_index=100)
+                self.Input_Entry.focus()
+                self.Can_Save = False
+        elif self.Validation == "Percentage":
+            try:
+                if (int(self.Value) >= 0) and (int(self.Value) <= 100):
+                    pass
+                else:
+                    raise
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not whole percentage belonging to interval 0 .. 100.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry.delete(first_index=0, last_index=100)
+                self.Input_Entry.focus()
+                self.Can_Save = False
+        elif self.Validation == "Float":
+            try:
+                float(self.Value)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry.delete(first_index=0, last_index=100)
+                self.Input_Entry.focus()
+                self.Can_Save = False
         else:
             pass
 
@@ -359,24 +360,25 @@ class WidgetRow_Double_Input_Entry:
                     self.Input_Entry1.delete(first_index=0, last_index=100)
                     self.Input_Entry1.focus()
                     self.Can_Save1 = False
-            elif self.Validation1 == "Integer":
-                try:
-                    int(self.Value1)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry1.delete(first_index=0, last_index=100)
-                    self.Input_Entry1.focus()
-                    self.Can_Save1 = False
-            elif self.Validation1 == "Float":
-                try:
-                    float(self.Value1)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry1.delete(first_index=0, last_index=100)
-                    self.Input_Entry1.focus()
-                    self.Can_Save1 = False
-            else:
-                pass
+        else:
+            pass
+
+        if self.Validation1 == "Integer":
+            try:
+                int(self.Value1)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry1.delete(first_index=0, last_index=100)
+                self.Input_Entry1.focus()
+                self.Can_Save1 = False
+        elif self.Validation1 == "Float":
+            try:
+                float(self.Value1)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value1} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry1.delete(first_index=0, last_index=100)
+                self.Input_Entry1.focus()
+                self.Can_Save1 = False
         else:
             pass
 
@@ -416,24 +418,25 @@ class WidgetRow_Double_Input_Entry:
                     self.Input_Entry2.delete(first_index=0, last_index=100)
                     self.Input_Entry2.focus()
                     self.Can_Save2 = False
-            elif self.Validation2 == "Integer":
-                try:
-                    int(self.Value2)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry2.delete(first_index=0, last_index=100)
-                    self.Input_Entry2.focus()
-                    self.Can_Save2 = False
-            elif self.Validation2 == "Float":
-                try:
-                    float(self.Value2)
-                except:
-                    Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
-                    self.Input_Entry2.delete(first_index=0, last_index=100)
-                    self.Input_Entry2.focus()
-                    self.Can_Save2 = False
-            else:
-                pass
+        else:
+            pass
+
+        if self.Validation2 == "Integer":
+            try:
+                int(self.Value2)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not whole number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry2.delete(first_index=0, last_index=100)
+                self.Input_Entry2.focus()
+                self.Can_Save2 = False
+        elif self.Validation2 == "Float":
+            try:
+                float(self.Value2)
+            except:
+                Elements.Get_MessageBox(Configuration=self.Configuration, window=self.window, title="Error", message=f"Value: {self.Value2} in not float number.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
+                self.Input_Entry2.delete(first_index=0, last_index=100)
+                self.Input_Entry2.focus()
+                self.Can_Save2 = False
         else:
             pass
 

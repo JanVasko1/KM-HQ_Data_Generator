@@ -85,7 +85,10 @@ async def Generate_Purchase_Order(Request_PO: PurchaseOrder):
         except:
             raise HTTPException(status_code=405, detail=f"Template: {Request_PO.Template} not found.")
         Template_path_list = [Template_path]
-        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        try:
+            Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_PO.Template} is not applicable.")
 
         # Update Settings to upload file to server instantly
         Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"] = True
@@ -121,7 +124,10 @@ async def Generate_BB_Invoice(Request_BB_INV: BBInvoice):
         except:
             raise HTTPException(status_code=405, detail=f"Template: {Request_BB_INV.Template} not found.")
         Template_path_list = [Template_path]
-        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        try:
+            Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_BB_INV.Template} is not applicable.")
 
         # Update Settings to upload file to server instantly
         Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"] = True
@@ -157,7 +163,10 @@ async def Generate_Purchase_Return_Order(Request_PRO: PurchaseReturnOrder):
         except:
             raise HTTPException(status_code=405, detail=f"Template: {Request_PRO.Template} not found.")
         Template_path_list = [Template_path]
-        Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        try:
+            Data_Functions.Import_Data(Settings=Settings, Configuration=None, window=None, import_file_path=Template_path_list, Import_Type="Template", JSON_path=["0", "HQ_Data_Handler"], Method="Overwrite")
+        except:
+            raise HTTPException(status_code=405, detail=f"Template: {Request_PRO.Template} is not applicable.")
 
         # Update Settings to upload file to server instantly
         Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"] = True

@@ -99,6 +99,9 @@ class HeaderBarApp:
         self.Icon_Delete_Templates.configure(command = lambda: self.Delete_Templates(Button=self.Icon_Delete_Templates, Actual_Template_Frame_Var=self.Actual_Template_Frame_Var))
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Icon_Delete_Templates, message="Delete Templates file from program.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
+        # Default template assign
+        self.Apply_Template(Selected_Value="General_Usage")
+
         # Build look of Widget
         self.Status_Frame.pack(side="right", fill="none", expand=False, padx=5, pady=(2,2))
         self.Authorization_Frame.pack(side="top", fill="none", expand=False, padx=(0, 3), pady=2)
@@ -151,7 +154,7 @@ class HeaderBarApp:
             HTML_Font_Color = Work_Area_Detail_Font[1]
 
         # Frame - General
-        Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=self.Configuration, Frame=Version_List_Window, Name="Version List", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="Show software changes.", GUI_Level_ID=1)
+        Frame_Main = Elements_Groups.Get_Widget_Frame(Configuration=self.Configuration, Frame=Version_List_Window, Name="Version List", Additional_Text="<ESC> to close.", Widget_size="Single_size", Widget_Label_Tooltip="Show software changes.", GUI_Level_ID=1)
         Frame_Main.configure(bg_color = "#000001", height=700)
         Frame_Body = Frame_Main.children["!ctkframe2"]
 

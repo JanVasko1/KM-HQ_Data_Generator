@@ -2,13 +2,14 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "DDL_Dealer",
+                "Last_Used": "General_Usage",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",
                     "DDL_Dealer",
                     "DDL_Towers",
                     "DDL_Towers_CPDI",
+                    "General_Usage",
                     "MT_Carstock",
                     "PRO_Confirmation_All",
                     "PRO_Confirmation_reject10%",
@@ -163,16 +164,16 @@
                             ],
                             "Intervals_Dates": {
                                 "ONH": {
-                                    "From": 1,
-                                    "To": 1
+                                    "From": 2,
+                                    "To": 6
                                 },
                                 "ONB": {
-                                    "From": 1,
-                                    "To": 1
+                                    "From": 20,
+                                    "To": 30
                                 }
                             },
                             "Fixed_Dates": {
-                                "ONH": "2025-04-15",
+                                "ONH": "2025-04-01",
                                 "ONB": "2025-04-02"
                             }
                         }
@@ -293,7 +294,7 @@
                     }
                 },
                 "Level_Provided": {
-                    "Method": "Random",
+                    "Method": "Purchase Order",
                     "Methods_List": [
                         "Fixed",
                         "Purchase Order",
@@ -305,7 +306,7 @@
                     }
                 },
                 "Status": {
-                    "Method": "All Statuses",
+                    "Method": "Fixed",
                     "Methods_List": [
                         "Fixed",
                         "All Statuses",
@@ -335,7 +336,7 @@
                     },
                     "Shift_Options": {
                         "Generation_Date_Shift_by": -3,
-                        "Delivery_Date_Shift_by": -2
+                        "Delivery_Date_Shift_by": -1
                     }
                 }
             },
@@ -376,7 +377,7 @@
                         "Lines random",
                         "Prompt"
                     ],
-                    "FreeOfCharge_with_Main": true
+                    "FreeOfCharge_with_Main": false
                 },
                 "Serial_Numbers": {
                     "Generate": {
@@ -404,11 +405,11 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fix_Date": "2025-05-16"
+                        "Fix_Date": "2025-04-17"
                     },
                     "Random_Options": {
                         "From": 2,
-                        "To": 5
+                        "To": 10
                     }
                 },
                 "Carrier_ID": {
@@ -443,7 +444,7 @@
                             ],
                             "Automatic_Options": {
                                 "Prefix": "PACK",
-                                "Max_Packages_Records": 3
+                                "Max_Packages_Records": 6
                             },
                             "Fixed_Options": {
                                 "Fixed_Package_No": "PACKAGE0001"
@@ -564,7 +565,7 @@
                         ]
                     },
                     "Currency": {
-                        "Method": "Purchase Order",
+                        "Method": "From Confirmation",
                         "Methods_List": [
                             "Fixed",
                             "Purchase Order",
@@ -586,8 +587,8 @@
                             "Fix_Date": "2025-04-16"
                         },
                         "Random_Options": {
-                            "From": 4,
-                            "To": 6
+                            "From": 2,
+                            "To": 4
                         }
                     },
                     "Plants": {
