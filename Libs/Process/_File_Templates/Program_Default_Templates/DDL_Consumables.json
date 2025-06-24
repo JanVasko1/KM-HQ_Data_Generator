@@ -408,7 +408,6 @@
                             "Fixed_Plant": "1004",
                             "Plant_List": [
                                 "1000",
-                                "1002",
                                 "1004"
                             ]
                         }
@@ -574,7 +573,34 @@
                 },
                 "PDF": {
                     "Generate": true
-                }
+                },
+                    "Local_Development": {
+                        "BHN": {
+                            "Exchange_Rate": {
+                                "Use": false,
+                                "Currency": {
+                                    "Currency_From": "HUF",
+                                    "Currency_To": "EUR",
+                                    "Currency_List": [
+                                        "HUF",
+                                        "EUR"
+                                    ]
+                                },
+                                "Valid_Date": {
+                                    "Method": "Today",
+                                    "Methods_List": [
+                                        "Fixed",
+                                        "Today",
+                                        "Prompt"
+                                    ],
+                                    "Fixed_Options": {
+                                        "Fix_Date": "2025-06-20"
+                                    }
+                                },
+                                "Exchange_Rate": 403
+                            }
+                        }
+                    }
             },
             "BackBone_Billing": {
                 "Use": false,

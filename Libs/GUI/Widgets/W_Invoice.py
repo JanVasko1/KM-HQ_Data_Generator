@@ -1,8 +1,8 @@
 # Import Libraries
-from customtkinter import CTk, CTkFrame, StringVar
+from customtkinter import CTk, CTkFrame, StringVar, BooleanVar
 
 import Libs.CustomTkinter_Functions as CustomTkinter_Functions
-from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_Input_Entry, WidgetRow_OptionMenu, Widget_Section_Row, WidgetRow_Date_Picker
+from Libs.GUI.Widgets.Widgets_Class import WidgetFrame, WidgetRow_Input_Entry, WidgetRow_OptionMenu, Widget_Section_Row, WidgetRow_Date_Picker, WidgetRow_CheckBox
 
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- Main Functions -------------------------------------------------------------------------------------------------------------------------------------------------- #--------------------------------------------------- Tabs--------------------------------------------------------------------------#
@@ -509,3 +509,45 @@ def PRO_Tariff(Settings: dict, Configuration: dict|None, window: CTk|None, Frame
     PRO_INV_Tariff_Widget.Add_row(Rows=[PRO_Tariff_Method_Row, PRO_Fixed_Tariff_Row])
 
     return PRO_INV_Tariff_Widget
+
+def BHN_Exchange_Rates(Settings: dict, Configuration: dict|None, window: CTk|None, Frame: CTkFrame, GUI_Level_ID: int|None = None) -> WidgetFrame:
+    # ---------------------------- Defaults ----------------------------#
+    Date_Format = Settings["0"]["General"]["Formats"]["Date"]
+    BHN_Exchange_Use = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Use"]
+    BHN_Exchange_Currency_From = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Currency"]["Currency_From"]
+    BHN_Exchange_Currency_To = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Currency"]["Currency_To"]
+    BHN_Exchange_Currency_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Currency"]["Currency_List"])
+    
+    BHN_Exchange_Date_Method = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Valid_Date"]["Method"]
+    BHN_Exchange_Date_Method_List = list(Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Valid_Date"]["Methods_List"])
+    BHN_Exchange_Date_Fix_Date = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Valid_Date"]["Fixed_Options"]["Fix_Date"]
+
+    BHN_Exchange_Exchange_Rate = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Exchange_Rate"]
+
+    BHN_Exchange_Use_Variable = BooleanVar(master=Frame, value=BHN_Exchange_Use, name="BHN_Exchange_Use_Variable")
+    BHN_Exchange_Currency_From_Variable = StringVar(master=Frame, value=BHN_Exchange_Currency_From, name="BHN_Exchange_Currency_From_Variable")
+    BHN_Exchange_Currency_To_Variable = StringVar(master=Frame, value=BHN_Exchange_Currency_To, name="BHN_Exchange_Currency_To_Variable")
+    BHN_Exchange_Date_Method_Variable = StringVar(master=Frame, value=BHN_Exchange_Date_Method, name="BHN_Exchange_Date_Method_Variable")
+
+    # ------------------------- Main Functions -------------------------#
+    # Widget
+    BHN_Exchange_Rates_Widget = WidgetFrame(Configuration=Configuration, Frame=Frame, Name="BHN Exchange Rates", Additional_Text="", Widget_size="Single_size", Widget_Label_Tooltip="These settings if enabled will add 4 Remarks into Invoice related to Exchange Rate. This happen only when Delivery is done from Plant=1004.", GUI_Level_ID=GUI_Level_ID)
+
+    # Fields
+    BHN_Exchange_Currency_From_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Currency From", Variable=BHN_Exchange_Currency_From_Variable, Values=BHN_Exchange_Currency_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Currency", "Currency_From"], GUI_Level_ID=GUI_Level_ID) 
+    BHN_Exchange_Currency_To_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Currency To", Variable=BHN_Exchange_Currency_To_Variable, Values=BHN_Exchange_Currency_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Currency", "Currency_To"], GUI_Level_ID=GUI_Level_ID) 
+
+    BHN_Exchange_Date_Fix_Date_Row = WidgetRow_Date_Picker(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Fixed Date", Date_format=Date_Format, Value=BHN_Exchange_Date_Fix_Date, placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Valid_Date", "Fixed_Options", "Fix_Date"], Button_ToolTip="Date Picker.", Picker_Always_on_Top=True, Validation="Date", GUI_Level_ID=GUI_Level_ID + 1)
+    BHN_Exchange_Date_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=["Fixed", "Today", "Prompt"], Freeze_fields=[[],[BHN_Exchange_Date_Fix_Date_Row],[BHN_Exchange_Date_Fix_Date_Row]])
+    BHN_Exchange_Date_Method_Row = WidgetRow_OptionMenu(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Valid Date Method", Variable=BHN_Exchange_Date_Method_Variable, Values=BHN_Exchange_Date_Method_List, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Valid_Date", "Method"], Field_list=[BHN_Exchange_Date_Fix_Date_Row], Field_Blocking_dict=BHN_Exchange_Date_Blocking_dict, GUI_Level_ID=GUI_Level_ID) 
+
+    BHN_Exchange_Exchange_Rate_Row = WidgetRow_Input_Entry(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Field_Size="Normal", Label="Exchange Rate", Value=BHN_Exchange_Exchange_Rate, placeholder_text="Exchange Rate", placeholder_text_color="#949A9F", Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Exchange_Rate"], Validation="Float")
+
+    Use_Fields_Blocking_dict = CustomTkinter_Functions.Fields_Blocking(Values=[True, False], Freeze_fields=[[],[BHN_Exchange_Currency_From_Row, BHN_Exchange_Currency_To_Row, BHN_Exchange_Date_Fix_Date_Row, BHN_Exchange_Date_Method_Row, BHN_Exchange_Exchange_Rate_Row]])
+    Use_BHN_Exchange_Row = WidgetRow_CheckBox(Settings=Settings, Configuration=Configuration, master=BHN_Exchange_Rates_Widget.Body_Frame, window=window, Field_Frame_Type="Single_Column", Label="Use", Variable=BHN_Exchange_Use_Variable, Save_To="Settings", Save_path=["0", "HQ_Data_Handler", "Invoice", "Purchase_Order", "Local_Development", "BHN", "Exchange_Rate", "Use"], Field_list=[BHN_Exchange_Currency_From_Row, BHN_Exchange_Currency_To_Row, BHN_Exchange_Date_Fix_Date_Row, BHN_Exchange_Date_Method_Row, BHN_Exchange_Exchange_Rate_Row], Field_Blocking_dict=Use_Fields_Blocking_dict)
+
+
+    # Add Fields to Widget Body
+    BHN_Exchange_Rates_Widget.Add_row(Rows=[Use_BHN_Exchange_Row, BHN_Exchange_Currency_From_Row, BHN_Exchange_Currency_To_Row, BHN_Exchange_Date_Method_Row, BHN_Exchange_Date_Fix_Date_Row, BHN_Exchange_Exchange_Rate_Row])
+
+    return BHN_Exchange_Rates_Widget

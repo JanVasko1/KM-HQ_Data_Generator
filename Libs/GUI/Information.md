@@ -586,3 +586,6 @@
     - NUS_BASIC_W1
     - SUPER (DATA)
 3. Enable
+
+#### User Setup
+- you have to put the **Client Name**  into **User Setup** 

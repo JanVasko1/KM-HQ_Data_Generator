@@ -80,6 +80,25 @@ if __name__ == "__main__":
         # Create folders if do not exists
         os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\"))
         os.mkdir(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"))
+
+        # Copy General_Usage template
+        File_Manipulation.Copy_File(Configuration=Configuration,
+                                    window=window,
+                                    Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\General_Usage.json"), 
+                                    Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\General_Usage.json"))
+    except:
+        pass
+    try:
+        # General_Usage test of existence
+        File_Exists = File_Manipulation.File_exists(Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\General_Usage.json"))
+        
+        if File_Exists == False:
+            File_Manipulation.Copy_File(Configuration=Configuration,
+                                        window=window,
+                                        Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\General_Usage.json"), 
+                                        Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\General_Usage.json"))
+        else:
+            pass
     except:
         pass
     try:
@@ -88,7 +107,8 @@ if __name__ == "__main__":
                                         window=window,
                                         Source_Path=Data_Functions.Absolute_path(relative_path=f"Libs\\Process\\_File_Templates\\Program_Default_Templates\\"), 
                                         Destination_Path=Data_Functions.Absolute_path(relative_path=f"Operational\\Template\\"), 
-                                        include_hidden=True)
+                                        include_hidden=True,
+                                        Exclude_list=["General_Usage.json"])
     except:
         pass
     

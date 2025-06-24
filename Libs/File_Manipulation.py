@@ -12,6 +12,9 @@ import Libs.GUI.Elements as Elements
 from customtkinter import CTk
 
 # --------------------------------------------- Folders / Files --------------------------------------------- #
+def File_exists(filepath):
+    return os.path.exists(filepath)
+    
 def Get_All_Files_Names(file_path: str) -> list:
     file_names = []
     for (dirpath, dirnames, filenames) in os.walk(file_path):
@@ -34,9 +37,24 @@ def Copy_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Dest
     except Exception as Error:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Not possible to copy file:\n From: {Source_Path}\n To: {Destination_Path} ", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
 
-def Copy_All_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str, include_hidden: bool) -> None:
-    files = glob(pathname=os.path.join(Source_Path, "*"), include_hidden=include_hidden)
-    for source_file in files:
+def Copy_All_File(Configuration: dict|None, window: CTk|None, Source_Path: str, Destination_Path: str, include_hidden: bool, Exclude_list: list|None = None) -> None:
+    Files_list = glob(pathname=os.path.join(Source_Path, "*"), include_hidden=include_hidden)
+
+    # Exclude list
+    if not Exclude_list:
+        pass
+    else:
+        Exclude_files_list = []
+        # Create list of paths
+        for Exclude_file in Exclude_list:
+            Exclude_files_list.append(f"{Source_Path}{Exclude_file}")
+
+        # Drop excluded from list
+        for Exclude_file in Exclude_files_list:
+            Files_list.remove(Exclude_file)
+
+    # Copy
+    for source_file in Files_list:
         dest_file = source_file.replace(Source_Path, Destination_Path)
         try:
             copy(src=source_file, dst=dest_file)

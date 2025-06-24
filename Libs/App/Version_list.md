@@ -4,6 +4,14 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 1.0.4
+- Widget Entry Field save to list enabled validation
+- General_Usage template is not overwritten with every program start issue corrected
+- Python: Request library upgrade, because found vulnerability
+- Information page height adjusted
+- BHN Invoice Exchange Rate integration
+- Plant list reduced to be only [1000, 1004] as Plant=1002 is no more existing
+
 #### 1.0.3
 - Correct Function assignment for Button Widget Class
 - Correct Entry Field Widget Class Validation for Integer, Float and Percentage not allowing empty 

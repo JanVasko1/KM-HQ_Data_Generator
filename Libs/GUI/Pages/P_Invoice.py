@@ -15,6 +15,7 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
     TabView = Elements.Get_Tab_View(Configuration=Configuration, Frame=Frame_Invoice_Work_Area_Main, Tab_size="Normal", GUI_Level_ID=1)
     TabView.pack_propagate(flag=False)
     Tab_PO = TabView.add("Purchase Order")
+    Tab_PO_Loc = TabView.add("Purchase Order - Local")
     Tab_BB_A = TabView.add("BackBone Billing")
     Tab_BB_B = TabView.add("BackBone Billing - Additional")
     Tab_BB_C = TabView.add("BackBone Billing - IAL")
@@ -22,11 +23,13 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
     TabView.set("Purchase Order")
 
     Tab_PO_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton"]
-    Tab_BB_A_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
-    Tab_BB_B_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
-    Tab_BB_C_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton4"]
-    Tab_PCM_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton5"]
+    Tab_PO_Loc_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton2"]
+    Tab_BB_A_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton3"]
+    Tab_BB_B_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton4"]
+    Tab_BB_C_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton5"]
+    Tab_PCM_ToolTip_But = TabView.children["!ctksegmentedbutton"].children["!ctkbutton6"]
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PO_ToolTip_But, message="Settings related to Invoice document created because of Purchase Order.", ToolTip_Size="Normal", GUI_Level_ID=1)
+    Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_PO_Loc_ToolTip_But, message="Settings related Local NOC integration development.", ToolTip_Size="Normal", GUI_Level_ID=1)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_A_ToolTip_But, message="Settings related to BackBone Billing document, send from BEU as Stand Alone Invoice for services.", ToolTip_Size="Normal", GUI_Level_ID=1)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_B_ToolTip_But, message="Settings related to BackBone Billing document, send from BEU as Stand Alone Invoice for services.", ToolTip_Size="Normal", GUI_Level_ID=1)
     Elements.Get_ToolTip(Configuration=Configuration, widget=Tab_BB_C_ToolTip_But, message="Settings related to BackBone Billing document, IAL.", ToolTip_Size="Normal", GUI_Level_ID=1)
@@ -44,6 +47,12 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
     PO_INV_Date_Widget = W_Invoice.PO_Invoice_Date(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
     PO_INV_Origin_Widget = W_Invoice.PO_CountryOrigin(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
     PO_INV_Tariff_Widget = W_Invoice.PO_Tariff(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Column_B, GUI_Level_ID=2)
+
+    # ---------- Purchase Order Local ---------- #
+    Frame_PO_Loc_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_PO_Loc, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
+    Frame_PO_Loc_Column_A.pack_propagate(flag=False)
+
+    BHN_Exchange_Rates_Widget = W_Invoice.BHN_Exchange_Rates(Settings=Settings, Configuration=Configuration, window=window, Frame=Frame_PO_Loc_Column_A, GUI_Level_ID=2)
 
     # ---------- BackBone Billing ---------- #
     Frame_BB_A_Column_A = Elements.Get_Frame(Configuration=Configuration, Frame=Tab_BB_A, Frame_Size="Work_Area_Columns", GUI_Level_ID=1)
@@ -99,6 +108,9 @@ def Page_Invoice(Settings: dict, Configuration: dict|None, window: CTk|None, Fra
     PO_INV_Date_Widget.Show()
     PO_INV_Origin_Widget.Show()
     PO_INV_Tariff_Widget.Show()
+
+    Frame_PO_Loc_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
+    BHN_Exchange_Rates_Widget.Show()
 
     Frame_BB_A_Column_A.pack(side="left", fill="both", expand=True, padx=5, pady=5)
     Frame_BB_A_Column_B.pack(side="left", fill="both", expand=True, padx=5, pady=5)

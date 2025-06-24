@@ -63,7 +63,7 @@
         },
         "HQ_Data_Handler": {
             "Export": {
-                "Download_Folder": true
+                "Download_Folder": false
             },
             "Confirmation": {
                 "Purchase_Order": {
@@ -469,7 +469,6 @@
                                 "Fixed_Plant": "1000",
                                 "Plant_List": [
                                     "1000",
-                                    "1002",
                                     "1004"
                                 ]
                             }
@@ -635,6 +634,33 @@
                     },
                     "PDF": {
                         "Generate": true
+                    },
+                    "Local_Development": {
+                        "BHN": {
+                            "Exchange_Rate": {
+                                "Use": true,
+                                "Currency": {
+                                    "Currency_From": "HUF",
+                                    "Currency_To": "EUR",
+                                    "Currency_List": [
+                                        "HUF",
+                                        "EUR"
+                                    ]
+                                },
+                                "Valid_Date": {
+                                    "Method": "Today",
+                                    "Methods_List": [
+                                        "Fixed",
+                                        "Today",
+                                        "Prompt"
+                                    ],
+                                    "Fixed_Options": {
+                                        "Fix_Date": "2025-06-20"
+                                    }
+                                },
+                                "Exchange_Rate": 403
+                            }
+                        }
                     }
                 },
                 "BackBone_Billing": {

@@ -51,6 +51,8 @@ def Process_Purchase_Orders(Settings: dict,
     Generate_Invoice_PDF = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["PDF"]["Generate"]
     Export_NAV_Folder = Settings["0"]["HQ_Data_Handler"]["Export"]["Download_Folder"]
 
+    BHN_Exchange_Use = Settings["0"]["HQ_Data_Handler"]["Invoice"]["Purchase_Order"]["Local_Development"]["BHN"]["Exchange_Rate"]["Use"]
+
     # Generate Purchase Order List
     Purchase_Orders_List = Purchase_Headers_df["No"].to_list()
 
@@ -314,6 +316,7 @@ def Process_Purchase_Orders(Settings: dict,
         if Generate_Invoice == True:
             import Libs.Process.Purchase_Orders.Generate_Invoice_Header as Generate_Invoice_Header
             import Libs.Process.Purchase_Orders.Generate_Invoice_Lines as Generate_Invoice_Lines
+            import Libs.Process.Purchase_Orders.Generate_Invoice_BHN as Generate_Invoice_BHN
 
             # Define if Delivery lines existing
             if Generate_Delivery == True:
@@ -350,21 +353,28 @@ def Process_Purchase_Orders(Settings: dict,
                                                                                                   GUI=GUI)
 
             # Lines
-            PO_Invoices, PO_Invoice_Table_Data_list = Generate_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
-                                                                                                    Configuration=Configuration, 
-                                                                                                    window=window, 
-                                                                                                    Purchase_Order=Purchase_Order, 
-                                                                                                    Purchase_Lines_df=Purchase_Lines_df, 
-                                                                                                    PO_Invoices=PO_Invoices,
-                                                                                                    PO_Invoice_Number_list=PO_Invoice_Number_list,
-                                                                                                    PO_Delivery_Number_list=PO_Delivery_Number_list,
-                                                                                                    Delivery_Lines_df=Delivery_Lines_df, 
-                                                                                                    Confirmed_Lines_df=Confirmed_Lines_df,
-                                                                                                    Items_df=Items_df,
-                                                                                                    Items_Price_List_Detail_df=Items_Price_List_Detail_df,
-                                                                                                    Country_ISO_Code_list=Country_ISO_Code_list,
-                                                                                                    Tariff_Number_list=Tariff_Number_list,
-                                                                                                    GUI=GUI)
+            PO_Invoices, PO_Invoice_Table_Data_list, Invoice_Lines_df = Generate_Invoice_Lines.Generate_Invoice_Lines(Settings=Settings, 
+                                                                                                                        Configuration=Configuration, 
+                                                                                                                        window=window, 
+                                                                                                                        Purchase_Order=Purchase_Order, 
+                                                                                                                        Purchase_Lines_df=Purchase_Lines_df, 
+                                                                                                                        PO_Invoices=PO_Invoices,
+                                                                                                                        PO_Invoice_Number_list=PO_Invoice_Number_list,
+                                                                                                                        PO_Delivery_Number_list=PO_Delivery_Number_list,
+                                                                                                                        Delivery_Lines_df=Delivery_Lines_df, 
+                                                                                                                        Confirmed_Lines_df=Confirmed_Lines_df,
+                                                                                                                        Items_df=Items_df,
+                                                                                                                        Items_Price_List_Detail_df=Items_Price_List_Detail_df,
+                                                                                                                        Country_ISO_Code_list=Country_ISO_Code_list,
+                                                                                                                        Tariff_Number_list=Tariff_Number_list,
+                                                                                                                        GUI=GUI)
+
+            # Local Development Process
+            # BHN Exchange Rate
+            if BHN_Exchange_Use == True:
+                PO_Invoices = Generate_Invoice_BHN.Generate_Exchange_Header_BHN(Settings=Settings, Configuration=Configuration, window=window, PO_Invoices=PO_Invoices, Invoice_Lines_df=Invoice_Lines_df, GUI=GUI)
+            else:
+                pass
 
             # Export 
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
@@ -440,7 +450,6 @@ def Process_BackBoneBilling(Settings: dict,
                                                                                                                 BB_supplier_order_id=BB_supplier_order_id,
                                                                                                                 BB_Order_Date=BB_Order_Date,
                                                                                                                 GUI=GUI)
-                                                    
         # Update Lines
         BB_Invoice["invoice"]["invoice_item_list"] = BB_Invoice_Lines
 

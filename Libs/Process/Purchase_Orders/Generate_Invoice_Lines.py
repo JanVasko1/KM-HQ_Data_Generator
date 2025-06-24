@@ -533,5 +533,5 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
         # Add data to List of PDF Table Data for multiple PDFs
         PO_Invoice_Table_Data_list.append(Table_Data)
 
-    return PO_Invoices, PO_Invoice_Table_Data_list
+    return PO_Invoices, PO_Invoice_Table_Data_list, Invoice_Lines_df
 
