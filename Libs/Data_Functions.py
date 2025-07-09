@@ -3,10 +3,14 @@ import json
 import os
 from glob import glob
 
-from customtkinter import CTk, CTkEntry, StringVar, IntVar, BooleanVar
-
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
+
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkEntry, StringVar, IntVar, BooleanVar
+except:
+    pass
 
 # ----------------------------------------------- String Operations ------------------------------------------------ #
 def Company_Name_prepare(Company: str) -> str:

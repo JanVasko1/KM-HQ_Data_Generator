@@ -3,12 +3,16 @@ from pandas import DataFrame
 import requests
 import json
 import random
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.GUI.Elements as Elements
 import Libs.Pandas_Functions as Pandas_Functions
 
-from customtkinter import CTk
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 # ---------------------------------------------------------- Local Functions ---------------------------------------------------------- #
 def Get_Params(fields_list_string: str, filters_list_string: str) -> dict:
@@ -57,7 +61,7 @@ def Request_Endpoint(Configuration: dict|None, window: CTk|None, headers: dict, 
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Download Data from Business Central received Error Code: {Error_Code}: {Error_Detail}", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail=f"Download Data from Business Central received Error Code: {Error_Code}: {Error_Detail}")
+            raise APIError(message=f"Download Data from Business Central received Error Code: {Error_Code}: {Error_Detail}", status_code=500, charset="utf-8")
 
     return response_values_List, list_len
 

@@ -1,11 +1,16 @@
 # Import Libraries
 from pandas import DataFrame
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.File_Manipulation as File_Manipulation
 import Libs.GUI.Elements as Elements
 import Libs.Process.Prepare_Files_Helpers as Prepare_Files_Helpers
 
-from customtkinter import CTk
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 # ---------------------------------------------------------- Main Functions ---------------------------------------------------------- #
 def Process_Purchase_Orders(Settings: dict, 
@@ -17,7 +22,6 @@ def Process_Purchase_Orders(Settings: dict,
                             NOC: str, 
                             Environment: str, 
                             Company: str,
-                            Can_Process: bool, 
                             Purchase_Headers_df: DataFrame, 
                             Purchase_Lines_df: DataFrame, 
                             HQ_Communication_Setup_df: DataFrame, 
@@ -112,10 +116,16 @@ def Process_Purchase_Orders(Settings: dict,
 
             # Export 
             Confirmation_File_Name = f"ORDRSP_{PO_Confirmation_Number}_Test"
-            if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+            if GUI == True:
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Confirmation_Header, HQ_File_Type_Path="HQ_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json")
+                else:
+                    raise APIError(message=f"Confirmation: {PO_Confirmation_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
 
             # Prepare Dataframe for Delivery, cannot be done sooner as Confirmation must contain all Items
             Confirmed_Lines_df = Prepare_Files_Helpers.Update_Confirm_df_for_Delivery(Confirmed_Lines_df=Confirmed_Lines_df, Items_df=Items_df)
@@ -230,10 +240,16 @@ def Process_Purchase_Orders(Settings: dict,
             for Delivery_Index, Delivery_Number in enumerate(PO_Delivery_Number_list):
                 Delivery_Content = PO_Deliveries[Delivery_Index]
                 Delivery_File_Name = f"DELVRY02_{Delivery_Number}_Test"
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                if GUI == True:
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Delivery_Content, HQ_File_Type_Path="HQ_Delivery_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                    else:
+                        File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=Delivery_Content, File_Name=Delivery_File_Name, File_suffix="json")
+                    else:
+                        raise APIError(message=f"Delivery: {Delivery_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass
 
@@ -255,10 +271,16 @@ def Process_Purchase_Orders(Settings: dict,
             for PreAdvice_Index, PreAdvice_Number in enumerate(PO_PreAdviceNumber_list):
                 PreAdvice_Content = PO_PreAdvices[PreAdvice_Index]
                 Delivery_File_Name = f"PREADV02_{PreAdvice_Number}_Test"
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PreAdvice_Content, HQ_File_Type_Path="HQ_PreAdvice_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                if GUI == True:
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PreAdvice_Content, HQ_File_Type_Path="HQ_PreAdvice_File_Path", File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                    else:
+                        File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json", GUI=GUI)
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PreAdvice_Content, File_Name=Delivery_File_Name, File_suffix="json")
+                    else:
+                        raise APIError(message=f"PreAdvice: {PreAdvice_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass
 
@@ -380,10 +402,17 @@ def Process_Purchase_Orders(Settings: dict,
             for Invoice_Index, Invoice_Number in enumerate(PO_Invoice_Number_list):
                 Invoice_Content = PO_Invoices[Invoice_Index]
                 Invoice_File_Name = f"INVOIC02_{Invoice_Number}_Test"
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                if GUI == True:
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=Invoice_Content, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                    else:
+                        File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json", GUI=GUI)
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=Invoice_Content, File_Name=Invoice_File_Name, File_suffix="json")
+                    else:
+                        raise APIError(message=f"Invoice: {Invoice_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
+
         else:
             pass
         
@@ -397,17 +426,23 @@ def Process_Purchase_Orders(Settings: dict,
 
                 # Export 
                 # File name must be same as Invoice Number
-                if Export_NAV_Folder == True:
-                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                if GUI == True:
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PO_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                    else:
+                        File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
                 else:
-                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf", GUI=GUI)
+                    if Export_NAV_Folder == True:
+                        File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PO_Invoice_PDF, File_Name=Invoice_Number, File_suffix="pdf")
+                    else:
+                        raise APIError(message=f"Invoice PDF: {Invoice_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass
 
 def Process_BackBoneBilling(Settings: dict, 
                             Configuration: dict|None,
                             window: CTk|None,
-                            Can_Process: bool, 
+                            NOC: str, 
                             Buy_from_Vendor_No: str,
                             HQ_Communication_Setup_df: DataFrame, 
                             NVR_FS_Connect_df: DataFrame, 
@@ -460,10 +495,16 @@ def Process_BackBoneBilling(Settings: dict,
 
         # Export 
         BB_Invoice_File_Name = f"INVOIC02_{BB_Number}_Test"
-        if Export_NAV_Folder == True:
-            File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
+        if GUI == True:
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice, HQ_File_Type_Path="HQ_Invoice_File_Path", File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
+            else:
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
         else:
-            File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json", GUI=GUI)
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=BB_Invoice, File_Name=BB_Invoice_File_Name, File_suffix="json")
+            else:
+                raise APIError(message=f"BackBoneBilling Invoice: {BB_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
     else:
         pass
 
@@ -474,10 +515,16 @@ def Process_BackBoneBilling(Settings: dict,
 
         # Export 
         # File name must be same as Invoice Number
-        if Export_NAV_Folder == True:
-            File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
+        if GUI == True:
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=BB_Invoice_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
+            else:
+                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
         else:
-            File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf", GUI=GUI)
+            if Export_NAV_Folder == True:
+                File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=BB_Invoice_PDF, File_Name=BB_Number, File_suffix="pdf")
+            else:
+                raise APIError(message=f"BackBoneBilling Invoice PDF: {BB_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
     else:
         pass
 
@@ -497,7 +544,6 @@ def Process_Purchase_Return_Orders(Settings: dict,
                                     NOC: str, 
                                     Environment: str, 
                                     Company: str,
-                                    Can_Process: bool, 
                                     HQ_Vendors_list: list,
                                     Purchase_Return_Headers_df: DataFrame, 
                                     Purchase_Return_Lines_df: DataFrame, 
@@ -572,10 +618,16 @@ def Process_Purchase_Return_Orders(Settings: dict,
 
             # Export 
             Confirmation_File_Name = f"ORDRSP_{PRO_Confirmation_Number}_Test"
-            if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Confirmation_Header, HQ_File_Type_Path="HQ_R_O_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+            if GUI == True:
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Confirmation_Header, HQ_File_Type_Path="HQ_R_O_Confirm_File_Path", File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json", GUI=GUI)
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PRO_Confirmation_Header, File_Name=Confirmation_File_Name, File_suffix="json")
+                else:
+                    raise APIError(message=f"Confirmation: {PRO_Confirmation_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass
 
@@ -590,19 +642,13 @@ def Process_Purchase_Return_Orders(Settings: dict,
             # ---------------- Posted Return Shipments ---------------- #
             # PRO_Return_Shipment_list
             import Libs.Downloader.NAV_OData_API as NAV_OData_API
-            if Can_Process == True:
-                PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
-            else:
-                pass
+            PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
 
             # HQ_Testing_PRO_Ship_Lines
-            if Can_Process == True:
-                PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
-                # Drop Duplicate rows amd reset index
-                PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
-                PRO_Shipment_Lines_df.reset_index(drop=True, inplace=True)
-            else:
-                pass
+            PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
+            # Drop Duplicate rows amd reset index
+            PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)
+            PRO_Shipment_Lines_df.reset_index(drop=True, inplace=True)
 
             # Header
             PRO_Credit_Memo, PRO_Credit_Number, PRO_Return_Shipment_Number = Generate_PRO_Invoice_Header.Generate_Credit_Memo_Header(Settings=Settings, 
@@ -635,10 +681,16 @@ def Process_Purchase_Return_Orders(Settings: dict,
 
             # Export 
             Credit_Memo_File_Name = f"INVOIC02_{PRO_Credit_Number}_Test"
-            if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+            if GUI == True:
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo, HQ_File_Type_Path="HQ_R_O_Cr_Memo_File_Path", File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo, File_Name=Credit_Memo_File_Name, File_suffix="json", GUI=GUI)
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PRO_Credit_Memo, File_Name=Credit_Memo_File_Name, File_suffix="json")
+                else:
+                    raise APIError(message=f"Credit Memo: {PRO_Credit_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass
 
@@ -649,9 +701,15 @@ def Process_Purchase_Return_Orders(Settings: dict,
 
             # Export 
             # File name must be same as Credit Memo Number
-            if Export_NAV_Folder == True:
-                File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
+            if GUI == True:
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_NAV_Folders(Configuration=Configuration, window=window, NVR_FS_Connect_df=NVR_FS_Connect_df, HQ_Communication_Setup_df=HQ_Communication_Setup_df, Buy_from_Vendor_No=Buy_from_Vendor_No, File_Content=PRO_Credit_Memo_PDF, HQ_File_Type_Path="HQ_PDF_File_Path", File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
+                else:
+                    File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo_PDF, File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
             else:
-                File_Manipulation.Export_Download_Folders(Configuration=Configuration, window=window, File_Content=PRO_Credit_Memo_PDF, File_Name=PRO_Credit_Number, File_suffix="pdf", GUI=GUI)
+                if Export_NAV_Folder == True:
+                    File_Manipulation.Export_Azure(NOC=NOC, HQ_Communication_Setup_df=HQ_Communication_Setup_df, File_Content=PRO_Credit_Memo_PDF, File_Name=PRO_Credit_Number, File_suffix="json")
+                else:
+                    raise APIError(message=f"Credit Memo PDF: {PRO_Credit_Number} was not exported as Export_NAV_Folder = False.", status_code=500, charset="utf-8")     
         else:
             pass

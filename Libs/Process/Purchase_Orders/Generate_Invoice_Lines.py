@@ -1,15 +1,19 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Lines_df: DataFrame, PO_Invoice_Number_list: list, PO_Invoices: list, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, Confirmed_Lines_df: DataFrame, Items_df: DataFrame, Items_Price_List_Detail_df: DataFrame, Country_ISO_Code_list: list, Tariff_Number_list: list, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -176,12 +180,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["price_amount"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="price_amount", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="price_amount"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Price.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Price.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Items price Method selected: {Price_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -265,12 +269,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                 Button_Confirm_Var.wait_variable(PO_INV_Plant_Variable)
                 Plants_List = PO_INV_Plant_Variable.get().split(";")
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Plant.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Plant.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {Inv_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Plants Method selected: {Inv_Plant_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Plants Method selected: {Inv_Plant_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -364,12 +368,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["origin"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="origin", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="origin"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Country_of_Origin.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Country_of_Origin.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Country of Origin  Method selected: {Count_Origin_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -455,12 +459,12 @@ def Generate_Invoice_Lines(Settings: dict, Configuration: dict|None, window: CTk
                     Invoice_Lines_df["tariff_number"] = Invoice_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="tariff_number", Compare_Column_df1=["Invoice_No", "supplier_aid", "line_item_id"], Compare_Column_df2=["Invoice_No", "supplier_aid", "line_item_id"], Search_df=Invoice_Lines_df_Filtered, Search_Column="tariff_number"), axis=1)
                     del Invoice_Lines_df_Filtered
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Tariff.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Lines:Tariff.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Tariff Method selected: {Tariff_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass

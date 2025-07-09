@@ -1,0 +1,17 @@
+.git*
+.vscode
+.venv
+.VSCodeCounter
+__pycache__/
+__azurite_db*__.json
+__blobstorage__
+__queuestorage__
+local.settings.json
+test.py
+Libs/App/
+Libs/GUI/
+Libs/Azure/Authorization.pkl
+Operational/
+HQDataGenerator.spec
+Version.rc
+requirements_APP.txt

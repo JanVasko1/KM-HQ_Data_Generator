@@ -638,7 +638,7 @@
                     "Local_Development": {
                         "BHN": {
                             "Exchange_Rate": {
-                                "Use": true,
+                                "Use": false,
                                 "Currency": {
                                     "Currency_From": "HUF",
                                     "Currency_To": "EUR",

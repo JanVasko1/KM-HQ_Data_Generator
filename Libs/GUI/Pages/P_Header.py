@@ -47,7 +47,7 @@ class HeaderBarApp:
         self.Authorization_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=self.Auth_Result_Variable)
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Authorization_Frame, message="Initial Azure authorization status.", ToolTip_Size="Normal", GUI_Level_ID=0)
 
-        # Authorization OAuth2 Flag
+        # Export NAV Folders
         self.Export_folder_Frame = Elements.Get_RadioButton_Normal(Configuration=self.Configuration, Frame=self.Status_Frame, Var_Value=True) 
         self.Export_folder_Frame.configure(width=2, height=2, radiobutton_width=10, radiobutton_height=10, border_width_unchecked=2, border_width_checked=2, fg_color="#517A31", text="", state="disabled", variable=self.Export_folder_Variable)
         Elements.Get_ToolTip(Configuration=self.Configuration, widget=self.Export_folder_Frame, message="Export files to NAV folders.", ToolTip_Size="Normal", GUI_Level_ID=0)

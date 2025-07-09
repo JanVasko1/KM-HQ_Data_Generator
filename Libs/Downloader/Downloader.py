@@ -1,7 +1,8 @@
 # Import Libraries
 import pandas
 from pandas import DataFrame
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
+
 
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
@@ -10,8 +11,12 @@ import Libs.Azure.Authorization as Authorization
 import Libs.Downloader.NAV_OData_API as NAV_OData_API
 import Libs.Process.Prepare_Files as Prepare_Files
 
-from customtkinter import CTkProgressBar, CTk, CTkFrame, StringVar
-from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
+try:
+    # Front-End Library
+    from customtkinter import CTkProgressBar, CTk, CTkFrame, StringVar
+    from Libs.GUI.CTk.ctk_scrollable_dropdown import CTkScrollableDropdown as CTkScrollableDropdown 
+except:
+    pass
 
 # ---------------------------------------------------------- Local Function ---------------------------------------------------------- #
 def Progress_Bar_step(window: CTk|None, Progress_Bar: CTkProgressBar|None) -> None:
@@ -22,6 +27,9 @@ def Progress_Bar_set(window: CTk|None, Progress_Bar: CTkProgressBar|None, value:
     Progress_Bar.set(value=value)
     window.update_idletasks()
 
+def Enable_buttons(Buttons_list: list):
+    for Button in Buttons_list:
+        Button.configure(state="normal")
 
 # ---------------------------------------------------------- Main Program ---------------------------------------------------------- #
 def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: str, NOC: str, Environment: str, Companies_Frame_Var: CTkScrollableDropdown) -> list:
@@ -44,9 +52,10 @@ def Get_Companies_List(Configuration: dict|None, window: CTk|None, NUS_version: 
     else:
         pass
 
-def Select_Company_Process(Configuration: dict|None, window: CTk|None, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame) -> None:
+def Select_Company_Process(Configuration: dict|None, window: CTk|None, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Variable: StringVar, BB_Vendor_Used_Frame: CTkFrame, Buttons_list: list) -> None:
     Get_Logistic_Process_List(Configuration=Configuration, window=window, Documents=Documents, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Log_Proc_Used_Variable=Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame=PO_MUL_LOG_PROC_Frame)
     Get_HQ_Vendors_List(Configuration=Configuration, window=window, Documents=Documents, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, BB_Vendor_Used_Variable=BB_Vendor_Used_Variable, BB_Vendor_Used_Frame=BB_Vendor_Used_Frame)
+    Enable_buttons(Buttons_list=Buttons_list)
 
 def Get_Logistic_Process_List(Configuration: dict|None, window: CTk|None, Documents: dict, NUS_version: str, NOC: str, Environment: str, Company: str, Log_Proc_Used_Variable: StringVar, PO_MUL_LOG_PROC_Frame: CTkFrame) -> None:
     Display_name, client_id, client_secret, tenant_id = Defaults_Lists.Load_Azure_Auth()
@@ -129,7 +138,7 @@ def Get_Orders_List(Configuration: dict|None, window: CTk|None, NUS_version: str
     return Purchase_Header_list
 
 
-def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
+def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Order_list: list, Buttons_list: list|None=None, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
@@ -179,7 +188,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="HQ Communication Setup is empty, canceling download and process. Please check.")
+            raise APIError(message="HQ Communication Setup is empty, canceling download and process. Please check.", status_code=500, charset="utf-8")
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -197,7 +206,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.")
+                raise APIError(message="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -217,7 +226,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase header downloaded that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="There is no purchase header downloaded that is why program cannot continue. Please check.")
+                raise APIError(message="There is no purchase header downloaded that is why program cannot continue. Please check.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -237,7 +246,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase lines downloaded, that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="There is no purchase lines downloaded, that is why program cannot continue. Please check.")
+                raise APIError(message="There is no purchase lines downloaded, that is why program cannot continue. Please check.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -257,7 +266,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="All Order/s you select were not exported by HQ, canceling download. Please Export them first.")
+                raise APIError(message="All Order/s you select were not exported by HQ, canceling download. Please Export them first.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -277,7 +286,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="It was not possible to download any Item detail information from Item Cards.")
+                raise APIError(message="It was not possible to download any Item detail information from Item Cards.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -517,7 +526,6 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             NOC=NOC, 
             Environment=Environment, 
             Company=Company,
-            Can_Process=Can_Process, 
             Purchase_Headers_df=Purchase_Headers_df, 
             Purchase_Lines_df=Purchase_Lines_df, 
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
@@ -543,16 +551,18 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
             GUI=GUI)
         
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=200, detail="Selected files for selected Purchase Order/s successfully created.")
+            pass
     else:
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass
 
-def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
+def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Buy_from_Vendor_No: str, Buttons_list: list|None=None,  client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
@@ -584,7 +594,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="HQ Communication Setup is empty, canceling download and process. Please check.")
+            raise APIError(message="HQ Communication Setup is empty, canceling download and process. Please check.", status_code=500, charset="utf-8")
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -602,7 +612,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.")
+                raise APIError(message="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -622,7 +632,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.")
+                raise APIError(message="It was not possible to download any Vendor Service Functions detail so program cannot build Invoice.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -688,7 +698,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             Settings=Settings,
             Configuration=Configuration,
             window=window,
-            Can_Process=Can_Process, 
+            NOC=NOC,
             Buy_from_Vendor_No=Buy_from_Vendor_No,
             HQ_Communication_Setup_df=HQ_Communication_Setup_df, 
             NVR_FS_Connect_df=NVR_FS_Connect_df, 
@@ -700,16 +710,18 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
             GUI=GUI)
         
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected BackBone Billing Invoice/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=200, detail="Selected files for selected BackBone Billing Invoice/s successfully created.")
+            pass
     else:
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass
 
-def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
+def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window: CTk|None, Progress_Bar: CTkProgressBar|None, NUS_version: str, NOC: str, Environment: str, Company: str, Purchase_Return_Orders_List: list, Buttons_list:list|None=None, client_id: str|None=None, client_secret: str|None=None, tenant_id: str|None=None, GUI: bool=True) -> None:
     Company = Data_Functions.Company_Name_prepare(Company=Company)
 
     if GUI == True:
@@ -746,7 +758,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="HQ Communication Setup is empty, canceling download and process. Please check.")
+            raise APIError(message="HQ Communication Setup is empty, canceling download and process. Please check.", status_code=500, charset="utf-8")
         Can_Process = False
     else:
         # Drop Duplicate rows amd reset index
@@ -764,7 +776,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.")
+                raise APIError(message="NVR File Connector is empty, this means that there is not know path for file exports. Canceling downloads.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -784,7 +796,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase return header downloaded that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="There is no purchase return header downloaded that is why program cannot continue. Please check.")
+                raise APIError(message="There is no purchase return header downloaded that is why program cannot continue. Please check.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -804,7 +816,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no purchase return lines downloaded, that is why program cannot continue. Please check.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="There is no purchase return lines downloaded, that is why program cannot continue. Please check.")
+                raise APIError(message="There is no purchase return lines downloaded, that is why program cannot continue. Please check.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -824,7 +836,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"All Order/s you select were not exported by HQ, canceling download. Please Export them first.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="All Order/s you select were not exported by HQ, canceling download. Please Export them first.")
+                raise APIError(message="All Order/s you select were not exported by HQ, canceling download. Please Export them first.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -844,7 +856,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It was not possible to download any Item detail information from Item Cards.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail="It was not possible to download any Item detail information from Item Cards.")
+                raise APIError(message="It was not possible to download any Item detail information from Item Cards.", status_code=500, charset="utf-8")
             Can_Process = False
         else:
             # Drop Duplicate rows amd reset index
@@ -930,7 +942,6 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             NOC=NOC, 
             Environment=Environment, 
             Company=Company,
-            Can_Process=Can_Process, 
             HQ_Vendors_list=HQ_Vendors_list,
             Purchase_Return_Headers_df=Purchase_Return_Headers_df, 
             Purchase_Return_Lines_df=Purchase_Return_Lines_df, 
@@ -946,11 +957,13 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
             GUI=GUI)
         
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Success", message="Selected files for selected Return Purchase Order/s successfully created.", icon="check", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=200, detail="Selected files for selected Return Purchase Order/s successfully created.")
+            pass
     else:
         if GUI == True:
+            Enable_buttons(Buttons_list=Buttons_list)
             Progress_Bar_set(window=window, Progress_Bar=Progress_Bar, value=0)
         else:
             pass

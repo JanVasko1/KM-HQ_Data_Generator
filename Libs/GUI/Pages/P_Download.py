@@ -34,12 +34,24 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
     Logistic_Process_Variable = StringVar(master=Frame, value="-", name="Logistic_Process_Variable")
 
     # ------------------------- Local Functions ------------------------#
+    def Disable_buttons():
+        Button_PO_One_Generate_Var.configure(state="disabled")
+        Button_PO_Show_Var.configure(state="disabled")
+        Button_PO_Multi_Generate_Var.configure(state="disabled")
+        Button_Generate_BB.configure(state="disabled")
+        Button_PRO_Show_Var.configure(state="disabled")
+        Buttons_list = [Button_PO_One_Generate_Var, Button_PO_Show_Var, Button_PO_Multi_Generate_Var, Button_Generate_BB, Button_PRO_Show_Var]
+        return Buttons_list
+
     def Download_Companies(Companies_Frame_Var: CTkScrollableDropdown) -> None:
         Companies_thread = threading.Thread(target=Downloader.Get_Companies_List, args=(Configuration, window, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Companies_Frame_Var))
         Companies_thread.start()
         Companies_thread.join(timeout=0.1) 
 
     def Select_Company(PO_MUL_LOG_PROC_Frame: CTkFrame, BB_Vendor_Used_Frame: CTkFrame, Selected_Company: str) -> list:
+        # Buttons - disable
+        Buttons_list = Disable_buttons()
+
         # Delete Operational data from Settings to clear lists
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Used"], Information="")
         Data_Functions.Save_Value(Settings=None, Configuration=None, Documents=Documents, window=window, Variable=None, File_Name="Documents", JSON_path=["Logistic_Process", "Process_List"], Information=[])
@@ -54,23 +66,19 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         Environment = Environment_Variable.get()
 
         # Function Company Select --> because multiple thread (in previous version was wrong)
-        Company_Select_thread = threading.Thread(target=Downloader.Select_Company_Process, args=(Configuration, window, Documents, NUS_Version, NOC, Environment, Selected_Company, Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Variable, BB_Vendor_Used_Frame))
+        Company_Select_thread = threading.Thread(target=Downloader.Select_Company_Process, args=(Configuration, window, Documents, NUS_Version, NOC, Environment, Selected_Company, Log_Proc_Used_Variable, PO_MUL_LOG_PROC_Frame, BB_Vendor_Used_Variable, BB_Vendor_Used_Frame, Buttons_list))
         Company_Select_thread.start()
         Company_Select_thread.join(timeout=0.1) 
-
-        # Make Buttons available
-        Button_PO_One_Generate_Var.configure(state="normal")
-        Button_PO_Show_Var.configure(state="normal")
-        Button_PO_Multi_Generate_Var.configure(state="normal")
-        Button_Generate_BB.configure(state="normal")
-        Button_PRO_Show_Var.configure(state="normal")
         
     def Generate_Purchase_Orders() -> None:
         Purchase_Order_list = Documents["Purchase_Order"]["Purchase_Order_List"]
         if len(Purchase_Order_list) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Generate_PO_thread = threading.Thread(target=Downloader.Download_Data_Purchase_Orders, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Order_list))
+            # Buttons - disable
+            Buttons_list = Disable_buttons()
+
+            Generate_PO_thread = threading.Thread(target=Downloader.Download_Data_Purchase_Orders, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Order_list, Buttons_list))
             Generate_PO_thread.start()
             Generate_PO_thread.join(timeout=0.1) 
 
@@ -211,7 +219,10 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         if len(Buy_from_Vendor_No) == "":
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no BEU Vendor selected, you have to select one before Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Generate_BB_Invoice_thread = threading.Thread(target=Downloader.Download_Data_BackBoneBilling, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Buy_from_Vendor_No))
+            # Buttons - disable
+            Buttons_list = Disable_buttons()
+            
+            Generate_BB_Invoice_thread = threading.Thread(target=Downloader.Download_Data_BackBoneBilling, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Buy_from_Vendor_No, Buttons_list))
             Generate_BB_Invoice_thread.start()
             Generate_BB_Invoice_thread.join(timeout=0.1) 
 
@@ -220,7 +231,10 @@ def Page_Download(Settings: dict, Configuration: dict|None, window: CTk|None, Do
         if len(Purchase_Return_Orders_List) == 0:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"There is no Purchase Order selected, you have to put one or select multiple to Download and Process.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            Generate_PRO_thread = threading.Thread(target=Downloader.Download_Data_Return_Order, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Return_Orders_List))
+            # Buttons - disable
+            Buttons_list = Disable_buttons()
+
+            Generate_PRO_thread = threading.Thread(target=Downloader.Download_Data_Return_Order, args=(Settings, Configuration, window, Progress_Bar, NUS_Version_Variable.get(), NOC_Variable.get(), Environment_Variable.get(), Company_Variable.get(), Purchase_Return_Orders_List, Buttons_list))
             Generate_PRO_thread.start()
             Generate_PRO_thread.join(timeout=0.1) 
 

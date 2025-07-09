@@ -4,6 +4,10 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
+#### 1.1.0
+- Buttons not possible to press when action triggered, release it after action finished
+- API rebuild from FastAPI to Azure Functions
+
 #### 1.0.4
 - Widget Entry Field save to list enabled validation
 - General_Usage template is not overwritten with every program start issue corrected

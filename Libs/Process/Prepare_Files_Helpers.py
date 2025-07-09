@@ -1,13 +1,17 @@
 # Import Libraries
 from pandas import DataFrame, Series
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Pandas_Functions as Pandas_Functions
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 # ---------------------------------------------------------- For Delivery ---------------------------------------------------------- #
 def Update_Confirm_df_for_Delivery(Confirmed_Lines_df: DataFrame, Items_df: DataFrame) -> DataFrame:
@@ -63,9 +67,9 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
                 pass
         else:
             if Document_Type == "Order":
-                raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Document_Number} during preparation of Delivery.")
+                raise APIError(message=f"It is not possible to download Confirmation for {Document_Number} during preparation of Delivery.", status_code=500, charset="utf-8")
             elif Document_Type == "Return Order":
-                raise HTTPException(status_code=500, detail=f"It is not possible to download Confirmation for {Document_Number} during preparation of Return Credit Memo.")
+                raise APIError(message=f"It is not possible to download Confirmation for {Document_Number} during preparation of Return Credit Memo.", status_code=500, charset="utf-8")
             else:
                 pass
     else:
@@ -230,7 +234,7 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.")
+            raise APIError(message=f"It is not possible to download Delivery/s for {Purchase_Order} during preparation of Invoice.", status_code=500, charset="utf-8")
     else:
         # --------------------------------- Confirmation --------------------------------- # 
         # Confirmation Number

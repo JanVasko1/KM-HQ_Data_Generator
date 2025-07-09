@@ -1,15 +1,19 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Pandas_Functions as Pandas_Functions
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Deliveries: dict, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, Package_Header_df: DataFrame, Items_UoM_df: DataFrame, UoM_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -169,12 +173,12 @@ def Generate_Delivery_Packages_Lines(Settings: dict, Configuration: dict|None, w
                 Button_Confirm_Var.wait_variable(PO_Pack_Plant_Variable)
                 Pack_Plant_list = PO_Pack_Plant_Variable.get().split(";")
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Packages_Lines:Plants.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Packages_Lines:Plants.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Plants Method selected: {Pack_Plant_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Plants Method selected: {Pack_Plant_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Plants Method selected: {Pack_Plant_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
 
     # Apply to Package_Lines_df

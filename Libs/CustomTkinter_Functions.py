@@ -1,9 +1,14 @@
 # Import Libraries
-import pyautogui
-from customtkinter import CTk, CTkButton, get_appearance_mode
-from CTkTable import CTkTable
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
+
+try:
+    # Front-End Library
+    from CTkTable import CTkTable
+    import pyautogui
+    from customtkinter import CTk, CTkButton, get_appearance_mode
+except:
+    pass
 
 # --------------------------------------------- CustomTkinter --------------------------------------------- #
 def Dialog_Window_Request(Configuration: dict|None, title: str, text: str, Dialog_Type: str, GUI_Level_ID: int|None = None) -> str|None:

@@ -2,13 +2,19 @@
 import random
 from pandas import DataFrame, Series
 from datetime import datetime
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.GUI.Elements as Elements
 import Libs.Pandas_Functions as Pandas_Functions
 import Libs.Defaults_Lists as Defaults_Lists
 
 from customtkinter import CTk
+
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Deliveries: dict, PO_Delivery_Number_list: list, Delivery_Lines_df: DataFrame, UoM_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -73,7 +79,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None,
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Package Number Method selected: {Pack_Number_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Package Number Method selected: {Pack_Number_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Package Number Method selected: {Pack_Number_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -112,7 +118,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None,
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    raise HTTPException(status_code=500, detail=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.")
+                    raise APIError(message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
                 Can_Continue = False
                 
         elif EXIDV2_Assign_Method == "Per Delivery":
@@ -139,13 +145,13 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None,
                 if GUI == True:
                     Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
                 else:
-                    raise HTTPException(status_code=500, detail=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.")
+                    raise APIError(message=f"EXIDV2 Number Method selected: {EXIDV2_Numbers_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
                 Can_Continue = False
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"EXIDV2 Assign Method selected: {EXIDV2_Assign_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"EXIDV2 Assign Method selected: {EXIDV2_Assign_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"EXIDV2 Assign Method selected: {EXIDV2_Assign_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -164,7 +170,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None,
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass 
@@ -183,7 +189,7 @@ def Generate_Delivery_Packages_Headers(Settings: dict, Configuration: dict|None,
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Weight Method selected: {Pack_Weight_UoM_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass   

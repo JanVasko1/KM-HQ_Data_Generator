@@ -1,10 +1,14 @@
 # Import Libraries
 import requests
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTk
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 # ---------------------------------------------------------- Main Function ---------------------------------------------------------- #
 def Azure_OAuth(Configuration: dict|None, window: CTk|None, client_id: str, client_secret: str, tenant_id: str, GUI: bool=True) -> str:
@@ -12,17 +16,17 @@ def Azure_OAuth(Configuration: dict|None, window: CTk|None, client_id: str, clie
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="No client_id found. Check your Navision.")
+            raise APIError(message="No client_id found. Check your Navision.", status_code=500, charset="utf-8")
     if not client_secret:
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No client_secret found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="No client_secret found. Check your Navision.")
+            raise APIError(message="No client_secret found. Check your Navision.", status_code=500, charset="utf-8")
     if not tenant_id:
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message="No tenant_id found. Check your Settings.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="No tenant_id found. Check your Navision.")
+            raise APIError(message="No tenant_id found. Check your Navision.", status_code=500, charset="utf-8")
 
     # OAuth2 authentication at KM Azure
     url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"

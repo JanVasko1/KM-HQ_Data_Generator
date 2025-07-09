@@ -1,14 +1,17 @@
 # Import Libraries
 from datetime import datetime, timedelta
-from fastapi import HTTPException
-
-from customtkinter import CTk, CTkFrame, StringVar
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
 
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Deliveries: list, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -75,12 +78,12 @@ def Generate_PreAdvice_from_Delivery_dict(Settings: dict, Configuration: dict|No
                 Button_Confirm_Var.wait_variable(PO_Pre_Date_Date_Variable)
                 PreAdvice_Date = PO_Pre_Date_Date_Variable.get()
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PreAdvice_from_Delivery_dict:PreAdvice_Date.")
+                raise APIError(message="Any Prompt method is not allowed in API calls. Issue in Generate_PreAdvice_from_Delivery_dict:PreAdvice_Date.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"PreAdvice Number Method selected: {PreAdvice_Dates_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
 
         # Assign new value

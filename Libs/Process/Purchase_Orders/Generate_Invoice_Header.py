@@ -1,14 +1,18 @@
 # Import Libraries
 from pandas import DataFrame
 from datetime import datetime
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, Purchase_Order_index: str, Purchase_Headers_df: DataFrame, PO_Confirmation_Number: str, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, Delivery_Lines_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -141,7 +145,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PO_INV_Number_Variable)
                 PO_Invoice_Number_list = PO_INV_Number_Variable.get().split(";")
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Number.")
+                raise APIError(message="Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Number.", status_code=500, charset="utf-8")
     else:
         pass
 
@@ -256,7 +260,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PO_INV_Date_Variable)
                 PO_Invoice_Date_list = PO_INV_Date_Variable.get().split(";")
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Date.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Invoice_Header:Invoice_Date.", status_code=500, charset="utf-8")
         else:
             pass
         # Fill value in template
@@ -279,7 +283,7 @@ def Generate_Invoice_Header(Settings: dict, Configuration: dict|None, window: CT
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Invoice_Header:Currency", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Invoice_Header:Currency")
+                raise APIError(message=f"Currency Method selected: {Currency_Method} which is not supporter. Issue in Generate_Invoice_Header:Currency.", status_code=500, charset="utf-8")
             Can_Continue = False
 
         # Fill value in template

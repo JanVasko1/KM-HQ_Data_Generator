@@ -1,15 +1,19 @@
 # Import Libraries
 import random
 from pandas import DataFrame, Series
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Pandas_Functions as Pandas_Functions
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 import Libs.Defaults_Lists as Defaults_Lists
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_PRO_CON_Lines(Settings: dict, 
                             Configuration: dict|None, 
@@ -127,12 +131,12 @@ def Generate_PRO_CON_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Price selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PRO_Price_Variable)
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Price")
+                raise APIError(message="Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Price.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items price Method selected: {PRO_Price_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Items price Method selected: {PRO_Price_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message="Items price Method selected: {PRO_Price_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -214,12 +218,12 @@ def Generate_PRO_CON_Lines(Settings: dict,
                 Elements.Get_ToolTip(Configuration=Configuration, widget=Button_Confirm_Var, message="Confirm Confirmation Unit of Measure selection.", ToolTip_Size="Normal", GUI_Level_ID=3)   
                 Button_Confirm_Var.wait_variable(PRO_UoM_Variable)
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Unit_of_Measure")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Unit_of_Measure.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Unit of Measure Method selected: {PRO_UoM_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Items Unit of Measure Method selected: {PRO_UoM_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Items Unit of Measure Method selected: {PRO_UoM_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass
@@ -337,12 +341,12 @@ def Generate_PRO_CON_Lines(Settings: dict,
                 PRO_Cancelled_list = list(map(lambda x: True if x.lower() == "true" else False, PRO_Cancelled_list))
                 PRO_Confirmed_Lines_df["cancelled"] = PRO_Cancelled_list
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Unit_of_Measure")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Lines:Unit_of_Measure.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Items Rejection Method selected: {PRO_Reject_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Items Rejection Method selected: {PRO_Reject_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Items Rejection Method selected: {PRO_Reject_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass

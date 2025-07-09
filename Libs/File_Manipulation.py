@@ -5,11 +5,15 @@ from glob import glob
 from shutil import rmtree, copy
 from pandas import DataFrame
 from fpdf import FPDF
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTk
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 # --------------------------------------------- Folders / Files --------------------------------------------- #
 def File_exists(filepath):
@@ -96,6 +100,11 @@ def Get_Downloads_File_Path(File_Name: str, File_postfix: str):
     return Destination_File
 
 # --------------------------------------------- Exporting to --------------------------------------------- #
+def Export_Azure(NOC: str, HQ_Communication_Setup_df: DataFrame, File_Content: dict|FPDF, File_Name: str, File_suffix: str) -> None:
+    # TODO --> Azure Upload
+    print("Store in Azure.")
+    pass
+
 def Export_NAV_Folders(Configuration: dict, window: CTk, NVR_FS_Connect_df: DataFrame, HQ_Communication_Setup_df: DataFrame, Buy_from_Vendor_No: str, File_Content: dict|FPDF, HQ_File_Type_Path: str, File_Name: str, File_suffix: str, GUI: bool=True) -> None:
     # NVR Connector
     Root_Path_NUS = str(NVR_FS_Connect_df.iloc[0]["Root_Path_NUS"])
@@ -123,7 +132,7 @@ def Export_NAV_Folders(Configuration: dict, window: CTk, NVR_FS_Connect_df: Data
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in FileServer.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="Impossible to store data in FileServer.")
+            raise APIError(message="Impossible to store data in FileServer.", status_code=500, charset="utf-8")
 
 def Export_Download_Folders(Configuration: dict, window: CTk, File_Content: dict|FPDF, File_Name: str, File_suffix: str, GUI: bool=True) -> None:
     Export_Folder_Path = os.path.join(os.path.expanduser("~"), "Downloads")
@@ -137,4 +146,4 @@ def Export_Download_Folders(Configuration: dict, window: CTk, File_Content: dict
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Impossible to store data in Downloads folder.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail="Impossible to store data in Downloads folder.")
+            raise APIError(message="Impossible to store data in Downloads folder.", status_code=500, charset="utf-8")     

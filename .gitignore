@@ -4,3 +4,5 @@ __pycache__
 Test*
 Operational
 Authorization.pkl
+.python_packages
+.venv

@@ -1,14 +1,18 @@
 # Import Libraries
 from pandas import DataFrame
 from datetime import datetime
-from fastapi import HTTPException
-
-from customtkinter import CTk, CTkFrame, StringVar
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Defaults_Lists as Defaults_Lists
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements as Elements
 import Libs.GUI.Elements_Groups as Elements_Groups
+
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Return_Order: str, Purchase_Return_Order_index: str, Purchase_Return_Headers_df: DataFrame, Company_Information_df: DataFrame, HQ_Communication_Setup_df: DataFrame, HQ_Item_Transport_Register_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -79,12 +83,12 @@ def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PRO_CON_Number_Variable)
                 PRO_Confirmation_Number = PRO_CON_Number_Variable.get()
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Header:Confirmation_Number")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Header:Confirmation_Number", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Confirmation Number Method selected: {PRO_Numbers_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Confirmation Number Method selected: {PRO_Numbers_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Confirmation Number Method selected: {PRO_Numbers_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
         
         # Fill value in template
@@ -135,12 +139,12 @@ def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CT
                 Button_Confirm_Var.wait_variable(PRO_Gen_Date_Date_Variable)
                 PRO_Generation_Date = PRO_Gen_Date_Date_Variable.get()
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Header:Generation_Date")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_PRO_CON_Header:Generation_Date.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Generation Date Method selected: {PRO_Generation_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Generation Date Method selected: {PRO_Generation_Date_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Generation Date Method selected: {PRO_Generation_Date_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
 
         # Fill value in template
@@ -159,7 +163,7 @@ def Generate_PRO_CON_Header(Settings: dict, Configuration: dict|None, window: CT
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Currency Method selected: {PRO_Currency_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Currency Method selected: {PRO_Currency_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Currency Method selected: {PRO_Currency_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
 
         # Fill value in template

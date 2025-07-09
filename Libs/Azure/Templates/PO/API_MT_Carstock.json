@@ -52,7 +52,7 @@
                         "Random Finished",
                         "Prompt"
                     ],
-                    "Labels_always": true,
+                    "Labels_always": false,
                     "Item_EOL_Finish": true,
                     "Always_Substitute": true
                 },
@@ -274,8 +274,8 @@
                     "To": 6
                 },
                 "Shift_Options": {
-                    "Generation_Date_Shift_by": -3,
-                    "Delivery_Date_Shift_by": -2
+                    "Generation_Date_Shift_by": -1,
+                    "Delivery_Date_Shift_by": -1
                 }
             }
         },
@@ -316,12 +316,12 @@
                     "Lines random",
                     "Prompt"
                 ],
-                "FreeOfCharge_with_Main": true
+                "FreeOfCharge_with_Main": false
             },
             "Serial_Numbers": {
                 "Generate": {
-                    "Machines": true,
-                    "Tracked": true
+                    "Machines": false,
+                    "Tracked": false
                 },
                 "Prefix": "SN",
                 "Middle": {
@@ -348,7 +348,7 @@
                 },
                 "Random_Options": {
                     "From": 2,
-                    "To": 5
+                    "To": 2
                 }
             },
             "Carrier_ID": {
@@ -363,7 +363,7 @@
                 }
             },
             "Shipment_Method": {
-                "Method": "Random",
+                "Method": "Fixed",
                 "Methods_List": [
                     "Fixed",
                     "Random",
@@ -383,7 +383,7 @@
                         ],
                         "Automatic_Options": {
                             "Prefix": "PACK",
-                            "Max_Packages_Records": 5
+                            "Max_Packages_Records": 1
                         },
                         "Fixed_Options": {
                             "Fixed_Package_No": "PACKAGE0001"
@@ -405,7 +405,7 @@
                             "Prompt"
                         ],
                         "Fixed_Options": {
-                            "Fixed_Plant": "1000",
+                            "Fixed_Plant": "1004",
                             "Plant_List": [
                                 "1000",
                                 "1004"
@@ -525,8 +525,8 @@
                         "Fix_Date": "2025-04-16"
                     },
                     "Random_Options": {
-                        "From": 4,
-                        "To": 6
+                        "From": 2,
+                        "To": 2
                     }
                 },
                 "Plants": {
@@ -539,7 +539,7 @@
                         "Prompt"
                     ],
                     "Fixed_Options": {
-                        "Fixed_Plant": "1000",
+                        "Fixed_Plant": "1004",
                         "Plants_List": [
                             "1000",
                             "1002",
@@ -573,6 +573,33 @@
                 },
                 "PDF": {
                     "Generate": true
+                },
+                "Local_Development": {
+                    "BHN": {
+                        "Exchange_Rate": {
+                            "Use": false,
+                            "Currency": {
+                                "Currency_From": "HUF",
+                                "Currency_To": "EUR",
+                                "Currency_List": [
+                                    "HUF",
+                                    "EUR"
+                                ]
+                            },
+                            "Valid_Date": {
+                                "Method": "Today",
+                                "Methods_List": [
+                                    "Fixed",
+                                    "Today",
+                                    "Prompt"
+                                ],
+                                "Fixed_Options": {
+                                    "Fix_Date": "2025-06-20"
+                                }
+                            },
+                            "Exchange_Rate": 403
+                        }
+                    }
                 }
             },
             "BackBone_Billing": {

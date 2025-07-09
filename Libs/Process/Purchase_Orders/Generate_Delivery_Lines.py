@@ -2,15 +2,19 @@
 import random
 from datetime import datetime
 from pandas import DataFrame, Series
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Pandas_Functions as Pandas_Functions
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, Purchase_Order: str, PO_Deliveries: list, Delivery_Count: int, PO_Delivery_Number_list: list, PO_Delivery_Date_list: list, Confirmed_Lines_df: DataFrame, PO_Confirmation_Number: str, HQ_Item_Transport_Register_df: DataFrame, Items_df: DataFrame, Items_Tracking_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -55,12 +59,12 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
             else:
                 pass
         else:
-            raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Lines:Item_Splitting:DEL_Assignment_Method")
+            raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Lines:Item_Splitting:DEL_Assignment_Method.", status_code=500, charset="utf-8")
     else:
         if GUI == True:
             Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
         else:
-            raise HTTPException(status_code=500, detail=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.")
+            raise APIError(message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
         Can_Continue = False
 
     # Define Qty per Delivery
@@ -288,12 +292,12 @@ def Generate_Delivery_Lines(Settings: dict, Configuration: dict|None, window: CT
                     Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_start_date", Set_Value=Delivery_Date)
                     Delivery_Lines_df = Pandas_Functions.Dataframe_Set_Value_on_Condition(Set_df=Delivery_Lines_df, conditions=Delivery_No_condition, Set_Column="delivery_end_date", Set_Value=Delivery_Date)
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Lines:Item_Splitting")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Delivery_Lines:Item_Splitting.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Delivery Random Method selected: {DEL_Assignment_Method} which is not supporter. Cancel File creation..", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass

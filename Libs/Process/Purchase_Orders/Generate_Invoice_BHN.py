@@ -1,15 +1,19 @@
 # Import Libraries
 from pandas import DataFrame
 from datetime import datetime
-from fastapi import HTTPException
+from Libs.Azure.API_Error_Handler import APIError
 
 import Libs.Defaults_Lists as Defaults_Lists
 import Libs.Pandas_Functions as Pandas_Functions
-import Libs.CustomTkinter_Functions as CustomTkinter_Functions
 import Libs.GUI.Elements_Groups as Elements_Groups
 import Libs.GUI.Elements as Elements
 
-from customtkinter import CTk, CTkFrame, StringVar
+try:
+    # Front-End Library
+    from customtkinter import CTk, CTkFrame, StringVar
+    import Libs.CustomTkinter_Functions as CustomTkinter_Functions
+except:
+    pass
 
 def Generate_Exchange_Header_BHN(Settings: dict, Configuration: dict|None, window: CTk|None, PO_Invoices: dict, Invoice_Lines_df: DataFrame, GUI: bool=True):
     # --------------------------------------------- Defaults --------------------------------------------- #
@@ -133,12 +137,12 @@ def Generate_Exchange_Header_BHN(Settings: dict, Configuration: dict|None, windo
                 PO_Exchange_Date_list = PO_EXCH_Date_Variable.get().split(";")
                 Exchange_Rate_columns_df["Valid_From"] = PO_Exchange_Date_list
             else:
-                raise HTTPException(status_code=500, detail=f"Any Prompt method is not allowed in API calls. Issue in Generate_Exchange_Header_BHN:Exchange_Rate.")
+                raise APIError(message=f"Any Prompt method is not allowed in API calls. Issue in Generate_Exchange_Header_BHN:Exchange_Rate.", status_code=500, charset="utf-8")
         else:
             if GUI == True:
                 Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"Exchange Date Method selected: {BHN_Exchange_Date_Method} which is not supporter. Cancel File creation.", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
             else:
-                raise HTTPException(status_code=500, detail=f"Exchange Date Method selected: {BHN_Exchange_Date_Method} which is not supporter. Cancel File creation.")
+                raise APIError(message=f"Exchange Date Method selected: {BHN_Exchange_Date_Method} which is not supporter. Cancel File creation.", status_code=500, charset="utf-8")
             Can_Continue = False
     else:
         pass

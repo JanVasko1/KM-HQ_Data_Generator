@@ -2,9 +2,13 @@
 import random
 from pandas import DataFrame, Series
 
-from customtkinter import CTk
-
 import Libs.Defaults_Lists as Defaults_Lists
+
+try:
+    # Front-End Library
+    from customtkinter import CTk
+except:
+    pass
 
 def Generate_PRO_ATP_CON_Lines(Settings: dict, Configuration: dict|None, window: CTk|None, PRO_Confirmed_Lines_df: DataFrame, PRO_Confirmation_Lines: dict, GUI: bool=True) -> dict:
     # --------------------------------------------- Defaults --------------------------------------------- #

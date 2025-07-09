@@ -1,6 +1,4 @@
 # Import Libraries
-import time
-
 from customtkinter import CTk, CTkFrame
 
 import Libs.GUI.Pages.P_Download as P_Download
