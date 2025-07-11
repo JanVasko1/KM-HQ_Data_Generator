@@ -2,11 +2,10 @@
 import requests
 from Libs.Azure.API_Error_Handler import APIError
 
-import Libs.GUI.Elements as Elements
-
 try:
     # Front-End Library
     from customtkinter import CTk
+    import Libs.GUI.Elements as Elements
 except:
     pass
 

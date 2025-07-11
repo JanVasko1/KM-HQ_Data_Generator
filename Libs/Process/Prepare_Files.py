@@ -298,7 +298,7 @@ def Process_Purchase_Orders(Settings: dict,
                     if response == "Download":                    
                         import Libs.Downloader.NAV_OData_API as NAV_OData_API
 
-                        # HQ_Testing_HQ_Item_Transport_Register
+                        # HQ_Item_Transport_Register
                         Deliveries_HQ_Item_Tr_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery", GUI=GUI)
                         if Deliveries_HQ_Item_Tr_df.empty:
                             if GUI == True:
@@ -644,7 +644,7 @@ def Process_Purchase_Return_Orders(Settings: dict,
             import Libs.Downloader.NAV_OData_API as NAV_OData_API
             PRO_Return_Shipment_list = NAV_OData_API.Get_Purchase_Ret_Shipment_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
 
-            # HQ_Testing_PRO_Ship_Lines
+            # PRO_Ship_Lines
             PRO_Shipment_Lines_df = NAV_OData_API.Get_Purchase_Ret_Shipment_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, PRO_Return_Shipment_list=PRO_Return_Shipment_list, GUI=GUI)
             # Drop Duplicate rows amd reset index
             PRO_Shipment_Lines_df.drop_duplicates(inplace=True, ignore_index=True)

@@ -2,7 +2,7 @@
     "0": {
         "General": {
             "Template": {
-                "Last_Used": "General_Usage",
+                "Last_Used": "Replenishment",
                 "Templates_List": [
                     "BB_Invoice",
                     "DDL_Consumables",

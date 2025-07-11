@@ -55,7 +55,7 @@ def Prepare_Confirmed_Lines_df_from_HQ_Confirmed(Configuration: dict|None, windo
     Confirmed_Lines_df_Columns = ["line_item_id", "supplier_aid", "buyer_aid", "description_long", "quantity", "order_unit", "price_amount", "price_line_amount", "delivery_start_date", "delivery_end_date", "ordered_quantity", "supplier_order_item_id", "item_category", "discontinued", "set", "bom", "bom_with_delivery_group", "cancelled", "Exported_Line_No", "PO_UoM"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_Columns)
 
-    # HQ_Testing_HQ_Item_Transport_Register
+    # HQ_Item_Transport_Register
     HQ_Confirmed_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Document_Number], Document_Type=Document_Type, Vendor_Document_Type="Confirmation", GUI=GUI)
     if HQ_Confirmed_Lines_df.empty:
         if GUI == True:
@@ -228,7 +228,7 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
     Confirmed_Lines_df_columns = ["supplier_aid", "supplier_order_item_id", "price_amount"]
     Confirmed_Lines_df = DataFrame(columns=Confirmed_Lines_df_columns)
 
-    # HQ_Testing_HQ_Item_Transport_Register
+    # HQ_Item_Transport_Register
     HQ_Delivery_Lines_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=[Purchase_Order], Document_Type="Order", Vendor_Document_Type="Delivery", GUI=GUI)
     if HQ_Delivery_Lines_df.empty:
         if GUI == True:
@@ -385,12 +385,12 @@ def Prepare_Delivery_Lines_df_from_HQ_Deliveries(Settings: dict, Configuration: 
         # --------------------------------- Package Tracking Register --------------------------------- # ¨
         # Plant --> because use on Invoice Lines
         Delivery_Lines_df["Plant_Help"] = ""
-        HQ_HQ_Testing_HQ_Pack_Reg_df = NAV_OData_API.Get_HQ_Testing_HQ_Pack_Reg_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI=GUI)
-        HQ_HQ_Testing_HQ_Pack_Reg_df.drop_duplicates(inplace=True, ignore_index=True)
+        HQ_Pack_Reg_df = NAV_OData_API.Get_HQ_Pack_Reg_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order=Purchase_Order, PO_Delivery_Number_list=PO_Delivery_Number_list, GUI=GUI)
+        HQ_Pack_Reg_df.drop_duplicates(inplace=True, ignore_index=True)
 
-        if HQ_HQ_Testing_HQ_Pack_Reg_df.empty:
+        if HQ_Pack_Reg_df.empty:
             pass
         else:
-            Delivery_Lines_df["Plant_Help"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Plant_Help", Compare_Column_df1=["Delivery_No"], Compare_Column_df2=["Delivery_No"], Search_df=HQ_HQ_Testing_HQ_Pack_Reg_df, Search_Column="Plant_No"), axis=1)
+            Delivery_Lines_df["Plant_Help"] = Delivery_Lines_df.apply(lambda row: Pandas_Functions.Dataframe_Apply_Value_from_df2(row=row, Fill_Column="Plant_Help", Compare_Column_df1=["Delivery_No"], Compare_Column_df2=["Delivery_No"], Search_df=HQ_Pack_Reg_df, Search_Column="Plant_No"), axis=1)
         
     return PO_Confirmation_Number, PO_Delivery_Number_list, PO_Delivery_Date_list, Delivery_Lines_df, Confirmed_Lines_df

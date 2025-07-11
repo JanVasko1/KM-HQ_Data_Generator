@@ -4,9 +4,10 @@
 **Mobile**: +420 601 383 301<br>
 
 ### Version List
-#### 1.1.0
+### 1.1.0
 - Buttons not possible to press when action triggered, release it after action finished
 - API rebuild from FastAPI to Azure Functions
+- Web Service Business Central name change from HQ_Testing_* --> HQ_DatGen_*
 
 #### 1.0.4
 - Widget Entry Field save to list enabled validation

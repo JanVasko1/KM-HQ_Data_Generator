@@ -1428,7 +1428,7 @@
                 "corner_radius": 10,
                 "bg_color": "transparent",
                 "fg_color": [
-                    "#D0D0D0",
+                    "#efefef",
                     "#111219"
                 ],
                 "progress_color": [

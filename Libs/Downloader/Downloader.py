@@ -67,7 +67,7 @@ def Get_Logistic_Process_List(Configuration: dict|None, window: CTk|None, Docume
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    Log_Process_List = NAV_OData_API.Get_HQ_Testing_Logistic_Process_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
+    Log_Process_List = NAV_OData_API.Get_Logistic_Process_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     
     if len(Log_Process_List) > 0:
         # Add empty value for all
@@ -117,7 +117,7 @@ def Get_Orders_List(Configuration: dict|None, window: CTk|None, NUS_version: str
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    # HQ_Testing_HQ_Communication
+    # HQ_Communication
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company)
     if HQ_Communication_Setup_df.empty:
         Elements.Get_MessageBox(Configuration=Configuration, window=window, title="Error", message=f"HQ Communication Setup is empty, canceling download and process. Please check", icon="cancel", fade_in_duration=1, GUI_Level_ID=1)
@@ -125,7 +125,7 @@ def Get_Orders_List(Configuration: dict|None, window: CTk|None, NUS_version: str
     else:
         pass
 
-    # HQ_Testing_Purchase_Headers
+    # Purchase_Headers
     if Can_Process == True:
         Purchase_Header_list = NAV_OData_API.Get_Purchase_Headers_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Document_Type=Document_Type, HQ_Vendors_list=HQ_Vendors_list, Logistic_Process_Filter=Logistic_Process_Filter)
         if len(Purchase_Header_list) == 0:
@@ -182,7 +182,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    # HQ_Testing_HQ_Communication
+    # HQ_Communication
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
     if HQ_Communication_Setup_df.empty:
         if GUI == True:
@@ -199,7 +199,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
         else:
             pass
 
-    # HQ_Testing_NVR_FS_Connect
+    # NVR_FS_Connect
     if Can_Process == True:
         NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list, GUI=GUI)
         if NVR_FS_Connect_df.empty:
@@ -219,7 +219,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Purchase_Headers
+    # Purchase_Headers
     if Can_Process == True:
         Purchase_Headers_df, Purchase_Order_list = NAV_OData_API.Get_Purchase_Headers_info_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
         if Purchase_Headers_df.empty:
@@ -239,7 +239,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Purchase_Lines
+    # Purchase_Lines
     if Can_Process == True:
         Purchase_Lines_df, Items_list = NAV_OData_API.Get_Purchase_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, GUI=GUI)
         if Purchase_Lines_df.empty:
@@ -259,7 +259,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_HQ_Item_Transport_Register
+    # HQ_Item_Transport_Register
     if Can_Process == True:
         HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Order_list, Document_Type="Order", Vendor_Document_Type="Export", GUI=GUI)
         if HQ_Item_Transport_Register_df.empty:
@@ -279,7 +279,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items
+    # Items
     if Can_Process == True:
         Items_df, Substitution_Item_list, BOM_Item_list, BEU_Set_Item_list, Item_Tracking_Code_list = NAV_OData_API.Get_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, GUI=GUI)
         if Items_df.empty:
@@ -299,7 +299,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_BOM
+    # Items_BOM
     if Can_Process == True:
         Items_BOMs_df, Items_For_BOM_df = NAV_OData_API.Get_Items_BOM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=BOM_Item_list, GUI=GUI)
         Items_BOMs_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -314,7 +314,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_Substitutions
+    # Items_Substitutions
     if Can_Process == True:
         Items_Substitutions_df, Items_For_Substitution_df = NAV_OData_API.Get_Items_Substitutions_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Substitution_Item_list, GUI=GUI)
         Items_Substitutions_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -329,7 +329,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_Connected_Items
+    # Items_Connected_Items
     if Can_Process == True:
         Items_Connected_Items_df, Items_For_Connected_Items_df = NAV_OData_API.Get_Items_Connected_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, Connection_Type_list=["Free of Charge", "Distribution"], GUI=GUI)
         Items_Connected_Items_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -361,7 +361,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_Price_Detail_List
+    # Items_Price_Detail_List
     if Can_Process == True:
         Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"], GUI=GUI)
@@ -375,7 +375,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_Tracking_Codes
+    # Items_Tracking_Codes
     if Can_Process == True:
         Items_Tracking_df = NAV_OData_API.Get_Items_Tracking_Codes_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Item_Tracking_Code_list=Item_Tracking_Code_list, GUI=GUI)
         Items_Tracking_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -387,7 +387,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Items_UoM
+    # Items_UoM
     if Can_Process == True:
         Items_UoM_df = NAV_OData_API.Get_Items_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, GUI=GUI)
         Items_UoM_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -399,7 +399,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_BEU_Dist_Status
+    # BEU_Dist_Status
     if Can_Process == True:
         Items_Distr_Status_df = NAV_OData_API.Get_Items_Distr_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Items_Distr_Status_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -411,7 +411,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Plans
+    # Plans
     if Can_Process == True:
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -423,7 +423,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Shipment_Method
+    # Shipment_Method
     if Can_Process == True:
         Shipment_Method_list = NAV_OData_API.Get_Shipment_Method_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -433,7 +433,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Shipping_Agent
+    # Shipping_Agent
     if Can_Process == True:
         Shipping_Agent_list = NAV_OData_API.Get_Shipping_Agent_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -443,7 +443,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Tariff_Numbers
+    # Tariff_Numbers
     if Can_Process == True:
         Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -453,7 +453,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Company_Information
+    # Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -465,7 +465,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Country_Regions
+    # Country_Regions
     if Can_Process == True:
         Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -475,7 +475,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_HQ_CPDI_Level_df
+    # HQ_CPDI_Level_df
     if Can_Process == True:
         HQ_CPDI_Level_df = NAV_OData_API.Get_CPDI_Level_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         HQ_CPDI_Level_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -487,7 +487,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_HQ_CPDI_Status_df
+    # HQ_CPDI_Status_df
     if Can_Process == True:
         HQ_CPDI_Status_df = NAV_OData_API.Get_CPDI_Status_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         HQ_CPDI_Status_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -499,7 +499,7 @@ def Download_Data_Purchase_Orders(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_UoM
+    # UoM
     if Can_Process == True:
         UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         UoM_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -588,7 +588,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
 
-    # HQ_Testing_HQ_Communication
+    # HQ_Communication
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
     if HQ_Communication_Setup_df.empty:
         if GUI == True:
@@ -605,7 +605,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
         else:
             pass
 
-    # HQ_Testing_NVR_FS_Connect
+    # NVR_FS_Connect
     if Can_Process == True:
         NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list, GUI=GUI)
         if NVR_FS_Connect_df.empty:
@@ -645,7 +645,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Company_Information
+    # Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -657,7 +657,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Plans
+    # Plans
     if Can_Process == True:
         Plants_df = NAV_OData_API.Get_Plants_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Plants_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -669,7 +669,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Country_Regions
+    # Country_Regions
     if Can_Process == True:
         Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -679,7 +679,7 @@ def Download_Data_BackBoneBilling(Settings: dict, Configuration: dict|None, wind
     else:
         pass
 
-    # HQ_Testing_Tariff_Numbers
+    # Tariff_Numbers
     if Can_Process == True:
         Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -752,7 +752,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'}
     
-    # HQ_Testing_HQ_Communication
+    # HQ_Communication
     HQ_Communication_Setup_df, File_Connector_Code_list, HQ_Vendors_list = NAV_OData_API.Get_HQ_Communication_Setup_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
     if HQ_Communication_Setup_df.empty:
         if GUI == True:
@@ -769,7 +769,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
         else:
             pass
 
-    # HQ_Testing_NVR_FS_Connect
+    # NVR_FS_Connect
     if Can_Process == True:
         NVR_FS_Connect_df = NAV_OData_API.Get_NVR_FS_Connect_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, File_Connector_Code_list=File_Connector_Code_list, GUI=GUI)
         if NVR_FS_Connect_df.empty:
@@ -789,7 +789,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Purchase_Headers
+    # Purchase_Headers
     if Can_Process == True:
         Purchase_Return_Headers_df, Purchase_Return_Orders_List = NAV_OData_API.Get_Purchase_Return_Headers_info_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, HQ_Vendors_list=HQ_Vendors_list, GUI=GUI)
         if Purchase_Return_Headers_df.empty:
@@ -809,7 +809,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Purchase_Lines
+    # Purchase_Lines
     if Can_Process == True:
         Purchase_Return_Lines_df, Items_list = NAV_OData_API.Get_Purchase_Return_Lines_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Return_Orders_List=Purchase_Return_Orders_List, GUI=GUI)
         if Purchase_Return_Lines_df.empty:
@@ -829,7 +829,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_HQ_Item_Transport_Register
+    # HQ_Item_Transport_Register
     if Can_Process == True:
         HQ_Item_Transport_Register_df = NAV_OData_API.Get_HQ_Item_Transport_Register_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Purchase_Order_list=Purchase_Return_Orders_List, Document_Type="Return Order", Vendor_Document_Type="Export", GUI=GUI)
         if HQ_Item_Transport_Register_df.empty:
@@ -849,7 +849,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Items
+    # Items
     if Can_Process == True:
         Items_df, Substitution_Item_list, BOM_Item_list, BEU_Set_Item_list, Item_Tracking_Code_list = NAV_OData_API.Get_Items_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, GUI=GUI)
         if Items_df.empty:
@@ -869,7 +869,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Items_Price_Detail_List
+    # Items_Price_Detail_List
     if Can_Process == True:
         Active_Price_Lists_df, BEU_Price_list = NAV_OData_API.Get_Items_Price_Lists_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Items_Price_List_Detail_df = NAV_OData_API.Get_Items_Price_List_detail_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, Items_list=Items_list, BEU_Price_list=BEU_Price_list, Amount_Type_List=["Price", "Price & Discount"], GUI=GUI)
@@ -883,7 +883,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Country_Regions
+    # Country_Regions
     if Can_Process == True:
         Country_ISO_Code_list = NAV_OData_API.Get_Country_ISO_Code_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -893,7 +893,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Tariff_Numbers
+    # Tariff_Numbers
     if Can_Process == True:
         Tariff_Number_list = NAV_OData_API.Get_Tariff_Number_list(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         if GUI == True:
@@ -903,7 +903,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_Company_Information
+    # Company_Information
     if Can_Process == True:
         Company_Information_df = NAV_OData_API.Get_Company_Information_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         Company_Information_df.drop_duplicates(inplace=True, ignore_index=True)
@@ -915,7 +915,7 @@ def Download_Data_Return_Order(Settings: dict, Configuration: dict|None, window:
     else:
         pass
 
-    # HQ_Testing_UoM
+    # UoM
     if Can_Process == True:
         UoM_df =  NAV_OData_API.Get_UoM_df(Configuration=Configuration, window=window, headers=headers, tenant_id=tenant_id, NUS_version=NUS_version, NOC=NOC, Environment=Environment, Company=Company, GUI=GUI)
         UoM_df.drop_duplicates(inplace=True, ignore_index=True)
